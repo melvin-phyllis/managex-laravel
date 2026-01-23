@@ -1,0 +1,54 @@
+<?php
+
+namespace App\Notifications;
+
+use App\Models\Messaging\Message;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Notifications\Messages\DatabaseMessage;
+use Illuminate\Notifications\Notification;
+
+class NewMessageNotification extends Notification implements ShouldQueue
+{
+    use Queueable;
+
+    public function __construct(
+        public Message $message
+    ) {}
+
+    public function via(object $notifiable): array
+    {
+        return ['database'];
+    }
+
+    public function toDatabase(object $notifiable): array
+    {
+        $conversation = $this->message->conversation;
+        $sender = $this->message->sender;
+        
+        // Get conversation name for display
+        if ($conversation->type === 'direct') {
+            $title = $sender?->name ?? 'Utilisateur';
+        } else {
+            $title = $conversation->name ?? 'Groupe';
+        }
+
+        return [
+            'type' => 'new_message',
+            'message_id' => $this->message->id,
+            'conversation_id' => $conversation->id,
+            'conversation_type' => $conversation->type,
+            'conversation_name' => $title,
+            'sender_id' => $sender?->id,
+            'sender_name' => $sender?->name ?? 'Système',
+            'sender_avatar' => $sender?->avatar,
+            'content_preview' => \Str::limit($this->message->content, 100),
+            'has_attachments' => $this->message->attachments()->exists(),
+        ];
+    }
+
+    public function toArray(object $notifiable): array
+    {
+        return $this->toDatabase($notifiable);
+    }
+}

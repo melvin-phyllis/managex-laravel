@@ -11,11 +11,11 @@ $progressToMilestone = $nextMilestone > 0 ? min(100, ($currentStreak / $nextMile
 $isAtMilestone = in_array($currentStreak, $milestones);
 @endphp
 
-<div {{ $attributes->merge(['class' => 'bg-gradient-to-r from-orange-400 via-orange-500 to-red-500 rounded-xl shadow-lg p-6 text-white animate-fade-in-up']) }}
+<div {{ $attributes->merge(['class' => ' w-full bg-gradient-to-r from-orange-400 via-orange-500 to-red-500 rounded-xl shadow-lg p-6 text-white animate-fade-in-up']) }}
      x-data="streakCounter({{ $currentStreak }}, {{ $isAtMilestone ? 'true' : 'false' }})"
      x-init="init()">
 
-    <div class="flex items-center justify-between">
+    <div class="flex  items-center justify-between">
         {{-- Left side: Fire icon and streak count --}}
         <div class="flex items-center space-x-4">
             <div class="relative">

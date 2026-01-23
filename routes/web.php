@@ -104,6 +104,16 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::post('/settings/positions', [SettingsController::class, 'storePosition'])->name('settings.positions.store');
     Route::put('/settings/positions/{position}', [SettingsController::class, 'updatePosition'])->name('settings.positions.update');
     Route::delete('/settings/positions/{position}', [SettingsController::class, 'destroyPosition'])->name('settings.positions.destroy');
+
+    // Gestion de la messagerie (admin)
+    Route::get('/messaging', [\App\Http\Controllers\Admin\MessagingController::class, 'index'])->name('messaging.index');
+    Route::post('/messaging', [\App\Http\Controllers\Admin\MessagingController::class, 'store'])->name('messaging.store');
+    Route::get('/messaging/{conversation}', [\App\Http\Controllers\Admin\MessagingController::class, 'show'])->name('messaging.show');
+    Route::put('/messaging/{conversation}', [\App\Http\Controllers\Admin\MessagingController::class, 'update'])->name('messaging.update');
+    Route::delete('/messaging/{conversation}', [\App\Http\Controllers\Admin\MessagingController::class, 'destroy'])->name('messaging.destroy');
+    Route::post('/messaging/{conversation}/participants', [\App\Http\Controllers\Admin\MessagingController::class, 'addParticipant'])->name('messaging.participants.add');
+    Route::delete('/messaging/{conversation}/participants/{user}', [\App\Http\Controllers\Admin\MessagingController::class, 'removeParticipant'])->name('messaging.participants.remove');
+    Route::delete('/messaging/messages/{message}', [\App\Http\Controllers\Admin\MessagingController::class, 'deleteMessage'])->name('messaging.message.delete');
 });
 
 // Routes Employee
@@ -141,6 +151,17 @@ Route::middleware(['auth', 'role:employee'])->prefix('employee')->name('employee
     Route::get('/surveys', [EmployeeSurveyController::class, 'index'])->name('surveys.index');
     Route::get('/surveys/{survey}', [EmployeeSurveyController::class, 'show'])->name('surveys.show');
     Route::post('/surveys/{survey}/respond', [EmployeeSurveyController::class, 'respond'])->name('surveys.respond');
+
+    // Profil employé
+    Route::get('/profile', [\App\Http\Controllers\Employee\ProfileController::class, 'index'])->name('profile.index');
+    Route::put('/profile/personal', [\App\Http\Controllers\Employee\ProfileController::class, 'updatePersonal'])->name('profile.update.personal');
+    Route::put('/profile/emergency', [\App\Http\Controllers\Employee\ProfileController::class, 'updateEmergencyContact'])->name('profile.update.emergency');
+    Route::put('/profile/avatar', [\App\Http\Controllers\Employee\ProfileController::class, 'updateAvatar'])->name('profile.update.avatar');
+    Route::put('/profile/password', [\App\Http\Controllers\Employee\ProfileController::class, 'updatePassword'])->name('profile.update.password');
+
+    // Paramètres employé
+    Route::get('/settings', [\App\Http\Controllers\Employee\SettingsController::class, 'index'])->name('settings.index');
+    Route::put('/settings/password', [\App\Http\Controllers\Employee\SettingsController::class, 'updatePassword'])->name('settings.password');
 });
 
 // Routes profil (accessibles à tous les utilisateurs authentifiés)
@@ -151,3 +172,4 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+require __DIR__.'/messaging.php';

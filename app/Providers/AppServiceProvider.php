@@ -27,5 +27,7 @@ class AppServiceProvider extends ServiceProvider
         // Enregistrement des policies
         Gate::policy(Task::class, TaskPolicy::class);
         Gate::policy(Payroll::class, PayrollPolicy::class);
+        Gate::policy(\App\Models\Messaging\Conversation::class, \App\Policies\ConversationPolicy::class);
+        Gate::policy(\App\Models\Messaging\Message::class, \App\Policies\MessagePolicy::class);
     }
 }

@@ -17,7 +17,66 @@
                 </a>
             </div>
         </div>
+  <!-- KPIs avancés -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-5 text-white animate-fade-in-up">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-blue-100 text-sm">Taux de présence</p>
+                        <p class="text-3xl font-bold mt-1">{{ $advancedStats['presence_rate'] }}%</p>
+                    </div>
+                    <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
 
+            <div class="bg-gradient-to-br from-red-500 to-red-600 rounded-xl p-5 text-white animate-fade-in-up animation-delay-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-red-100 text-sm">Taux d'absentéisme</p>
+                        <p class="text-3xl font-bold mt-1">{{ $advancedStats['absenteeism_rate'] }}%</p>
+                    </div>
+                    <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-br from-green-500 to-green-600 rounded-xl p-5 text-white animate-fade-in-up animation-delay-200">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-green-100 text-sm">Tâches terminées</p>
+                        <p class="text-3xl font-bold mt-1">{{ $advancedStats['tasks_completed_this_week'] }}</p>
+                        <p class="text-green-200 text-xs mt-1">cette semaine</p>
+                    </div>
+                    <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl p-5 text-white animate-fade-in-up animation-delay-300">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-purple-100 text-sm">Heures moy. travaillées</p>
+                        <p class="text-3xl font-bold mt-1">{{ $advancedStats['avg_hours_today'] }}h</p>
+                        <p class="text-purple-200 text-xs mt-1">aujourd'hui</p>
+                    </div>
+                    <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
         <!-- Stats Cards avec KPIs avancés -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 lg:gap-6">
             <x-stat-card
@@ -83,6 +142,8 @@
                     </svg>
                 </x-slot:icon>
             </x-stat-card>
+
+          
         </div>
 
         <!-- Quick Actions & Alerts Row -->
@@ -227,66 +288,7 @@
             </div>
         </div>
 
-        <!-- KPIs avancés -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-5 text-white animate-fade-in-up">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-blue-100 text-sm">Taux de présence</p>
-                        <p class="text-3xl font-bold mt-1">{{ $advancedStats['presence_rate'] }}%</p>
-                    </div>
-                    <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-gradient-to-br from-red-500 to-red-600 rounded-xl p-5 text-white animate-fade-in-up animation-delay-100">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-red-100 text-sm">Taux d'absentéisme</p>
-                        <p class="text-3xl font-bold mt-1">{{ $advancedStats['absenteeism_rate'] }}%</p>
-                    </div>
-                    <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/>
-                        </svg>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-gradient-to-br from-green-500 to-green-600 rounded-xl p-5 text-white animate-fade-in-up animation-delay-200">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-green-100 text-sm">Tâches terminées</p>
-                        <p class="text-3xl font-bold mt-1">{{ $advancedStats['tasks_completed_this_week'] }}</p>
-                        <p class="text-green-200 text-xs mt-1">cette semaine</p>
-                    </div>
-                    <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                        </svg>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl p-5 text-white animate-fade-in-up animation-delay-300">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-purple-100 text-sm">Heures moy. travaillées</p>
-                        <p class="text-3xl font-bold mt-1">{{ $advancedStats['avg_hours_today'] }}h</p>
-                        <p class="text-purple-200 text-xs mt-1">aujourd'hui</p>
-                    </div>
-                    <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
-                    </div>
-                </div>
-            </div>
-        </div>
+        
     </div>
 
     @push('scripts')
