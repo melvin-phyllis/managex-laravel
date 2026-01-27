@@ -27,5 +27,9 @@ php artisan view:cache || echo "View cache warning"
 chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
+# Update Nginx port to match Railway PORT environment variable
+echo "Configuring Nginx to listen on port ${PORT:-8080}..."
+sed -i "s/listen 8080;/listen ${PORT:-8080};/g" /etc/nginx/http.d/default.conf
+
 echo "Starting nginx + php-fpm via supervisor..."
 exec /usr/bin/supervisord -c /etc/supervisord.conf
