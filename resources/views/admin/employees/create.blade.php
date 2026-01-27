@@ -377,16 +377,6 @@
                 </div>
             </div>
 
-            <!-- Section 7: Soldes de congés -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                
-                <div class="p-6">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <!-- Congés payés retiré : valeur fixée à 30 jours par défaut -->
-                    </div>
-                </div>
-            </div>
-
             <!-- Submit -->
             <div class="flex items-center justify-end space-x-4 py-4">
                 <a href="{{ route('admin.employees.index') }}" class="px-6 py-2.5 text-gray-700 hover:text-gray-900 font-medium">Annuler</a>

@@ -13,15 +13,25 @@
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="font-sans antialiased">
+    <script>window.userId = {{ auth()->id() ?? 'null' }};</script>
+    <x-realtime-notifications />
     <div class="min-h-screen bg-gray-100">
         <!-- Sidebar -->
         <aside class="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform transition-transform duration-200 ease-in-out lg:translate-x-0 -translate-x-full" id="sidebar">
-            <div class="flex items-center justify-center h-16 bg-green-600">
+            <div class="flex items-center lg:flex-row justify-center h-16 px-4 bg-green-600">
                 <span class="text-xl font-bold text-white">ManageX</span>
+                <button class="lg:hidden p-2 rounded-lg bg-green-700 hover:bg-green-800 text-white transition-colors" onclick="document.getElementById('sidebar').classList.toggle('-translate-x-full')">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
             </div>
-
+            
             <nav class="mt-6">
                 <div class="px-4 space-y-2">
                     <x-sidebar-link :href="route('employee.dashboard')" :active="request()->routeIs('employee.dashboard')">
@@ -31,7 +41,7 @@
                         Tableau de bord
                     </x-sidebar-link>
 
-                    <x-sidebar-link :href="route('messaging.index')" :active="request()->routeIs('messaging.*')">
+                    <x-sidebar-link :href="route('employee.messaging.index')" :active="request()->routeIs('employee.messaging.*')">
                         <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
                         </svg>
@@ -72,6 +82,20 @@
                         </svg>
                         Sondages
                     </x-sidebar-link>
+
+                    <x-sidebar-link :href="route('employee.announcements.index')" :active="request()->routeIs('employee.announcements.*')">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"></path>
+                        </svg>
+                        Annonces
+                    </x-sidebar-link>
+
+                    <x-sidebar-link :href="route('employee.documents.index')" :active="request()->routeIs('employee.documents.*')">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        Mes Documents
+                    </x-sidebar-link>
                 </div>
             </nav>
         </aside>
@@ -79,13 +103,15 @@
         <!-- Main Content -->
         <div class="lg:pl-64">
             <!-- Top Navigation -->
-            <header class="bg-white shadow-sm  justify-end flex ">
+            <header class="bg-white shadow-sm   ">
                 <div class="flex items-center justify-between h-16 px-4 ">
-                    <button class="lg:hidden" onclick="document.getElementById('sidebar').classList.toggle('-translate-x-full')">
+                   <div>
+                     <button class="lg:hidden" onclick="document.getElementById('sidebar').classList.toggle('-translate-x-full')">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                         </svg>
                     </button>
+                   </div>
 
                     <div class="flex items-center space-x-4 ">
                         <!-- Notifications -->

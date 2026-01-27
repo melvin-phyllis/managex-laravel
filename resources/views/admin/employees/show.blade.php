@@ -13,7 +13,7 @@
                     </svg>
                     Modifier
                 </a>
-                <a href="{{ route('admin.employees.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-200 transition-colors">
+                <a href="{{ request('from') === 'documents' ? route('admin.documents.index') : route('admin.employees.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-200 transition-colors">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                     </svg>
@@ -138,6 +138,64 @@
                                 <span class="font-medium text-gray-900">{{ number_format($employee->base_salary, 2, ',', ' ') }} €</span>
                             </div>
                         @endif
+                    </div>
+
+                    <!-- Document du contrat -->
+                    <div class="mt-4 pt-4 border-t border-gray-100">
+                        <p class="text-sm font-medium text-gray-700 mb-3">📄 Document du contrat</p>
+                        
+                        @php
+                            $contract = $employee->currentContract;
+                            $hasDocument = $contract && $contract->document_path;
+                        @endphp
+
+                        @if($hasDocument)
+                            <div class="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+                                <div class="flex items-center gap-3">
+                                    <span class="text-xl">📋</span>
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-900">{{ $contract->document_original_name }}</p>
+                                        <p class="text-xs text-gray-500">Uploadé le {{ $contract->document_uploaded_at?->format('d/m/Y') }}</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <a href="{{ route('admin.employees.contract.download', $employee) }}"
+                                       class="p-2 text-emerald-600 hover:text-emerald-700 transition" title="Télécharger">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                                        </svg>
+                                    </a>
+                                    <form action="{{ route('admin.employees.contract.delete', $employee) }}" method="POST"
+                                          onsubmit="return confirm('Supprimer ce document ?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="p-2 text-red-500 hover:text-red-600 transition" title="Supprimer">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                            </svg>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        @else
+                            <form action="{{ route('admin.employees.contract.upload', $employee) }}" method="POST" 
+                                  enctype="multipart/form-data" class="space-y-3">
+                                @csrf
+                                <div class="flex items-center gap-3">
+                                    <input type="file" name="contract_document" accept=".pdf,.doc,.docx"
+                                           class="flex-1 text-sm text-gray-600 file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-sm file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100">
+                                    <button type="submit"
+                                            class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium rounded-lg transition">
+                                        Uploader
+                                    </button>
+                                </div>
+                                <p class="text-xs text-gray-500">PDF, DOC, DOCX • Max 10 Mo</p>
+                            </form>
+                        @endif
+
+                        @error('contract_document')
+                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
                     </div>
                 </div>
 

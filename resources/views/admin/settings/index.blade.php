@@ -55,6 +55,14 @@
                         {{ $departments->count() }}
                     </span>
                 </button>
+                <button @click="activeTab = 'paie'"
+                        :class="activeTab === 'paie' ? 'border-emerald-500 text-emerald-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+                        class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm flex items-center gap-2 transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg>
+                    Paie
+                </button>
             </nav>
         </div>
 
@@ -510,6 +518,72 @@
                     </form>
                 </div>
             </div>
+        </div>
+
+        <!-- Tab: Paie -->
+        <div x-show="activeTab === 'paie'" x-cloak>
+            <form action="{{ route('admin.settings.update') }}" method="POST">
+                @csrf
+                @method('PUT')
+                <input type="hidden" name="section" value="paie">
+
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                    <div class="flex items-center mb-6">
+                        <div class="bg-emerald-100 p-3 rounded-full mr-4">
+                            <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h2 class="text-lg font-semibold text-gray-900">Configuration Paie</h2>
+                            <p class="text-sm text-gray-500">Sélectionnez le pays dont les règles fiscales seront appliquées aux fiches de paie.</p>
+                        </div>
+                    </div>
+
+                    <div class="max-w-md">
+                        <label for="payroll_country_id" class="block text-sm font-medium text-gray-700 mb-2">
+                            Pays de paie par défaut
+                        </label>
+                        <select name="payroll_country_id" id="payroll_country_id"
+                                class="w-full rounded-lg border-gray-300 focus:border-emerald-500 focus:ring-emerald-500 py-3">
+                            <option value="">-- Sélectionnez un pays --</option>
+                            @foreach($payrollCountries as $country)
+                                <option value="{{ $country->id }}" {{ ($settings['payroll_country_id'] ?? null) == $country->id ? 'selected' : '' }}>
+                                    {{ $country->name }} ({{ $country->currency_symbol }})
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('payroll_country_id')
+                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                        @enderror
+                        <p class="mt-2 text-xs text-gray-500">
+                            Les règles de calcul (IS, CN, IGR, CNPS...) du pays sélectionné seront utilisées pour toutes les fiches de paie.
+                        </p>
+                    </div>
+
+                    @if(isset($payrollCountries) && $payrollCountries->count() > 0)
+                        <div class="mt-6 p-4 bg-emerald-50 rounded-lg max-w-md">
+                            <p class="text-sm text-emerald-800">
+                                <strong>{{ $payrollCountries->count() }} pays configuré(s)</strong> dans le système.
+                                <a href="{{ route('admin.payroll-settings.countries') }}" class="underline hover:no-underline">Gérer les pays →</a>
+                            </p>
+                        </div>
+                    @else
+                        <div class="mt-6 p-4 bg-yellow-50 rounded-lg max-w-md">
+                            <p class="text-sm text-yellow-800">
+                                <strong>Aucun pays configuré.</strong>
+                                <a href="{{ route('admin.payroll-settings.countries') }}" class="underline hover:no-underline">Configurer un pays →</a>
+                            </p>
+                        </div>
+                    @endif
+
+                    <div class="mt-6 flex justify-end">
+                        <button type="submit" class="px-6 py-2.5 bg-emerald-600 text-white font-medium rounded-lg hover:bg-emerald-700 transition-colors">
+                            Enregistrer
+                        </button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 

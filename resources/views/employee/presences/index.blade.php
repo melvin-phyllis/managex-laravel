@@ -7,7 +7,7 @@
                 <p class="text-sm text-gray-500 mt-1">Suivez votre temps de travail et votre ponctualité</p>
             </div>
             <!-- Horloge en temps réel -->
-            <div class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-3 rounded-xl shadow-lg" x-data="{ time: '' }" x-init="
+            <div class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-4 rounded-2xl shadow-lg" x-data="{ time: '' }" x-init="
                 setInterval(() => {
                     time = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
                 }, 1000);
@@ -19,11 +19,11 @@
 
         <!-- Horaires de travail -->
         @if(isset($workSettings))
-        <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl shadow-sm border border-blue-100 p-4">
+        <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl shadow-sm border border-gray-200 p-4">
             <div class="flex flex-wrap items-center justify-between gap-4">
                 <div class="flex items-center gap-6">
                     <div class="flex items-center gap-2">
-                        <div class="bg-blue-100 p-2 rounded-lg">
+                        <div class="bg-blue-100 p-2.5 rounded-xl">
                             <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
@@ -34,7 +34,7 @@
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
-                        <div class="bg-orange-100 p-2 rounded-lg">
+                        <div class="bg-orange-100 p-2.5 rounded-xl">
                             <svg class="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707"></path>
                             </svg>
@@ -45,7 +45,7 @@
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
-                        <div class="bg-yellow-100 p-2 rounded-lg">
+                        <div class="bg-yellow-100 p-2.5 rounded-xl">
                             <svg class="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
                             </svg>
@@ -66,7 +66,7 @@
 
         <!-- Avertissement jour non travaillé -->
         @if(isset($isWorkingDay) && !$isWorkingDay)
-        <div class="bg-amber-50 border-l-4 border-amber-400 p-4 rounded-r-lg">
+        <div class="bg-amber-50 border-l-4 border-amber-400 p-4 rounded-r-lg mb-4">
             <div class="flex">
                 <div class="flex-shrink-0">
                     <svg class="h-5 w-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
@@ -82,8 +82,45 @@
         </div>
         @endif
 
+        <!-- Avertissement Pas de Zone Configurée -->
+        @if(isset($checkInRestriction) && $checkInRestriction === 'no_geolocation')
+        <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded-r-lg mb-4">
+            <div class="flex">
+                <div class="flex-shrink-0">
+                    <svg class="h-5 w-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+                    </svg>
+                </div>
+                <div class="ml-3">
+                    <p class="text-sm text-red-700">
+                        <strong>Configuration manquante :</strong> Aucune zone de travail n'est assignée. Le pointage est impossible.
+                        <br> Veuillez contacter votre administrateur.
+                    </p>
+                </div>
+            </div>
+        </div>
+        @endif
+
+        <!-- Avertissement Après 17h -->
+        @if(isset($checkInRestriction) && $checkInRestriction === 'after_hours')
+        <div class="bg-orange-50 border-l-4 border-orange-500 p-4 rounded-r-lg mb-4">
+            <div class="flex">
+                <div class="flex-shrink-0">
+                    <svg class="h-5 w-5 text-orange-500" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+                    </svg>
+                </div>
+                <div class="ml-3">
+                    <p class="text-sm text-orange-700">
+                        <strong>Pointage fermé :</strong> Il est passé 17h00. Les arrivées ne sont plus acceptées.
+                    </p>
+                </div>
+            </div>
+        </div>
+        @endif
+
         <!-- Pointage du jour - Design amélioré -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
             <div class="flex items-center justify-between mb-4">
                 <h2 class="text-lg font-semibold text-gray-900">Pointage du jour</h2>
                 <span class="text-sm text-gray-500">{{ now()->translatedFormat('l d F Y') }}</span>
@@ -140,11 +177,15 @@
                         @csrf
                         <input type="hidden" name="latitude" id="checkInLat">
                         <input type="hidden" name="longitude" id="checkInLng">
-                        <button type="button" id="checkInBtn" class="w-full px-6 py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-medium rounded-xl hover:from-green-600 hover:to-emerald-700 transition-all shadow-lg shadow-green-500/30 flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02] active:scale-[0.98]">
+                        <button type="button" id="checkInBtn" 
+                                {{ isset($canCheckIn) && !$canCheckIn ? 'disabled' : '' }}
+                                class="w-full px-6 py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-medium rounded-xl hover:from-green-600 hover:to-emerald-700 transition-all shadow-lg shadow-green-500/30 flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none transform hover:scale-[1.02] active:scale-[0.98] disabled:hover:scale-100">
                             <svg id="checkInIcon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
                             </svg>
-                            <span id="checkInText" class="text-lg">Pointer l'arrivée</span>
+                            <span id="checkInText" class="text-lg">
+                                {{ (isset($canCheckIn) && !$canCheckIn) ? 'Pointage non disponible' : "Pointer l'arrivée" }}
+                            </span>
                         </button>
                     </form>
                 @elseif(!$todayPresence->check_out)
@@ -309,7 +350,7 @@
         <!-- Stats Cards améliorées -->
         <div class="grid grid-cols-2 lg:grid-cols-5 gap-4">
             <!-- Jours pointés -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 hover:shadow-md transition-shadow">
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-5 hover:shadow-md transition-shadow">
                 <div class="flex items-center justify-between">
                     <div class="bg-gradient-to-br from-green-500 to-emerald-600 p-2.5 rounded-xl shadow-lg shadow-green-500/30">
                         <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -322,7 +363,7 @@
             </div>
 
             <!-- Heures totales -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 hover:shadow-md transition-shadow">
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-5 hover:shadow-md transition-shadow">
                 <div class="flex items-center justify-between">
                     <div class="bg-gradient-to-br from-blue-500 to-indigo-600 p-2.5 rounded-xl shadow-lg shadow-blue-500/30">
                         <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -341,7 +382,7 @@
             </div>
 
             <!-- Score de ponctualité -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 hover:shadow-md transition-shadow">
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-5 hover:shadow-md transition-shadow">
                 <div class="flex items-center justify-between">
                     <div class="bg-gradient-to-br from-purple-500 to-violet-600 p-2.5 rounded-xl shadow-lg shadow-purple-500/30">
                         <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -354,7 +395,7 @@
             </div>
 
             <!-- Heures supplémentaires -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 hover:shadow-md transition-shadow">
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-5 hover:shadow-md transition-shadow">
                 <div class="flex items-center justify-between">
                     <div class="bg-gradient-to-br from-amber-500 to-orange-600 p-2.5 rounded-xl shadow-lg shadow-amber-500/30">
                         <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -367,7 +408,7 @@
             </div>
 
             <!-- Retards -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 hover:shadow-md transition-shadow">
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-5 hover:shadow-md transition-shadow">
                 <div class="flex items-center justify-between">
                     <div class="bg-gradient-to-br from-red-500 to-rose-600 p-2.5 rounded-xl shadow-lg shadow-red-500/30">
                         <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -383,7 +424,7 @@
         <!-- Graphique + Calendrier -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <!-- Graphique hebdomadaire -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
                 <h3 class="text-lg font-semibold text-gray-900 mb-4">📈 Heures des 7 derniers jours</h3>
                 <div class="relative" style="height: 200px;">
                     <canvas id="weeklyChart"></canvas>
@@ -391,7 +432,7 @@
             </div>
 
             <!-- Calendrier mensuel -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
                 <h3 class="text-lg font-semibold text-gray-900 mb-4">📅 Calendrier du mois</h3>
                 <div class="grid grid-cols-7 gap-1 text-center text-xs mb-2">
                     <span class="text-gray-500 font-medium">Lun</span>
@@ -444,7 +485,7 @@
         </div>
 
         <!-- Month Selector -->
-        <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+        <div class="bg-white rounded-2xl shadow-sm p-4 border border-gray-200">
             <form action="{{ route('employee.presences.index') }}" method="GET" class="flex flex-col sm:flex-row gap-4 items-end">
                 <div class="flex-1">
                     <label for="mois" class="block text-sm font-medium text-gray-700 mb-1">Afficher l'historique du mois</label>
@@ -457,13 +498,13 @@
         </div>
 
         <!-- Historique Table -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-200">
                 <h3 class="text-lg font-semibold text-gray-900">📋 Historique des présences</h3>
             </div>
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gradient-to-r from-gray-50 to-gray-100">
+                    <thead class="bg-gray-50">
                         <tr>
                             <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Date</th>
                             <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Arrivée</th>
@@ -475,7 +516,7 @@
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
                         @forelse($presences as $presence)
-                            <tr class="hover:bg-blue-50/50 transition-colors">
+                            <tr class="hover:bg-gray-50 transition-colors">
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm font-medium text-gray-900">{{ $presence->date->format('d/m/Y') }}</div>
                                     <div class="text-xs text-gray-500">{{ $presence->date->translatedFormat('l') }}</div>

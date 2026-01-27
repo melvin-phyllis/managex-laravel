@@ -516,4 +516,19 @@ class DashboardController extends Controller
         $days = floor($hours / 24);
         return $days . ' jour' . ($days > 1 ? 's' : '');
     }
+
+    public function markNotificationAsRead($id)
+    {
+        $notification = auth()->user()->notifications()->findOrFail($id);
+        $notification->markAsRead();
+
+        return redirect()->back();
+    }
+
+    public function markAllNotificationsAsRead()
+    {
+        auth()->user()->unreadNotifications->markAsRead();
+
+        return redirect()->back()->with('success', 'Toutes les notifications ont été marquées comme lues.');
+    }
 }

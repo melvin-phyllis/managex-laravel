@@ -14,6 +14,9 @@ Route::middleware(['auth'])->prefix('messaging')->name('messaging.')->group(func
     
     // Main messaging interface
     Route::get('/', [ConversationController::class, 'index'])->name('index');
+    
+    // Admin chat (uses admin layout)
+    Route::get('/admin-chat', [ConversationController::class, 'adminChat'])->name('admin.chat')->middleware('role:admin');
 
     // API Routes
     Route::prefix('api')->name('api.')->group(function () {

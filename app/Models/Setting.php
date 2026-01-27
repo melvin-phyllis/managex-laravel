@@ -119,4 +119,16 @@ class Setting extends Model
 
         return ($totalMinutes - $breakMinutes) / 60;
     }
+
+    /**
+     * Get the default payroll country
+     */
+    public static function getDefaultPayrollCountry(): ?\App\Models\PayrollCountry
+    {
+        $countryId = static::get('payroll_country_id');
+        if (!$countryId) {
+            return \App\Models\PayrollCountry::where('is_active', true)->first();
+        }
+        return \App\Models\PayrollCountry::find($countryId);
+    }
 }

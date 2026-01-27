@@ -346,4 +346,92 @@ class EmployeeController extends Controller
         return redirect()->route('admin.employees.index')
             ->with('success', 'Employé supprimé avec succès.');
     }
+
+    /**
+     * Upload contract document for an employee
+     */
+    public function uploadContract(Request $request, User $employee)
+    {
+        $request->validate([
+            'contract_document' => 'required|file|mimes:pdf,doc,docx|max:10240',
+        ], [
+            'contract_document.required' => 'Veuillez sélectionner un fichier.',
+            'contract_document.mimes' => 'Le fichier doit être au format PDF, DOC ou DOCX.',
+            'contract_document.max' => 'Le fichier ne doit pas dépasser 10 Mo.',
+        ]);
+
+        $contract = $employee->currentContract;
+        
+        if (!$contract) {
+            return back()->withErrors(['error' => 'Cet employé n\'a pas de contrat actif.']);
+        }
+
+        // Delete old file if exists
+        if ($contract->document_path) {
+            \Storage::disk('documents')->delete($contract->document_path);
+        }
+
+        $file = $request->file('contract_document');
+        $filename = \Str::uuid() . '.' . $file->getClientOriginalExtension();
+        $path = 'contracts/' . $employee->id . '/' . $filename;
+
+        \Storage::disk('documents')->putFileAs(
+            'contracts/' . $employee->id,
+            $file,
+            $filename
+        );
+
+        $contract->update([
+            'document_path' => $path,
+            'document_original_name' => $file->getClientOriginalName(),
+            'document_uploaded_at' => now(),
+            'document_uploaded_by' => auth()->id(),
+        ]);
+
+        return back()->with('success', 'Contrat de travail uploadé avec succès.');
+    }
+
+    /**
+     * Download contract document
+     */
+    public function downloadContract(User $employee)
+    {
+        $contract = $employee->currentContract;
+        
+        if (!$contract || !$contract->document_path) {
+            abort(404, 'Document introuvable');
+        }
+
+        if (!\Storage::disk('documents')->exists($contract->document_path)) {
+            abort(404, 'Fichier introuvable');
+        }
+
+        return \Storage::disk('documents')->download(
+            $contract->document_path,
+            $contract->document_original_name
+        );
+    }
+
+    /**
+     * Delete contract document
+     */
+    public function deleteContract(User $employee)
+    {
+        $contract = $employee->currentContract;
+        
+        if (!$contract || !$contract->document_path) {
+            return back()->withErrors(['error' => 'Aucun document à supprimer.']);
+        }
+
+        \Storage::disk('documents')->delete($contract->document_path);
+        
+        $contract->update([
+            'document_path' => null,
+            'document_original_name' => null,
+            'document_uploaded_at' => null,
+            'document_uploaded_by' => null,
+        ]);
+
+        return back()->with('success', 'Document du contrat supprimé.');
+    }
 }

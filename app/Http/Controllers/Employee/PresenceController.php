@@ -155,7 +155,8 @@ class PresenceController extends Controller
         }
 
         // Vérifier si la géolocalisation est activée (au moins une zone active)
-        $geolocationEnabled = GeolocationZone::where('is_active', true)->exists();
+        $zones = GeolocationZone::where('is_active', true)->get();
+        $geolocationEnabled = $zones->isNotEmpty();
         $defaultZone = GeolocationZone::getDefault();
 
         // Paramètres horaires
@@ -170,6 +171,33 @@ class PresenceController extends Controller
         // Vérifier si aujourd'hui est un jour de travail
         $isWorkingDay = $user->isWorkingDay();
         $workDayNames = $user->work_day_names;
+        
+        // --- LOGIQUE STRICTE DE POINTAGE ---
+        
+        // 1. Restriction Horaire (17:00 Hard Limit)
+        $lastCheckInTime = Carbon::today()->setHour(17)->setMinute(0);
+        $isAfterHours = now()->gt($lastCheckInTime);
+        
+        // 2. Flags pour l'UI
+        $canCheckIn = true;
+        $checkInRestriction = null;
+        
+        if (!$isWorkingDay) {
+            $canCheckIn = false;
+            $checkInRestriction = 'not_working_day'; // Jour non travaillé
+        } elseif (!$geolocationEnabled) {
+            $canCheckIn = false;
+            $checkInRestriction = 'no_geolocation'; // Pas de zone configurée
+        } elseif ($isAfterHours) {
+            $canCheckIn = false;
+            $checkInRestriction = 'after_hours'; // Après 17h
+        } elseif ($user->hasCheckedInToday()) {
+            $canCheckIn = false;
+            // Déjà pointé (géré ailleurs)
+        }
+
+        // 3. Flag pour le départ
+        $canCheckOut = $todayPresence && !$todayPresence->check_out;
 
         return view('employee.presences.index', compact(
             'presences',
@@ -182,7 +210,11 @@ class PresenceController extends Controller
             'workDayNames',
             'weeklyData',
             'weeklyLabels',
-            'calendarData'
+            'calendarData',
+            'canCheckIn',
+            'canCheckOut',
+            'checkInRestriction',
+            'isAfterHours'
         ));
     }
 
@@ -200,9 +232,20 @@ class PresenceController extends Controller
             return redirect()->back()->with('error', 'Vous avez déjà pointé votre arrivée aujourd\'hui.');
         }
 
+        // Restriction horaire stricte : 17h00
+        $limitTime = Carbon::today()->setHour(17)->setMinute(0);
+        if (now()->gt($limitTime)) {
+            return redirect()->back()->with('error', "Pointage d'arrivée refusé. Il est passé 17h00.");
+        }
+
         // Vérifier si la géolocalisation est activée
         $zones = GeolocationZone::where('is_active', true)->get();
         $geolocationEnabled = $zones->isNotEmpty();
+        
+        // Pré-requis Localisation (Bloquant)
+        if (!$geolocationEnabled) {
+             return redirect()->back()->with('error', "Le pointage est désactivé car aucune zone de travail n'est configurée. Contactez l'administrateur.");
+        }
 
         // Géolocalisation
         $latitude = $request->input('latitude');

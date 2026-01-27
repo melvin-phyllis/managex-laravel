@@ -96,4 +96,14 @@ class Leave extends Model
             default => 'gray',
         };
     }
+
+    /**
+     * Scope for leaves active today
+     */
+    public function scopeCurrentlyActive($query)
+    {
+        return $query->where('statut', 'approved')
+                     ->where('date_debut', '<=', now())
+                     ->where('date_fin', '>=', now());
+    }
 }

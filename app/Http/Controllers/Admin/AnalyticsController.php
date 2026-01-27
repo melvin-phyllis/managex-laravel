@@ -5,284 +5,370 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Department;
 use App\Models\Leave;
+use App\Models\Payroll;
 use App\Models\Presence;
 use App\Models\Task;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class AnalyticsController extends Controller
 {
     /**
-     * Afficher le tableau de bord analytique
+     * Display the analytics dashboard.
      */
     public function index()
     {
         $departments = Department::active()->orderBy('name')->get();
 
-        return view('admin.analytics.index', compact('departments'));
+        // Initial data for page load (optional, to avoid immediate fetch if desired, but we'll fetch via JS for smoother load)
+        $initialData = [
+            'kpis' => null, // Will be loaded via API
+            'charts' => null,
+        ];
+
+        return view('admin.analytics.index', compact('departments', 'initialData'));
     }
 
     /**
-     * Récupérer les données analytiques (API JSON)
+     * Get KPI data.
      */
-    public function getData(Request $request)
+    public function getKpiData(Request $request): JsonResponse
     {
-        $period = $request->get('period', 'month'); // week, month, quarter, year
+        $periodDates = $this->getPeriodDates($request->get('period', 'month'));
         $departmentId = $request->get('department_id');
+        $contractType = $request->get('contract_type');
 
-        $startDate = $this->getStartDate($period);
-        $endDate = now();
+        // 1. Effectif total
+        $currentQuery = User::where('role', 'employee');
+        if ($departmentId) $currentQuery->where('department_id', $departmentId);
+        if ($contractType) $currentQuery->where('contract_type', $contractType);
+        $currentCount = $currentQuery->count();
 
-        // Statistiques de présence
-        $presenceStats = $this->getPresenceStats($startDate, $endDate, $departmentId);
+        $previousQuery = User::where('role', 'employee')->where('hire_date', '<=', now()->subMonth());
+        // Note: Previous count approximation doesn't perfect account for departures in the past, but good enough for trend locally
+        $previousCount = $previousQuery->count();
 
-        // Statistiques des tâches
-        $taskStats = $this->getTaskStats($startDate, $endDate, $departmentId);
+        $variation = $previousCount > 0
+            ? round((($currentCount - $previousCount) / $previousCount) * 100, 1)
+            : 0;
 
-        // Statistiques des congés
-        $leaveStats = $this->getLeaveStats($startDate, $endDate, $departmentId);
+        // Determine the period first (used for multiple queries)
+        $period = $request->get('period', 'month');
+        if ($period === 'custom') {
+            $currentMonth = (int) $request->get('custom_month', now()->month);
+            $currentYear = (int) $request->get('custom_year', now()->year);
+        } else {
+            $currentMonth = (int) now()->month;
+            $currentYear = (int) now()->year;
+        }
+        
+        // Create date range for the selected month
+        $monthStart = \Carbon\Carbon::create($currentYear, $currentMonth, 1)->startOfMonth();
+        $monthEnd = \Carbon\Carbon::create($currentYear, $currentMonth, 1)->endOfMonth();
+        
+        // 2. Présences du mois sélectionné
+        $presencesMonth = Presence::month($currentMonth, $currentYear)
+            ->forDepartment($departmentId)
+            ->get();
+        
+        // Nombre de jours ouvrés dans le mois (approximatif)
+        $workingDaysInMonth = 0;
+        $tempDate = $monthStart->copy();
+        while ($tempDate <= $monthEnd) {
+            if (!$tempDate->isWeekend()) $workingDaysInMonth++;
+            $tempDate->addDay();
+        }
+        
+        // Présences uniques (nombre de jours avec au moins une présence)
+        $presenceCount = $presencesMonth->unique('date')->count();
+        $expectedPresences = $currentCount * $workingDaysInMonth;
 
-        // Tendances de présence par jour
-        $presenceTrend = $this->getPresenceTrend($startDate, $endDate, $departmentId);
+        // 3. En congé (for the selected month period)
+        $onLeave = Leave::where('statut', 'approved')
+            ->where(function($q) use ($monthStart, $monthEnd) {
+                $q->where('date_debut', '<=', $monthEnd)
+                  ->where('date_fin', '>=', $monthStart);
+            })
+            ->when($departmentId, fn($q) => $q->whereHas('user', fn($u) => $u->where('department_id', $departmentId)))
+            ->get();
 
-        // Répartition par département
-        $departmentDistribution = $this->getDepartmentDistribution();
+        // 4. Jours d'absence non justifiés (approximation)
+        // Total jours attendus - présences - jours de congé
+        $totalLeaveDays = $onLeave->sum(function($leave) use ($monthStart, $monthEnd) {
+            $start = max($leave->date_debut, $monthStart);
+            $end = min($leave->date_fin, $monthEnd);
+            return $start->diffInDaysFiltered(fn($d) => !$d->isWeekend(), $end) + 1;
+        });
+        $absent = max(0, $expectedPresences - $presenceCount - $totalLeaveDays);
 
-        // Top employés (présence)
-        $topEmployees = $this->getTopEmployees($startDate, $endDate, $departmentId);
+        // 5. Masse salariale
+        $payrollTotal = Payroll::where('mois', $currentMonth)
+            ->where('annee', $currentYear)
+            ->when($departmentId, fn($q) => $q->whereHas('user', fn($u) => $u->where('department_id', $departmentId)))
+            ->sum('net_salary');
 
-        // Heures moyennes de pointage
-        $averageCheckTimes = $this->getAverageCheckTimes($startDate, $endDate, $departmentId);
-
-        // Statistiques géolocalisation
-        $geolocationStats = $this->getGeolocationStats($startDate, $endDate);
+        // 6. Heures supplémentaires (basé sur worked_hours > 8h)
+        $overtimeData = $presencesMonth->sum(function ($p) {
+            $workedHours = $p->worked_hours ?? 0;
+            return max(0, $workedHours - 8);
+        });
 
         return response()->json([
-            'presence' => $presenceStats,
-            'tasks' => $taskStats,
-            'leaves' => $leaveStats,
-            'presenceTrend' => $presenceTrend,
-            'departmentDistribution' => $departmentDistribution,
-            'topEmployees' => $topEmployees,
-            'averageCheckTimes' => $averageCheckTimes,
-            'geolocation' => $geolocationStats,
+            'effectif_total' => [
+                'value' => $currentCount,
+                'variation' => $variation,
+                'previous' => $previousCount
+            ],
+            'presents_today' => [
+                'value' => $presenceCount,
+                'expected' => $expectedPresences,
+                'percentage' => $expectedPresences > 0 ? round(($presenceCount / $expectedPresences) * 100) : 0
+            ],
+            'en_conge' => [
+                'value' => $onLeave->count(),
+                'types' => [
+                    'conge' => $onLeave->where('type', 'conge')->count(),
+                    'maladie' => $onLeave->where('type', 'maladie')->count(),
+                    'autre' => $onLeave->where('type', 'autre')->count(),
+                ]
+            ],
+            'absents_non_justifies' => [
+                'value' => $absent,
+            ],
+            'masse_salariale' => [
+                'value' => $payrollTotal,
+                'formatted' => number_format($payrollTotal, 0, ',', ' ') . ' FCFA'
+            ],
+            'heures_supplementaires' => [
+                'value' => round($overtimeData, 1),
+                'count' => $presencesMonth->filter(fn($p) => ($p->worked_hours ?? 0) > 8)->unique('user_id')->count()
+            ]
         ]);
     }
 
-    private function getStartDate(string $period): Carbon
+    /**
+     * Get Charts data.
+     */
+    public function getChartsData(Request $request): JsonResponse
     {
-        return match($period) {
-            'week' => now()->subWeek(),
-            'month' => now()->subMonth(),
-            'quarter' => now()->subQuarter(),
-            'year' => now()->subYear(),
-            default => now()->subMonth(),
-        };
-    }
+        $startDate = $this->getPeriodDates($request->get('period', 'month'))['start'];
+        $endDate = $this->getPeriodDates($request->get('period', 'month'))['end'];
+        $departmentId = $request->get('department_id');
 
-    private function getPresenceStats(Carbon $startDate, Carbon $endDate, ?int $departmentId): array
-    {
-        $query = Presence::whereBetween('date', [$startDate, $endDate]);
-
+        // 1. Evolution presences (Lines)
+        $presenceTrendQuery = Presence::selectRaw('DATE(date) as day, COUNT(*) as count')
+            ->whereBetween('date', [$startDate, $endDate]);
+            
         if ($departmentId) {
-            $query->whereHas('user', fn($q) => $q->where('department_id', $departmentId));
+             $presenceTrendQuery->forDepartment($departmentId);
         }
-
-        $totalPresences = $query->count();
-
-        // Calculer les heures moyennes à partir de check_in et check_out
-        $presencesWithCheckOut = (clone $query)->whereNotNull('check_out')->get();
-        $avgHoursPerDay = 0;
-        if ($presencesWithCheckOut->count() > 0) {
-            $totalHours = $presencesWithCheckOut->sum(function ($p) {
-                $checkIn = Carbon::parse($p->check_in);
-                $checkOut = Carbon::parse($p->check_out);
-                // S'assurer que check_out est après check_in
-                if ($checkOut->gt($checkIn)) {
-                    return $checkOut->diffInMinutes($checkIn) / 60;
-                }
-                return 0;
-            });
-            $avgHoursPerDay = $totalHours / $presencesWithCheckOut->count();
-        }
-
-        // Taux de présence (présences / jours ouvrés * employés)
-        $workingDays = $this->countWorkingDays($startDate, $endDate);
-        $employeeCount = User::where('role', 'employee')
-            ->when($departmentId, fn($q) => $q->where('department_id', $departmentId))
-            ->count();
-
-        $expectedPresences = $workingDays * $employeeCount;
-        $presenceRate = $expectedPresences > 0 ? round(($totalPresences / $expectedPresences) * 100, 1) : 0;
-
-        return [
-            'total' => $totalPresences,
-            'avgHoursPerDay' => round($avgHoursPerDay, 2),
-            'presenceRate' => $presenceRate,
-            'workingDays' => $workingDays,
-        ];
-    }
-
-    private function getTaskStats(Carbon $startDate, Carbon $endDate, ?int $departmentId): array
-    {
-        $query = Task::whereBetween('created_at', [$startDate, $endDate]);
-
-        if ($departmentId) {
-            $query->whereHas('user', fn($q) => $q->where('department_id', $departmentId));
-        }
-
-        $total = $query->count();
-        $completed = (clone $query)->where('statut', 'completed')->count();
-        $validated = (clone $query)->where('statut', 'approved')->count();
-        $inProgress = (clone $query)->whereIn('statut', ['pending', 'approved'])->count();
-        $pending = (clone $query)->where('statut', 'pending')->count();
-
-        $completionRate = $total > 0 ? round(($completed / $total) * 100, 1) : 0;
-
-        return [
-            'total' => $total,
-            'completed' => $completed,
-            'validated' => $validated,
-            'inProgress' => $inProgress,
-            'pending' => $pending,
-            'completionRate' => $completionRate,
-        ];
-    }
-
-    private function getLeaveStats(Carbon $startDate, Carbon $endDate, ?int $departmentId): array
-    {
-        $query = Leave::whereBetween('created_at', [$startDate, $endDate]);
-
-        if ($departmentId) {
-            $query->whereHas('user', fn($q) => $q->where('department_id', $departmentId));
-        }
-
-        $total = $query->count();
-        $approved = (clone $query)->where('statut', 'approved')->count();
-        $rejected = (clone $query)->where('statut', 'rejected')->count();
-        $pending = (clone $query)->where('statut', 'pending')->count();
-
-        // Répartition par type
-        $byType = Leave::whereBetween('created_at', [$startDate, $endDate])
-            ->when($departmentId, fn($q) => $q->whereHas('user', fn($q2) => $q2->where('department_id', $departmentId)))
-            ->select('type', DB::raw('count(*) as count'))
-            ->groupBy('type')
-            ->pluck('count', 'type')
-            ->toArray();
-
-        return [
-            'total' => $total,
-            'approved' => $approved,
-            'rejected' => $rejected,
-            'pending' => $pending,
-            'byType' => $byType,
-        ];
-    }
-
-    private function getPresenceTrend(Carbon $startDate, Carbon $endDate, ?int $departmentId): array
-    {
-        $query = Presence::whereBetween('date', [$startDate, $endDate])
-            ->when($departmentId, fn($q) => $q->whereHas('user', fn($q2) => $q2->where('department_id', $departmentId)))
-            ->select(DB::raw('DATE(date) as day'), DB::raw('count(*) as count'))
-            ->groupBy('day')
+        
+        $presenceTrend = $presenceTrendQuery->groupBy('day')
             ->orderBy('day')
             ->get();
 
-        return $query->map(fn($item) => [
-            'date' => $item->day,
-            'count' => $item->count,
-        ])->toArray();
-    }
-
-    private function getDepartmentDistribution(): array
-    {
-        return Department::withCount(['users' => fn($q) => $q->where('role', 'employee')])
-            ->having('users_count', '>', 0)
+        // 2. Repartition par departement
+        $deptDistribution = Department::withCount(['users' => fn($q) => $q->where('role', 'employee')])
             ->get()
-            ->map(fn($dept) => [
-                'name' => $dept->name,
-                'count' => $dept->users_count,
-                'color' => $dept->color,
-            ])
-            ->toArray();
-    }
+            ->map(fn($d) => ['label' => $d->name, 'value' => $d->users_count]);
 
-    private function getTopEmployees(Carbon $startDate, Carbon $endDate, ?int $departmentId): array
-    {
-        return User::where('role', 'employee')
-            ->when($departmentId, fn($q) => $q->where('department_id', $departmentId))
-            ->withCount(['presences' => fn($q) => $q->whereBetween('date', [$startDate, $endDate])])
-            ->orderByDesc('presences_count')
-            ->take(5)
-            ->get()
-            ->map(fn($user) => [
-                'name' => $user->name,
-                'department' => $user->department?->name ?? 'N/A',
-                'presences' => $user->presences_count,
-            ])
-            ->toArray();
-    }
-
-    private function getAverageCheckTimes(Carbon $startDate, Carbon $endDate, ?int $departmentId): array
-    {
-        $presences = Presence::whereBetween('date', [$startDate, $endDate])
-            ->when($departmentId, fn($q) => $q->whereHas('user', fn($q2) => $q2->where('department_id', $departmentId)))
-            ->whereNotNull('check_in')
-            ->whereNotNull('check_out')
-            ->get();
-
-        if ($presences->isEmpty()) {
-            return ['avgCheckIn' => 'N/A', 'avgCheckOut' => 'N/A'];
+        // 3. Recrutements vs Departs (12 mois) - Fixed range
+        $months = collect();
+        for ($i = 11; $i >= 0; $i--) {
+            $date = now()->subMonths($i);
+            $recruits = User::whereMonth('hire_date', $date->month)
+                ->whereYear('hire_date', $date->year)
+                ->when($departmentId, fn($q) => $q->where('department_id', $departmentId))
+                ->count();
+            $departures = User::whereMonth('contract_end_date', $date->month)
+                ->whereYear('contract_end_date', $date->year)
+                ->whereNotNull('contract_end_date') // Assuming DepartedInPeriod logic
+                ->when($departmentId, fn($q) => $q->where('department_id', $departmentId))
+                ->count();
+                
+            $months->push([
+                'label' => $date->translatedFormat('M Y'),
+                'recruits' => $recruits,
+                'departures' => $departures
+            ]);
         }
 
-        $checkInMinutes = $presences->map(fn($p) => Carbon::parse($p->check_in)->hour * 60 + Carbon::parse($p->check_in)->minute);
-        $checkOutMinutes = $presences->map(fn($p) => Carbon::parse($p->check_out)->hour * 60 + Carbon::parse($p->check_out)->minute);
+        // 4. Taux absenteisme par service
+        $absenteism = Department::with(['users' => fn($q) => $q->where('role', 'employee')])->get()->map(function($dept) use ($startDate, $endDate) {
+            $employees = $dept->users->count();
+            if ($employees === 0) return ['label' => $dept->name, 'rate' => 0];
+            
+            // Calculate work days in period
+            $daysInPeriod = $startDate->diffInDays($endDate) + 1; // Approx check
+            // Better: use business days
+            $workDays = 22; // Using standard monthly avg for simplicity or verify period
+            if ($daysInPeriod < 20) $workDays = 5; // Week
+            
+            $expectedPresences = $employees * $workDays;
+            
+            $actualPresences = Presence::whereHas('user', fn($q) => $q->where('department_id', $dept->id))
+                ->whereBetween('date', [$startDate, $endDate])
+                ->count();
+                
+            $rate = $expectedPresences > 0
+                ? round((1 - $actualPresences / $expectedPresences) * 100, 1)
+                : 0;
+            return ['label' => $dept->name, 'rate' => max(0, $rate)];
+        });
 
-        $avgCheckIn = $checkInMinutes->avg();
-        $avgCheckOut = $checkOutMinutes->avg();
-
-        return [
-            'avgCheckIn' => sprintf('%02d:%02d', floor($avgCheckIn / 60), $avgCheckIn % 60),
-            'avgCheckOut' => sprintf('%02d:%02d', floor($avgCheckOut / 60), $avgCheckOut % 60),
-        ];
-    }
-
-    private function getGeolocationStats(Carbon $startDate, Carbon $endDate): array
-    {
-        $total = Presence::whereBetween('date', [$startDate, $endDate])->count();
-        $inZone = Presence::whereBetween('date', [$startDate, $endDate])
-            ->where('check_in_status', 'in_zone')
-            ->count();
-        $outOfZone = Presence::whereBetween('date', [$startDate, $endDate])
-            ->where('check_in_status', 'out_of_zone')
-            ->count();
-        $unknown = Presence::whereBetween('date', [$startDate, $endDate])
-            ->where('check_in_status', 'unknown')
-            ->count();
-
-        return [
-            'total' => $total,
-            'inZone' => $inZone,
-            'outOfZone' => $outOfZone,
-            'unknown' => $unknown,
-            'inZoneRate' => $total > 0 ? round(($inZone / $total) * 100, 1) : 0,
-        ];
-    }
-
-    private function countWorkingDays(Carbon $startDate, Carbon $endDate): int
-    {
-        $count = 0;
-        $current = $startDate->copy();
-
-        while ($current <= $endDate) {
-            if ($current->isWeekday()) {
-                $count++;
-            }
-            $current->addDay();
+        // 5. Heures travaillees par semaine
+        $weeklyHours = collect();
+        for ($w = 4; $w >= 0; $w--) {
+            $weekStart = now()->subWeeks($w)->startOfWeek();
+            $weekEnd = now()->subWeeks($w)->endOfWeek();
+            
+            $hoursQuery = Presence::whereBetween('date', [$weekStart, $weekEnd]);
+            if ($departmentId) $hoursQuery->forDepartment($departmentId);
+            $hours = $hoursQuery->get()->sum('hours_worked') ?? 0;
+            
+            $weeklyHours->push([
+                'label' => 'Sem ' . $weekStart->weekOfYear,
+                'hours' => round($hours, 1)
+            ]);
         }
 
-        return $count;
+        return response()->json([
+            'presence_trend' => [
+                'labels' => $presenceTrend->pluck('day')->map(fn($d) => Carbon::parse($d)->format('d/m')),
+                'data' => $presenceTrend->pluck('count')
+            ],
+            'department_distribution' => [
+                'labels' => $deptDistribution->pluck('label'),
+                'data' => $deptDistribution->pluck('value'),
+                'colors' => ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899']
+            ],
+            'recruitment_turnover' => [
+                'labels' => $months->pluck('label'),
+                'recrutements' => $months->pluck('recruits'),
+                'departs' => $months->pluck('departures')
+            ],
+            'absenteisme_par_service' => [
+                'labels' => $absenteism->pluck('label'),
+                'rates' => $absenteism->pluck('rate')
+            ],
+            'heures_travaillees_semaine' => [
+                'labels' => $weeklyHours->pluck('label'),
+                'data' => $weeklyHours->pluck('hours')
+            ]
+        ]);
+    }
+
+    public function getRecentActivities(Request $request): JsonResponse
+    {
+        $activities = collect();
+        
+        // Recent presences
+        $presences = Presence::with('user')->orderBy('created_at', 'desc')->take(5)->get()->map(function($p) {
+            return [
+                'type' => 'presence',
+                'user' => $p->user->name,
+                'avatar' => $p->user->avatar,
+                'description' => 'a pointé son arrivée à ' . $p->check_in_formatted,
+                'time' => $p->created_at->diffForHumans()
+            ];
+        });
+        
+        // Recent leaves
+        $leaves = Leave::with('user')->orderBy('created_at', 'desc')->take(5)->get()->map(function($l) {
+            return [
+                'type' => 'leave',
+                'user' => $l->user->name,
+                'avatar' => $l->user->avatar,
+                'description' => 'a demandé un congé (' . $l->type_label . ')',
+                'time' => $l->created_at->diffForHumans()
+            ];
+        });
+
+        // Recent tasks
+        $tasks = Task::with('user')->orderBy('updated_at', 'desc')->take(5)->get()->filter(fn($t) => $t->statut == 'completed')->map(function($t) {
+            $user = $t->user; 
+            return [
+                'type' => 'task',
+                'user' => $user ? $user->name : 'Système',
+                'avatar' => $user ? $user->avatar : null,
+                'description' => 'a terminé la tâche "' . $t->titre . '"',
+                'time' => $t->updated_at->diffForHumans()
+            ];
+        });
+
+        return response()->json(
+            $presences->merge($leaves)->merge($tasks)->sortByDesc('time')->take(10)->values()
+        );
+    }
+
+    public function getPendingRequests(Request $request): JsonResponse
+    {
+        $pendingLeaves = Leave::with('user')->pending()->take(5)->get()->map(function($l) {
+            return [
+                'id' => $l->id,
+                'type' => 'Congé',
+                'user' => $l->user->name,
+                'details' => $l->type_label . ' (' . $l->duree . ' jours)',
+                'date' => $l->created_at->format('d/m/Y')
+            ];
+        });
+
+        return response()->json($pendingLeaves);
+    }
+
+    public function getTopLatecomers(Request $request): JsonResponse
+    {
+        $month = now()->month;
+        return response()->json(
+            Presence::where('is_late', true)
+                ->whereMonth('date', $month)
+                ->select('user_id', DB::raw('COUNT(*) as late_count'), DB::raw('SUM(late_minutes) as total_minutes'))
+                ->groupBy('user_id')
+                ->orderByDesc('late_count')
+                ->limit(5)
+                ->with('user:id,name,department_id', 'user.department:id,name')
+                ->get()
+                ->map(fn($p, $i) => [
+                    'rank' => $i + 1,
+                    'user_id' => $p->user_id,
+                    'name' => $p->user->name,
+                    'department' => $p->user->department->name ?? '-',
+                    'count' => $p->late_count,
+                    'avg_minutes' => $p->late_count > 0 ? round($p->total_minutes / $p->late_count) : 0
+                ])
+        );
+    }
+
+    public function getHrAlerts(Request $request): JsonResponse
+    {
+        return response()->json([
+            'contracts' => User::expiringContracts()->with('department')->limit(5)->get()->map(fn($u) => [
+                'name' => $u->name,
+                'department' => $u->department->name ?? '-',
+                'end_date' => $u->contract_end_date->format('d/m/Y'),
+                'days' => now()->diffInDays($u->contract_end_date),
+            ]),
+            'birthdays' => User::upcomingBirthdays()->limit(5)->get()->map(fn($u) => [
+                'name' => $u->name,
+                'date' => $u->date_of_birth->format('d/m'),
+                'age' => $u->date_of_birth->age + 1
+            ])
+        ]);
+    }
+
+    private function getPeriodDates(string $period): array
+    {
+        $end = now();
+        $start = match($period) {
+            'today' => now(),
+            'week' => now()->startOfWeek(),
+            'month' => now()->startOfMonth(),
+            'year' => now()->startOfYear(),
+            default => now()->subMonth()
+        };
+        return ['start' => $start, 'end' => $end];
     }
 }

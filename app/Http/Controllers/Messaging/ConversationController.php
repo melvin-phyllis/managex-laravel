@@ -33,6 +33,43 @@ class ConversationController extends Controller
     }
 
     /**
+     * Display the messaging interface with admin layout
+     */
+    public function adminChat(Request $request)
+    {
+        $user = auth()->user();
+        
+        $conversations = Conversation::forUser($user->id)
+            ->with(['latestMessage.sender', 'activeParticipants.user'])
+            ->withCount(['messages as unread_count' => function ($query) use ($user) {
+                $query->whereDoesntHave('reads', function ($q) use ($user) {
+                    $q->where('user_id', $user->id);
+                })->where('sender_id', '!=', $user->id);
+            }])
+            ->get()
+            ->map(function ($conv) use ($user) {
+                $otherUser = $conv->type === 'direct' 
+                    ? $conv->activeParticipants->where('user_id', '!=', $user->id)->first()?->user 
+                    : null;
+                return [
+                    'id' => $conv->id,
+                    'type' => $conv->type,
+                    'name' => $conv->name ?? $otherUser?->name ?? 'Conversation',
+                    'other_user' => $otherUser ? ['name' => $otherUser->name, 'avatar' => $otherUser->avatar] : null,
+                    'last_message' => $conv->latestMessage?->content,
+                    'last_message_at' => $conv->latestMessage?->created_at,
+                    'unread_count' => $conv->unread_count ?? 0,
+                ];
+            })
+            ->sortByDesc('last_message_at')
+            ->values();
+
+        $users = User::where('id', '!=', $user->id)->get(['id', 'name', 'email']);
+
+        return view('admin.messaging.chat', compact('conversations', 'users'));
+    }
+
+    /**
      * Get conversation list (API)
      */
     public function list(Request $request)

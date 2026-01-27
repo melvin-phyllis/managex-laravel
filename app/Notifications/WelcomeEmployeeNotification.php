@@ -3,16 +3,15 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class WelcomeEmployeeNotification extends Notification implements ShouldQueue
+class WelcomeEmployeeNotification extends Notification
 {
     use Queueable;
 
-    protected string $password;
-    protected string $employeeName;
+    public string $password;
+    public string $employeeName;
 
     /**
      * Create a new notification instance.

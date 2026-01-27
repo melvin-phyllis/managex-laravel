@@ -46,6 +46,10 @@ class ProfileController extends Controller
             'city' => 'nullable|string|max:100',
             'postal_code' => 'nullable|string|max:20',
             'country' => 'nullable|string|max:100',
+            // Fiscal fields
+            'marital_status' => 'nullable|in:single,married,divorced,widowed',
+            'children_count' => 'nullable|integer|min:0',
+            'cnps_number' => 'nullable|string|max:30',
         ]);
 
         $user->update($validated);

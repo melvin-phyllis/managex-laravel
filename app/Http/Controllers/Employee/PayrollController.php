@@ -35,7 +35,7 @@ class PayrollController extends Controller
             'total_year' => $user->payrolls()
                 ->where('annee', $currentYear)
                 ->paid()
-                ->sum('montant'),
+                ->sum('net_salary'),
             'pending' => $user->payrolls()->pending()->count(),
             'total_count' => $user->payrolls()->count(),
         ];
@@ -68,9 +68,10 @@ class PayrollController extends Controller
     {
         $payroll->load('user');
 
-        $pdf = Pdf::loadView('pdf.payroll', [
+        $pdf = Pdf::loadView('pdf.payroll-civ', [
             'payroll' => $payroll,
             'user' => $payroll->user,
+            'contract' => $payroll->user->currentContract,
             'generatedAt' => now(),
         ]);
 

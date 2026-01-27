@@ -4,19 +4,18 @@
         <div class="flex items-center justify-between">
             <div>
                 <h1 class="text-2xl font-bold text-gray-900">{{ $survey->titre }}</h1>
-                <p class="text-gray-500 mt-1">Détails du sondage</p>
+                <p class="text-gray-500 mt-1 flex items-center gap-2">
+                    <x-icon name="info" class="w-4 h-4" />
+                    Détails du sondage
+                </p>
             </div>
-            <div class="flex items-center space-x-3">
-                <a href="{{ route('admin.surveys.results', $survey) }}" class="inline-flex items-center px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition-colors">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-                    </svg>
+            <div class="flex items-center gap-3">
+                <a href="{{ route('admin.surveys.results', $survey) }}" class="inline-flex items-center px-4 py-2.5 bg-green-600 text-white text-sm font-medium rounded-xl hover:bg-green-700 transition-colors shadow-lg shadow-green-500/25">
+                    <x-icon name="bar-chart-2" class="w-5 h-5 mr-2" />
                     Voir les résultats
                 </a>
-                <a href="{{ route('admin.surveys.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-200 transition-colors">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-                    </svg>
+                <a href="{{ route('admin.surveys.index') }}" class="inline-flex items-center px-4 py-2.5 bg-gray-100 text-gray-700 text-sm font-medium rounded-xl hover:bg-gray-200 transition-colors">
+                    <x-icon name="arrow-left" class="w-5 h-5 mr-2" />
                     Retour
                 </a>
             </div>
@@ -26,66 +25,96 @@
             <!-- Survey Info -->
             <div class="lg:col-span-1 space-y-6">
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                    <h3 class="text-sm font-medium text-gray-500 uppercase tracking-wider mb-4">Informations</h3>
+                    <h3 class="text-sm font-medium text-gray-500 uppercase tracking-wider mb-4 flex items-center gap-2">
+                        <x-icon name="clipboard-list" class="w-4 h-4" />
+                        Informations
+                    </h3>
                     <dl class="space-y-4">
                         <div>
                             <dt class="text-sm text-gray-500">Statut</dt>
                             <dd class="mt-1">
                                 @if($survey->is_active)
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 border border-green-200">
+                                        <span class="w-1.5 h-1.5 bg-green-500 rounded-full mr-1.5"></span>
                                         Actif
                                     </span>
                                 @else
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800 border border-gray-200">
+                                        <span class="w-1.5 h-1.5 bg-gray-400 rounded-full mr-1.5"></span>
                                         Inactif
                                     </span>
                                 @endif
                             </dd>
                         </div>
                         <div>
-                            <dt class="text-sm text-gray-500">Questions</dt>
-                            <dd class="mt-1 text-sm font-medium text-gray-900">{{ $survey->questions->count() }}</dd>
+                            <dt class="text-sm text-gray-500 flex items-center gap-1.5">
+                                <x-icon name="help-circle" class="w-4 h-4" />
+                                Questions
+                            </dt>
+                            <dd class="mt-1 text-sm font-medium text-gray-900 ml-5.5">{{ $survey->questions->count() }}</dd>
                         </div>
                         <div>
-                            <dt class="text-sm text-gray-500">Répondants</dt>
-                            <dd class="mt-1 text-sm font-medium text-gray-900">{{ $survey->respondents_count }}</dd>
+                            <dt class="text-sm text-gray-500 flex items-center gap-1.5">
+                                <x-icon name="users" class="w-4 h-4" />
+                                Répondants
+                            </dt>
+                            <dd class="mt-1 text-sm font-medium text-gray-900 ml-5.5">{{ $survey->respondents_count }}</dd>
                         </div>
                         @if($survey->date_limite)
                             <div>
-                                <dt class="text-sm text-gray-500">Date limite</dt>
-                                <dd class="mt-1 text-sm font-medium {{ $survey->is_expired ? 'text-red-600' : 'text-gray-900' }}">
+                                <dt class="text-sm text-gray-500 flex items-center gap-1.5">
+                                    <x-icon name="calendar" class="w-4 h-4" />
+                                    Date limite
+                                </dt>
+                                <dd class="mt-1 text-sm font-medium ml-5.5 {{ $survey->is_expired ? 'text-red-600' : 'text-gray-900' }}">
                                     {{ $survey->date_limite->format('d/m/Y') }}
                                     @if($survey->is_expired)
-                                        <span class="text-red-600">(expiré)</span>
+                                        <span class="text-red-600 font-normal ml-1">(expiré)</span>
                                     @endif
                                 </dd>
                             </div>
                         @endif
                         <div>
-                            <dt class="text-sm text-gray-500">Créé le</dt>
-                            <dd class="mt-1 text-sm font-medium text-gray-900">{{ $survey->created_at->format('d/m/Y à H:i') }}</dd>
+                            <dt class="text-sm text-gray-500 flex items-center gap-1.5">
+                                <x-icon name="clock" class="w-4 h-4" />
+                                Créé le
+                            </dt>
+                            <dd class="mt-1 text-sm font-medium text-gray-900 ml-5.5">{{ $survey->created_at->format('d/m/Y à H:i') }}</dd>
                         </div>
                         <div>
-                            <dt class="text-sm text-gray-500">Créé par</dt>
-                            <dd class="mt-1 text-sm font-medium text-gray-900">{{ $survey->admin->name }}</dd>
+                            <dt class="text-sm text-gray-500 flex items-center gap-1.5">
+                                <x-icon name="user" class="w-4 h-4" />
+                                Créé par
+                            </dt>
+                            <dd class="mt-1 text-sm font-medium text-gray-900 ml-5.5">{{ $survey->admin->name }}</dd>
                         </div>
                     </dl>
                 </div>
 
                 <!-- Actions -->
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                    <h3 class="text-sm font-medium text-gray-500 uppercase tracking-wider mb-4">Actions</h3>
+                    <h3 class="text-sm font-medium text-gray-500 uppercase tracking-wider mb-4 flex items-center gap-2">
+                        <x-icon name="settings" class="w-4 h-4" />
+                        Actions
+                    </h3>
                     <div class="space-y-3">
                         <form action="{{ route('admin.surveys.toggle', $survey) }}" method="POST">
                             @csrf
-                            <button type="submit" class="w-full px-4 py-2 {{ $survey->is_active ? 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200' : 'bg-green-100 text-green-700 hover:bg-green-200' }} font-medium rounded-lg transition-colors">
-                                {{ $survey->is_active ? 'Désactiver le sondage' : 'Activer le sondage' }}
+                            <button type="submit" class="w-full px-4 py-2.5 {{ $survey->is_active ? 'bg-amber-50 text-amber-700 hover:bg-amber-100 border border-amber-200' : 'bg-green-50 text-green-700 hover:bg-green-100 border border-green-200' }} font-medium rounded-xl transition-colors flex items-center justify-center gap-2">
+                                @if($survey->is_active)
+                                    <x-icon name="pause-circle" class="w-5 h-5" />
+                                    Désactiver le sondage
+                                @else
+                                    <x-icon name="play-circle" class="w-5 h-5" />
+                                    Activer le sondage
+                                @endif
                             </button>
                         </form>
                         <form action="{{ route('admin.surveys.destroy', $survey) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce sondage ?')">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="w-full px-4 py-2 bg-red-100 text-red-700 font-medium rounded-lg hover:bg-red-200 transition-colors">
+                            <button type="submit" class="w-full px-4 py-2.5 bg-red-50 text-red-700 font-medium rounded-xl hover:bg-red-100 border border-red-200 transition-colors flex items-center justify-center gap-2">
+                                <x-icon name="trash-2" class="w-5 h-5" />
                                 Supprimer le sondage
                             </button>
                         </form>
@@ -95,67 +124,76 @@
 
             <!-- Questions -->
             <div class="lg:col-span-2">
-                <div class="bg-white rounded-xl shadow-sm border border-gray-100">
-                    <div class="p-6 border-b border-gray-100">
-                        <h2 class="text-lg font-semibold text-gray-900">Questions</h2>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="p-6 border-b border-gray-100 bg-gray-50/50">
+                        <h2 class="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                            <x-icon name="list" class="w-5 h-5 text-gray-500" />
+                            Questions du sondage
+                        </h2>
                         @if($survey->description)
-                            <p class="mt-2 text-gray-600">{{ $survey->description }}</p>
+                            <p class="mt-2 text-gray-600 text-sm">{{ $survey->description }}</p>
                         @endif
                     </div>
 
                     <div class="divide-y divide-gray-100">
                         @forelse($survey->questions as $index => $question)
-                            <div class="p-6">
+                            <div class="p-6 hover:bg-gray-50 transition-colors">
                                 <div class="flex items-start">
-                                    <span class="flex-shrink-0 w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-sm font-medium">
+                                    <span class="flex-shrink-0 w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-sm font-bold shadow-sm">
                                         {{ $index + 1 }}
                                     </span>
                                     <div class="ml-4 flex-1">
                                         <div class="flex items-center justify-between">
                                             <h4 class="text-base font-medium text-gray-900">{{ $question->question }}</h4>
                                             @if($question->is_required)
-                                                <span class="text-red-500 text-sm">*</span>
+                                                <span class="flex items-center gap-1 text-red-600 text-xs font-medium bg-red-50 px-2 py-0.5 rounded-full">
+                                                    Obligatoire
+                                                </span>
                                             @endif
                                         </div>
-                                        <p class="mt-1 text-sm text-gray-500">{{ $question->type_label }}</p>
+                                        <p class="mt-1 text-sm text-gray-500 flex items-center gap-1">
+                                            <x-icon name="tag" class="w-3 h-3" />
+                                            {{ $question->type_label }}
+                                        </p>
 
                                         @if($question->type === 'choice' && $question->options)
-                                            <div class="mt-3 space-y-2">
+                                            <div class="mt-4 space-y-2 pl-4 border-l-2 border-gray-200">
                                                 @foreach($question->options as $option)
-                                                    <div class="flex items-center text-sm text-gray-600">
-                                                        <span class="w-4 h-4 border border-gray-300 rounded-full mr-2"></span>
+                                                    <div class="flex items-center text-sm text-gray-700 bg-white p-2 rounded border border-gray-100 shadow-sm">
+                                                        <div class="w-4 h-4 border border-gray-300 rounded-full mr-3"></div>
                                                         {{ $option }}
                                                     </div>
                                                 @endforeach
                                             </div>
                                         @elseif($question->type === 'rating')
-                                            <div class="mt-3 flex items-center space-x-2">
+                                            <div class="mt-4 flex items-center space-x-2">
                                                 @for($i = 1; $i <= 5; $i++)
-                                                    <span class="w-8 h-8 border border-gray-300 rounded flex items-center justify-center text-sm text-gray-400">{{ $i }}</span>
+                                                    <div class="w-10 h-10 border border-gray-200 rounded-lg flex items-center justify-center text-sm font-medium text-gray-500 bg-gray-50">
+                                                        {{ $i }}
+                                                    </div>
                                                 @endfor
                                             </div>
                                         @elseif($question->type === 'yesno')
-                                            <div class="mt-3 flex items-center space-x-4">
-                                                <span class="flex items-center text-sm text-gray-600">
-                                                    <span class="w-4 h-4 border border-gray-300 rounded-full mr-2"></span>
-                                                    Oui
-                                                </span>
-                                                <span class="flex items-center text-sm text-gray-600">
-                                                    <span class="w-4 h-4 border border-gray-300 rounded-full mr-2"></span>
-                                                    Non
-                                                </span>
-                                            </div>
-                                        @else
-                                            <div class="mt-3">
-                                                <div class="w-full h-10 border border-gray-200 rounded bg-gray-50"></div>
+                                            <div class="mt-4 flex items-center space-x-4">
+                                                <div class="flex items-center px-3 py-2 border border-gray-200 rounded-lg bg-gray-50">
+                                                    <div class="w-4 h-4 border border-gray-300 rounded-full mr-2"></div>
+                                                    <span class="text-sm font-medium text-gray-700">Oui</span>
+                                                </div>
+                                                <div class="flex items-center px-3 py-2 border border-gray-200 rounded-lg bg-gray-50">
+                                                    <div class="w-4 h-4 border border-gray-300 rounded-full mr-2"></div>
+                                                    <span class="text-sm font-medium text-gray-700">Non</span>
+                                                </div>
                                             </div>
                                         @endif
                                     </div>
                                 </div>
                             </div>
                         @empty
-                            <div class="p-12 text-center text-gray-500">
-                                <p>Aucune question dans ce sondage</p>
+                            <div class="p-12 text-center">
+                                <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <x-icon name="help-circle" class="w-8 h-8 text-gray-400" />
+                                </div>
+                                <p class="text-gray-500 font-medium">Aucune question dans ce sondage</p>
                             </div>
                         @endforelse
                     </div>

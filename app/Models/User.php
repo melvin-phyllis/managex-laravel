@@ -40,6 +40,11 @@ class User extends Authenticatable
         'emergency_contact_name',
         'emergency_contact_phone',
         'emergency_contact_relationship',
+        // Fiscalité CIV
+        'marital_status',
+        'children_count',
+        'number_of_parts',
+        'cnps_number',
         // Informations professionnelles
         'hire_date',
         'contract_end_date',
@@ -241,5 +246,58 @@ class User extends Authenticatable
             $parts[] = $this->position->name;
         }
         return implode(' - ', $parts) ?: 'Non assigné';
+    }
+
+    // Analytics Scopes
+
+    public function scopeHiredInPeriod($query, \Carbon\Carbon $start, \Carbon\Carbon $end)
+    {
+        return $query->whereBetween('hire_date', [$start, $end]);
+    }
+
+    public function scopeDepartedInPeriod($query, \Carbon\Carbon $start, \Carbon\Carbon $end)
+    {
+        return $query->whereBetween('contract_end_date', [$start, $end])
+                     ->whereNotNull('contract_end_date');
+    }
+
+    public function scopeExpiringContracts($query, int $daysAhead = 30)
+    {
+        return $query->whereNotNull('contract_end_date')
+                     ->where('contract_end_date', '<=', now()->addDays($daysAhead))
+                     ->where('contract_end_date', '>=', now());
+    }
+
+    public function scopeUpcomingBirthdays($query, int $daysAhead = 7)
+    {
+        return $query->whereNotNull('date_of_birth')
+            ->whereRaw("DATE_FORMAT(date_of_birth, '%m-%d') BETWEEN ? AND ?", [
+                now()->format('m-d'),
+                now()->addDays($daysAhead)->format('m-d')
+            ]);
+    }
+
+    /**
+     * Get user's contracts
+     */
+    public function contracts(): HasMany
+    {
+        return $this->hasMany(Contract::class);
+    }
+
+    /**
+     * Get user's current contract
+     */
+    public function currentContract()
+    {
+        return $this->hasOne(Contract::class)->where('is_current', true);
+    }
+
+    /**
+     * Get current base salary
+     */
+    public function getCurrentBaseSalaryAttribute(): ?float
+    {
+        return $this->currentContract ? $this->currentContract->base_salary : $this->base_salary;
     }
 }

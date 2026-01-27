@@ -102,6 +102,23 @@
                         @endif
                     </p>
                 </div>
+                <div>
+                    <p class="text-sm text-gray-500">Situation Familiale</p>
+                    <p class="font-medium text-gray-900">
+                        @switch($user->marital_status)
+                            @case('single') Célibataire @break
+                            @case('married') Marié(e) @break
+                            @case('divorced') Divorcé(e) @break
+                            @case('widowed') Veuf/Veuve @break
+                            @default -
+                        @endswitch
+                        ({{ $user->children_count }} enfants)
+                    </p>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-500">Numéro CNPS</p>
+                    <p class="font-medium text-gray-900">{{ $user->cnps_number ?? '-' }}</p>
+                </div>
             </div>
         </div>
 
@@ -253,6 +270,32 @@
                         <label class="block text-sm font-medium text-gray-700 mb-1">Pays</label>
                         <input type="text" name="country" value="{{ $user->country ?? 'France' }}"
                                class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+                    </div>
+                    <div class="pt-4 border-t border-gray-100">
+                        <h4 class="font-medium text-gray-900 mb-3">Informations Fiscales</h4>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Situation familiale</label>
+                                <select name="marital_status" class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+                                    <option value="single" {{ $user->marital_status === 'single' ? 'selected' : '' }}>Célibataire</option>
+                                    <option value="married" {{ $user->marital_status === 'married' ? 'selected' : '' }}>Marié(e)</option>
+                                    <option value="divorced" {{ $user->marital_status === 'divorced' ? 'selected' : '' }}>Divorcé(e)</option>
+                                    <option value="widowed" {{ $user->marital_status === 'widowed' ? 'selected' : '' }}>Veuf/Veuve</option>
+                                </select>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Enfants</label>
+                                    <input type="number" name="children_count" value="{{ $user->children_count }}" min="0"
+                                           class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">N° CNPS</label>
+                                    <input type="text" name="cnps_number" value="{{ $user->cnps_number }}"
+                                           class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="flex gap-3 mt-6">

@@ -269,7 +269,51 @@
                 </div>
             </div>
 
-            <!-- Section 5: Jours de travail -->
+            <!-- Section 5: Fiscalité (CIV) -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                <div class="px-6 py-4 bg-gray-50 border-b border-gray-100">
+                    <h2 class="text-lg font-semibold text-gray-900 flex items-center">
+                        <svg class="w-5 h-5 mr-2 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                        </svg>
+                        Fiscalité (Côte d'Ivoire)
+                    </h2>
+                </div>
+                <div class="p-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div>
+                            <label for="marital_status" class="block text-sm font-medium text-gray-700 mb-1">Situation familiale</label>
+                            <select name="marital_status" id="marital_status" class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+                                <option value="single" {{ old('marital_status', $employee->marital_status) == 'single' ? 'selected' : '' }}>Célibataire</option>
+                                <option value="married" {{ old('marital_status', $employee->marital_status) == 'married' ? 'selected' : '' }}>Marié(e)</option>
+                                <option value="divorced" {{ old('marital_status', $employee->marital_status) == 'divorced' ? 'selected' : '' }}>Divorcé(e)</option>
+                                <option value="widowed" {{ old('marital_status', $employee->marital_status) == 'widowed' ? 'selected' : '' }}>Veuf/Veuve</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="children_count" class="block text-sm font-medium text-gray-700 mb-1">Nombre d'enfants</label>
+                            <input type="number" name="children_count" id="children_count" value="{{ old('children_count', $employee->children_count ?? 0) }}" min="0"
+                                   class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+                        </div>
+
+                        <div>
+                            <label for="cnps_number" class="block text-sm font-medium text-gray-700 mb-1">Numéro CNPS</label>
+                            <input type="text" name="cnps_number" id="cnps_number" value="{{ old('cnps_number', $employee->cnps_number) }}"
+                                   class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+                        </div>
+                        
+                        <div>
+                            <label for="number_of_parts" class="block text-sm font-medium text-gray-700 mb-1">Parts fiscales (Override)</label>
+                            <input type="number" name="number_of_parts" id="number_of_parts" value="{{ old('number_of_parts', $employee->number_of_parts) }}" step="0.5" min="1"
+                                   class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500" placeholder="Auto par défaut">
+                            <p class="mt-1 text-xs text-gray-500">Laisser vide pour calcul auto</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 6: Jours de travail -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                 <div class="px-6 py-4 bg-gray-50 border-b border-gray-100">
                     <h2 class="text-lg font-semibold text-gray-900 flex items-center">

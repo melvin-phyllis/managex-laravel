@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Employee;
 
 use App\Http\Controllers\Controller;
+use App\Models\Announcement;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -40,6 +41,45 @@ class DashboardController extends Controller
             ->take(3)
             ->get();
 
+        // Annonces urgentes/critiques non lues pour le dashboard
+        $urgentAnnouncements = Announcement::published()
+            ->forUser($user)
+            ->where(function ($q) {
+                $q->where('priority', 'critical')
+                  ->orWhere('type', 'urgent');
+            })
+            ->unreadBy($user)
+            ->orderByPriority()
+            ->take(3)
+            ->get();
+
+        // Compteur d'annonces non lues
+        $unreadAnnouncementsCount = Announcement::published()
+            ->forUser($user)
+            ->unreadBy($user)
+            ->count();
+
+        // === NOUVEAUX WIDGETS ===
+        
+        // Demandes de documents (les 3 dernières)
+        $documentRequests = \App\Models\DocumentRequest::forUser($user->id)
+            ->latest()
+            ->take(3)
+            ->get();
+        
+        // Documents globaux non lus
+        $acknowledgedIds = \DB::table('global_document_acknowledgments')
+            ->where('user_id', $user->id)
+            ->pluck('global_document_id')
+            ->toArray();
+        $unreadGlobalDocs = \App\Models\GlobalDocument::active()
+            ->whereNotIn('id', $acknowledgedIds)
+            ->get();
+        
+        // Contrat de travail
+        $contract = $user->currentContract;
+        $hasContractDocument = $contract && $contract->document_path;
+
         return view('employee.dashboard', compact(
             'stats',
             'chartData',
@@ -50,9 +90,16 @@ class DashboardController extends Controller
             'recentTasks',
             'recentLeaves',
             'recentNotifications',
-            'pendingSurveys'
+            'pendingSurveys',
+            'urgentAnnouncements',
+            'unreadAnnouncementsCount',
+            'documentRequests',
+            'unreadGlobalDocs',
+            'contract',
+            'hasContractDocument'
         ));
     }
+
 
     /**
      * API endpoint for chart data

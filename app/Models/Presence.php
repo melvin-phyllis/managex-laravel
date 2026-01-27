@@ -17,12 +17,23 @@ class Presence extends Model
         'check_out',
         'date',
         'notes',
+        // Analytics fields
+        'is_late',
+        'late_minutes',
+        'is_early_departure',
+        'early_departure_minutes',
+        'departure_type',
+        'early_departure_reason',
+        'scheduled_start',
+        'scheduled_end',
     ];
 
     protected $casts = [
         'check_in' => 'datetime',
         'check_out' => 'datetime',
         'date' => 'date',
+        'is_late' => 'boolean',
+        'is_early_departure' => 'boolean',
     ];
 
     /**
@@ -50,6 +61,33 @@ class Presence extends Model
     }
 
     /**
+     * Scope for period
+     */
+    public function scopeInPeriod($query, Carbon $start, Carbon $end)
+    {
+        return $query->whereBetween('date', [$start, $end]);
+    }
+
+    /**
+     * Scope for late arrivals
+     */
+    public function scopeLate($query)
+    {
+        return $query->where('is_late', true);
+    }
+
+    /**
+     * Scope for department filtering
+     */
+    public function scopeForDepartment($query, ?int $departmentId)
+    {
+        if ($departmentId) {
+            return $query->whereHas('user', fn($q) => $q->where('department_id', $departmentId));
+        }
+        return $query;
+    }
+
+    /**
      * Get total hours worked
      */
     public function getHoursWorkedAttribute(): ?float
@@ -74,5 +112,19 @@ class Presence extends Model
     public function getCheckOutFormattedAttribute(): ?string
     {
         return $this->check_out?->format('H:i');
+    }
+
+    /**
+     * Get overtime minutes
+     */
+    public function getOvertimeMinutesAttribute(): int
+    {
+        if (!$this->check_out || !$this->scheduled_end) return 0;
+        
+        // Ensure scheduled_end is full datetime for comparison
+        $scheduledEnd = Carbon::parse($this->date->format('Y-m-d') . ' ' . $this->scheduled_end);
+        $actualEnd = Carbon::parse($this->check_out);
+        
+        return max(0, $actualEnd->diffInMinutes($scheduledEnd, false));
     }
 }

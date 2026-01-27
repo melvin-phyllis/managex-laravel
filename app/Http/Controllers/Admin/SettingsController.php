@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Setting;
 use App\Models\Department;
 use App\Models\Position;
+use App\Models\PayrollCountry;
 use Illuminate\Http\Request;
 
 class SettingsController extends Controller
@@ -21,7 +22,10 @@ class SettingsController extends Controller
             'break_start_time' => Setting::getBreakStartTime(),
             'break_end_time' => Setting::getBreakEndTime(),
             'late_tolerance_minutes' => Setting::getLateTolerance(),
+            'payroll_country_id' => Setting::get('payroll_country_id'),
         ];
+
+        $payrollCountries = PayrollCountry::active()->orderBy('name')->get();
 
         $departments = Department::withCount(['positions', 'users'])
             ->with(['positions' => function ($query) {
@@ -30,7 +34,7 @@ class SettingsController extends Controller
             ->orderBy('name')
             ->get();
 
-        return view('admin.settings.index', compact('settings', 'departments'));
+        return view('admin.settings.index', compact('settings', 'departments', 'payrollCountries'));
     }
 
     /**
@@ -81,6 +85,18 @@ class SettingsController extends Controller
                 Setting::set('late_tolerance_minutes', $validated['late_tolerance_minutes'], 'integer', 'presence');
                 $message = 'Tolérance de retard mise à jour avec succès.';
                 $tab = 'retards';
+                break;
+
+            case 'paie':
+                $validated = $request->validate([
+                    'payroll_country_id' => 'required|exists:payroll_countries,id',
+                ], [
+                    'payroll_country_id.required' => 'Le pays de paie est obligatoire.',
+                    'payroll_country_id.exists' => 'Le pays sélectionné n\'existe pas.',
+                ]);
+                Setting::set('payroll_country_id', $validated['payroll_country_id'], 'integer', 'payroll');
+                $message = 'Pays de paie mis à jour avec succès.';
+                $tab = 'paie';
                 break;
 
             default:

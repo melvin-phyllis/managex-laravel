@@ -3,16 +3,16 @@
         [x-cloak] { display: none !important; }
     </style>
     <div x-data="messagingApp()" x-init="init()">
-        <div class="h-[calc(100vh-8rem)] flex bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="h-[calc(100vh-8rem)] flex bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
         
         <!-- Sidebar - Liste des conversations -->
-        <div class="w-80 border-r border-gray-200 flex flex-col bg-gray-50">
+        <div class="w-80 border-r border-gray-200 flex flex-col bg-gray-50/50">
             <!-- Header -->
             <div class="p-4 border-b border-gray-200 bg-white">
                 <div class="flex items-center justify-between mb-3">
-                    <h2 class="text-lg font-bold text-gray-900">Messages</h2>
+                    <h2 class="text-lg font-bold text-gray-800">Messages</h2>
                     <button @click="showNewConversation = true" 
-                            class="p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                            class="p-2 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-xl hover:shadow-md transition-all">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                         </svg>
@@ -24,7 +24,7 @@
                            x-model="searchQuery"
                            @input.debounce.300ms="filterConversations()"
                            placeholder="Rechercher..." 
-                           class="w-full pl-10 pr-4 py-2 bg-gray-100 border-0 rounded-lg text-sm focus:ring-2 focus:ring-blue-500">
+                           class="w-full pl-10 pr-4 py-2.5 bg-gray-100 border-0 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:bg-white transition-colors">
                     <svg class="w-5 h-5 text-gray-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                     </svg>
@@ -32,20 +32,20 @@
             </div>
 
             <!-- Tabs -->
-            <div class="flex border-b border-gray-200 bg-white">
+            <div class="flex border-b border-gray-200 bg-white px-1">
                 <button @click="activeTab = 'all'" 
-                        :class="activeTab === 'all' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500'"
-                        class="flex-1 py-2 text-sm font-medium border-b-2 hover:text-gray-700 transition-colors">
+                        :class="activeTab === 'all' ? 'bg-blue-50 text-blue-600 border-blue-600' : 'border-transparent text-gray-500 hover:bg-gray-100'"
+                        class="flex-1 py-2.5 text-sm font-medium rounded-t-lg border-b-2 transition-all">
                     Tous
                 </button>
                 <button @click="activeTab = 'direct'" 
-                        :class="activeTab === 'direct' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500'"
-                        class="flex-1 py-2 text-sm font-medium border-b-2 hover:text-gray-700 transition-colors">
+                        :class="activeTab === 'direct' ? 'bg-blue-50 text-blue-600 border-blue-600' : 'border-transparent text-gray-500 hover:bg-gray-100'"
+                        class="flex-1 py-2.5 text-sm font-medium rounded-t-lg border-b-2 transition-all">
                     Directs
                 </button>
                 <button @click="activeTab = 'group'" 
-                        :class="activeTab === 'group' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500'"
-                        class="flex-1 py-2 text-sm font-medium border-b-2 hover:text-gray-700 transition-colors">
+                        :class="activeTab === 'group' ? 'bg-blue-50 text-blue-600 border-blue-600' : 'border-transparent text-gray-500 hover:bg-gray-100'"
+                        class="flex-1 py-2.5 text-sm font-medium rounded-t-lg border-b-2 transition-all">
                     Groupes
                 </button>
             </div>
@@ -63,16 +63,16 @@
 
                 <template x-for="conv in filteredConversations" :key="conv.id">
                     <div @click="selectConversation(conv)"
-                         :class="selectedConversation?.id === conv.id ? 'bg-blue-50 border-l-4 border-blue-600' : 'hover:bg-gray-100 border-l-4 border-transparent'"
-                         class="p-4 cursor-pointer transition-colors">
+                         :class="selectedConversation?.id === conv.id ? 'bg-blue-50/80 border-l-4 border-blue-500' : 'hover:bg-white border-l-4 border-transparent'"
+                         class="p-4 cursor-pointer transition-all">
                         <div class="flex items-start gap-3">
                             <!-- Avatar -->
                             <div class="relative flex-shrink-0">
-                                <div class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-semibold">
+                                <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-semibold shadow-sm">
                                     <span x-text="(conv.name || 'C').charAt(0).toUpperCase()"></span>
                                 </div>
                                 <template x-if="conv.is_pinned">
-                                    <div class="absolute -top-1 -right-1 bg-yellow-400 rounded-full p-0.5">
+                                    <div class="absolute -top-1 -right-1 bg-yellow-400 rounded-full p-0.5 shadow-sm">
                                         <svg class="w-3 h-3 text-yellow-800" fill="currentColor" viewBox="0 0 20 20">
                                             <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
                                         </svg>
@@ -82,14 +82,14 @@
                             <!-- Content -->
                             <div class="flex-1 min-w-0">
                                 <div class="flex items-center justify-between">
-                                    <h3 class="font-semibold text-gray-900 truncate" x-text="conv.name || 'Conversation'"></h3>
+                                    <h3 class="font-medium text-gray-800 truncate" x-text="conv.name || 'Conversation'"></h3>
                                     <span class="text-xs text-gray-400" x-text="conv.last_message?.created_at || ''"></span>
                                 </div>
                                 <p class="text-sm text-gray-500 truncate mt-0.5" x-text="conv.last_message?.content || 'Aucun message'"></p>
                             </div>
                             <!-- Unread Badge -->
                             <template x-if="conv.unread_count > 0">
-                                <span class="bg-blue-600 text-white text-xs font-bold px-2 py-0.5 rounded-full" x-text="conv.unread_count"></span>
+                                <span class="bg-gradient-to-r from-blue-500 to-blue-600 text-white text-xs font-bold px-2 py-0.5 rounded-full shadow-sm" x-text="conv.unread_count"></span>
                             </template>
                         </div>
                     </div>
@@ -215,7 +215,7 @@
                     </div>
 
                     <!-- Message Input -->
-                    <div class="p-4 border-t border-gray-200 bg-white">
+                    <div class="p-4 border-t border-gray-100 bg-white">
                         <form @submit.prevent="sendMessage()" class="flex items-end gap-3">
                             <div class="flex-1">
                                 <textarea x-model="newMessage" 
@@ -223,12 +223,12 @@
                                           @keydown.enter.ctrl="sendMessage()"
                                           placeholder="Écrivez votre message..."
                                           rows="1"
-                                          class="w-full px-4 py-3 bg-gray-100 border-0 rounded-xl resize-none focus:ring-2 focus:ring-blue-500"
+                                          class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl resize-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:bg-white transition-all"
                                           x-ref="messageInput"></textarea>
                             </div>
                             <button type="submit" 
                                     :disabled="!newMessage.trim()"
-                                    class="p-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                                    class="p-3 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-xl hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
                                 </svg>

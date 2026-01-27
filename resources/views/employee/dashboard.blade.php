@@ -1,19 +1,103 @@
 <x-layouts.employee>
     <div class="space-y-6">
+        <!-- Flash Messages -->
+       
+
+        @if(session('success'))
+            <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded-r-lg animate-fade-in" x-data="{ show: true }" x-show="show" x-transition>
+                <div class="flex items-start">
+                    <div class="flex-shrink-0">
+                        <svg class="h-5 w-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                    </div>
+                    <div class="ml-3 flex-1">
+                        <h3 class="text-sm font-medium text-green-800">Succès</h3>
+                        <p class="mt-1 text-sm text-green-700">{{ session('success') }}</p>
+                    </div>
+                    <button @click="show = false" class="ml-3 text-green-400 hover:text-green-600">
+                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        @endif
+
+        <!-- Urgent Announcements Banner -->
+        @if(isset($urgentAnnouncements) && $urgentAnnouncements->count() > 0)
+            <div class="space-y-3">
+                @foreach($urgentAnnouncements as $announcement)
+                    <div class="relative overflow-hidden rounded-xl shadow-lg
+                        @if($announcement->type === 'urgent' || $announcement->priority === 'critical')
+                            bg-gradient-to-r from-red-500 to-rose-600
+                        @else
+                            bg-gradient-to-r from-amber-500 to-orange-500
+                        @endif
+                        text-white p-4"
+                        x-data="{ dismissed: false }" 
+                        x-show="!dismissed"
+                        x-transition>
+                        
+                        <div class="flex items-start gap-4">
+                            <div class="flex-shrink-0 w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                                <span class="text-2xl">{{ $announcement->type_icon }}</span>
+                            </div>
+                            
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center gap-2 mb-1">
+                                    @if($announcement->is_pinned)
+                                        <span>📌</span>
+                                    @endif
+                                    <h3 class="font-bold text-lg">{{ $announcement->title }}</h3>
+                                    @if($announcement->priority === 'critical')
+                                        <span class="px-2 py-0.5 text-xs font-medium bg-white/20 rounded-full">Critique</span>
+                                    @endif
+                                </div>
+                                <p class="text-white/90 text-sm line-clamp-2">
+                                    {{ Str::limit(strip_tags($announcement->content), 150) }}
+                                </p>
+                                <div class="flex items-center gap-4 mt-3">
+                                    <a href="{{ route('employee.announcements.show', $announcement) }}" 
+                                       class="text-sm font-medium underline hover:no-underline">
+                                        Lire la suite →
+                                    </a>
+                                    @if($announcement->requires_acknowledgment)
+                                        <button onclick="acknowledgeAnnouncement({{ $announcement->id }}, this)"
+                                                class="px-3 py-1 bg-white text-red-600 text-sm font-medium rounded-lg hover:bg-white/90 transition">
+                                            ✓ J'ai pris connaissance
+                                        </button>
+                                    @endif
+                                </div>
+                            </div>
+                            
+                            @if(!$announcement->requires_acknowledgment)
+                                <button @click="dismissed = true; markAnnouncementRead({{ $announcement->id }})"
+                                        class="text-white/70 hover:text-white p-1">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                    </svg>
+                                </button>
+                            @endif
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        @endif
+
         <!-- Header with Streak -->
-        <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
+        <div class="space-y-4">
             <div>
                 <h1 class="text-2xl font-bold text-gray-900">Bienvenue, {{ auth()->user()->name }}</h1>
                 <p class="text-gray-500 mt-1">{{ now()->translatedFormat('l d F Y') }}</p>
             </div>
 
-            <!-- Streak Counter -->
+            <!-- Streak Counter - Full Width -->
             @if($streakData['current'] > 0 || $streakData['best'] > 0)
                 <x-streak-counter
                     :currentStreak="$streakData['current']"
                     :bestStreak="$streakData['best']"
-                    :lastPresenceDate="$streakData['last_date']"
-                    class="lg:max-w-sm" />
+                    :lastPresenceDate="$streakData['last_date']" />
             @endif
         </div>
 
@@ -207,6 +291,159 @@
                     <p class="mt-3 font-medium text-gray-900">Tâches</p>
                     <p class="text-sm text-gray-500">{{ $monthlyGoals['tasks']['completed'] }}/{{ $monthlyGoals['tasks']['assigned'] }} terminées</p>
                 </div>
+            </div>
+        </div>
+
+        <!-- Documents Quick Access Row -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- 📋 Mes Demandes de Documents -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow animate-fade-in-up">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="flex items-center justify-center w-12 h-12 bg-amber-100 rounded-xl">
+                        <svg class="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-gray-900">Mes Demandes</h3>
+                        <p class="text-sm text-gray-500">Attestations & certificats</p>
+                    </div>
+                </div>
+                
+                @if($documentRequests->count() > 0)
+                    <div class="space-y-2 mb-4">
+                        @foreach($documentRequests as $request)
+                            <div class="flex items-center justify-between p-2 rounded-lg bg-gray-50">
+                                <div class="flex items-center gap-2">
+                                    @if($request->status === 'approved')
+                                        <span class="text-green-500">✅</span>
+                                    @elseif($request->status === 'rejected')
+                                        <span class="text-red-500">❌</span>
+                                    @else
+                                        <span class="text-amber-500">⏳</span>
+                                    @endif
+                                    <span class="text-sm text-gray-700 truncate">{{ Str::limit($request->type_label, 18) }}</span>
+                                </div>
+                                @if($request->hasDocument())
+                                    <a href="{{ route('employee.document-requests.download', $request) }}" 
+                                       class="text-blue-600 hover:text-blue-800">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                                        </svg>
+                                    </a>
+                                @else
+                                    <span class="text-xs px-2 py-0.5 rounded-full 
+                                        @if($request->status === 'approved') bg-green-100 text-green-700
+                                        @elseif($request->status === 'rejected') bg-red-100 text-red-700
+                                        @else bg-amber-100 text-amber-700 @endif">
+                                        {{ $request->status_label }}
+                                    </span>
+                                @endif
+                            </div>
+                        @endforeach
+                    </div>
+                @else
+                    <p class="text-sm text-gray-400 mb-4">Aucune demande récente</p>
+                @endif
+                
+                <a href="{{ route('employee.document-requests.create') }}" 
+                   class="w-full inline-flex items-center justify-center px-4 py-2 bg-amber-500 text-white text-sm font-medium rounded-lg hover:bg-amber-600 transition-colors">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                    </svg>
+                    Nouvelle demande
+                </a>
+            </div>
+
+            <!-- 🏢 Documents à Consulter -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow animate-fade-in-up">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="flex items-center justify-center w-12 h-12 bg-blue-100 rounded-xl">
+                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-gray-900">Documents Entreprise</h3>
+                        <p class="text-sm text-gray-500">Règlements & chartes</p>
+                    </div>
+                </div>
+                
+                @if($unreadGlobalDocs->count() > 0)
+                    <div class="bg-amber-50 border border-amber-200 rounded-lg p-3 mb-4">
+                        <div class="flex items-center gap-2 text-amber-700">
+                            <span class="text-lg">⚠️</span>
+                            <span class="text-sm font-medium">{{ $unreadGlobalDocs->count() }} document(s) à consulter</span>
+                        </div>
+                        <ul class="mt-2 space-y-1">
+                            @foreach($unreadGlobalDocs->take(2) as $doc)
+                                <li class="text-sm text-amber-600 flex items-center gap-1">
+                                    <span>•</span>
+                                    <span class="truncate">{{ Str::limit($doc->title, 25) }}</span>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @else
+                    <div class="bg-green-50 border border-green-200 rounded-lg p-3 mb-4">
+                        <div class="flex items-center gap-2 text-green-700">
+                            <span class="text-lg">✅</span>
+                            <span class="text-sm font-medium">Tous les documents lus</span>
+                        </div>
+                    </div>
+                @endif
+                
+                <a href="{{ route('employee.documents.index') }}" 
+                   class="w-full inline-flex items-center justify-center px-4 py-2 bg-blue-500 text-white text-sm font-medium rounded-lg hover:bg-blue-600 transition-colors">
+                    Consulter →
+                </a>
+            </div>
+
+            <!-- 📄 Mon Contrat -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow animate-fade-in-up">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="flex items-center justify-center w-12 h-12 bg-purple-100 rounded-xl">
+                        <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-gray-900">Mon Contrat</h3>
+                        <p class="text-sm text-gray-500">Document de travail</p>
+                    </div>
+                </div>
+                
+                @if($contract)
+                    <div class="space-y-2 mb-4">
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-gray-500">Type</span>
+                            <span class="font-medium text-gray-900">{{ $contract->type ?? 'CDI' }}</span>
+                        </div>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-gray-500">Depuis</span>
+                            <span class="font-medium text-gray-900">{{ $contract->start_date?->format('d/m/Y') ?? '-' }}</span>
+                        </div>
+                    </div>
+                    
+                    @if($hasContractDocument)
+                        <a href="{{ route('employee.documents.download-contract') }}" 
+                           class="w-full inline-flex items-center justify-center px-4 py-2 bg-purple-500 text-white text-sm font-medium rounded-lg hover:bg-purple-600 transition-colors">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                            </svg>
+                            Télécharger
+                        </a>
+                    @else
+                        <div class="text-center py-2 text-sm text-gray-400">
+                            Document non disponible
+                        </div>
+                    @endif
+                @else
+                    <div class="text-center py-4">
+                        <span class="text-3xl">📋</span>
+                        <p class="text-sm text-gray-400 mt-2">Aucun contrat trouvé</p>
+                    </div>
+                @endif
             </div>
         </div>
 
@@ -539,6 +776,45 @@
                 });
             }
         });
+
+        // Announcement functions
+        function markAnnouncementRead(id) {
+            fetch(`/employee/announcements/${id}/read`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                }
+            });
+        }
+
+        function acknowledgeAnnouncement(id, button) {
+            button.disabled = true;
+            button.textContent = 'Envoi...';
+
+            fetch(`/employee/announcements/${id}/acknowledge`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    button.textContent = '✓ Confirmé';
+                    button.classList.remove('bg-white', 'text-red-600');
+                    button.classList.add('bg-green-500', 'text-white');
+                    setTimeout(() => {
+                        button.closest('.rounded-xl').remove();
+                    }, 1500);
+                }
+            })
+            .catch(() => {
+                button.textContent = 'Erreur';
+                button.disabled = false;
+            });
+        }
     </script>
     @endpush
 </x-layouts.employee>
