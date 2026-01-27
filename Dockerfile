@@ -39,21 +39,9 @@ COPY --from=assets /app/public/build ./public/build
 # Finalize
 RUN composer dump-autoload --optimize \
     && mkdir -p storage/framework/{sessions,views,cache} storage/logs bootstrap/cache \
-    && chmod -R 777 storage bootstrap/cache
-
-# Create startup script
-RUN echo '#!/bin/bash\n\
-set -e\n\
-echo "Running migrations..."\n\
-php artisan migrate --force || true\n\
-echo "Caching config..."\n\
-php artisan config:cache || true\n\
-php artisan route:cache || true\n\
-php artisan view:cache || true\n\
-echo "Starting server on port $PORT..."\n\
-exec php artisan serve --host=0.0.0.0 --port=${PORT:-8080}\n\
-' > /start.sh && chmod +x /start.sh
+    && chmod -R 777 storage bootstrap/cache \
+    && chmod +x start.sh
 
 EXPOSE 8080
 
-CMD ["/bin/bash", "/start.sh"]
+CMD ["bash", "start.sh"]
