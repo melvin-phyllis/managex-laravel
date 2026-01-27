@@ -1,6 +1,6 @@
 @props(['hasHeader' => true, 'hasFooter' => true])
 
-<div {{ $attributes->merge(['class' => 'bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden']) }}>
+<div {{ $attributes->merge(['class' => 'bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden']) }}>
     <!-- Barre d'actions groupées -->
     <div x-show="selectedCount > 0"
          x-transition

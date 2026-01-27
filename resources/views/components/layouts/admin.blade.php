@@ -20,12 +20,18 @@
 <body class="font-sans antialiased">
     <script>window.userId = {{ auth()->id() ?? 'null' }};</script>
     <x-realtime-notifications />
-    <div class="min-h-screen bg-gray-100">
+    <div class="min-h-screen bg-gray-50">
+        <!-- Decorative Background -->
+        <div class="fixed inset-0 overflow-hidden pointer-events-none">
+            <div class="absolute -top-40 -right-40 w-80 h-80 bg-blue-500/5 rounded-full blur-3xl"></div>
+            <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-indigo-500/5 rounded-full blur-3xl"></div>
+        </div>
+
         <!-- Sidebar -->
-        <aside class="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform transition-transform duration-200 ease-in-out lg:translate-x-0 -translate-x-full" id="sidebar">
-            <div class="flex items-center lg:flex-row justify-center h-16 px-4 bg-blue-600">
+        <aside class="fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 transform transition-transform duration-200 ease-in-out lg:translate-x-0 -translate-x-full" id="sidebar">
+            <div class="flex items-center justify-between h-16 px-4 bg-gradient-to-r from-blue-600 to-indigo-600">
                 <span class="text-xl font-bold text-white">ManageX</span>
-                <button class="lg:hidden p-2 rounded-lg bg-blue-700 hover:bg-blue-800 text-white transition-colors ml-auto" onclick="document.getElementById('sidebar').classList.toggle('-translate-x-full')">
+                <button class="lg:hidden p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white transition-colors" onclick="document.getElementById('sidebar').classList.toggle('-translate-x-full')">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                     </svg>
@@ -160,11 +166,11 @@
         <!-- Main Content -->
         <div class="lg:pl-64">
             <!-- Top Navigation -->
-            <header class="bg-white shadow-sm">
+            <header class="bg-white/80 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-40">
                 <div class="flex items-center justify-between h-16 px-4">
                     <div>
-                        <button class="lg:hidden" onclick="document.getElementById('sidebar').classList.toggle('-translate-x-full')">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <button class="lg:hidden p-2 rounded-xl hover:bg-gray-100 transition-colors" onclick="document.getElementById('sidebar').classList.toggle('-translate-x-full')">
+                        <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                         </svg>
                     </button>
@@ -251,14 +257,24 @@
             <main class="p-6">
                 <!-- Flash Messages -->
                 @if(session('success'))
-                    <div class="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg">
-                        {{ session('success') }}
+                    <div class="mb-6 p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-2xl flex items-center gap-3">
+                        <div class="flex-shrink-0 w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center">
+                            <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                            </svg>
+                        </div>
+                        <span class="font-medium">{{ session('success') }}</span>
                     </div>
                 @endif
 
                 @if(session('error'))
-                    <div class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
-                        {{ session('error') }}
+                    <div class="mb-6 p-4 bg-red-50 border border-red-200 text-red-800 rounded-2xl flex items-center gap-3">
+                        <div class="flex-shrink-0 w-10 h-10 bg-red-100 rounded-xl flex items-center justify-center">
+                            <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                            </svg>
+                        </div>
+                        <span class="font-medium">{{ session('error') }}</span>
                     </div>
                 @endif
 

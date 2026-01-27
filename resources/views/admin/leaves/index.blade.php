@@ -2,15 +2,18 @@
     <div class="space-y-6">
         <!-- Header -->
         <div class="flex items-center justify-between">
-            <h1 class="text-2xl font-bold text-gray-900">Demandes de congés</h1>
+            <div>
+                <h1 class="text-2xl font-bold text-gray-900">Demandes de congés</h1>
+                <p class="text-sm text-gray-500 mt-1">Gérez les demandes de congés de vos employés</p>
+            </div>
         </div>
 
         <!-- Filters -->
-        <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+        <div class="bg-white rounded-2xl shadow-sm p-4 border border-gray-200">
             <form action="{{ route('admin.leaves.index') }}" method="GET" class="flex flex-col md:flex-row gap-4">
                 <div class="flex-1">
                     <label for="employee_id" class="block text-sm font-medium text-gray-700 mb-1">Employé</label>
-                    <select name="employee_id" id="employee_id" class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+                    <select name="employee_id" id="employee_id" class="w-full rounded-xl border-gray-300 focus:border-blue-500 focus:ring-blue-500">
                         <option value="">Tous les employés</option>
                         @foreach($employees as $emp)
                             <option value="{{ $emp->id }}" {{ request('employee_id') == $emp->id ? 'selected' : '' }}>{{ $emp->name }}</option>
@@ -19,7 +22,7 @@
                 </div>
                 <div>
                     <label for="statut" class="block text-sm font-medium text-gray-700 mb-1">Statut</label>
-                    <select name="statut" id="statut" class="rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+                    <select name="statut" id="statut" class="rounded-xl border-gray-300 focus:border-blue-500 focus:ring-blue-500">
                         <option value="">Tous les statuts</option>
                         <option value="pending" {{ request('statut') == 'pending' ? 'selected' : '' }}>En attente</option>
                         <option value="approved" {{ request('statut') == 'approved' ? 'selected' : '' }}>Approuvé</option>
@@ -28,7 +31,7 @@
                 </div>
                 <div>
                     <label for="type" class="block text-sm font-medium text-gray-700 mb-1">Type</label>
-                    <select name="type" id="type" class="rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+                    <select name="type" id="type" class="rounded-xl border-gray-300 focus:border-blue-500 focus:ring-blue-500">
                         <option value="">Tous les types</option>
                         <option value="conge" {{ request('type') == 'conge' ? 'selected' : '' }}>Congé</option>
                         <option value="maladie" {{ request('type') == 'maladie' ? 'selected' : '' }}>Maladie</option>
@@ -36,7 +39,7 @@
                     </select>
                 </div>
                 <div class="flex items-end">
-                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors">
                         Filtrer
                     </button>
                 </div>
@@ -44,31 +47,31 @@
         </div>
 
         <!-- Leaves Table -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
+                    <thead class="bg-gradient-to-r from-gray-50 to-slate-100">
                         <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employé</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Période</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Durée</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Motif</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
-                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Employé</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Type</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Période</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Durée</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Motif</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Statut</th>
+                            <th class="px-6 py-4 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">Actions</th>
                         </tr>
                     </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
+                    <tbody class="bg-white divide-y divide-gray-100">
                         @forelse($leaves as $leave)
-                            <tr class="hover:bg-gray-50">
+                            <tr class="hover:bg-blue-50/50 transition-colors group">
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="flex items-center">
                                         <div class="flex-shrink-0 h-8 w-8">
                                             @if($leave->user->avatar)
-                                                <img class="h-8 w-8 rounded-full object-cover" src="{{ Storage::url($leave->user->avatar) }}" alt="{{ $leave->user->name }}">
+                                                <img class="h-10 w-10 rounded-full object-cover ring-2 ring-white shadow-sm" src="{{ Storage::url($leave->user->avatar) }}" alt="{{ $leave->user->name }}">
                                             @else
-                                                <div class="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center">
-                                                    <span class="text-blue-600 font-medium text-xs">{{ strtoupper(substr($leave->user->name, 0, 2)) }}</span>
+                                                <div class="h-10 w-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center ring-2 ring-white shadow-sm">
+                                                    <span class="text-white font-bold text-xs">{{ strtoupper(substr($leave->user->name, 0, 2)) }}</span>
                                                 </div>
                                             @endif
                                         </div>
@@ -100,7 +103,7 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                     <div class="flex items-center justify-end space-x-2">
-                                        <a href="{{ route('admin.leaves.show', $leave) }}" class="text-blue-600 hover:text-blue-900" title="Voir">
+                                        <a href="{{ route('admin.leaves.show', $leave) }}" class="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-colors" title="Voir">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
@@ -109,7 +112,7 @@
                                         @if($leave->statut === 'pending')
                                             <form action="{{ route('admin.leaves.approve', $leave) }}" method="POST" class="inline">
                                                 @csrf
-                                                <button type="submit" class="text-green-600 hover:text-green-900" title="Approuver">
+                                                <button type="submit" class="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-xl transition-colors" title="Approuver">
                                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                                                     </svg>
@@ -117,7 +120,7 @@
                                             </form>
                                             <form action="{{ route('admin.leaves.reject', $leave) }}" method="POST" class="inline">
                                                 @csrf
-                                                <button type="submit" class="text-red-600 hover:text-red-900" title="Rejeter">
+                                                <button type="submit" class="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors" title="Rejeter">
                                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                                                     </svg>

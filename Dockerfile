@@ -1,97 +1,54 @@
-# Stage 1: Build assets
-FROM node:22-alpine AS node-builder
+# Build assets with Node.js
+FROM node:22-alpine AS assets
 
 WORKDIR /app
-
-# Copy package files
 COPY package*.json ./
-
-# Install dependencies
 RUN npm ci
-
-# Copy source files for build
 COPY resources ./resources
-COPY vite.config.js ./
-COPY postcss.config.js ./
-COPY tailwind.config.js ./
-
-# Build assets
+COPY vite.config.js postcss.config.js tailwind.config.js ./
 RUN npm run build
 
-# Stage 2: PHP Application
-FROM php:8.2-fpm-alpine
+# PHP Application
+FROM php:8.2-cli
 
-# Install system dependencies
-RUN apk add --no-cache \
-    git \
-    curl \
-    libpng-dev \
-    libjpeg-turbo-dev \
-    freetype-dev \
-    libzip-dev \
-    zip \
-    unzip \
-    oniguruma-dev \
-    libxml2-dev \
-    icu-dev \
-    supervisor \
-    nginx
+# Install dependencies
+RUN apt-get update && apt-get install -y \
+    git curl zip unzip \
+    libpng-dev libjpeg-dev libfreetype6-dev \
+    libzip-dev libonig-dev libxml2-dev libicu-dev \
+    && rm -rf /var/lib/apt/lists/*
 
 # Install PHP extensions
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install -j$(nproc) \
-        pdo \
-        pdo_mysql \
-        mbstring \
-        exif \
-        pcntl \
-        bcmath \
-        gd \
-        zip \
-        intl \
-        opcache \
-        xml
+    && docker-php-ext-install pdo pdo_mysql mbstring bcmath gd zip intl opcache
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Set working directory
 WORKDIR /var/www/html
 
-# Copy composer files first for better caching
+# Copy composer files and install
 COPY composer.json composer.lock ./
-
-# Install PHP dependencies
 RUN composer install --no-dev --no-scripts --no-autoloader --prefer-dist
 
-# Copy application files
+# Copy application
 COPY . .
 
-# Copy built assets from node stage
-COPY --from=node-builder /app/public/build ./public/build
+# Copy built assets
+COPY --from=assets /app/public/build ./public/build
 
-# Generate optimized autoload
-RUN composer dump-autoload --optimize
+# Finalize
+RUN composer dump-autoload --optimize \
+    && mkdir -p storage/framework/{sessions,views,cache} storage/logs bootstrap/cache \
+    && chmod -R 777 storage bootstrap/cache
 
-# Set permissions
-RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 755 /var/www/html/storage \
-    && chmod -R 755 /var/www/html/bootstrap/cache
-
-# Create storage directories
-RUN mkdir -p storage/framework/{sessions,views,cache} storage/logs bootstrap/cache
-
-# Copy nginx configuration
-COPY docker/nginx.conf /etc/nginx/http.d/default.conf
-
-# Copy supervisor configuration
-COPY docker/supervisord.conf /etc/supervisord.conf
-
-# Expose port
+# Railway provides PORT dynamically
+ENV PORT=8080
 EXPOSE 8080
 
-# Start script
-COPY docker/start.sh /start.sh
-RUN chmod +x /start.sh
-
-CMD ["/start.sh"]
+# Simple start command
+CMD php artisan migrate --force && \
+    php artisan config:cache && \
+    php artisan route:cache && \
+    php artisan view:cache && \
+    php artisan serve --host=0.0.0.0 --port=$PORT
