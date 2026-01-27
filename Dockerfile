@@ -1,6 +1,5 @@
-# Build assets with Node.js
+# Build assets
 FROM node:22-alpine AS assets
-
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci
@@ -11,7 +10,7 @@ RUN npm run build
 # PHP Application
 FROM php:8.2-cli
 
-# Install dependencies
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
     git curl zip unzip \
     libpng-dev libjpeg-dev libfreetype6-dev \
@@ -27,7 +26,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
 
-# Copy composer files and install
+# Copy and install dependencies
 COPY composer.json composer.lock ./
 RUN composer install --no-dev --no-scripts --no-autoloader --prefer-dist
 
@@ -42,13 +41,19 @@ RUN composer dump-autoload --optimize \
     && mkdir -p storage/framework/{sessions,views,cache} storage/logs bootstrap/cache \
     && chmod -R 777 storage bootstrap/cache
 
-# Railway provides PORT dynamically
-ENV PORT=8080
+# Create startup script
+RUN echo '#!/bin/bash\n\
+set -e\n\
+echo "Running migrations..."\n\
+php artisan migrate --force || true\n\
+echo "Caching config..."\n\
+php artisan config:cache || true\n\
+php artisan route:cache || true\n\
+php artisan view:cache || true\n\
+echo "Starting server on port $PORT..."\n\
+exec php artisan serve --host=0.0.0.0 --port=${PORT:-8080}\n\
+' > /start.sh && chmod +x /start.sh
+
 EXPOSE 8080
 
-# Simple start command
-CMD php artisan migrate --force && \
-    php artisan config:cache && \
-    php artisan route:cache && \
-    php artisan view:cache && \
-    php artisan serve --host=0.0.0.0 --port=$PORT
+CMD ["/bin/bash", "/start.sh"]
