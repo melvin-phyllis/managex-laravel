@@ -1,0 +1,35 @@
+# Docker
+.docker/
+docker-compose*.yml
+Dockerfile*
+
+# Development
+.env
+.env.local
+.env.*.local
+node_modules/
+vendor/
+
+# IDE
+.idea/
+.vscode/
+*.sublime-*
+
+# Logs
+storage/logs/*
+!storage/logs/.gitkeep
+
+# Cache
+bootstrap/cache/*
+!bootstrap/cache/.gitkeep
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/views/*
+
+# Testing
+.phpunit.result.cache
+coverage/
+
+# OS
+.DS_Store
+Thumbs.db
