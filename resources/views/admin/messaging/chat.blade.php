@@ -4,14 +4,17 @@
     </style>
     <div x-data="messagingApp()" x-init="init()">
         <div class="h-[calc(100vh-8rem)] flex bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-        
+
         <!-- Sidebar - Liste des conversations -->
-        <div class="w-80 border-r border-gray-200 flex flex-col bg-gray-50">
+        <!-- Sur mobile: visible seulement si pas de conversation sélectionnée -->
+        <!-- Sur tablette/desktop (md+): toujours visible -->
+        <div class="border-r border-gray-200 flex flex-col bg-gray-50 w-full md:w-80 lg:w-96"
+             :class="{ 'hidden': selectedConversation, 'flex': !selectedConversation, 'md:flex': true }">
             <!-- Header -->
             <div class="p-4 border-b border-gray-200 bg-white">
                 <div class="flex items-center justify-between mb-3">
                     <h2 class="text-lg font-bold text-gray-900">Messages</h2>
-                    <button @click="showNewConversation = true" 
+                    <button @click="showNewConversation = true"
                             class="p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
@@ -20,10 +23,10 @@
                 </div>
                 <!-- Search -->
                 <div class="relative">
-                    <input type="text" 
+                    <input type="text"
                            x-model="searchQuery"
                            @input.debounce.300ms="filterConversations()"
-                           placeholder="Rechercher..." 
+                           placeholder="Rechercher..."
                            class="w-full pl-10 pr-4 py-2 bg-gray-100 border-0 rounded-lg text-sm focus:ring-2 focus:ring-blue-500">
                     <svg class="w-5 h-5 text-gray-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
@@ -33,17 +36,17 @@
 
             <!-- Tabs -->
             <div class="flex border-b border-gray-200 bg-white">
-                <button @click="activeTab = 'all'" 
+                <button @click="activeTab = 'all'"
                         :class="activeTab === 'all' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500'"
                         class="flex-1 py-2 text-sm font-medium border-b-2 hover:text-gray-700 transition-colors">
                     Tous
                 </button>
-                <button @click="activeTab = 'direct'" 
+                <button @click="activeTab = 'direct'"
                         :class="activeTab === 'direct' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500'"
                         class="flex-1 py-2 text-sm font-medium border-b-2 hover:text-gray-700 transition-colors">
                     Directs
                 </button>
-                <button @click="activeTab = 'group'" 
+                <button @click="activeTab = 'group'"
                         :class="activeTab === 'group' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500'"
                         class="flex-1 py-2 text-sm font-medium border-b-2 hover:text-gray-700 transition-colors">
                     Groupes
@@ -53,7 +56,7 @@
             <!-- Conversations List -->
             <div class="flex-1 overflow-y-auto">
                 <template x-for="conv in filteredConversations" :key="conv.id">
-                    <div @click="selectConversation(conv)" 
+                    <div @click="selectConversation(conv)"
                          :class="selectedConversation?.id === conv.id ? 'bg-blue-50 border-l-4 border-blue-600' : 'hover:bg-gray-100'"
                          class="p-3 cursor-pointer transition-colors border-b border-gray-100">
                         <div class="flex items-center gap-3">
@@ -79,15 +82,15 @@
                             <!-- Info -->
                             <div class="flex-1 min-w-0">
                                 <div class="flex justify-between items-start">
-                                    <h3 class="font-medium text-gray-900 truncate" 
+                                    <h3 class="font-medium text-gray-900 truncate"
                                         x-text="conv.type === 'direct' ? (conv.other_user?.name || conv.name) : conv.name"></h3>
-                                    <span class="text-xs text-gray-400 flex-shrink-0" x-text="formatTime(conv.last_message_at)"></span>
+                                    <span class="text-xs text-gray-400 flex-shrink-0 ml-2" x-text="formatTime(conv.last_message_at)"></span>
                                 </div>
                                 <p class="text-sm text-gray-500 truncate" x-text="conv.last_message || 'Aucun message'"></p>
                             </div>
                             <!-- Unread badge -->
                             <template x-if="conv.unread_count > 0">
-                                <span class="bg-blue-600 text-white text-xs font-bold px-2 py-1 rounded-full" x-text="conv.unread_count"></span>
+                                <span class="bg-blue-600 text-white text-xs font-bold px-2 py-1 rounded-full flex-shrink-0" x-text="conv.unread_count"></span>
                             </template>
                         </div>
                     </div>
@@ -106,12 +109,22 @@
         </div>
 
         <!-- Main Chat Area -->
-        <div class="flex-1 flex flex-col">
+        <!-- Sur mobile: visible seulement si conversation sélectionnée -->
+        <!-- Sur tablette/desktop (md+): toujours visible -->
+        <div class="flex-1 flex flex-col w-full"
+             :class="{ 'hidden': !selectedConversation, 'flex': selectedConversation, 'md:flex': true }">
             <template x-if="selectedConversation">
                 <div class="flex flex-col h-full">
                     <!-- Chat Header -->
                     <div class="h-16 border-b border-gray-200 flex items-center justify-between px-4 bg-white">
                         <div class="flex items-center gap-3">
+                            <!-- Bouton retour (mobile uniquement) -->
+                            <button @click="selectedConversation = null"
+                                    class="md:hidden p-2 -ml-2 text-gray-600 hover:bg-gray-100 rounded-lg">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                                </svg>
+                            </button>
                             <template x-if="selectedConversation.type === 'direct'">
                                 <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold"
                                      :class="getAvatarColor(selectedConversation.other_user?.name)">
@@ -123,8 +136,8 @@
                                     <span x-text="selectedConversation.type === 'channel' ? '#' : getInitials(selectedConversation.name)"></span>
                                 </div>
                             </template>
-                            <div>
-                                <h3 class="font-semibold text-gray-900" 
+                            <div class="min-w-0">
+                                <h3 class="font-semibold text-gray-900 truncate"
                                     x-text="selectedConversation.type === 'direct' ? selectedConversation.other_user?.name : selectedConversation.name"></h3>
                                 <p class="text-xs text-gray-500" x-text="selectedConversation.type === 'channel' ? 'Canal' : (selectedConversation.type === 'group' ? selectedConversation.participants?.length + ' participants' : 'Message direct')"></p>
                             </div>
@@ -132,15 +145,15 @@
                     </div>
 
                     <!-- Messages -->
-                    <div class="flex-1 overflow-y-auto p-4 space-y-4" id="messagesContainer" x-ref="messagesContainer">
+                    <div class="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50" id="messagesContainer" x-ref="messagesContainer">
                         <template x-for="message in messages" :key="message.id">
-                            <div :class="message.user_id == currentUserId ? 'flex justify-end' : 'flex justify-start'">
-                                <div :class="message.user_id == currentUserId ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-900'"
-                                     class="max-w-md px-4 py-2 rounded-2xl">
-                                    <template x-if="message.user_id != currentUserId && selectedConversation.type !== 'direct'">
-                                        <p class="text-xs font-semibold mb-1" :class="message.user_id == currentUserId ? 'text-blue-100' : 'text-gray-600'" x-text="message.user?.name"></p>
+                            <div :class="(message.sender_id || message.user_id) == currentUserId ? 'flex justify-end' : 'flex justify-start'">
+                                <div :class="(message.sender_id || message.user_id) == currentUserId ? 'bg-blue-600 text-white' : 'bg-white border border-gray-200 text-gray-900'"
+                                     class="max-w-[85%] sm:max-w-md px-4 py-2 rounded-2xl shadow-sm">
+                                    <template x-if="(message.sender_id || message.user_id) != currentUserId && selectedConversation.type !== 'direct'">
+                                        <p class="text-xs font-semibold mb-1" :class="(message.sender_id || message.user_id) == currentUserId ? 'text-blue-100' : 'text-gray-600'" x-text="message.sender?.name || message.user?.name"></p>
                                     </template>
-                                    <p class="text-sm" x-text="message.content"></p>
+                                    <p class="text-sm break-words" x-text="message.content"></p>
                                     <p class="text-xs mt-1 opacity-70" x-text="formatMessageTime(message.created_at)"></p>
                                 </div>
                             </div>
@@ -148,15 +161,15 @@
                     </div>
 
                     <!-- Input -->
-                    <div class="p-4 border-t border-gray-200 bg-white">
-                        <form @submit.prevent="sendMessage()" class="flex gap-3">
-                            <input type="text" 
+                    <div class="p-3 sm:p-4 border-t border-gray-200 bg-white">
+                        <form @submit.prevent="sendMessage()" class="flex gap-2 sm:gap-3">
+                            <input type="text"
                                    x-model="newMessage"
                                    placeholder="Écrivez un message..."
-                                   class="flex-1 px-4 py-2 border border-gray-300 rounded-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                            <button type="submit" 
+                                   class="flex-1 px-4 py-2 border border-gray-300 rounded-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm sm:text-base">
+                            <button type="submit"
                                     :disabled="!newMessage.trim()"
-                                    class="px-6 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+                                    class="p-2 sm:px-6 sm:py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex-shrink-0">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
                                 </svg>
@@ -166,9 +179,9 @@
                 </div>
             </template>
 
-            <!-- No conversation selected -->
+            <!-- No conversation selected (desktop only) -->
             <template x-if="!selectedConversation">
-                <div class="flex-1 flex items-center justify-center bg-gray-50">
+                <div class="hidden md:flex flex-1 items-center justify-center bg-gray-50">
                     <div class="text-center">
                         <svg class="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
@@ -182,12 +195,12 @@
         </div>
 
         <!-- Modal Nouvelle Conversation -->
-        <div x-show="showNewConversation" x-cloak 
-             class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+        <div x-show="showNewConversation" x-cloak
+             class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
              @click.self="showNewConversation = false">
-            <div class="bg-white rounded-xl shadow-xl w-full max-w-md p-6">
+            <div class="bg-white rounded-xl shadow-xl w-full max-w-md p-4 sm:p-6 max-h-[90vh] overflow-y-auto">
                 <h3 class="text-lg font-bold text-gray-900 mb-4">Nouvelle conversation</h3>
-                
+
                 <div class="space-y-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Type</label>
@@ -208,7 +221,7 @@
                             <template x-for="user in availableUsers" :key="user.id">
                                 <label class="flex items-center gap-3 p-2 hover:bg-gray-50 cursor-pointer">
                                     <input type="checkbox" :value="user.id" x-model="selectedParticipants" class="rounded border-gray-300 text-blue-600">
-                                    <span x-text="user.name"></span>
+                                    <span x-text="user.name" class="text-sm"></span>
                                 </label>
                             </template>
                         </div>
@@ -239,11 +252,16 @@
                 selectedParticipants: [],
                 availableUsers: @json($users ?? []),
                 currentUserId: {{ auth()->id() }},
+                pollingInterval: null,
+                conversationPollingInterval: null,
 
                 init() {
                     this.filterConversations();
                     this.$watch('activeTab', () => this.filterConversations());
-                    
+
+                    // Start polling for new messages
+                    this.startPolling();
+
                     // Echo listener if available
                     if (typeof Echo !== 'undefined') {
                         Echo.private(`user.${this.currentUserId}`)
@@ -252,20 +270,78 @@
                                     this.messages.push(e.message);
                                     this.$nextTick(() => this.scrollToBottom());
                                 }
-                                this.loadConversations();
+                                this.loadConversationsData();
                             });
+                    }
+                },
+
+                startPolling() {
+                    // Poll for new messages every 3 seconds
+                    this.pollingInterval = setInterval(() => {
+                        if (this.selectedConversation) {
+                            this.pollNewMessages();
+                        }
+                    }, 3000);
+
+                    // Poll for conversation updates every 10 seconds
+                    this.conversationPollingInterval = setInterval(() => {
+                        this.loadConversationsData();
+                    }, 10000);
+                },
+
+                async pollNewMessages() {
+                    if (!this.selectedConversation || this.messages.length === 0) return;
+
+                    try {
+                        const lastId = this.messages[this.messages.length - 1].id;
+                        const response = await fetch(`/admin/messaging/${this.selectedConversation.id}/messages?after=${lastId}`);
+                        const data = await response.json();
+
+                        if (data.data && data.data.length > 0) {
+                            const existingIds = new Set(this.messages.map(m => m.id));
+                            const newMessages = data.data.filter(m => !existingIds.has(m.id));
+
+                            if (newMessages.length > 0) {
+                                this.messages.push(...newMessages);
+                                this.$nextTick(() => this.scrollToBottom());
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Polling error:', error);
+                    }
+                },
+
+                async loadConversationsData() {
+                    try {
+                        const response = await fetch('/messaging/api/conversations');
+                        if (response.ok) {
+                            const data = await response.json();
+                            // Merge with existing to preserve other_user mapping
+                            if (Array.isArray(data)) {
+                                this.conversations = data.map(conv => {
+                                    const existing = this.conversations.find(c => c.id === conv.id);
+                                    return {
+                                        ...conv,
+                                        other_user: conv.other_user || existing?.other_user
+                                    };
+                                });
+                                this.filterConversations();
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Error loading conversations:', error);
                     }
                 },
 
                 filterConversations() {
                     let filtered = this.conversations;
-                    
+
                     if (this.activeTab === 'direct') {
                         filtered = filtered.filter(c => c.type === 'direct');
                     } else if (this.activeTab === 'group') {
                         filtered = filtered.filter(c => c.type === 'group' || c.type === 'channel');
                     }
-                    
+
                     if (this.searchQuery) {
                         const query = this.searchQuery.toLowerCase();
                         filtered = filtered.filter(c => {
@@ -273,7 +349,7 @@
                             return name?.toLowerCase().includes(query);
                         });
                     }
-                    
+
                     this.filteredConversations = filtered;
                 },
 
@@ -284,8 +360,9 @@
 
                 async loadMessages(conversationId) {
                     try {
-                        const response = await fetch(`/messaging/${conversationId}/messages`);
-                        this.messages = await response.json();
+                        const response = await fetch(`/admin/messaging/${conversationId}/messages`);
+                        const data = await response.json();
+                        this.messages = data.data;
                         this.$nextTick(() => this.scrollToBottom());
                     } catch (error) {
                         console.error('Error loading messages:', error);
@@ -296,7 +373,7 @@
                     if (!this.newMessage.trim() || !this.selectedConversation) return;
 
                     try {
-                        const response = await fetch(`/messaging/${this.selectedConversation.id}/messages`, {
+                        const response = await fetch(`/admin/messaging/${this.selectedConversation.id}/messages`, {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -316,7 +393,7 @@
 
                 async createConversation() {
                     try {
-                        const response = await fetch('/messaging', {
+                        const response = await fetch('/admin/messaging', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -364,7 +441,7 @@
                     const date = new Date(dateStr);
                     const now = new Date();
                     const diff = now - date;
-                    
+
                     if (diff < 86400000) {
                         return date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
                     } else if (diff < 604800000) {

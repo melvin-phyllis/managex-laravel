@@ -7,6 +7,7 @@ use App\Models\Messaging\Conversation;
 use App\Models\Messaging\Message;
 use App\Models\Messaging\ConversationParticipant;
 use App\Models\User;
+use App\Events\NewMessage;
 use Illuminate\Http\Request;
 
 class MessagingController extends Controller
@@ -43,6 +44,58 @@ class MessagingController extends Controller
             ->get();
 
         return view('admin.messaging.index', compact('stats', 'recentMessages', 'topConversations', 'channels'));
+    }
+
+    /**
+     * Display the chat interface
+     */
+    public function chat()
+    {
+        $user = auth()->user();
+
+        $conversationsData = Conversation::forUser($user->id)
+            ->with(['activeParticipants.user', 'latestMessage.sender'])
+            ->get();
+
+        $conversations = $conversationsData->map(function ($conv) use ($user) {
+            $otherUser = null;
+            if ($conv->type === 'direct') {
+                $otherParticipant = $conv->activeParticipants
+                    ->where('user_id', '!=', $user->id)
+                    ->first();
+                $otherUser = $otherParticipant?->user;
+            }
+
+            return [
+                'id' => $conv->id,
+                'type' => $conv->type,
+                'name' => $conv->name,
+                'description' => $conv->description,
+                'avatar' => $conv->avatar,
+                'unread_count' => $conv->unreadCountFor($user->id),
+                'last_message' => $conv->latestMessage?->content,
+                'last_message_at' => $conv->latestMessage?->created_at?->toIso8601String(),
+                'other_user' => $otherUser ? [
+                    'id' => $otherUser->id,
+                    'name' => $otherUser->name,
+                    'avatar' => $otherUser->avatar ?? null,
+                ] : null,
+                'participants' => $conv->activeParticipants->map(fn($p) => [
+                    'id' => $p->user_id,
+                    'name' => $p->user?->name,
+                    'role' => $p->role,
+                ])->values(),
+            ];
+        })
+        ->sortByDesc('last_message_at')
+        ->values();
+
+        $users = User::where('id', '!=', $user->id)
+            ->select('id', 'name', 'email')
+            ->orderBy('name')
+            ->get();
+
+        return view('admin.messaging.chat', compact('conversations', 'users'));
     }
 
     /**
@@ -165,5 +218,110 @@ class MessagingController extends Controller
         $message->delete();
 
         return redirect()->back()->with('success', 'Message supprimé.');
+    }
+    /**
+     * Get messages for a conversation (API)
+     */
+    public function getMessages(Request $request, Conversation $conversation)
+    {
+        $query = $conversation->messages()
+            ->with(['sender', 'attachments'])
+            ->orderBy('created_at', 'asc');
+
+        // Support polling with 'after' parameter
+        if ($request->filled('after')) {
+            $query->where('id', '>', $request->after);
+            $messages = $query->limit(50)->get();
+
+            return response()->json([
+                'data' => $messages->map(fn($m) => [
+                    'id' => $m->id,
+                    'conversation_id' => $m->conversation_id,
+                    'sender_id' => $m->sender_id,
+                    'user_id' => $m->sender_id, // Alias pour compatibilité
+                    'sender' => $m->sender ? [
+                        'id' => $m->sender->id,
+                        'name' => $m->sender->name,
+                        'avatar' => $m->sender->avatar ?? null,
+                    ] : null,
+                    'user' => $m->sender ? [
+                        'id' => $m->sender->id,
+                        'name' => $m->sender->name,
+                        'avatar' => $m->sender->avatar ?? null,
+                    ] : null,
+                    'content' => $m->content,
+                    'attachments' => $m->attachments,
+                    'created_at' => $m->created_at->toIso8601String(),
+                ]),
+            ]);
+        }
+
+        $messages = $query->paginate(50);
+
+        // Transform data for consistent format
+        $messages->getCollection()->transform(fn($m) => [
+            'id' => $m->id,
+            'conversation_id' => $m->conversation_id,
+            'sender_id' => $m->sender_id,
+            'user_id' => $m->sender_id,
+            'sender' => $m->sender ? [
+                'id' => $m->sender->id,
+                'name' => $m->sender->name,
+                'avatar' => $m->sender->avatar ?? null,
+            ] : null,
+            'user' => $m->sender ? [
+                'id' => $m->sender->id,
+                'name' => $m->sender->name,
+                'avatar' => $m->sender->avatar ?? null,
+            ] : null,
+            'content' => $m->content,
+            'attachments' => $m->attachments,
+            'created_at' => $m->created_at->toIso8601String(),
+        ]);
+
+        return response()->json($messages);
+    }
+
+    /**
+     * Store a new message (API)
+     */
+    public function storeMessage(Request $request, Conversation $conversation)
+    {
+        $request->validate([
+            'content' => 'required|string|max:1000',
+        ]);
+
+        $message = $conversation->messages()->create([
+            'sender_id' => auth()->id(),
+            'content' => $request->content,
+        ]);
+
+        $message->load('sender');
+
+        // Broadcast the message (if broadcasting is configured)
+        try {
+            broadcast(new NewMessage($message))->toOthers();
+        } catch (\Exception $e) {
+            \Log::debug('Broadcasting disabled or failed: ' . $e->getMessage());
+        }
+
+        return response()->json([
+            'id' => $message->id,
+            'conversation_id' => $message->conversation_id,
+            'sender_id' => $message->sender_id,
+            'user_id' => $message->sender_id, // Alias pour compatibilité
+            'sender' => $message->sender ? [
+                'id' => $message->sender->id,
+                'name' => $message->sender->name,
+                'avatar' => $message->sender->avatar ?? null,
+            ] : null,
+            'user' => $message->sender ? [
+                'id' => $message->sender->id,
+                'name' => $message->sender->name,
+                'avatar' => $message->sender->avatar ?? null,
+            ] : null,
+            'content' => $message->content,
+            'created_at' => $message->created_at->toIso8601String(),
+        ]);
     }
 }

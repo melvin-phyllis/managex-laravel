@@ -235,51 +235,32 @@
         </div>
 
         <!-- Charts Row -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <!-- Présences Chart -->
-            <div class="bg-white rounded-2xl shadow-sm p-6 border border-gray-200 animate-fade-in-up">
-                <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-lg font-semibold text-gray-900">Présences mensuelles</h3>
-                    <a href="{{ route('admin.presences.index') }}" class="text-sm text-blue-600 hover:underline">Voir tout</a>
-                </div>
-                <canvas id="presenceChart" height="200"></canvas>
-            </div>
+        <div class="grid grid-cols-1  gap-6 ">
+            
 
-            <!-- Tasks Chart -->
-            <div class="bg-white rounded-2xl shadow-sm p-6 border border-gray-200 animate-fade-in-up">
+            
+        </div>
+
+        <!-- Department Stats & Leave Chart -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+           <!-- Tasks Chart -->
+            <div class="bg-white rounded-2xl shadow-sm p-6 border border-gray-200 animate-fade-in-up h-96">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="text-lg font-semibold text-gray-900">Répartition des tâches</h3>
                     <a href="{{ route('admin.tasks.index') }}" class="text-sm text-blue-600 hover:underline">Voir tout</a>
                 </div>
                 <canvas id="taskChart" height="200"></canvas>
             </div>
-        </div>
-
-        <!-- Department Stats & Leave Chart -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <!-- Department Stats -->
-            <div class="bg-white rounded-2xl shadow-sm p-6 border border-gray-200 animate-fade-in-up">
-                <h3 class="text-lg font-semibold text-gray-900 mb-4">Présence par département</h3>
-                <div class="space-y-4">
-                    @forelse($departmentStats as $dept)
-                        <div>
-                            <div class="flex items-center justify-between mb-1">
-                                <span class="text-sm font-medium text-gray-700">{{ $dept['name'] }}</span>
-                                <span class="text-sm text-gray-500">{{ $dept['presences_today'] }}/{{ $dept['employees'] }}</span>
-                            </div>
-                            <div class="h-2 bg-gray-100 rounded-full overflow-hidden">
-                                <div class="h-full rounded-full transition-all duration-500"
-                                     style="width: {{ $dept['presence_rate'] }}%; background-color: {{ $dept['color'] }}"></div>
-                            </div>
-                        </div>
-                    @empty
-                        <p class="text-sm text-gray-500 text-center py-4">Aucun département configuré</p>
-                    @endforelse
+<!-- Présences Chart -->
+            <div class="bg-white rounded-2xl shadow-sm p-6 border border-gray-200 animate-fade-in-up h-96">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold text-gray-900">Présences mensuelles</h3>
+                    <a href="{{ route('admin.presences.index') }}" class="text-sm text-blue-600 hover:underline">Voir tout</a>
                 </div>
+                <canvas id="presenceChart" height="200"></canvas>
             </div>
-
             <!-- Leave Chart -->
-            <div class="lg:col-span-2 bg-white rounded-2xl shadow-sm p-6 border border-gray-200 animate-fade-in-up">
+            <div class="bg-white rounded-2xl shadow-sm p-6 border border-gray-200 animate-fade-in-up h-96">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="text-lg font-semibold text-gray-900">Congés approuvés par mois</h3>
                     <a href="{{ route('admin.leaves.index') }}" class="text-sm text-blue-600 hover:underline">Voir tout</a>
@@ -319,7 +300,7 @@
             },
             options: {
                 responsive: true,
-                maintainAspectRatio: true,
+                maintainAspectRatio: false,
                 plugins: {
                     legend: {
                         display: false
@@ -366,7 +347,7 @@
             },
             options: {
                 responsive: true,
-                maintainAspectRatio: true,
+                maintainAspectRatio: false,
                 cutout: '65%',
                 plugins: {
                     legend: {
@@ -402,7 +383,7 @@
             },
             options: {
                 responsive: true,
-                maintainAspectRatio: true,
+                maintainAspectRatio: false,
                 plugins: {
                     legend: {
                         display: false

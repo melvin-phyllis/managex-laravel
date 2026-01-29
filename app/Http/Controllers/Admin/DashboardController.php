@@ -168,7 +168,7 @@ class DashboardController extends Controller
                 'initials' => $this->getInitials($presence->user->name),
                 'time' => $presence->check_in->format('H:i'),
                 'delay' => $this->formatDelay($lateMinutes),
-                'link' => route('admin.presences.show', $presence->user->id),
+                'link' => route('admin.presences.employee-show', $presence->user->id),
             ];
         }
 
@@ -180,7 +180,7 @@ class DashboardController extends Controller
             ->get();
 
         foreach ($overdueTasks as $task) {
-            $daysOverdue = now()->diffInDays($task->date_fin);
+            $daysOverdue = (int) abs(now()->diffInDays($task->date_fin));
             $alerts['overdue'][] = [
                 'id' => $task->id,
                 'title' => $task->titre,

@@ -173,7 +173,7 @@ class PresenceController extends Controller
                 ? min(100, round(($employee->total_worked_hours / $expectedHours) * 100, 1))
                 : 0;
             
-            $lateMin = $employee->total_late_minutes ?? 0;
+            $lateMin = (int) abs($employee->total_late_minutes ?? 0);
             $employee->late_impact = $lateMin >= 60 
                 ? floor($lateMin / 60) . 'h ' . ($lateMin % 60) . 'min'
                 : $lateMin . 'min';

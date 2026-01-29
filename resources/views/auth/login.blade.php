@@ -6,7 +6,8 @@
         </div>
 
         <!-- Session Status -->
-        <x-auth-session-status class="mb-4" :status="session('status')" />
+        <!-- Session Status -->
+        <!-- Handled by Toastify -->
 
         <form method="POST" action="{{ route('login') }}" class="space-y-5">
             @csrf
@@ -24,7 +25,7 @@
                         class="block w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                         placeholder="votre@email.com">
                 </div>
-                <x-input-error :messages="$errors->get('email')" class="mt-2" />
+                <!-- Error managed by Toastify -->
             </div>
 
             <!-- Password -->
@@ -40,7 +41,7 @@
                         class="block w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                         placeholder="••••••••">
                 </div>
-                <x-input-error :messages="$errors->get('password')" class="mt-2" />
+                <!-- Error managed by Toastify -->
             </div>
 
             <!-- Remember Me + Forgot Password -->

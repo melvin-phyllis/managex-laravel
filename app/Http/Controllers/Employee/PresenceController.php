@@ -287,7 +287,7 @@ class PresenceController extends Controller
         $lateThreshold = $scheduledStart->copy()->addMinutes($lateTolerance);
 
         $isLate = $now->gt($lateThreshold);
-        $lateMinutes = $isLate ? $now->diffInMinutes($scheduledStart) : null;
+        $lateMinutes = $isLate ? (int) abs($now->diffInMinutes($scheduledStart)) : null;
 
         Presence::create([
             'user_id' => $user->id,

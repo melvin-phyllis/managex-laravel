@@ -15,10 +15,10 @@
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
-    <div class="py-6">
+    <div >
         <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6">
+                <div >
                     <form action="{{ route('admin.geolocation-zones.update', $geolocationZone) }}" method="POST">
                         @csrf
                         @method('PUT')

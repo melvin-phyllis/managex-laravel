@@ -7,6 +7,7 @@ use App\Models\Messaging\Conversation;
 use App\Models\Messaging\Message;
 use App\Models\Messaging\MessageRead;
 use App\Models\Messaging\Mention;
+use App\Events\NewMessage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -96,6 +97,13 @@ class MessageController extends Controller
 
             // Load relationships
             $message->load(['sender', 'attachments', 'reactions', 'parent.sender']);
+
+            // Broadcast for real-time updates
+            try {
+                broadcast(new NewMessage($message))->toOthers();
+            } catch (\Exception $e) {
+                \Log::debug('Broadcasting disabled or failed: ' . $e->getMessage());
+            }
 
             // Send notifications to other participants
             $otherParticipants = $conversation->activeParticipants()
@@ -337,11 +345,18 @@ class MessageController extends Controller
         return [
             'id' => $message->id,
             'conversation_id' => $message->conversation_id,
+            'sender_id' => $message->sender_id,
+            'user_id' => $message->sender_id, // Alias pour compatibilité
             'sender' => $message->sender ? [
                 'id' => $message->sender->id,
                 'name' => $message->sender->name,
                 'avatar' => $message->sender->avatar,
             ] : null,
+            'user' => $message->sender ? [
+                'id' => $message->sender->id,
+                'name' => $message->sender->name,
+                'avatar' => $message->sender->avatar,
+            ] : null, // Alias pour compatibilité
             'type' => $message->type,
             'content' => $message->content,
             'content_html' => $message->content_html,

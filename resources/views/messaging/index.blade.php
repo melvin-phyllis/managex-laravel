@@ -4,14 +4,17 @@
     </style>
     <div x-data="messagingApp()" x-init="init()">
         <div class="h-[calc(100vh-8rem)] flex bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-        
+
         <!-- Sidebar - Liste des conversations -->
-        <div class="w-80 border-r border-gray-200 flex flex-col bg-gray-50/50">
+        <!-- Sur mobile: visible seulement si pas de conversation sélectionnée -->
+        <!-- Sur tablette/desktop (md+): toujours visible -->
+        <div class="border-r border-gray-200 flex flex-col bg-gray-50/50 w-full md:w-80 lg:w-96"
+             :class="{ 'hidden': selectedConversation, 'flex': !selectedConversation, 'md:flex': true }">
             <!-- Header -->
             <div class="p-4 border-b border-gray-200 bg-white">
                 <div class="flex items-center justify-between mb-3">
                     <h2 class="text-lg font-bold text-gray-800">Messages</h2>
-                    <button @click="showNewConversation = true" 
+                    <button @click="showNewConversation = true"
                             class="p-2 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-xl hover:shadow-md transition-all">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
@@ -20,10 +23,10 @@
                 </div>
                 <!-- Search -->
                 <div class="relative">
-                    <input type="text" 
+                    <input type="text"
                            x-model="searchQuery"
                            @input.debounce.300ms="filterConversations()"
-                           placeholder="Rechercher..." 
+                           placeholder="Rechercher..."
                            class="w-full pl-10 pr-4 py-2.5 bg-gray-100 border-0 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:bg-white transition-colors">
                     <svg class="w-5 h-5 text-gray-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
@@ -33,17 +36,17 @@
 
             <!-- Tabs -->
             <div class="flex border-b border-gray-200 bg-white px-1">
-                <button @click="activeTab = 'all'" 
+                <button @click="activeTab = 'all'"
                         :class="activeTab === 'all' ? 'bg-blue-50 text-blue-600 border-blue-600' : 'border-transparent text-gray-500 hover:bg-gray-100'"
                         class="flex-1 py-2.5 text-sm font-medium rounded-t-lg border-b-2 transition-all">
                     Tous
                 </button>
-                <button @click="activeTab = 'direct'" 
+                <button @click="activeTab = 'direct'"
                         :class="activeTab === 'direct' ? 'bg-blue-50 text-blue-600 border-blue-600' : 'border-transparent text-gray-500 hover:bg-gray-100'"
                         class="flex-1 py-2.5 text-sm font-medium rounded-t-lg border-b-2 transition-all">
                     Directs
                 </button>
-                <button @click="activeTab = 'group'" 
+                <button @click="activeTab = 'group'"
                         :class="activeTab === 'group' ? 'bg-blue-50 text-blue-600 border-blue-600' : 'border-transparent text-gray-500 hover:bg-gray-100'"
                         class="flex-1 py-2.5 text-sm font-medium rounded-t-lg border-b-2 transition-all">
                     Groupes
@@ -83,13 +86,13 @@
                             <div class="flex-1 min-w-0">
                                 <div class="flex items-center justify-between">
                                     <h3 class="font-medium text-gray-800 truncate" x-text="conv.name || 'Conversation'"></h3>
-                                    <span class="text-xs text-gray-400" x-text="conv.last_message?.created_at || ''"></span>
+                                    <span class="text-xs text-gray-400 ml-2 flex-shrink-0" x-text="formatTime(conv.last_message_at)"></span>
                                 </div>
-                                <p class="text-sm text-gray-500 truncate mt-0.5" x-text="conv.last_message?.content || 'Aucun message'"></p>
+                                <p class="text-sm text-gray-500 truncate mt-0.5" x-text="conv.last_message || 'Aucun message'"></p>
                             </div>
                             <!-- Unread Badge -->
                             <template x-if="conv.unread_count > 0">
-                                <span class="bg-gradient-to-r from-blue-500 to-blue-600 text-white text-xs font-bold px-2 py-0.5 rounded-full shadow-sm" x-text="conv.unread_count"></span>
+                                <span class="bg-gradient-to-r from-blue-500 to-blue-600 text-white text-xs font-bold px-2 py-0.5 rounded-full shadow-sm flex-shrink-0" x-text="conv.unread_count"></span>
                             </template>
                         </div>
                     </div>
@@ -107,9 +110,12 @@
         </div>
 
         <!-- Main Chat Area -->
-        <div class="flex-1 flex flex-col">
+        <!-- Sur mobile: visible seulement si conversation sélectionnée -->
+        <!-- Sur tablette/desktop (md+): toujours visible -->
+        <div class="flex-1 flex flex-col w-full"
+             :class="{ 'hidden': !selectedConversation, 'flex': selectedConversation, 'md:flex': true }">
             <template x-if="!selectedConversation">
-                <div class="flex-1 flex items-center justify-center bg-gray-50">
+                <div class="hidden md:flex flex-1 items-center justify-center bg-gray-50">
                     <div class="text-center">
                         <svg class="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
@@ -121,25 +127,32 @@
             </template>
 
             <template x-if="selectedConversation">
-                <div class="flex-1 flex flex-col">
+                <div class="flex-1 flex flex-col h-full">
                     <!-- Chat Header -->
-                    <div class="px-6 py-4 border-b border-gray-200 bg-white flex items-center justify-between">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-semibold">
+                    <div class="px-4 sm:px-6 py-4 border-b border-gray-200 bg-white flex items-center justify-between">
+                        <div class="flex items-center gap-3 min-w-0">
+                            <!-- Bouton retour (mobile uniquement) -->
+                            <button @click="selectedConversation = null"
+                                    class="md:hidden p-2 -ml-2 text-gray-600 hover:bg-gray-100 rounded-lg flex-shrink-0">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                                </svg>
+                            </button>
+                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-semibold flex-shrink-0">
                                 <span x-text="(selectedConversation?.name || 'C').charAt(0).toUpperCase()"></span>
                             </div>
-                            <div>
-                                <h3 class="font-semibold text-gray-900" x-text="selectedConversation?.name || 'Conversation'"></h3>
+                            <div class="min-w-0">
+                                <h3 class="font-semibold text-gray-900 truncate" x-text="selectedConversation?.name || 'Conversation'"></h3>
                                 <p class="text-xs text-gray-500" x-text="selectedConversation.type === 'direct' ? 'Message direct' : (selectedConversation.participants?.length || 0) + ' participants'"></p>
                             </div>
                         </div>
-                        <div class="flex items-center gap-2">
+                        <div class="flex items-center gap-1 sm:gap-2 flex-shrink-0">
                             <button @click="togglePin()" class="p-2 text-gray-400 hover:text-yellow-500 hover:bg-gray-100 rounded-lg transition-colors">
                                 <svg class="w-5 h-5" :class="selectedConversation.is_pinned ? 'text-yellow-500 fill-current' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
                                 </svg>
                             </button>
-                            <button @click="showConversationInfo = true" class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+                            <button @click="showConversationInfo = true" class="hidden sm:block p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                 </svg>
@@ -148,7 +161,7 @@
                     </div>
 
                     <!-- Messages -->
-                    <div class="flex-1 overflow-y-auto p-6 space-y-4 bg-gray-50" id="messagesContainer" @scroll="handleScroll">
+                    <div class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 bg-gray-50" id="messagesContainer" @scroll="handleScroll">
                         <template x-if="loadingMessages">
                             <div class="flex items-center justify-center py-4">
                                 <svg class="animate-spin h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24">
@@ -159,14 +172,14 @@
                         </template>
 
                         <template x-for="(message, index) in messages" :key="message.id">
-                            <div :class="message.sender?.id === currentUserId ? 'flex justify-end' : 'flex justify-start'">
-                                <div :class="message.sender?.id === currentUserId ? 'bg-blue-600 text-white' : 'bg-white border border-gray-200'"
-                                     class="max-w-md px-4 py-3 rounded-2xl shadow-sm">
+                            <div :class="(message.sender?.id || message.sender_id) === currentUserId ? 'flex justify-end' : 'flex justify-start'">
+                                <div :class="(message.sender?.id || message.sender_id) === currentUserId ? 'bg-blue-600 text-white' : 'bg-white border border-gray-200'"
+                                     class="max-w-[85%] sm:max-w-md px-4 py-3 rounded-2xl shadow-sm">
                                     <!-- Sender name for others -->
-                                    <template x-if="message.sender?.id !== currentUserId && message.sender">
+                                    <template x-if="(message.sender?.id || message.sender_id) !== currentUserId && message.sender">
                                         <p class="text-xs font-medium text-gray-500 mb-1" x-text="message.sender.name"></p>
                                     </template>
-                                    
+
                                     <!-- Reply preview -->
                                     <template x-if="message.parent">
                                         <div class="mb-2 pl-2 border-l-2 border-gray-300 text-xs opacity-75">
@@ -176,25 +189,25 @@
                                     </template>
 
                                     <!-- Content -->
-                                    <div x-html="message.content_html || message.content"></div>
+                                    <div class="text-sm break-words" x-html="message.content_html || message.content"></div>
 
                                     <!-- Attachments -->
                                     <template x-if="message.attachments?.length > 0">
                                         <div class="mt-2 space-y-1">
                                             <template x-for="att in message.attachments" :key="att.id">
                                                 <a :href="att.url" target="_blank" class="flex items-center gap-2 text-sm hover:underline">
-                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/>
                                                     </svg>
-                                                    <span x-text="att.name"></span>
-                                                    <span class="opacity-75" x-text="'(' + att.size + ')'"></span>
+                                                    <span class="truncate" x-text="att.name"></span>
+                                                    <span class="opacity-75 flex-shrink-0" x-text="'(' + att.size + ')'"></span>
                                                 </a>
                                             </template>
                                         </div>
                                     </template>
 
                                     <!-- Footer -->
-                                    <div class="flex items-center justify-between mt-1" :class="message.sender?.id === currentUserId ? 'text-blue-200' : 'text-gray-400'">
+                                    <div class="flex items-center justify-between mt-1" :class="(message.sender?.id || message.sender_id) === currentUserId ? 'text-blue-200' : 'text-gray-400'">
                                         <span class="text-xs" x-text="message.created_at_human"></span>
                                         <template x-if="message.is_edited">
                                             <span class="text-xs">(modifié)</span>
@@ -202,8 +215,8 @@
                                     </div>
 
                                     <!-- Reactions -->
-                                    <template x-if="Object.keys(message.reactions).length > 0">
-                                        <div class="flex gap-1 mt-2">
+                                    <template x-if="message.reactions && Object.keys(message.reactions).length > 0">
+                                        <div class="flex flex-wrap gap-1 mt-2">
                                             <template x-for="(count, emoji) in message.reactions" :key="emoji">
                                                 <span class="bg-gray-100 px-2 py-0.5 rounded-full text-sm" x-text="emoji + ' ' + count"></span>
                                             </template>
@@ -215,20 +228,20 @@
                     </div>
 
                     <!-- Message Input -->
-                    <div class="p-4 border-t border-gray-100 bg-white">
-                        <form @submit.prevent="sendMessage()" class="flex items-end gap-3">
+                    <div class="p-3 sm:p-4 border-t border-gray-100 bg-white">
+                        <form @submit.prevent="sendMessage()" class="flex items-end gap-2 sm:gap-3">
                             <div class="flex-1">
-                                <textarea x-model="newMessage" 
+                                <textarea x-model="newMessage"
                                           @keydown.enter.meta="sendMessage()"
                                           @keydown.enter.ctrl="sendMessage()"
                                           placeholder="Écrivez votre message..."
                                           rows="1"
-                                          class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl resize-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:bg-white transition-all"
+                                          class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl resize-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:bg-white transition-all text-sm sm:text-base"
                                           x-ref="messageInput"></textarea>
                             </div>
-                            <button type="submit" 
+                            <button type="submit"
                                     :disabled="!newMessage.trim()"
-                                    class="p-3 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-xl hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                                    class="p-3 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-xl hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
                                 </svg>
@@ -241,7 +254,7 @@
     </div>
 
     <!-- New Conversation Modal -->
-    <div x-show="showNewConversation" 
+    <div x-show="showNewConversation"
          x-cloak
          x-transition:enter="ease-out duration-200"
          x-transition:enter-start="opacity-0"
@@ -249,10 +262,10 @@
          x-transition:leave="ease-in duration-150"
          x-transition:leave-start="opacity-100"
          x-transition:leave-end="opacity-0"
-         class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+         class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
          @click.self="closeNewConversationModal()"
          @keydown.escape.window="closeNewConversationModal()">
-        <div class="bg-white rounded-2xl shadow-xl w-full max-w-md mx-4 p-6">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-md p-4 sm:p-6 max-h-[90vh] overflow-y-auto">
             <h3 class="text-lg font-bold text-gray-900 mb-4">Nouvelle conversation</h3>
             <form @submit.prevent="createConversation()">
                 <div class="space-y-4">
@@ -318,10 +331,10 @@
                 async init() {
                     await this.loadConversations();
                     this.$watch('activeTab', () => this.filterConversations());
-                    
+
                     // Start polling for new messages
                     this.startPolling();
-                    
+
                     // Cleanup on page unload
                     window.addEventListener('beforeunload', () => this.stopPolling());
                 },
@@ -333,7 +346,7 @@
                             this.pollNewMessages();
                         }
                     }, 3000);
-                    
+
                     // Poll for conversation updates every 10 seconds
                     this.conversationPollingInterval = setInterval(() => {
                         this.pollConversations();
@@ -353,26 +366,26 @@
 
                 async pollNewMessages() {
                     if (!this.selectedConversation) return;
-                    
+
                     try {
                         const lastId = this.messages.length > 0 ? this.messages[this.messages.length - 1].id : 0;
                         const response = await fetch(`/messaging/api/conversations/${this.selectedConversation.id}/messages?after=${lastId}`);
                         const data = await response.json();
-                        
+
                         if (data.messages && data.messages.length > 0) {
                             // Filter out messages we already have
                             const existingIds = new Set(this.messages.map(m => m.id));
                             const newMessages = data.messages.filter(m => !existingIds.has(m.id));
-                            
+
                             if (newMessages.length > 0) {
                                 this.messages.push(...newMessages);
-                                
+
                                 // Scroll to bottom for new messages
                                 this.$nextTick(() => {
                                     const container = document.getElementById('messagesContainer');
                                     if (container) container.scrollTop = container.scrollHeight;
                                 });
-                                
+
                                 // Mark as read
                                 await fetch(`/messaging/api/conversations/${this.selectedConversation.id}/read`, {
                                     method: 'POST',
@@ -389,12 +402,12 @@
                     try {
                         const response = await fetch('/messaging/api/conversations');
                         const newConversations = await response.json();
-                        
+
                         // Update conversations while preserving selection
                         const selectedId = this.selectedConversation?.id;
                         this.conversations = newConversations;
                         this.filterConversations();
-                        
+
                         // Update selected conversation data if still selected
                         if (selectedId) {
                             const updated = this.conversations.find(c => c.id === selectedId);
@@ -421,16 +434,16 @@
 
                 filterConversations() {
                     let filtered = [...this.conversations];
-                    
+
                     if (this.activeTab !== 'all') {
                         filtered = filtered.filter(c => c.type === this.activeTab);
                     }
-                    
+
                     if (this.searchQuery) {
                         const query = this.searchQuery.toLowerCase();
-                        filtered = filtered.filter(c => c.name.toLowerCase().includes(query));
+                        filtered = filtered.filter(c => c.name?.toLowerCase().includes(query));
                     }
-                    
+
                     this.filteredConversations = filtered;
                 },
 
@@ -441,11 +454,11 @@
                         const response = await fetch(`/messaging/api/conversations/${conv.id}/messages`);
                         const data = await response.json();
                         this.messages = data.messages;
-                        
+
                         // Mark as read
                         await fetch(`/messaging/api/conversations/${conv.id}/read`, { method: 'POST', headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}'} });
                         conv.unread_count = 0;
-                        
+
                         // Scroll to bottom
                         this.$nextTick(() => {
                             const container = document.getElementById('messagesContainer');
@@ -469,11 +482,11 @@
                             },
                             body: JSON.stringify({ content: this.newMessage })
                         });
-                        
+
                         const data = await response.json();
                         this.messages.push(data.message);
                         this.newMessage = '';
-                        
+
                         // Scroll to bottom
                         this.$nextTick(() => {
                             const container = document.getElementById('messagesContainer');
@@ -503,16 +516,16 @@
                                 participants: this.selectedParticipants
                             })
                         });
-                        
+
                         if (!response.ok) {
                             throw new Error('Erreur lors de la création');
                         }
-                        
+
                         const data = await response.json();
-                        
+
                         // Close modal first
                         this.closeNewConversationModal();
-                        
+
                         // Reload and select
                         await this.loadConversations();
                         if (data.conversation) {
@@ -550,6 +563,21 @@
                     // Load more messages when scrolling to top
                     if (e.target.scrollTop === 0 && this.messages.length > 0) {
                         // TODO: Implement infinite scroll for older messages
+                    }
+                },
+
+                formatTime(dateStr) {
+                    if (!dateStr) return '';
+                    const date = new Date(dateStr);
+                    const now = new Date();
+                    const diff = now - date;
+
+                    if (diff < 86400000) { // Less than 24 hours
+                        return date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+                    } else if (diff < 604800000) { // Less than 7 days
+                        return date.toLocaleDateString('fr-FR', { weekday: 'short' });
+                    } else {
+                        return date.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' });
                     }
                 }
             };

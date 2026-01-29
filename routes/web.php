@@ -172,6 +172,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 
     // Gestion de la messagerie (admin)
     Route::get('/messaging', [\App\Http\Controllers\Admin\MessagingController::class, 'index'])->name('messaging.index');
+    Route::get('/messaging-chat', [\App\Http\Controllers\Admin\MessagingController::class, 'chat'])->name('messaging.chat');
     Route::post('/messaging', [\App\Http\Controllers\Admin\MessagingController::class, 'store'])->name('messaging.store');
     Route::get('/messaging/{conversation}', [\App\Http\Controllers\Admin\MessagingController::class, 'show'])->name('messaging.show');
     Route::put('/messaging/{conversation}', [\App\Http\Controllers\Admin\MessagingController::class, 'update'])->name('messaging.update');
@@ -179,6 +180,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::post('/messaging/{conversation}/participants', [\App\Http\Controllers\Admin\MessagingController::class, 'addParticipant'])->name('messaging.participants.add');
     Route::delete('/messaging/{conversation}/participants/{user}', [\App\Http\Controllers\Admin\MessagingController::class, 'removeParticipant'])->name('messaging.participants.remove');
     Route::delete('/messaging/messages/{message}', [\App\Http\Controllers\Admin\MessagingController::class, 'deleteMessage'])->name('messaging.message.delete');
+    Route::get('/messaging/{conversation}/messages', [\App\Http\Controllers\Admin\MessagingController::class, 'getMessages'])->name('messaging.messages.index');
+    Route::post('/messaging/{conversation}/messages', [\App\Http\Controllers\Admin\MessagingController::class, 'storeMessage'])->name('messaging.messages.store');
 
     // Notifications admin
     Route::post('/notifications/{id}/read', [AdminDashboardController::class, 'markNotificationAsRead'])->name('notifications.read');

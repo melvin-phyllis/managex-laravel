@@ -7,6 +7,10 @@
     <title>{{ config('app.name', 'ManageX') }} - Connexion</title>
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700&display=swap" rel="stylesheet" />
+    
+    <!-- Toastify CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="font-sans antialiased">
@@ -30,5 +34,68 @@
             {{ $slot }}
         </div>
     </div>
+
+
+    <!-- Toastify JS -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Success Toast
+            @if(session('success') || session('status'))
+                Toastify({
+                    text: "{{ session('success') ?? session('status') }}",
+                    duration: 4000,
+                    close: true,
+                    gravity: "top",
+                    position: "right",
+                    stopOnFocus: true,
+                    style: {
+                        background: "linear-gradient(to right, #10b981, #059669)", // Emerald gradient
+                        borderRadius: "10px",
+                        boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
+                    },
+                }).showToast();
+            @endif
+
+            // Error Toast
+            @if(session('error'))
+                Toastify({
+                    text: "{{ session('error') }}",
+                    duration: 4000,
+                    close: true,
+                    gravity: "top",
+                    position: "right",
+                    stopOnFocus: true,
+                    style: {
+                        background: "linear-gradient(to right, #ef4444, #b91c1c)", // Red gradient
+                        borderRadius: "10px",
+                        boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
+                    },
+                }).showToast();
+            @endif
+
+            // Validation Errors (specifically auth failed)
+            @if($errors->any())
+                @if($errors->has('email') || $errors->has('password'))
+                    Toastify({
+                        text: "Identification de connexion incorrecte", // Custom message for login failure
+                        duration: 4000,
+                        close: true,
+                        gravity: "top",
+                        position: "right",
+                        stopOnFocus: true,
+                        style: {
+                            background: "linear-gradient(to right, #ef4444, #b91c1c)", // Red gradient
+                            borderRadius: "10px",
+                            boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
+                        },
+                    }).showToast();
+                @endif
+                
+                // Other general validation errors (optional or separate)
+            @endif
+        });
+    </script>
 </body>
 </html>

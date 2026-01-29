@@ -197,7 +197,7 @@
                                     ✓ Arrivée pointée à {{ $todayPresence->check_in->format('H:i') }}
                                 </p>
                                 @if($todayPresence->is_late)
-                                    <p class="text-sm text-orange-600 mt-1">⚠️ Retard de {{ $todayPresence->late_minutes }} minutes</p>
+                                    <p class="text-sm text-orange-600 mt-1">⚠️ Retard de {{ abs($todayPresence->late_minutes) }} minutes</p>
                                 @endif
                                 @if($todayPresence->check_in_status === 'in_zone')
                                     <p class="text-sm text-green-600 mt-1">📍 Dans la zone autorisée</p>

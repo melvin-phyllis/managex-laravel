@@ -97,18 +97,33 @@ class ConversationController extends Controller
 
         $conversations = $query->get()
             ->map(function ($conversation) use ($user) {
+                $otherUser = null;
+                if ($conversation->type === 'direct') {
+                    $otherParticipant = $conversation->activeParticipants
+                        ->where('user_id', '!=', $user->id)
+                        ->first();
+                    $otherUser = $otherParticipant?->user;
+                }
+
                 return [
                     'id' => $conversation->id,
                     'type' => $conversation->type,
                     'name' => $this->getConversationName($conversation, $user),
                     'avatar' => $this->getConversationAvatar($conversation, $user),
-                    'last_message' => $conversation->latestMessage ? [
-                        'content' => $conversation->latestMessage->content,
-                        'sender_name' => $conversation->latestMessage->sender?->name,
-                        'created_at' => $conversation->latestMessage->created_at->diffForHumans(),
-                    ] : null,
+                    'last_message' => $conversation->latestMessage?->content,
+                    'last_message_at' => $conversation->latestMessage?->created_at?->toIso8601String(),
                     'unread_count' => $conversation->unreadCountFor($user->id),
                     'is_pinned' => $conversation->participants->where('user_id', $user->id)->first()?->is_pinned ?? false,
+                    'other_user' => $otherUser ? [
+                        'id' => $otherUser->id,
+                        'name' => $otherUser->name,
+                        'avatar' => $otherUser->avatar ?? null,
+                    ] : null,
+                    'participants' => $conversation->activeParticipants->map(fn($p) => [
+                        'id' => $p->user_id,
+                        'name' => $p->user?->name,
+                        'role' => $p->role,
+                    ])->values(),
                 ];
             })
             ->sortByDesc('is_pinned')
