@@ -22,7 +22,7 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
-        'password',
+        // 'password' - RETIRÉ : définir explicitement via $user->password = Hash::make(...) pour éviter mass assignment
         // 'role' - RETIRÉ pour prévenir l'élévation de privilèges via mass assignment
         // Utiliser setRole() ou $user->role = 'xxx' explicitement
         'poste',

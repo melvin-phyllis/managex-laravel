@@ -291,7 +291,7 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Participants</label>
                         <select x-model="selectedParticipants" multiple class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500" size="5">
-                            @foreach(\App\Models\User::where('id', '!=', auth()->id())->orderBy('name')->get() as $user)
+                            @foreach($users as $user)
                                 <option value="{{ $user->id }}">{{ $user->name }}</option>
                             @endforeach
                         </select>
@@ -421,12 +421,18 @@
                     }
                 },
 
+                fetchWithTimeout(url, options = {}, timeoutMs = 15000) {
+                    const controller = new AbortController();
+                    const id = setTimeout(() => controller.abort(), timeoutMs);
+                    return fetch(url, { ...options, signal: controller.signal }).finally(() => clearTimeout(id));
+                },
+
                 async pollNewMessages() {
                     if (!this.selectedConversation) return;
 
                     try {
                         const lastId = this.messages.length > 0 ? this.messages[this.messages.length - 1].id : 0;
-                        const response = await fetch(`/messaging/api/conversations/${this.selectedConversation.id}/messages?after=${lastId}`);
+                        const response = await this.fetchWithTimeout(`/messaging/api/conversations/${this.selectedConversation.id}/messages?after=${lastId}`);
                         const data = await response.json();
 
                         if (data.messages && data.messages.length > 0) {
@@ -438,10 +444,10 @@
                                 this.$nextTick(() => this.scrollToBottom());
 
                                 // Mark as read
-                                await fetch(`/messaging/api/conversations/${this.selectedConversation.id}/read`, {
+                                await this.fetchWithTimeout(`/messaging/api/conversations/${this.selectedConversation.id}/read`, {
                                     method: 'POST',
                                     headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}'}
-                                });
+                                }, 5000);
                             }
                         }
                     } catch (error) {
@@ -451,7 +457,7 @@
 
                 async pollConversations() {
                     try {
-                        const response = await fetch('/messaging/api/conversations');
+                        const response = await this.fetchWithTimeout('/messaging/api/conversations');
                         const newConversations = await response.json();
 
                         const selectedId = this.selectedConversation?.id;

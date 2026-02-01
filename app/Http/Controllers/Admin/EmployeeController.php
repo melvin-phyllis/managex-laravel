@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exports\EmployeesExport;
 use App\Http\Controllers\Controller;
 use App\Models\Department;
 use App\Models\EmployeeWorkDay;
@@ -12,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules;
+use Maatwebsite\Excel\Facades\Excel;
 
 class EmployeeController extends Controller
 {
@@ -51,12 +53,22 @@ class EmployeeController extends Controller
         // Charger la présence du jour pour chaque employé
         $today = now()->toDateString();
         $employeeIds = $employees->pluck('id');
+        
+        // Pre-charger les présences (optimisé: 1 requête)
         $todayPresences = \App\Models\Presence::whereIn('user_id', $employeeIds)
             ->whereDate('date', $today)
             ->get()
             ->keyBy('user_id');
 
-        // Ajouter le statut de présence à chaque employé
+        // Pre-charger les congés approuvés du jour (optimisé: 1 requête au lieu de N)
+        $todayLeaves = \App\Models\Leave::whereIn('user_id', $employeeIds)
+            ->where('statut', 'approved')
+            ->whereDate('date_debut', '<=', $today)
+            ->whereDate('date_fin', '>=', $today)
+            ->pluck('user_id')
+            ->toArray();
+
+        // Ajouter le statut de présence à chaque employé (pas de requête dans la boucle)
         foreach ($employees as $employee) {
             $presence = $todayPresences->get($employee->id);
             if ($presence) {
@@ -66,17 +78,13 @@ class EmployeeController extends Controller
                     $employee->presence_status = 'present'; // Actuellement présent
                 }
             } else {
-                // Vérifier si en congé
-                $isOnLeave = \App\Models\Leave::where('user_id', $employee->id)
-                    ->where('statut', 'approved')
-                    ->whereDate('date_debut', '<=', $today)
-                    ->whereDate('date_fin', '>=', $today)
-                    ->exists();
+                // Vérifier si en congé (lookup en mémoire)
+                $isOnLeave = in_array($employee->id, $todayLeaves);
                 $employee->presence_status = $isOnLeave ? 'on_leave' : 'absent';
             }
         }
 
-        $departments = Department::active()->orderBy('name')->get();
+        $departments = Department::getActiveCached();
 
         // Statistiques
         $totalEmployees = User::where('role', 'employee')->count();
@@ -108,9 +116,26 @@ class EmployeeController extends Controller
         return view('admin.employees.index', compact('employees', 'departments', 'stats'));
     }
 
+    /**
+     * Export all employees (personal info, CDI, nom, poste, etc.) to Excel.
+     */
+    public function export(Request $request)
+    {
+        $departmentId = $request->get('department_id');
+        $status = $request->get('status');
+        $contractType = $request->get('contract_type');
+
+        $filename = 'employes-' . now()->format('Y-m-d') . '.xlsx';
+
+        return Excel::download(
+            new EmployeesExport($departmentId, $status, $contractType),
+            $filename
+        );
+    }
+
     public function create()
     {
-        $departments = Department::active()->orderBy('name')->get();
+        $departments = Department::getActiveCached();
         return view('admin.employees.create', compact('departments'));
     }
 
@@ -161,7 +186,6 @@ class EmployeeController extends Controller
         $employee = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($password),
             // 'role' défini explicitement après création pour sécurité
             'poste' => $request->poste,
             'telephone' => $request->telephone,
@@ -190,7 +214,8 @@ class EmployeeController extends Controller
             'status' => 'active',
         ]);
 
-        // Définir le rôle de manière sécurisée (non mass-assignable)
+        $employee->password = Hash::make($password);
+        $employee->saveQuietly();
         $employee->setRole('employee')->save();
 
         // Enregistrer les jours de travail
@@ -243,7 +268,7 @@ class EmployeeController extends Controller
     public function edit(User $employee)
     {
         $employee->load('workDays');
-        $departments = Department::active()->orderBy('name')->get();
+        $departments = Department::getActiveCached();
         $positions = $employee->department_id
             ? Position::where('department_id', $employee->department_id)->active()->orderBy('name')->get()
             : collect();
@@ -325,9 +350,10 @@ class EmployeeController extends Controller
         ];
 
         if ($request->filled('password')) {
-            $data['password'] = Hash::make($request->password);
+            $employee->password = Hash::make($request->password);
+            $employee->saveQuietly();
         }
-
+        unset($data['password']);
         $employee->update($data);
 
         // Mettre à jour les jours de travail

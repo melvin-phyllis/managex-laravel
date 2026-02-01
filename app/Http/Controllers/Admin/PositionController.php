@@ -25,7 +25,7 @@ class PositionController extends Controller
         }
 
         $positions = $query->orderBy('name')->paginate(10);
-        $departments = Department::active()->orderBy('name')->get();
+        $departments = Department::getActiveCached();
 
         return view('admin.positions.index', compact('positions', 'departments'));
     }
@@ -35,7 +35,7 @@ class PositionController extends Controller
      */
     public function create()
     {
-        $departments = Department::active()->orderBy('name')->get();
+        $departments = Department::getActiveCached();
         return view('admin.positions.create', compact('departments'));
     }
 
@@ -85,7 +85,7 @@ class PositionController extends Controller
      */
     public function edit(Position $position)
     {
-        $departments = Department::active()->orderBy('name')->get();
+        $departments = Department::getActiveCached();
         return view('admin.positions.edit', compact('position', 'departments'));
     }
 

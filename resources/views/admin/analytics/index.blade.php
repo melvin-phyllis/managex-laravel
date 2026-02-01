@@ -7,7 +7,7 @@
             <div class="absolute -top-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
             <div class="absolute -bottom-24 -left-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
             
-            <div class="relative p-6 md:p-8 bg-blue-400">
+            <div class="relative p-6 md:p-8 bg-blue-400/30">
                 <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                     <div>
                         <h1 class="text-2xl md:text-3xl font-bold text-white flex items-center gap-3">
@@ -29,8 +29,12 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button @click="exportData('pdf')" class="px-4 py-2.5 bg-white/20 backdrop-blur-sm text-white font-medium rounded-xl hover:bg-white/30 transition-all flex items-center">
-                            <x-icon name="download" class="w-4 h-4 mr-2"/>
+                            <x-icon name="file-text" class="w-4 h-4 mr-2"/>
                             Export PDF
+                        </button>
+                        <button @click="exportData('excel')" class="px-4 py-2.5 bg-emerald-500/80 backdrop-blur-sm text-white font-medium rounded-xl hover:bg-emerald-600 transition-all flex items-center">
+                            <x-icon name="table" class="w-4 h-4 mr-2"/>
+                            Export Excel
                         </button>
                         <button @click="loadData()" class="px-4 py-2.5 bg-white text-indigo-700 font-semibold rounded-xl hover:bg-indigo-50 transition-all shadow-lg flex items-center">
                             <x-icon name="refresh-cw" class="w-4 h-4 mr-2" x-bind:class="{'animate-spin': loading}"/>
@@ -242,8 +246,186 @@
             </div>
         </div>
 
+        {{-- Résumé Évaluations --}}
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-fade-in-up animation-delay-300">
+            {{-- Stats Évaluations Employés --}}
+            <div class="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl shadow-lg p-6 text-white">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="font-semibold flex items-center gap-2">
+                        <x-icon name="clipboard-list" class="w-5 h-5"/>
+                        Évaluations Employés (Ce mois)
+                    </h3>
+                    <a href="{{ route('admin.employee-evaluations.index') }}" class="text-xs bg-white/20 hover:bg-white/30 px-3 py-1 rounded-full transition">
+                        Voir tout →
+                    </a>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-white/10 rounded-lg p-3">
+                        <p class="text-2xl font-bold" x-text="tables.evaluationStats.employees?.validated || 0"></p>
+                        <p class="text-xs text-white/80">Validées</p>
+                    </div>
+                    <div class="bg-white/10 rounded-lg p-3">
+                        <p class="text-2xl font-bold" x-text="tables.evaluationStats.employees?.not_evaluated || 0"></p>
+                        <p class="text-xs text-white/80">Non évalués</p>
+                    </div>
+                    <div class="bg-white/10 rounded-lg p-3">
+                        <p class="text-2xl font-bold" x-text="tables.evaluationStats.employees?.avg_score || '0'"></p>
+                        <p class="text-xs text-white/80">Note moyenne</p>
+                    </div>
+                    <div class="bg-white/10 rounded-lg p-3">
+                        <p class="text-2xl font-bold" x-text="tables.evaluationStats.employees?.max_score || '0'"></p>
+                        <p class="text-xs text-white/80">Meilleure note</p>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Stats Évaluations Stagiaires --}}
+            <div class="bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl shadow-lg p-6 text-white">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="font-semibold flex items-center gap-2">
+                        <x-icon name="user-check" class="w-5 h-5"/>
+                        Évaluations Stagiaires (4 sem.)
+                    </h3>
+                    <a href="{{ route('admin.intern-evaluations.index') }}" class="text-xs bg-white/20 hover:bg-white/30 px-3 py-1 rounded-full transition">
+                        Voir tout →
+                    </a>
+                </div>
+                <div class="grid grid-cols-3 gap-4">
+                    <div class="bg-white/10 rounded-lg p-3">
+                        <p class="text-2xl font-bold" x-text="tables.evaluationStats.interns?.total_evaluations || 0"></p>
+                        <p class="text-xs text-white/80">Total évaluations</p>
+                    </div>
+                    <div class="bg-white/10 rounded-lg p-3">
+                        <p class="text-2xl font-bold" x-text="tables.evaluationStats.interns?.avg_score || '0'"></p>
+                        <p class="text-xs text-white/80">Note moyenne /10</p>
+                    </div>
+                    <div class="bg-white/10 rounded-lg p-3">
+                        <p class="text-2xl font-bold text-amber-300" x-text="tables.evaluationStats.interns?.not_evaluated_this_week || 0"></p>
+                        <p class="text-xs text-white/80">À évaluer cette sem.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- Section Évaluations & Classements --}}
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-fade-in-up animation-delay-350">
+            {{-- Meilleurs Employés (Évaluations) --}}
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                <div class="p-4 border-b border-gray-100 bg-gradient-to-r from-emerald-50 to-white flex items-center gap-2">
+                    <div class="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center">
+                        <x-icon name="award" class="w-4 h-4 text-emerald-600"/>
+                    </div>
+                    <h3 class="font-semibold text-gray-900">🏆 Top Employés (Notes)</h3>
+                </div>
+                <div class="divide-y divide-gray-100 max-h-80 overflow-y-auto">
+                    <template x-for="emp in tables.topPerformers.employees" :key="emp.rank">
+                        <div class="p-3 hover:bg-gray-50 flex items-center gap-3">
+                            <div class="flex-shrink-0">
+                                <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold"
+                                     :class="emp.rank === 1 ? 'bg-yellow-400 text-yellow-900' : emp.rank === 2 ? 'bg-gray-300 text-gray-700' : emp.rank === 3 ? 'bg-amber-600 text-white' : 'bg-gray-100 text-gray-600'"
+                                     x-text="emp.rank"></div>
+                            </div>
+                            <template x-if="emp.avatar">
+                                <img :src="'/storage/' + emp.avatar" class="w-10 h-10 rounded-full object-cover">
+                            </template>
+                            <template x-if="!emp.avatar">
+                                <div class="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 font-bold" x-text="emp.name.charAt(0)"></div>
+                            </template>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm font-medium text-gray-900 truncate" x-text="emp.name"></p>
+                                <p class="text-xs text-gray-500" x-text="emp.department"></p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-sm font-bold text-emerald-600" x-text="emp.score + '/' + emp.max_score"></p>
+                                <p class="text-xs text-gray-400" x-text="emp.percentage + '%'"></p>
+                            </div>
+                        </div>
+                    </template>
+                    <div x-show="!tables.topPerformers.employees?.length" class="p-8 text-center text-gray-500">
+                        Aucune évaluation ce mois
+                    </div>
+                </div>
+            </div>
+
+            {{-- Meilleurs Stagiaires (Évaluations) --}}
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                <div class="p-4 border-b border-gray-100 bg-gradient-to-r from-purple-50 to-white flex items-center gap-2">
+                    <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+                        <x-icon name="star" class="w-4 h-4 text-purple-600"/>
+                    </div>
+                    <h3 class="font-semibold text-gray-900">⭐ Top Stagiaires (Notes)</h3>
+                </div>
+                <div class="divide-y divide-gray-100 max-h-80 overflow-y-auto">
+                    <template x-for="intern in tables.topPerformers.interns" :key="intern.rank">
+                        <div class="p-3 hover:bg-gray-50 flex items-center gap-3">
+                            <div class="flex-shrink-0">
+                                <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold"
+                                     :class="intern.rank === 1 ? 'bg-yellow-400 text-yellow-900' : intern.rank === 2 ? 'bg-gray-300 text-gray-700' : intern.rank === 3 ? 'bg-amber-600 text-white' : 'bg-gray-100 text-gray-600'"
+                                     x-text="intern.rank"></div>
+                            </div>
+                            <template x-if="intern.avatar">
+                                <img :src="'/storage/' + intern.avatar" class="w-10 h-10 rounded-full object-cover">
+                            </template>
+                            <template x-if="!intern.avatar">
+                                <div class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 font-bold" x-text="intern.name.charAt(0)"></div>
+                            </template>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm font-medium text-gray-900 truncate" x-text="intern.name"></p>
+                                <p class="text-xs text-gray-500" x-text="intern.department"></p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-sm font-bold text-purple-600" x-text="intern.score + '/' + intern.max_score"></p>
+                                <p class="text-xs text-gray-400" x-text="intern.percentage + '%'"></p>
+                            </div>
+                        </div>
+                    </template>
+                    <div x-show="!tables.topPerformers.interns?.length" class="p-8 text-center text-gray-500">
+                        Aucune évaluation stagiaire
+                    </div>
+                </div>
+            </div>
+
+            {{-- Meilleure Assiduité --}}
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                <div class="p-4 border-b border-gray-100 bg-gradient-to-r from-blue-50 to-white flex items-center gap-2">
+                    <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                        <x-icon name="check-circle" class="w-4 h-4 text-blue-600"/>
+                    </div>
+                    <h3 class="font-semibold text-gray-900">👏 Meilleure Assiduité</h3>
+                </div>
+                <div class="divide-y divide-gray-100 max-h-80 overflow-y-auto">
+                    <template x-for="att in tables.bestAttendance" :key="att.rank">
+                        <div class="p-3 hover:bg-gray-50 flex items-center gap-3">
+                            <div class="flex-shrink-0">
+                                <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold"
+                                     :class="att.rank === 1 ? 'bg-yellow-400 text-yellow-900' : att.rank === 2 ? 'bg-gray-300 text-gray-700' : att.rank === 3 ? 'bg-amber-600 text-white' : 'bg-gray-100 text-gray-600'"
+                                     x-text="att.rank"></div>
+                            </div>
+                            <template x-if="att.avatar">
+                                <img :src="'/storage/' + att.avatar" class="w-10 h-10 rounded-full object-cover">
+                            </template>
+                            <template x-if="!att.avatar">
+                                <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold" x-text="att.name.charAt(0)"></div>
+                            </template>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm font-medium text-gray-900 truncate" x-text="att.name"></p>
+                                <p class="text-xs text-gray-500" x-text="att.department"></p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-sm font-bold text-blue-600" x-text="att.punctuality_rate + '%'"></p>
+                                <p class="text-xs text-gray-400" x-text="att.presence_count + ' jours'"></p>
+                            </div>
+                        </div>
+                    </template>
+                    <div x-show="!tables.bestAttendance?.length" class="p-8 text-center text-gray-500">
+                        Aucune donnée de présence
+                    </div>
+                </div>
+            </div>
+        </div>
+
         {{-- Graphiques Row 1 --}}
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-fade-in-up animation-delay-300">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-fade-in-up animation-delay-400">
             {{-- Evolution presences (Line) - Takes 2 cols --}}
             <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-100 p-5">
                 <div class="flex items-center justify-between mb-4">
@@ -284,7 +466,7 @@
         </div>
 
         {{-- Graphiques Row 2 --}}
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-fade-in-up animation-delay-350">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-fade-in-up animation-delay-450">
             {{-- Recrutements vs Departs --}}
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
                 <h3 class="font-semibold text-gray-900 mb-4 flex items-center gap-2">
@@ -326,7 +508,7 @@
         </div>
 
         {{-- Graphiques Row 3 --}}
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-fade-in-up animation-delay-400">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-fade-in-up animation-delay-500">
             {{-- Absenteisme par service --}}
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
                 <h3 class="font-semibold text-gray-900 mb-4 flex items-center gap-2">
@@ -355,7 +537,7 @@
         </div>
 
         {{-- Heures par semaine (Area) --}}
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 animate-fade-in-up animation-delay-450">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 animate-fade-in-up animation-delay-550">
             <div class="flex items-center justify-between mb-4">
                 <h3 class="font-semibold text-gray-900 flex items-center gap-2">
                     <div class="w-8 h-8 bg-cyan-100 rounded-lg flex items-center justify-center">
@@ -373,7 +555,7 @@
         </div>
 
         {{-- Insights & Recommendations (NOUVEAU) --}}
-        <div class="bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 rounded-xl border border-indigo-100 p-6 animate-fade-in-up animation-delay-500">
+        <div class="bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 rounded-xl border border-indigo-100 p-6 animate-fade-in-up animation-delay-600">
             <div class="flex items-start gap-4">
                 <div class="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center flex-shrink-0">
                     <x-icon name="zap" class="w-6 h-6 text-white"/>
@@ -411,7 +593,7 @@
         </div>
 
         {{-- Tableaux Grid --}}
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-fade-in-up animation-delay-550">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-fade-in-up animation-delay-650">
             {{-- Activité récente --}}
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                 <div class="p-4 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white flex justify-between items-center">
@@ -573,7 +755,10 @@
                     activities: [],
                     pending: [],
                     alerts: { contracts: [], birthdays: [] },
-                    latecomers: []
+                    latecomers: [],
+                    topPerformers: { employees: [], interns: [] },
+                    bestAttendance: [],
+                    evaluationStats: { employees: {}, interns: {} }
                 },
                 chartInstances: {},
 
@@ -588,18 +773,21 @@
                     const query = new URLSearchParams(this.filters).toString();
                     
                     try {
-                        const [kpis, charts, activities, pending, alerts, latecomers] = await Promise.all([
+                        const [kpis, charts, activities, pending, alerts, latecomers, topPerformers, bestAttendance, evaluationStats] = await Promise.all([
                             fetch(`{{ route('admin.analytics.kpis') }}?${query}`).then(r => r.json()),
                             fetch(`{{ route('admin.analytics.charts') }}?${query}`).then(r => r.json()),
                             fetch(`{{ route('admin.analytics.activities') }}?${query}`).then(r => r.json()),
                             fetch(`{{ route('admin.analytics.pending') }}?${query}`).then(r => r.json()),
                             fetch(`{{ route('admin.analytics.alerts') }}?${query}`).then(r => r.json()),
-                            fetch(`{{ route('admin.analytics.latecomers') }}?${query}`).then(r => r.json())
+                            fetch(`{{ route('admin.analytics.latecomers') }}?${query}`).then(r => r.json()),
+                            fetch(`{{ route('admin.analytics.top-performers') }}?${query}`).then(r => r.json()),
+                            fetch(`{{ route('admin.analytics.best-attendance') }}?${query}`).then(r => r.json()),
+                            fetch(`{{ route('admin.analytics.evaluation-stats') }}?${query}`).then(r => r.json())
                         ]);
 
                         this.kpis = kpis;
                         this.charts = charts;
-                        this.tables = { activities, pending, alerts, latecomers };
+                        this.tables = { activities, pending, alerts, latecomers, topPerformers, bestAttendance, evaluationStats };
                         this.lastUpdate = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
                         
                         this.$nextTick(() => {
@@ -613,7 +801,12 @@
                 },
 
                 exportData(format) {
-                    window.open(`{{ route('admin.presences.export.pdf') }}?${new URLSearchParams(this.filters).toString()}`, '_blank');
+                    const queryParams = new URLSearchParams(this.filters).toString();
+                    if (format === 'pdf') {
+                        window.open(`{{ route('admin.analytics.export.pdf') }}?${queryParams}`, '_blank');
+                    } else if (format === 'excel') {
+                        window.open(`{{ route('admin.analytics.export.excel') }}?${queryParams}`, '_blank');
+                    }
                 },
 
                 updateCharts() {

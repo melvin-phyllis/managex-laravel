@@ -6,7 +6,10 @@ use App\Models\Payroll;
 use App\Models\Task;
 use App\Policies\PayrollPolicy;
 use App\Policies\TaskPolicy;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -34,5 +37,44 @@ class AppServiceProvider extends ServiceProvider
         // Enregistrement des observers pour les notifications
         Task::observe(\App\Observers\TaskObserver::class);
         \App\Models\Leave::observe(\App\Observers\LeaveObserver::class);
+
+        // Configuration du Rate Limiting
+        $this->configureRateLimiting();
+    }
+
+    /**
+     * Configure les limites de requêtes pour protéger l'API
+     */
+    protected function configureRateLimiting(): void
+    {
+        // Limite globale API: 60 requêtes par minute par utilisateur
+        RateLimiter::for('api', function (Request $request) {
+            return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
+        });
+
+        // Limite pour la messagerie: 30 messages par minute
+        RateLimiter::for('messaging', function (Request $request) {
+            return Limit::perMinute(30)->by($request->user()?->id ?: $request->ip());
+        });
+
+        // Limite pour les uploads: 10 par minute
+        RateLimiter::for('uploads', function (Request $request) {
+            return Limit::perMinute(10)->by($request->user()?->id ?: $request->ip());
+        });
+
+        // Limite pour les exports/rapports: 5 par minute (opérations lourdes)
+        RateLimiter::for('exports', function (Request $request) {
+            return Limit::perMinute(5)->by($request->user()?->id ?: $request->ip());
+        });
+
+        // Limite stricte pour le login: 5 tentatives par minute
+        RateLimiter::for('login', function (Request $request) {
+            return Limit::perMinute(5)->by($request->input('email') . '|' . $request->ip());
+        });
+
+        // Limite pour les actions sensibles (suppression, etc.): 20 par minute
+        RateLimiter::for('sensitive', function (Request $request) {
+            return Limit::perMinute(20)->by($request->user()?->id ?: $request->ip());
+        });
     }
 }

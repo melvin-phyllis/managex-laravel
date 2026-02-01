@@ -111,9 +111,9 @@ class ProfileController extends Controller
             'password' => ['required', 'confirmed', Password::min(8)->mixedCase()->numbers()],
         ]);
 
-        auth()->user()->update([
-            'password' => Hash::make($validated['password']),
-        ]);
+        $user = auth()->user();
+        $user->password = Hash::make($validated['password']);
+        $user->saveQuietly();
 
         return redirect()->route('employee.profile.index')
             ->with('success', 'Mot de passe mis à jour.');

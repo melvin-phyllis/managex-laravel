@@ -321,7 +321,8 @@ class SettingsController extends Controller
                 ->with('error', 'Le mot de passe actuel est incorrect.');
         }
 
-        $user->update(['password' => Hash::make($validated['new_password'])]);
+        $user->password = Hash::make($validated['new_password']);
+        $user->saveQuietly();
 
         return redirect()->route('admin.settings.index', ['tab' => 'compte'])
             ->with('success', 'Mot de passe mis à jour avec succès.');

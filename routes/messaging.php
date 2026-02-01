@@ -30,21 +30,31 @@ Route::middleware(['auth'])->prefix('messaging')->name('messaging.')->group(func
         Route::post('/conversations/{conversation}/pin', [ConversationController::class, 'togglePin'])->name('conversations.pin');
         Route::post('/conversations/{conversation}/archive', [ConversationController::class, 'toggleArchive'])->name('conversations.archive');
 
-        // Messages
+        // Messages (avec rate limiting)
         Route::get('/conversations/{conversation}/messages', [MessageController::class, 'index'])->name('messages.index');
-        Route::post('/conversations/{conversation}/messages', [MessageController::class, 'store'])->name('messages.store');
+        Route::post('/conversations/{conversation}/messages', [MessageController::class, 'store'])
+            ->middleware('throttle:messaging')
+            ->name('messages.store');
         Route::post('/conversations/{conversation}/read', [MessageController::class, 'markAsRead'])->name('messages.read');
-        Route::put('/messages/{message}', [MessageController::class, 'update'])->name('messages.update');
-        Route::delete('/messages/{message}', [MessageController::class, 'destroy'])->name('messages.destroy');
+        Route::put('/messages/{message}', [MessageController::class, 'update'])
+            ->middleware('throttle:messaging')
+            ->name('messages.update');
+        Route::delete('/messages/{message}', [MessageController::class, 'destroy'])
+            ->middleware('throttle:sensitive')
+            ->name('messages.destroy');
 
         // Reactions
         Route::post('/messages/{message}/reactions', [MessageController::class, 'addReaction'])->name('messages.reactions.add');
         Route::delete('/messages/{message}/reactions', [MessageController::class, 'removeReaction'])->name('messages.reactions.remove');
 
-        // Attachments
-        Route::post('/conversations/{conversation}/attachments', [App\Http\Controllers\Messaging\AttachmentController::class, 'store'])->name('attachments.store');
+        // Attachments (avec rate limiting pour uploads)
+        Route::post('/conversations/{conversation}/attachments', [App\Http\Controllers\Messaging\AttachmentController::class, 'store'])
+            ->middleware('throttle:uploads')
+            ->name('attachments.store');
         Route::get('/attachments/{attachment}/download', [App\Http\Controllers\Messaging\AttachmentController::class, 'download'])->name('attachments.download');
-        Route::delete('/attachments/{attachment}', [App\Http\Controllers\Messaging\AttachmentController::class, 'destroy'])->name('attachments.destroy');
+        Route::delete('/attachments/{attachment}', [App\Http\Controllers\Messaging\AttachmentController::class, 'destroy'])
+            ->middleware('throttle:sensitive')
+            ->name('attachments.destroy');
 
         // User Status
         Route::get('/status', [App\Http\Controllers\Messaging\StatusController::class, 'show'])->name('status.show');

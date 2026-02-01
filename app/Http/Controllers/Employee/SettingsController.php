@@ -31,9 +31,9 @@ class SettingsController extends Controller
             'password.min' => 'Le mot de passe doit contenir au moins 8 caractères.',
         ]);
 
-        auth()->user()->update([
-            'password' => Hash::make($validated['password']),
-        ]);
+        $user = auth()->user();
+        $user->password = Hash::make($validated['password']);
+        $user->saveQuietly();
 
         return redirect()->route('employee.settings.index')
             ->with('success', 'Mot de passe mis à jour avec succès.');

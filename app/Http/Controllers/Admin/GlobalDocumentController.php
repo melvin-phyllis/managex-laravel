@@ -85,8 +85,11 @@ class GlobalDocumentController extends Controller
     {
         $globalDocument->load(['uploader', 'acknowledgedBy']);
         $usersNotAcknowledged = $globalDocument->usersNotAcknowledged();
+        
+        // Comptage des employés pour le calcul du pourcentage d'accusés de réception
+        $totalEmployees = \App\Models\User::where('role', 'employee')->count();
 
-        return view('admin.global-documents.show', compact('globalDocument', 'usersNotAcknowledged'));
+        return view('admin.global-documents.show', compact('globalDocument', 'usersNotAcknowledged', 'totalEmployees'));
     }
 
     /**

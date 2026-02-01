@@ -531,4 +531,14 @@ class DashboardController extends Controller
 
         return redirect()->back()->with('success', 'Toutes les notifications ont été marquées comme lues.');
     }
+
+    /**
+     * API: Retourne le nombre de notifications non lues (pour polling)
+     */
+    public function getUnreadNotificationsCount()
+    {
+        return response()->json([
+            'count' => auth()->user()->unreadNotifications()->count()
+        ]);
+    }
 }

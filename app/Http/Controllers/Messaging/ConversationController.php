@@ -29,7 +29,12 @@ class ConversationController extends Controller
             ->get()
             ->sortByDesc(fn ($c) => $c->latestMessage?->created_at ?? $c->created_at);
 
-        return view('messaging.index', compact('conversations'));
+        // Liste des utilisateurs pour la création de conversation (excluant l'utilisateur courant)
+        $users = User::where('id', '!=', $user->id)
+            ->orderBy('name')
+            ->get(['id', 'name', 'email']);
+
+        return view('messaging.index', compact('conversations', 'users'));
     }
 
     /**

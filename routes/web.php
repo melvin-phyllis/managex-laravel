@@ -162,7 +162,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/dashboard/alerts', [AdminDashboardController::class, 'getAlertsData'])->name('dashboard.alerts');
     Route::get('/dashboard/calendar', [AdminDashboardController::class, 'getCalendarEventsData'])->name('dashboard.calendar');
 
-    // Gestion des employés
+    // Gestion des employés (export avant resource pour éviter que "export" soit pris comme {employee})
+    Route::get('/employees/export', [EmployeeController::class, 'export'])->name('employees.export');
     Route::resource('employees', EmployeeController::class);
     Route::post('/employees/{employee}/contract/upload', [EmployeeController::class, 'uploadContract'])->name('employees.contract.upload');
     Route::get('/employees/{employee}/contract/download', [EmployeeController::class, 'downloadContract'])->name('employees.contract.download');
@@ -234,6 +235,11 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
         Route::get('/pending', [AnalyticsController::class, 'getPendingRequests'])->name('pending');
         Route::get('/alerts', [AnalyticsController::class, 'getHrAlerts'])->name('alerts');
         Route::get('/latecomers', [AnalyticsController::class, 'getTopLatecomers'])->name('latecomers');
+        Route::get('/top-performers', [AnalyticsController::class, 'getTopPerformers'])->name('top-performers');
+        Route::get('/best-attendance', [AnalyticsController::class, 'getBestAttendance'])->name('best-attendance');
+        Route::get('/evaluation-stats', [AnalyticsController::class, 'getEvaluationStats'])->name('evaluation-stats');
+        Route::get('/export/pdf', [AnalyticsController::class, 'exportPdf'])->name('export.pdf');
+        Route::get('/export/excel', [AnalyticsController::class, 'exportExcel'])->name('export.excel');
     });
 
     // Paramètres
@@ -267,6 +273,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::post('/messaging/{conversation}/read', [\App\Http\Controllers\Admin\MessagingController::class, 'markAsRead'])->name('messaging.read');
 
     // Notifications admin
+    Route::get('/notifications/unread-count', [AdminDashboardController::class, 'getUnreadNotificationsCount'])->name('notifications.unread-count');
     Route::post('/notifications/{id}/read', [AdminDashboardController::class, 'markNotificationAsRead'])->name('notifications.read');
     Route::post('/notifications/read-all', [AdminDashboardController::class, 'markAllNotificationsAsRead'])->name('notifications.read-all');
 
@@ -360,6 +367,7 @@ Route::middleware(['auth', 'role:employee'])->prefix('employee')->name('employee
     Route::get('/dashboard', [EmployeeDashboardController::class, 'index'])->name('dashboard');
     Route::get('/dashboard/chart-data', [EmployeeDashboardController::class, 'getChartDataApi'])->name('dashboard.chart-data');
     Route::get('/dashboard/events', [EmployeeDashboardController::class, 'getUpcomingEventsApi'])->name('dashboard.events');
+    Route::get('/notifications/unread-count', [EmployeeDashboardController::class, 'getUnreadNotificationsCount'])->name('notifications.unread-count');
     Route::post('/notifications/{id}/read', [EmployeeDashboardController::class, 'markNotificationAsRead'])->name('notifications.read');
     Route::post('/notifications/read-all', [EmployeeDashboardController::class, 'markAllNotificationsAsRead'])->name('notifications.read-all');
 

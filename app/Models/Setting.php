@@ -48,18 +48,28 @@ class Setting extends Model
     }
 
     /**
-     * Récupérer tous les paramètres d'un groupe
+     * Récupérer tous les paramètres d'un groupe (avec cache)
      */
     public static function getGroup(string $group): array
     {
-        $settings = static::where('group', $group)->get();
+        return Cache::remember("setting.group.{$group}", 3600, function () use ($group) {
+            $settings = static::where('group', $group)->get();
 
-        $result = [];
-        foreach ($settings as $setting) {
-            $result[$setting->key] = static::castValue($setting->value, $setting->type);
-        }
+            $result = [];
+            foreach ($settings as $setting) {
+                $result[$setting->key] = static::castValue($setting->value, $setting->type);
+            }
 
-        return $result;
+            return $result;
+        });
+    }
+
+    /**
+     * Invalider le cache d'un groupe de paramètres
+     */
+    public static function clearGroupCache(string $group): void
+    {
+        Cache::forget("setting.group.{$group}");
     }
 
     /**

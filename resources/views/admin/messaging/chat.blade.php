@@ -372,6 +372,12 @@
                     }
                 },
 
+                fetchWithTimeout(url, options = {}, timeoutMs = 15000) {
+                    const controller = new AbortController();
+                    const id = setTimeout(() => controller.abort(), timeoutMs);
+                    return fetch(url, { ...options, signal: controller.signal }).finally(() => clearTimeout(id));
+                },
+
                 startPolling() {
                     // Poll for new messages every 3 seconds
                     this.pollingInterval = setInterval(() => {
@@ -391,7 +397,7 @@
 
                     try {
                         const lastId = this.messages[this.messages.length - 1].id;
-                        const response = await fetch(`/admin/messaging/${this.selectedConversation.id}/messages?after=${lastId}`);
+                        const response = await this.fetchWithTimeout(`/admin/messaging/${this.selectedConversation.id}/messages?after=${lastId}`);
                         const data = await response.json();
 
                         if (data.data && data.data.length > 0) {
@@ -410,7 +416,7 @@
 
                 async loadConversationsData() {
                     try {
-                        const response = await fetch('/messaging/api/conversations');
+                        const response = await this.fetchWithTimeout('/messaging/api/conversations');
                         if (response.ok) {
                             const data = await response.json();
                             if (Array.isArray(data)) {

@@ -53,16 +53,16 @@
             </div>
         </div>
 
-        <!-- Stats Cards -->
+        <!-- Stats Cards (optimisé: données depuis le contrôleur) -->
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 animate-fade-in-up animation-delay-100">
             @php
                 $stats = [
-                    ['label' => 'Total', 'value' => $tasks->total(), 'color' => 'gray', 'icon' => 'clipboard-list'],
-                    ['label' => 'En attente', 'value' => \App\Models\Task::where('statut', 'pending')->count(), 'color' => 'amber', 'icon' => 'clock'],
-                    ['label' => 'En cours', 'value' => \App\Models\Task::whereIn('statut', ['approved', 'in_progress'])->count(), 'color' => 'blue', 'icon' => 'play'],
-                    ['label' => 'Terminées', 'value' => \App\Models\Task::where('statut', 'completed')->count(), 'color' => 'purple', 'icon' => 'check'],
-                    ['label' => 'Validées', 'value' => \App\Models\Task::where('statut', 'validated')->count(), 'color' => 'emerald', 'icon' => 'badge-check'],
-                    ['label' => 'En retard', 'value' => \App\Models\Task::where('date_fin', '<', now())->whereNotIn('statut', ['validated', 'completed'])->count(), 'color' => 'red', 'icon' => 'exclamation'],
+                    ['label' => 'Total', 'value' => $taskStats->total ?? 0, 'color' => 'gray', 'icon' => 'clipboard-list'],
+                    ['label' => 'En attente', 'value' => $taskStats->pending_count ?? 0, 'color' => 'amber', 'icon' => 'clock'],
+                    ['label' => 'En cours', 'value' => $taskStats->in_progress_count ?? 0, 'color' => 'blue', 'icon' => 'play'],
+                    ['label' => 'Terminées', 'value' => $taskStats->completed_count ?? 0, 'color' => 'purple', 'icon' => 'check'],
+                    ['label' => 'Validées', 'value' => $taskStats->validated_count ?? 0, 'color' => 'emerald', 'icon' => 'badge-check'],
+                    ['label' => 'En retard', 'value' => $taskStats->overdue_count ?? 0, 'color' => 'red', 'icon' => 'exclamation'],
                 ];
             @endphp
             @foreach($stats as $stat)
@@ -204,7 +204,7 @@
             </div>
 
             @php
-                $kanbanTasks = \App\Models\Task::with('user')->get()->groupBy('statut');
+                // $kanbanTasks passé depuis le contrôleur (optimisé)
                 $columns = [
                     'pending' => ['title' => 'En attente', 'color' => 'amber', 'icon' => 'clock'],
                     'approved' => ['title' => 'En cours', 'color' => 'blue', 'icon' => 'play'],

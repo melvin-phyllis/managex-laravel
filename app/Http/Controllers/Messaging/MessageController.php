@@ -305,6 +305,7 @@ class MessageController extends Controller
 
     /**
      * Create mentions from message content
+     * Optimisé: une seule requête au lieu de N requêtes
      */
     private function createMentions(Message $message, ?string $content): void
     {
@@ -322,17 +323,48 @@ class MessageController extends Controller
         preg_match_all('/@(\w+)/', $content, $matches);
         
         if (!empty($matches[1])) {
-            foreach ($matches[1] as $username) {
-                if (in_array(strtolower($username), ['tous', 'all'])) continue;
+            // Filtrer les mentions @tous/@all
+            $usernames = array_filter($matches[1], function($username) {
+                return !in_array(strtolower($username), ['tous', 'all']);
+            });
+
+            if (empty($usernames)) return;
+
+            // Charger tous les utilisateurs potentiels en UNE seule requête
+            $query = \App\Models\User::query();
+            foreach ($usernames as $index => $username) {
+                if ($index === 0) {
+                    $query->where('name', 'like', "%{$username}%");
+                } else {
+                    $query->orWhere('name', 'like', "%{$username}%");
+                }
+            }
+            $matchedUsers = $query->get()->keyBy(function($user) {
+                return strtolower($user->name);
+            });
+
+            // Créer les mentions sans requêtes supplémentaires
+            $mentionsToCreate = [];
+            foreach ($usernames as $username) {
+                // Chercher l'utilisateur dans la collection en mémoire
+                $user = $matchedUsers->first(function($u) use ($username) {
+                    return stripos($u->name, $username) !== false;
+                });
                 
-                $user = \App\Models\User::where('name', 'like', "%{$username}%")->first();
                 if ($user) {
-                    Mention::create([
+                    $mentionsToCreate[] = [
                         'message_id' => $message->id,
                         'user_id' => $user->id,
                         'type' => 'user',
-                    ]);
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ];
                 }
+            }
+
+            // Insertion en batch si des mentions existent
+            if (!empty($mentionsToCreate)) {
+                Mention::insert($mentionsToCreate);
             }
         }
     }

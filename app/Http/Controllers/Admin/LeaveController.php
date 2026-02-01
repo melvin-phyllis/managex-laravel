@@ -28,7 +28,27 @@ class LeaveController extends Controller
         $leaves = $query->orderBy('created_at', 'desc')->paginate(15);
         $employees = \App\Models\User::where('role', 'employee')->orderBy('name')->get();
 
-        return view('admin.leaves.index', compact('leaves', 'employees'));
+        // Statistiques pour le dashboard (une seule requête optimisée)
+        $stats = Leave::selectRaw("
+            COUNT(*) as total,
+            SUM(CASE WHEN statut = 'pending' THEN 1 ELSE 0 END) as pending_count,
+            SUM(CASE WHEN statut = 'approved' THEN 1 ELSE 0 END) as approved_count,
+            SUM(CASE WHEN statut = 'rejected' THEN 1 ELSE 0 END) as rejected_count
+        ")->first();
+
+        $pendingCount = $stats->pending_count ?? 0;
+        $approvedCount = $stats->approved_count ?? 0;
+        $rejectedCount = $stats->rejected_count ?? 0;
+        $totalCount = $stats->total ?? 0;
+
+        return view('admin.leaves.index', compact(
+            'leaves', 
+            'employees', 
+            'pendingCount', 
+            'approvedCount', 
+            'rejectedCount', 
+            'totalCount'
+        ));
     }
 
     public function show(Leave $leave)

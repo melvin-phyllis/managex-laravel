@@ -34,13 +34,44 @@ function realtimeToasts() {
         toasts: [],
         toastId: 0,
         
+        lastNotificationId: null,
+        pollingInterval: null,
+
         init() {
+            // Essayer WebSocket en premier
             if (window.Echo && window.userId) {
                 window.Echo.private('App.Models.User.' + window.userId)
                     .notification((notification) => {
                         this.showToast(notification);
                         window.dispatchEvent(new CustomEvent('new-notification', { detail: notification }));
                     });
+            } else {
+                // Fallback: polling toutes les 30 secondes si pas de WebSocket
+                this.startPolling();
+            }
+        },
+
+        startPolling() {
+            if (!window.userId) return;
+            
+            // Polling toutes les 30 secondes
+            this.pollingInterval = setInterval(() => {
+                this.checkNewNotifications();
+            }, 30000);
+        },
+
+        async checkNewNotifications() {
+            try {
+                const response = await fetch('/notifications/unread-count');
+                if (response.ok) {
+                    const data = await response.json();
+                    // Mettre à jour le compteur dans la navbar si différent
+                    window.dispatchEvent(new CustomEvent('notification-count-updated', { 
+                        detail: { count: data.count }
+                    }));
+                }
+            } catch (error) {
+                console.debug('Polling notifications failed:', error);
             }
         },
 

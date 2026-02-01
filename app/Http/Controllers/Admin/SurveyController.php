@@ -89,7 +89,10 @@ class SurveyController extends Controller
             $statistics[$question->id] = $question->statistics;
         }
 
-        return view('admin.surveys.results', compact('survey', 'statistics'));
+        // Comptage des employés pour le calcul du taux de réponse
+        $totalEmployees = \App\Models\User::where('role', 'employee')->count();
+
+        return view('admin.surveys.results', compact('survey', 'statistics', 'totalEmployees'));
     }
 
     public function toggle(Survey $survey)

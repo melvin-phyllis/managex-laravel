@@ -1,11 +1,5 @@
 <x-layouts.admin>
-    @php
-        $allLeaves = \App\Models\Leave::query();
-        $pendingCount = (clone $allLeaves)->where('statut', 'pending')->count();
-        $approvedCount = (clone $allLeaves)->where('statut', 'approved')->count();
-        $rejectedCount = (clone $allLeaves)->where('statut', 'rejected')->count();
-        $totalCount = $allLeaves->count();
-    @endphp
+    {{-- Statistiques passées depuis le contrôleur (optimisé: 1 requête au lieu de 4) --}}
 
     <div class="space-y-6">
         <!-- Header avec gradient -->

@@ -78,7 +78,7 @@
                     <div class="p-6">
                         @php
                             $acknowledgedCount = $globalDocument->acknowledgedBy->count();
-                            $totalEmployees = \App\Models\User::where('role', 'employee')->count();
+                            // $totalEmployees passé depuis le contrôleur
                             $percentage = $totalEmployees > 0 ? round(($acknowledgedCount / $totalEmployees) * 100) : 0;
                         @endphp
 

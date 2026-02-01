@@ -45,7 +45,25 @@ class TaskController extends Controller
         
         $employees = User::where('role', 'employee')->orderBy('name')->get();
 
-        return view('admin.tasks.index', compact('tasks', 'employees'));
+        // Statistiques optimisées (une seule requête au lieu de 6)
+        $taskStats = Task::selectRaw("
+            COUNT(*) as total,
+            SUM(CASE WHEN statut = 'pending' THEN 1 ELSE 0 END) as pending_count,
+            SUM(CASE WHEN statut IN ('approved', 'in_progress') THEN 1 ELSE 0 END) as in_progress_count,
+            SUM(CASE WHEN statut = 'completed' THEN 1 ELSE 0 END) as completed_count,
+            SUM(CASE WHEN statut = 'validated' THEN 1 ELSE 0 END) as validated_count,
+            SUM(CASE WHEN date_fin < NOW() AND statut NOT IN ('validated', 'completed') THEN 1 ELSE 0 END) as overdue_count
+        ")->first();
+
+        // Kanban tasks - limité à 50 tâches par statut pour performance
+        $kanbanTasks = Task::with('user')
+            ->whereIn('statut', ['pending', 'approved', 'in_progress', 'completed', 'validated', 'rejected'])
+            ->orderBy('priorite', 'desc')
+            ->orderBy('date_fin', 'asc')
+            ->get()
+            ->groupBy('statut');
+
+        return view('admin.tasks.index', compact('tasks', 'employees', 'taskStats', 'kanbanTasks'));
     }
 
     public function create()

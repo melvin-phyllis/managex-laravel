@@ -79,7 +79,7 @@
                         <p class="text-sm font-medium text-gray-500">Taux de réponse</p>
                         <p class="text-3xl font-bold text-gray-900 mt-1">
                             @php
-                                $totalEmployees = \App\Models\User::where('role', 'employee')->count();
+                                // $totalEmployees passé depuis le contrôleur
                                 $rate = $totalEmployees > 0 ? round(($survey->respondents_count / $totalEmployees) * 100) : 0;
                             @endphp
                             {{ $rate }}%

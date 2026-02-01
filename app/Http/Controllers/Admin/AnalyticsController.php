@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Department;
+use App\Models\EmployeeEvaluation;
+use App\Models\InternEvaluation;
 use App\Models\Leave;
 use App\Models\Payroll;
 use App\Models\Presence;
@@ -21,7 +23,7 @@ class AnalyticsController extends Controller
      */
     public function index()
     {
-        $departments = Department::active()->orderBy('name')->get();
+        $departments = Department::getActiveCached();
 
         // Initial data for page load (optional, to avoid immediate fetch if desired, but we'll fetch via JS for smoother load)
         $initialData = [
@@ -499,6 +501,217 @@ class AnalyticsController extends Controller
         ]);
     }
 
+    /**
+     * Get top performers based on evaluations
+     */
+    public function getTopPerformers(Request $request): JsonResponse
+    {
+        $month = (int) $request->get('custom_month', now()->month);
+        $year = (int) $request->get('custom_year', now()->year);
+        $departmentId = $request->get('department_id');
+
+        // Top employés par évaluation
+        $topEmployees = EmployeeEvaluation::with(['user:id,name,avatar,department_id', 'user.department:id,name'])
+            ->forPeriod($month, $year)
+            ->validated()
+            ->when($departmentId, fn($q) => $q->whereHas('user', fn($u) => $u->where('department_id', $departmentId)))
+            ->orderByDesc('total_score')
+            ->limit(5)
+            ->get()
+            ->map(fn($eval, $index) => [
+                'rank' => $index + 1,
+                'name' => $eval->user->name ?? '-',
+                'avatar' => $eval->user->avatar ?? null,
+                'department' => $eval->user->department->name ?? '-',
+                'score' => $eval->total_score,
+                'max_score' => EmployeeEvaluation::MAX_SCORE,
+                'percentage' => $eval->score_percentage,
+            ]);
+
+        // Top stagiaires par évaluation (dernières 4 semaines)
+        $weekStart = now()->startOfWeek();
+        $topInternsData = InternEvaluation::submitted()
+            ->where('week_start', '>=', $weekStart->copy()->subWeeks(4))
+            ->when($departmentId, fn($q) => $q->whereHas('intern', fn($u) => $u->where('department_id', $departmentId)))
+            ->selectRaw('intern_id, AVG(discipline_score + behavior_score + skills_score + communication_score) as avg_score')
+            ->groupBy('intern_id')
+            ->orderByDesc('avg_score')
+            ->limit(5)
+            ->get();
+
+        // Load interns separately
+        $internIds = $topInternsData->pluck('intern_id');
+        $interns = User::with('department:id,name')
+            ->whereIn('id', $internIds)
+            ->get()
+            ->keyBy('id');
+
+        $topInterns = $topInternsData->map(function ($eval, $index) use ($interns) {
+            $intern = $interns->get($eval->intern_id);
+            return [
+                'rank' => $index + 1,
+                'name' => $intern->name ?? '-',
+                'avatar' => $intern->avatar ?? null,
+                'department' => $intern->department->name ?? '-',
+                'score' => round($eval->avg_score ?? 0, 1),
+                'max_score' => 10,
+                'percentage' => $eval->avg_score ? round(($eval->avg_score / 10) * 100, 1) : 0,
+            ];
+        });
+
+        return response()->json([
+            'employees' => $topEmployees,
+            'interns' => $topInterns,
+        ]);
+    }
+
+    /**
+     * Get best attendance rankings
+     */
+    public function getBestAttendance(Request $request): JsonResponse
+    {
+        $month = (int) $request->get('custom_month', now()->month);
+        $year = (int) $request->get('custom_year', now()->year);
+        $departmentId = $request->get('department_id');
+
+        // Meilleure assiduité (plus de présences, moins de retards)
+        $attendanceData = Presence::whereMonth('date', $month)
+            ->whereYear('date', $year)
+            ->when($departmentId, fn($q) => $q->forDepartment($departmentId))
+            ->select('user_id')
+            ->selectRaw('COUNT(*) as presence_count')
+            ->selectRaw('SUM(CASE WHEN is_late = 0 OR is_late IS NULL THEN 1 ELSE 0 END) as on_time_count')
+            ->selectRaw('SUM(CASE WHEN is_late = 1 THEN 1 ELSE 0 END) as late_count')
+            ->groupBy('user_id')
+            ->orderByDesc('on_time_count')
+            ->orderBy('late_count')
+            ->limit(5)
+            ->get();
+
+        // Load users separately
+        $userIds = $attendanceData->pluck('user_id');
+        $users = User::with('department:id,name')
+            ->whereIn('id', $userIds)
+            ->get()
+            ->keyBy('id');
+
+        // Calculate total hours for each user
+        $totalHours = [];
+        if ($userIds->isNotEmpty()) {
+            $presences = Presence::whereMonth('date', $month)
+                ->whereYear('date', $year)
+                ->whereIn('user_id', $userIds)
+                ->whereNotNull('check_out')
+                ->get();
+            
+            foreach ($presences as $presence) {
+                $userId = $presence->user_id;
+                $hours = $presence->hours_worked ?? 0;
+                $totalHours[$userId] = ($totalHours[$userId] ?? 0) + $hours;
+            }
+        }
+
+        $bestAttendance = $attendanceData->map(function ($p, $index) use ($users, $totalHours) {
+            $user = $users->get($p->user_id);
+            return [
+                'rank' => $index + 1,
+                'name' => $user->name ?? '-',
+                'avatar' => $user->avatar ?? null,
+                'department' => $user->department->name ?? '-',
+                'presence_count' => (int) $p->presence_count,
+                'on_time_count' => (int) $p->on_time_count,
+                'late_count' => (int) $p->late_count,
+                'punctuality_rate' => $p->presence_count > 0 
+                    ? round(($p->on_time_count / $p->presence_count) * 100, 1) 
+                    : 0,
+                'total_hours' => round($totalHours[$p->user_id] ?? 0, 1),
+            ];
+        });
+
+        return response()->json($bestAttendance);
+    }
+
+    /**
+     * Get evaluation statistics
+     */
+    public function getEvaluationStats(Request $request): JsonResponse
+    {
+        $month = (int) $request->get('custom_month', now()->month);
+        $year = (int) $request->get('custom_year', now()->year);
+        $departmentId = $request->get('department_id');
+
+        // Statistiques évaluations employés
+        $employeeEvalStats = EmployeeEvaluation::forPeriod($month, $year)
+            ->when($departmentId, fn($q) => $q->whereHas('user', fn($u) => $u->where('department_id', $departmentId)))
+            ->selectRaw('COUNT(*) as total')
+            ->selectRaw("SUM(CASE WHEN status = 'validated' THEN 1 ELSE 0 END) as validated")
+            ->selectRaw("SUM(CASE WHEN status = 'draft' THEN 1 ELSE 0 END) as draft")
+            ->selectRaw('AVG(total_score) as avg_score')
+            ->selectRaw('MAX(total_score) as max_score')
+            ->selectRaw('MIN(total_score) as min_score')
+            ->first();
+
+        // Employés non évalués ce mois
+        $evaluatedUserIds = EmployeeEvaluation::forPeriod($month, $year)->pluck('user_id');
+        $notEvaluatedCount = User::where('role', 'employee')
+            ->where('contract_type', '!=', 'stage')
+            ->when($departmentId, fn($q) => $q->where('department_id', $departmentId))
+            ->whereNotIn('id', $evaluatedUserIds)
+            ->count();
+
+        // Distribution des notes (pour graphique)
+        $scoreDistribution = EmployeeEvaluation::forPeriod($month, $year)
+            ->validated()
+            ->when($departmentId, fn($q) => $q->whereHas('user', fn($u) => $u->where('department_id', $departmentId)))
+            ->selectRaw("
+                CASE 
+                    WHEN total_score >= 5 THEN 'Excellent (5+)'
+                    WHEN total_score >= 4 THEN 'Bien (4-5)'
+                    WHEN total_score >= 3 THEN 'Satisfaisant (3-4)'
+                    WHEN total_score >= 2 THEN 'A ameliorer (2-3)'
+                    ELSE 'Insuffisant (<2)'
+                END as grade_range,
+                COUNT(*) as count
+            ")
+            ->groupBy('grade_range')
+            ->get();
+
+        // Statistiques stagiaires (dernières 4 semaines)
+        $internEvalStats = InternEvaluation::submitted()
+            ->where('week_start', '>=', now()->subWeeks(4)->startOfWeek())
+            ->when($departmentId, fn($q) => $q->whereHas('intern', fn($u) => $u->where('department_id', $departmentId)))
+            ->selectRaw('COUNT(*) as total')
+            ->selectRaw('AVG(discipline_score + behavior_score + skills_score + communication_score) as avg_score')
+            ->first();
+
+        // Stagiaires non évalués cette semaine
+        $currentWeekStart = now()->startOfWeek();
+        $evaluatedInternIds = InternEvaluation::where('week_start', $currentWeekStart)->pluck('intern_id');
+        $internsNotEvaluated = User::where('role', 'employee')
+            ->where('contract_type', 'stage')
+            ->when($departmentId, fn($q) => $q->where('department_id', $departmentId))
+            ->whereNotIn('id', $evaluatedInternIds)
+            ->count();
+
+        return response()->json([
+            'employees' => [
+                'total' => $employeeEvalStats->total ?? 0,
+                'validated' => $employeeEvalStats->validated ?? 0,
+                'draft' => $employeeEvalStats->draft ?? 0,
+                'not_evaluated' => $notEvaluatedCount,
+                'avg_score' => round($employeeEvalStats->avg_score ?? 0, 2),
+                'max_score' => round($employeeEvalStats->max_score ?? 0, 2),
+                'min_score' => round($employeeEvalStats->min_score ?? 0, 2),
+                'score_distribution' => $scoreDistribution,
+            ],
+            'interns' => [
+                'total_evaluations' => $internEvalStats->total ?? 0,
+                'avg_score' => round($internEvalStats->avg_score ?? 0, 2),
+                'not_evaluated_this_week' => $internsNotEvaluated,
+            ],
+        ]);
+    }
+
     private function getPeriodDates(string $period): array
     {
         $end = now();
@@ -510,5 +723,97 @@ class AnalyticsController extends Controller
             default => now()->subMonth()
         };
         return ['start' => $start, 'end' => $end];
+    }
+
+    /**
+     * Export analytics data to PDF
+     */
+    public function exportPdf(Request $request)
+    {
+        $data = $this->getExportData($request);
+        
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pdf.analytics-report', $data);
+        $pdf->setPaper('a4', 'portrait');
+        
+        return $pdf->download('rapport-analytics-' . now()->format('Y-m-d') . '.pdf');
+    }
+
+    /**
+     * Export analytics data to Excel
+     */
+    public function exportExcel(Request $request)
+    {
+        $data = $this->getExportData($request);
+        
+        return \Maatwebsite\Excel\Facades\Excel::download(
+            new \App\Exports\AnalyticsExport($data),
+            'rapport-analytics-' . now()->format('Y-m-d') . '.xlsx'
+        );
+    }
+
+    /**
+     * Get data for export (PDF/Excel)
+     */
+    private function getExportData(Request $request): array
+    {
+        $period = $request->get('period', 'month');
+        $departmentId = $request->get('department_id');
+        
+        // Période
+        $periodLabel = match($period) {
+            'today' => "Aujourd'hui",
+            'week' => 'Cette semaine',
+            'month' => 'Ce mois',
+            'year' => 'Cette année',
+            default => 'Ce mois'
+        };
+
+        // Récupérer les KPIs via la méthode existante
+        $kpisResponse = $this->getKpiData($request);
+        $kpis = json_decode($kpisResponse->getContent(), true);
+
+        // Département sélectionné
+        $department = $departmentId ? Department::find($departmentId) : null;
+
+        // Effectif par département
+        $departmentStats = Department::withCount(['users' => fn($q) => $q->where('role', 'employee')])
+            ->get()
+            ->map(fn($d) => [
+                'name' => $d->name,
+                'count' => $d->users_count
+            ]);
+
+        // Top retardataires
+        $latecomersResponse = $this->getTopLatecomers($request);
+        $latecomers = json_decode($latecomersResponse->getContent(), true);
+
+        // Congés en attente
+        $pendingLeaves = Leave::with('user')->pending()->get();
+
+        // Top performers
+        $topPerformersResponse = $this->getTopPerformers($request);
+        $topPerformers = json_decode($topPerformersResponse->getContent(), true);
+
+        // Best attendance
+        $bestAttendanceResponse = $this->getBestAttendance($request);
+        $bestAttendance = json_decode($bestAttendanceResponse->getContent(), true);
+
+        // Evaluation stats
+        $evalStatsResponse = $this->getEvaluationStats($request);
+        $evaluationStats = json_decode($evalStatsResponse->getContent(), true);
+
+        return [
+            'title' => 'Rapport Analytics RH',
+            'period_label' => $periodLabel,
+            'department' => $department,
+            'generated_at' => now()->format('d/m/Y H:i'),
+            'kpis' => $kpis,
+            'department_stats' => $departmentStats,
+            'latecomers' => $latecomers,
+            'pending_leaves' => $pendingLeaves,
+            'top_performers' => $topPerformers,
+            'best_attendance' => $bestAttendance,
+            'evaluation_stats' => $evaluationStats,
+        ];
     }
 }
