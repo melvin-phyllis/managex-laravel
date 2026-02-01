@@ -1,6 +1,6 @@
 <x-layouts.admin>
     <div class="space-y-6">
-        <div>
+        <div class="animate-fade-in-up">
             <nav class="flex items-center text-sm text-gray-500 mb-2">
                 <a href="{{ route('admin.payroll-settings.countries') }}" class="hover:text-red-600">Configuration Paie</a>
                 <svg class="w-4 h-4 mx-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -15,7 +15,7 @@
             <h1 class="text-2xl font-bold text-gray-900">Modifier la Règle - {{ $rule->label }}</h1>
         </div>
 
-        <form action="{{ route('admin.payroll-settings.rules.update', [$country, $rule]) }}" method="POST" class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <form action="{{ route('admin.payroll-settings.rules.update', [$country, $rule]) }}" method="POST" class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 animate-fade-in-up animation-delay-100">
             @csrf
             @method('PUT')
 

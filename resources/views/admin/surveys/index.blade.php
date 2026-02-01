@@ -1,7 +1,7 @@
 <x-layouts.admin>
     <div class="space-y-6" x-data="surveyManagement()">
         <!-- Breadcrumb -->
-        <nav class="flex" aria-label="Breadcrumb">
+        <nav class="flex animate-fade-in-up" aria-label="Breadcrumb">
             <ol class="inline-flex items-center space-x-1 md:space-x-3">
                 <li class="inline-flex items-center">
                     <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600">
@@ -22,7 +22,7 @@
             </ol>
         </nav>
         <!-- Header -->
-        <x-table-header title="Sondages Internes" subtitle="Créez et analysez les sondages de votre équipe avec des outils simples">
+        <x-table-header title="Sondages Internes" subtitle="Créez et analysez les sondages de votre équipe avec des outils simples" class="animate-fade-in-up animation-delay-100">
             <x-slot:icon>
                 <div class="w-12 h-12 bg-gradient-to-br from-violet-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-violet-500/20">
                     <x-icon name="clipboard-list" class="w-6 h-6 text-white" />
@@ -39,7 +39,7 @@
         <!-- Stats Cards (Visible only if $stats is available) -->
         @if(isset($stats))
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 animate-fade-in-up animation-delay-200">
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm font-medium text-gray-500">Total Sondages</p>
@@ -55,7 +55,7 @@
         @endif
 
         <!-- Survey Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in-up animation-delay-300">
             @forelse($surveys as $survey)
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-all duration-200 group">
                     <!-- Card Header -->

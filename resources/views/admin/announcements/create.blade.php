@@ -1,7 +1,7 @@
 <x-layouts.admin>
     <div class="max-w-4xl mx-auto space-y-6">
         <!-- Breadcrumb -->
-        <nav class="flex" aria-label="Breadcrumb">
+        <nav class="flex animate-fade-in-up" aria-label="Breadcrumb">
             <ol class="inline-flex items-center space-x-1 md:space-x-3">
                 <li class="inline-flex items-center">
                     <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600">
@@ -30,7 +30,7 @@
             </ol>
         </nav>
         <!-- Header -->
-        <div class="flex items-center gap-4">
+        <div class="flex items-center gap-4 animate-fade-in-up animation-delay-100">
             <a href="{{ route('admin.announcements.index') }}" 
                class="p-2 rounded-lg hover:bg-gray-100 transition-colors">
                 <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -48,7 +48,7 @@
             @csrf
 
             <!-- Main Content Card -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-6">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-6 animate-fade-in-up animation-delay-200">
                 <h2 class="text-lg font-semibold text-gray-900 border-b pb-3">📝 Contenu</h2>
 
                 <!-- Title -->
@@ -107,7 +107,7 @@
             </div>
 
             <!-- Targeting Card -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-6">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-6 animate-fade-in-up animation-delay-300">
                 <h2 class="text-lg font-semibold text-gray-900 border-b pb-3">🎯 Ciblage</h2>
 
                 <div>
@@ -203,7 +203,7 @@
             </div>
 
             <!-- Scheduling Card -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-6">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-6 animate-fade-in-up animation-delay-400">
                 <h2 class="text-lg font-semibold text-gray-900 border-b pb-3">📅 Planification</h2>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -227,7 +227,7 @@
             </div>
 
             <!-- Options Card -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-4">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-4 animate-fade-in-up animation-delay-500">
                 <h2 class="text-lg font-semibold text-gray-900 border-b pb-3">⚙️ Options</h2>
 
                 <label class="flex items-center gap-3 cursor-pointer">

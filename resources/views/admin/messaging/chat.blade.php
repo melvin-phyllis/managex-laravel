@@ -1,15 +1,56 @@
 <x-layouts.admin>
     <style>
         [x-cloak] { display: none !important; }
+
+        /* Resizer styles */
+        .resizer {
+            width: 4px;
+            background: transparent;
+            cursor: col-resize;
+            flex-shrink: 0;
+            transition: background-color 0.2s;
+            position: relative;
+        }
+        .resizer:hover,
+        .resizer.resizing {
+            background: #3b82f6;
+        }
+        .resizer::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 4px;
+            height: 40px;
+            background: #d1d5db;
+            border-radius: 2px;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .resizer:hover::before {
+            opacity: 1;
+            background: white;
+        }
+
+        /* Prevent text selection while resizing */
+        .no-select {
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
     </style>
+
     <div x-data="messagingApp()" x-init="init()">
-        <div class="h-[calc(100vh-8rem)] flex bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="h-[calc(100vh-8rem)] flex bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden"
+             :class="{ 'no-select': isResizing }">
 
         <!-- Sidebar - Liste des conversations -->
-        <!-- Sur mobile: visible seulement si pas de conversation sélectionnée -->
-        <!-- Sur tablette/desktop (md+): toujours visible -->
-        <div class="border-r border-gray-200 flex flex-col bg-gray-50 w-full md:w-80 lg:w-96"
-             :class="{ 'hidden': selectedConversation, 'flex': !selectedConversation, 'md:flex': true }">
+        <div class="border-r border-gray-200 flex flex-col bg-gray-50 flex-shrink-0 overflow-hidden"
+             :class="{ 'hidden': selectedConversation && !isDesktop, 'flex': !selectedConversation || isDesktop }"
+             :style="isDesktop ? 'width: ' + sidebarWidth + 'px' : 'width: 100%'"
+             x-ref="sidebar">
             <!-- Header -->
             <div class="p-4 border-b border-gray-200 bg-white">
                 <div class="flex items-center justify-between mb-3">
@@ -108,11 +149,16 @@
             </div>
         </div>
 
+        <!-- Resizer Handle (desktop only) -->
+        <div class="resizer hidden md:block"
+             :class="{ 'resizing': isResizing }"
+             @mousedown="startResize($event)"
+             x-show="isDesktop"
+             x-ref="resizer"></div>
+
         <!-- Main Chat Area -->
-        <!-- Sur mobile: visible seulement si conversation sélectionnée -->
-        <!-- Sur tablette/desktop (md+): toujours visible -->
-        <div class="flex-1 flex flex-col w-full"
-             :class="{ 'hidden': !selectedConversation, 'flex': selectedConversation, 'md:flex': true }">
+        <div class="flex-1 flex flex-col min-w-0"
+             :class="{ 'hidden': !selectedConversation && !isDesktop, 'flex': selectedConversation || isDesktop }">
             <template x-if="selectedConversation">
                 <div class="flex flex-col h-full">
                     <!-- Chat Header -->
@@ -179,10 +225,10 @@
                 </div>
             </template>
 
-            <!-- No conversation selected (desktop only) -->
+            <!-- No conversation selected -->
             <template x-if="!selectedConversation">
-                <div class="hidden md:flex flex-1 items-center justify-center bg-gray-50">
-                    <div class="text-center">
+                <div class="flex flex-1 items-center justify-center bg-gray-50">
+                    <div class="text-center px-4">
                         <svg class="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
                         </svg>
@@ -255,9 +301,30 @@
                 pollingInterval: null,
                 conversationPollingInterval: null,
 
+                // Resizer
+                isResizing: false,
+                sidebarWidth: 320,
+                minWidth: 250,
+                maxWidth: 600,
+                isDesktop: window.innerWidth >= 768,
+
                 init() {
                     this.filterConversations();
                     this.$watch('activeTab', () => this.filterConversations());
+
+                    // Load saved sidebar width
+                    const savedWidth = localStorage.getItem('messaging_sidebar_width');
+                    if (savedWidth) {
+                        this.sidebarWidth = parseInt(savedWidth);
+                    }
+
+                    // Check if desktop
+                    this.checkDesktop();
+                    window.addEventListener('resize', () => this.checkDesktop());
+
+                    // Add mouse event listeners for resizing
+                    document.addEventListener('mousemove', (e) => this.handleResize(e));
+                    document.addEventListener('mouseup', () => this.stopResize());
 
                     // Start polling for new messages
                     this.startPolling();
@@ -272,6 +339,36 @@
                                 }
                                 this.loadConversationsData();
                             });
+                    }
+                },
+
+                checkDesktop() {
+                    this.isDesktop = window.innerWidth >= 768;
+                },
+
+                startResize(e) {
+                    if (!this.isDesktop) return;
+                    this.isResizing = true;
+                    e.preventDefault();
+                },
+
+                handleResize(e) {
+                    if (!this.isResizing) return;
+
+                    const container = this.$refs.sidebar.parentElement;
+                    const containerRect = container.getBoundingClientRect();
+                    let newWidth = e.clientX - containerRect.left;
+
+                    // Apply constraints
+                    newWidth = Math.max(this.minWidth, Math.min(this.maxWidth, newWidth));
+                    this.sidebarWidth = newWidth;
+                },
+
+                stopResize() {
+                    if (this.isResizing) {
+                        this.isResizing = false;
+                        // Save to localStorage
+                        localStorage.setItem('messaging_sidebar_width', this.sidebarWidth.toString());
                     }
                 },
 
@@ -316,7 +413,6 @@
                         const response = await fetch('/messaging/api/conversations');
                         if (response.ok) {
                             const data = await response.json();
-                            // Merge with existing to preserve other_user mapping
                             if (Array.isArray(data)) {
                                 this.conversations = data.map(conv => {
                                     const existing = this.conversations.find(c => c.id === conv.id);

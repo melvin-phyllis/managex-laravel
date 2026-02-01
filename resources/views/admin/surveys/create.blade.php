@@ -1,7 +1,7 @@
 <x-layouts.admin>
     <div class="space-y-6">
         <!-- Breadcrumb -->
-        <nav class="flex" aria-label="Breadcrumb">
+        <nav class="flex animate-fade-in-up" aria-label="Breadcrumb">
             <ol class="inline-flex items-center space-x-1 md:space-x-3">
                 <li class="inline-flex items-center">
                     <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600">
@@ -30,7 +30,7 @@
             </ol>
         </nav>
         <!-- Header -->
-        <div class="flex items-center justify-between">
+        <div class="flex items-center justify-between animate-fade-in-up animation-delay-100">
             <div>
                 <h1 class="text-2xl font-bold text-gray-900">Créer un sondage</h1>
                 <p class="text-gray-500 mt-1">Ajoutez des questions pour votre sondage interne</p>
@@ -46,7 +46,7 @@
             @csrf
 
             <!-- Survey Info -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 animate-fade-in-up animation-delay-200">
                 <h2 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
                     <x-icon name="info" class="w-5 h-5 text-blue-500" />
                     Informations générales
@@ -90,7 +90,7 @@
             </div>
 
             <!-- Questions -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 animate-fade-in-up animation-delay-300">
                 <div class="flex items-center justify-between mb-4">
                     <h2 class="text-lg font-semibold text-gray-900 flex items-center gap-2">
                         <x-icon name="list-checks" class="w-5 h-5 text-blue-500" />

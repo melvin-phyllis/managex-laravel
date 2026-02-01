@@ -68,3 +68,4 @@ class NewSurveyNotification extends Notification implements ShouldQueue
         ];
     }
 }
+

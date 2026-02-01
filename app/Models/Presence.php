@@ -26,6 +26,14 @@ class Presence extends Model
         'early_departure_reason',
         'scheduled_start',
         'scheduled_end',
+        // Recovery tracking
+        'overtime_minutes',
+        'recovery_minutes',
+        'is_recovery_session',
+        // Late expiration tracking
+        'late_recovery_deadline',
+        'is_late_expired',
+        'expired_late_minutes',
     ];
 
     protected $casts = [
@@ -34,6 +42,14 @@ class Presence extends Model
         'date' => 'date',
         'is_late' => 'boolean',
         'is_early_departure' => 'boolean',
+        'is_recovery_session' => 'boolean',
+        'overtime_minutes' => 'integer',
+        'recovery_minutes' => 'integer',
+        'late_minutes' => 'integer',
+        // Late expiration
+        'late_recovery_deadline' => 'date',
+        'is_late_expired' => 'boolean',
+        'expired_late_minutes' => 'integer',
     ];
 
     /**
@@ -115,9 +131,9 @@ class Presence extends Model
     }
 
     /**
-     * Get overtime minutes
+     * Calculate overtime minutes (used when saving)
      */
-    public function getOvertimeMinutesAttribute(): int
+    public function calculateOvertimeMinutes(): int
     {
         if (!$this->check_out || !$this->scheduled_end) return 0;
         
@@ -126,5 +142,164 @@ class Presence extends Model
         $actualEnd = Carbon::parse($this->check_out);
         
         return max(0, $actualEnd->diffInMinutes($scheduledEnd, false));
+    }
+
+    /**
+     * Scope for presences with recovery
+     */
+    public function scopeWithRecovery($query)
+    {
+        return $query->where('recovery_minutes', '>', 0);
+    }
+
+    /**
+     * Scope for recovery sessions
+     */
+    public function scopeRecoverySessions($query)
+    {
+        return $query->where('is_recovery_session', true);
+    }
+
+    /**
+     * Apply automatic recovery based on overtime and user's late balance
+     * 
+     * @param int $userLateBalance Current balance of late minutes to recover
+     * @return int Minutes applied as recovery
+     */
+    public function applyAutomaticRecovery(int $userLateBalance): int
+    {
+        if ($userLateBalance <= 0 || $this->overtime_minutes <= 0) {
+            return 0;
+        }
+
+        // Apply recovery up to the overtime worked or remaining balance
+        $recoveryToApply = min($this->overtime_minutes, $userLateBalance);
+        
+        $this->recovery_minutes = $recoveryToApply;
+        $this->save();
+
+        return $recoveryToApply;
+    }
+
+    /**
+     * Get formatted recovery info
+     */
+    public function getRecoveryInfoAttribute(): ?string
+    {
+        if ($this->recovery_minutes > 0) {
+            $hours = floor($this->recovery_minutes / 60);
+            $mins = $this->recovery_minutes % 60;
+            return $hours > 0 ? "{$hours}h{$mins}" : "{$mins} min";
+        }
+        return null;
+    }
+
+    /**
+     * Get formatted overtime info
+     */
+    public function getOvertimeInfoAttribute(): ?string
+    {
+        if ($this->overtime_minutes > 0) {
+            $hours = floor($this->overtime_minutes / 60);
+            $mins = $this->overtime_minutes % 60;
+            return $hours > 0 ? "{$hours}h{$mins}" : "{$mins} min";
+        }
+        return null;
+    }
+
+    /**
+     * Get formatted late info
+     */
+    public function getLateInfoAttribute(): ?string
+    {
+        if ($this->late_minutes > 0) {
+            $hours = floor($this->late_minutes / 60);
+            $mins = $this->late_minutes % 60;
+            return $hours > 0 ? "{$hours}h{$mins}" : "{$mins} min";
+        }
+        return null;
+    }
+
+    /**
+     * Scope for expired late hours
+     */
+    public function scopeExpiredLate($query)
+    {
+        return $query->where('is_late_expired', true);
+    }
+
+    /**
+     * Scope for late hours that are about to expire
+     */
+    public function scopeExpiringLate($query, int $daysBeforeExpiration = 2)
+    {
+        $warningDate = Carbon::today()->addDays($daysBeforeExpiration);
+        
+        return $query->where('is_late', true)
+            ->where('is_late_expired', false)
+            ->whereNotNull('late_recovery_deadline')
+            ->where('late_recovery_deadline', '<=', $warningDate)
+            ->whereRaw('late_minutes > recovery_minutes');
+    }
+
+    /**
+     * Get unrecovered late minutes
+     */
+    public function getUnrecoveredMinutesAttribute(): int
+    {
+        return max(0, ($this->late_minutes ?? 0) - ($this->recovery_minutes ?? 0));
+    }
+
+    /**
+     * Check if this late is still recoverable
+     */
+    public function isRecoverable(): bool
+    {
+        if (!$this->is_late || $this->is_late_expired) {
+            return false;
+        }
+
+        if (!$this->late_recovery_deadline) {
+            return true; // No deadline set
+        }
+
+        return $this->late_recovery_deadline->isFuture() || $this->late_recovery_deadline->isToday();
+    }
+
+    /**
+     * Get days remaining to recover
+     */
+    public function getDaysToRecoverAttribute(): ?int
+    {
+        if (!$this->late_recovery_deadline || $this->is_late_expired) {
+            return null;
+        }
+
+        $days = Carbon::today()->diffInDays($this->late_recovery_deadline, false);
+        return max(0, $days);
+    }
+
+    /**
+     * Get recovery status
+     */
+    public function getRecoveryStatusAttribute(): string
+    {
+        if (!$this->is_late) {
+            return 'not_applicable';
+        }
+
+        if ($this->is_late_expired) {
+            return 'expired';
+        }
+
+        if ($this->unrecovered_minutes <= 0) {
+            return 'recovered';
+        }
+
+        if ($this->days_to_recover !== null && $this->days_to_recover <= 2) {
+            return 'expiring_soon';
+        }
+
+        return 'pending';
     }
 }

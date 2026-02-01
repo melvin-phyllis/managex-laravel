@@ -1,7 +1,7 @@
 <x-layouts.admin>
     <div class="space-y-6" x-data="payrollTable()">
         <!-- Header -->
-        <div class="flex items-center justify-between">
+        <div class="flex items-center justify-between animate-fade-in-up">
             <h1 class="text-2xl font-bold text-gray-900">Gestion des fiches de paie</h1>
             <div class="flex space-x-3">
                 <button @click="showBulkModal = true" class="inline-flex items-center px-4 py-2 bg-purple-600 text-white text-sm font-medium rounded-lg hover:bg-purple-700 transition-colors">
@@ -20,7 +20,7 @@
         </div>
 
         <!-- Filters -->
-        <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+        <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100 animate-fade-in-up animation-delay-100">
             <form action="{{ route('admin.payrolls.index') }}" method="GET" class="flex flex-col md:flex-row gap-4">
                 <div class="flex-1">
                     <label for="employee_id" class="block text-sm font-medium text-gray-700 mb-1">Employé</label>
@@ -66,7 +66,7 @@
         </div>
 
         <!-- Payrolls Table -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden animate-fade-in-up animation-delay-200">
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">

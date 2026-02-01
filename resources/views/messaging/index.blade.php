@@ -1,15 +1,56 @@
 <x-layouts.employee>
     <style>
         [x-cloak] { display: none !important; }
+
+        /* Resizer styles */
+        .resizer {
+            width: 4px;
+            background: transparent;
+            cursor: col-resize;
+            flex-shrink: 0;
+            transition: background-color 0.2s;
+            position: relative;
+        }
+        .resizer:hover,
+        .resizer.resizing {
+            background: #3b82f6;
+        }
+        .resizer::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 4px;
+            height: 40px;
+            background: #d1d5db;
+            border-radius: 2px;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .resizer:hover::before {
+            opacity: 1;
+            background: white;
+        }
+
+        /* Prevent text selection while resizing */
+        .no-select {
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
     </style>
+
     <div x-data="messagingApp()" x-init="init()">
-        <div class="h-[calc(100vh-8rem)] flex bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+        <div class="h-[calc(100vh-8rem)] flex bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden"
+             :class="{ 'no-select': isResizing }">
 
         <!-- Sidebar - Liste des conversations -->
-        <!-- Sur mobile: visible seulement si pas de conversation sélectionnée -->
-        <!-- Sur tablette/desktop (md+): toujours visible -->
-        <div class="border-r border-gray-200 flex flex-col bg-gray-50/50 w-full md:w-80 lg:w-96"
-             :class="{ 'hidden': selectedConversation, 'flex': !selectedConversation, 'md:flex': true }">
+        <div class="border-r border-gray-200 flex flex-col bg-gray-50/50 flex-shrink-0 overflow-hidden"
+             :class="{ 'hidden': selectedConversation && !isDesktop, 'flex': !selectedConversation || isDesktop }"
+             :style="isDesktop ? 'width: ' + sidebarWidth + 'px' : 'width: 100%'"
+             x-ref="sidebar">
             <!-- Header -->
             <div class="p-4 border-b border-gray-200 bg-white">
                 <div class="flex items-center justify-between mb-3">
@@ -109,14 +150,19 @@
             </div>
         </div>
 
+        <!-- Resizer Handle (desktop only) -->
+        <div class="resizer hidden md:block"
+             :class="{ 'resizing': isResizing }"
+             @mousedown="startResize($event)"
+             x-show="isDesktop"
+             x-ref="resizer"></div>
+
         <!-- Main Chat Area -->
-        <!-- Sur mobile: visible seulement si conversation sélectionnée -->
-        <!-- Sur tablette/desktop (md+): toujours visible -->
-        <div class="flex-1 flex flex-col w-full"
-             :class="{ 'hidden': !selectedConversation, 'flex': selectedConversation, 'md:flex': true }">
+        <div class="flex-1 flex flex-col min-w-0"
+             :class="{ 'hidden': !selectedConversation && !isDesktop, 'flex': selectedConversation || isDesktop }">
             <template x-if="!selectedConversation">
-                <div class="hidden md:flex flex-1 items-center justify-center bg-gray-50">
-                    <div class="text-center">
+                <div class="flex flex-1 items-center justify-center bg-gray-50">
+                    <div class="text-center px-4">
                         <svg class="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
                         </svg>
@@ -152,16 +198,11 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
                                 </svg>
                             </button>
-                            <button @click="showConversationInfo = true" class="hidden sm:block p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                </svg>
-                            </button>
                         </div>
                     </div>
 
                     <!-- Messages -->
-                    <div class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 bg-gray-50" id="messagesContainer" @scroll="handleScroll">
+                    <div class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 bg-gray-50" id="messagesContainer" x-ref="messagesContainer" @scroll="handleScroll">
                         <template x-if="loadingMessages">
                             <div class="flex items-center justify-center py-4">
                                 <svg class="animate-spin h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24">
@@ -180,48 +221,13 @@
                                         <p class="text-xs font-medium text-gray-500 mb-1" x-text="message.sender.name"></p>
                                     </template>
 
-                                    <!-- Reply preview -->
-                                    <template x-if="message.parent">
-                                        <div class="mb-2 pl-2 border-l-2 border-gray-300 text-xs opacity-75">
-                                            <span class="font-medium" x-text="message.parent.sender_name"></span>
-                                            <p class="truncate" x-text="message.parent.content"></p>
-                                        </div>
-                                    </template>
-
                                     <!-- Content -->
                                     <div class="text-sm break-words" x-html="message.content_html || message.content"></div>
 
-                                    <!-- Attachments -->
-                                    <template x-if="message.attachments?.length > 0">
-                                        <div class="mt-2 space-y-1">
-                                            <template x-for="att in message.attachments" :key="att.id">
-                                                <a :href="att.url" target="_blank" class="flex items-center gap-2 text-sm hover:underline">
-                                                    <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/>
-                                                    </svg>
-                                                    <span class="truncate" x-text="att.name"></span>
-                                                    <span class="opacity-75 flex-shrink-0" x-text="'(' + att.size + ')'"></span>
-                                                </a>
-                                            </template>
-                                        </div>
-                                    </template>
-
                                     <!-- Footer -->
                                     <div class="flex items-center justify-between mt-1" :class="(message.sender?.id || message.sender_id) === currentUserId ? 'text-blue-200' : 'text-gray-400'">
-                                        <span class="text-xs" x-text="message.created_at_human"></span>
-                                        <template x-if="message.is_edited">
-                                            <span class="text-xs">(modifié)</span>
-                                        </template>
+                                        <span class="text-xs" x-text="message.created_at_human || formatMessageTime(message.created_at)"></span>
                                     </div>
-
-                                    <!-- Reactions -->
-                                    <template x-if="message.reactions && Object.keys(message.reactions).length > 0">
-                                        <div class="flex flex-wrap gap-1 mt-2">
-                                            <template x-for="(count, emoji) in message.reactions" :key="emoji">
-                                                <span class="bg-gray-100 px-2 py-0.5 rounded-full text-sm" x-text="emoji + ' ' + count"></span>
-                                            </template>
-                                        </div>
-                                    </template>
                                 </div>
                             </div>
                         </template>
@@ -328,15 +334,66 @@
                 conversationPollingInterval: null,
                 lastMessageId: 0,
 
+                // Resizer
+                isResizing: false,
+                sidebarWidth: 320,
+                minWidth: 250,
+                maxWidth: 600,
+                isDesktop: window.innerWidth >= 768,
+
                 async init() {
                     await this.loadConversations();
                     this.$watch('activeTab', () => this.filterConversations());
+
+                    // Load saved sidebar width
+                    const savedWidth = localStorage.getItem('messaging_sidebar_width_employee');
+                    if (savedWidth) {
+                        this.sidebarWidth = parseInt(savedWidth);
+                    }
+
+                    // Check if desktop
+                    this.checkDesktop();
+                    window.addEventListener('resize', () => this.checkDesktop());
+
+                    // Add mouse event listeners for resizing
+                    document.addEventListener('mousemove', (e) => this.handleResize(e));
+                    document.addEventListener('mouseup', () => this.stopResize());
 
                     // Start polling for new messages
                     this.startPolling();
 
                     // Cleanup on page unload
                     window.addEventListener('beforeunload', () => this.stopPolling());
+                },
+
+                checkDesktop() {
+                    this.isDesktop = window.innerWidth >= 768;
+                },
+
+                startResize(e) {
+                    if (!this.isDesktop) return;
+                    this.isResizing = true;
+                    e.preventDefault();
+                },
+
+                handleResize(e) {
+                    if (!this.isResizing) return;
+
+                    const container = this.$refs.sidebar.parentElement;
+                    const containerRect = container.getBoundingClientRect();
+                    let newWidth = e.clientX - containerRect.left;
+
+                    // Apply constraints
+                    newWidth = Math.max(this.minWidth, Math.min(this.maxWidth, newWidth));
+                    this.sidebarWidth = newWidth;
+                },
+
+                stopResize() {
+                    if (this.isResizing) {
+                        this.isResizing = false;
+                        // Save to localStorage
+                        localStorage.setItem('messaging_sidebar_width_employee', this.sidebarWidth.toString());
+                    }
                 },
 
                 startPolling() {
@@ -373,18 +430,12 @@
                         const data = await response.json();
 
                         if (data.messages && data.messages.length > 0) {
-                            // Filter out messages we already have
                             const existingIds = new Set(this.messages.map(m => m.id));
                             const newMessages = data.messages.filter(m => !existingIds.has(m.id));
 
                             if (newMessages.length > 0) {
                                 this.messages.push(...newMessages);
-
-                                // Scroll to bottom for new messages
-                                this.$nextTick(() => {
-                                    const container = document.getElementById('messagesContainer');
-                                    if (container) container.scrollTop = container.scrollHeight;
-                                });
+                                this.$nextTick(() => this.scrollToBottom());
 
                                 // Mark as read
                                 await fetch(`/messaging/api/conversations/${this.selectedConversation.id}/read`, {
@@ -403,12 +454,10 @@
                         const response = await fetch('/messaging/api/conversations');
                         const newConversations = await response.json();
 
-                        // Update conversations while preserving selection
                         const selectedId = this.selectedConversation?.id;
                         this.conversations = newConversations;
                         this.filterConversations();
 
-                        // Update selected conversation data if still selected
                         if (selectedId) {
                             const updated = this.conversations.find(c => c.id === selectedId);
                             if (updated) {
@@ -455,15 +504,10 @@
                         const data = await response.json();
                         this.messages = data.messages;
 
-                        // Mark as read
                         await fetch(`/messaging/api/conversations/${conv.id}/read`, { method: 'POST', headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}'} });
                         conv.unread_count = 0;
 
-                        // Scroll to bottom
-                        this.$nextTick(() => {
-                            const container = document.getElementById('messagesContainer');
-                            if (container) container.scrollTop = container.scrollHeight;
-                        });
+                        this.$nextTick(() => this.scrollToBottom());
                     } catch (error) {
                         console.error('Error loading messages:', error);
                     }
@@ -487,11 +531,7 @@
                         this.messages.push(data.message);
                         this.newMessage = '';
 
-                        // Scroll to bottom
-                        this.$nextTick(() => {
-                            const container = document.getElementById('messagesContainer');
-                            if (container) container.scrollTop = container.scrollHeight;
-                        });
+                        this.$nextTick(() => this.scrollToBottom());
                     } catch (error) {
                         console.error('Error sending message:', error);
                     }
@@ -522,11 +562,8 @@
                         }
 
                         const data = await response.json();
-
-                        // Close modal first
                         this.closeNewConversationModal();
 
-                        // Reload and select
                         await this.loadConversations();
                         if (data.conversation) {
                             this.selectConversation(data.conversation);
@@ -559,6 +596,13 @@
                     }
                 },
 
+                scrollToBottom() {
+                    const container = this.$refs.messagesContainer;
+                    if (container) {
+                        container.scrollTop = container.scrollHeight;
+                    }
+                },
+
                 handleScroll(e) {
                     // Load more messages when scrolling to top
                     if (e.target.scrollTop === 0 && this.messages.length > 0) {
@@ -572,13 +616,19 @@
                     const now = new Date();
                     const diff = now - date;
 
-                    if (diff < 86400000) { // Less than 24 hours
+                    if (diff < 86400000) {
                         return date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
-                    } else if (diff < 604800000) { // Less than 7 days
+                    } else if (diff < 604800000) {
                         return date.toLocaleDateString('fr-FR', { weekday: 'short' });
                     } else {
                         return date.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' });
                     }
+                },
+
+                formatMessageTime(dateStr) {
+                    if (!dateStr) return '';
+                    const date = new Date(dateStr);
+                    return date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
                 }
             };
         }

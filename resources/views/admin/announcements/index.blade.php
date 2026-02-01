@@ -1,7 +1,7 @@
 <x-layouts.admin>
     <div class="space-y-6" x-data="announcementManagement()">
         <!-- Breadcrumb -->
-        <nav class="flex" aria-label="Breadcrumb">
+        <nav class="flex animate-fade-in-up" aria-label="Breadcrumb">
             <ol class="inline-flex items-center space-x-1 md:space-x-3">
                 <li class="inline-flex items-center">
                     <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600">
@@ -22,7 +22,7 @@
             </ol>
         </nav>
         <!-- Header -->
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 animate-fade-in-up animation-delay-100">
             <div>
                 <h1 class="text-2xl font-bold text-gray-900">📢 Annonces</h1>
                 <p class="text-gray-500 mt-1">Gérez les communications internes</p>
@@ -38,7 +38,7 @@
 
         <!-- Stats Cards -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 animate-fade-in-up animation-delay-100">
                 <div class="flex items-center gap-4">
                     <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
                         <span class="text-xl">📢</span>
@@ -49,7 +49,7 @@
                     </div>
                 </div>
             </div>
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 animate-fade-in-up animation-delay-200">
                 <div class="flex items-center gap-4">
                     <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
                         <span class="text-xl">✅</span>
@@ -60,7 +60,7 @@
                     </div>
                 </div>
             </div>
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 animate-fade-in-up animation-delay-300">
                 <div class="flex items-center gap-4">
                     <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
                         <span class="text-xl">🚨</span>
@@ -71,7 +71,7 @@
                     </div>
                 </div>
             </div>
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 animate-fade-in-up animation-delay-400">
                 <div class="flex items-center gap-4">
                     <div class="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center">
                         <span class="text-xl">📌</span>

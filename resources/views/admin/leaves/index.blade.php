@@ -1,7 +1,7 @@
 <x-layouts.admin>
     <div class="space-y-6">
         <!-- Breadcrumbs -->
-        <nav class="flex" aria-label="Breadcrumb">
+        <nav class="flex animate-fade-in-up" aria-label="Breadcrumb">
             <ol class="inline-flex items-center space-x-1 md:space-x-3">
                 <li class="inline-flex items-center">
                     <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600">
@@ -22,7 +22,7 @@
             </ol>
         </nav>
         <!-- Header -->
-        <div class="flex items-center justify-between">
+        <div class="flex items-center justify-between animate-fade-in-up animation-delay-100">
             <div>
                 <h1 class="text-2xl font-bold text-gray-900">Demandes de congés</h1>
                 <p class="text-sm text-gray-500 mt-1">Gérez les demandes de congés de vos employés</p>
@@ -30,7 +30,7 @@
         </div>
 
         <!-- Filters -->
-        <div class="bg-white rounded-2xl shadow-sm p-4 border border-gray-200">
+        <div class="bg-white rounded-2xl shadow-sm p-4 border border-gray-200 animate-fade-in-up animation-delay-200">
             <form action="{{ route('admin.leaves.index') }}" method="GET" class="flex flex-col md:flex-row gap-4">
                 <div class="flex-1">
                     <label for="employee_id" class="block text-sm font-medium text-gray-700 mb-1">Employé</label>
@@ -68,7 +68,7 @@
         </div>
 
         <!-- Leaves Table -->
-        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in-up animation-delay-300">
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gradient-to-r from-gray-50 to-slate-100">

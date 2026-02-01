@@ -1,7 +1,7 @@
 <x-layouts.employee>
     <div class="space-y-6">
         <!-- Header avec horloge en temps réel -->
-        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 animate-fade-in-up">
             <div>
                 <h1 class="text-2xl font-bold text-gray-900">Mes présences</h1>
                 <p class="text-sm text-gray-500 mt-1">Suivez votre temps de travail et votre ponctualité</p>
@@ -19,7 +19,7 @@
 
         <!-- Horaires de travail -->
         @if(isset($workSettings))
-        <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl shadow-sm border border-gray-200 p-4">
+        <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl shadow-sm border border-gray-200 p-4 animate-fade-in-up animation-delay-100">
             <div class="flex flex-wrap items-center justify-between gap-4">
                 <div class="flex items-center gap-6">
                     <div class="flex items-center gap-2">
@@ -64,22 +64,209 @@
         </div>
         @endif
 
-        <!-- Avertissement jour non travaillé -->
-        @if(isset($isWorkingDay) && !$isWorkingDay)
-        <div class="bg-amber-50 border-l-4 border-amber-400 p-4 rounded-r-lg mb-4">
-            <div class="flex">
-                <div class="flex-shrink-0">
-                    <svg class="h-5 w-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+        <!-- Avertissement retards expirants -->
+        @if(isset($expiringLateData) && ($expiringLateData['expiring_minutes'] > 0 || count($expiringLateData['upcoming_penalties']) > 0))
+        <div class="bg-red-50 border border-red-200 rounded-2xl p-4 mb-4 animate-fade-in-up">
+            <div class="flex items-start gap-3">
+                <div class="flex-shrink-0 bg-red-100 p-2 rounded-lg">
+                    <svg class="h-5 w-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
                 </div>
-                <div class="ml-3">
-                    <p class="text-sm text-amber-700">
-                        <strong>Aujourd'hui n'est pas un jour de travail pour vous.</strong> Le pointage est désactivé.
-                    </p>
+                <div class="flex-1">
+                    <h4 class="font-semibold text-red-800">⚠️ Attention - Heures de retard à rattraper</h4>
+                    
+                    @if($expiringLateData['expiring_minutes'] > 0)
+                        @php
+                            $expMins = $expiringLateData['expiring_minutes'];
+                            $expHours = floor($expMins / 60);
+                            $expMinsRemainder = $expMins % 60;
+                            $expFormatted = $expHours > 0 ? "{$expHours}h" . ($expMinsRemainder > 0 ? sprintf('%02d', $expMinsRemainder) : '') : "{$expMinsRemainder} min";
+                        @endphp
+                        <p class="text-sm text-red-700 mt-1">
+                            <strong>{{ $expFormatted }}</strong> de retard expirent dans les prochains jours. 
+                            Rattrapez-les en restant plus tard !
+                        </p>
+                        
+                        @if($expiringLateData['expiring_presences']->isNotEmpty())
+                            <div class="mt-2 space-y-1">
+                                @foreach($expiringLateData['expiring_presences']->take(3) as $expPresence)
+                                    <div class="flex items-center gap-2 text-xs text-red-600">
+                                        <span class="font-medium">{{ $expPresence->date->format('d/m') }}</span>
+                                        <span>→</span>
+                                        <span>{{ $expPresence->unrecovered_minutes }} min</span>
+                                        <span class="text-red-500">
+                                            (expire {{ $expPresence->late_recovery_deadline?->format('d/m') }})
+                                        </span>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @endif
+                    @endif
+
+                    @if(count($expiringLateData['upcoming_penalties']) > 0)
+                        <div class="mt-3 pt-3 border-t border-red-200">
+                            <p class="text-sm font-semibold text-red-800">🚫 Absences pénalité programmées :</p>
+                            @foreach($expiringLateData['upcoming_penalties'] as $penalty)
+                                <div class="flex items-center gap-2 text-sm text-red-700 mt-1">
+                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    <strong>{{ $penalty->absence_date->format('d/m/Y') }}</strong> - 
+                                    Absence due à {{ $penalty->formatted_expired_time }} de retard non rattrapé
+                                </div>
+                            @endforeach
+                        </div>
+                    @endif
+
+                    @php
+                        $thresholdMins = $expiringLateData['penalty_threshold'];
+                        $expiredMins = $expiringLateData['expired_minutes'];
+                        $thresholdHours = $thresholdMins / 60;
+                        $progressPercent = $thresholdMins > 0 ? min(100, ($expiredMins / $thresholdMins) * 100) : 0;
+                    @endphp
+                    @if($expiredMins > 0)
+                        <div class="mt-3 pt-3 border-t border-red-200">
+                            <p class="text-xs text-red-600 mb-1">
+                                Progression vers prochaine absence pénalité (seuil: {{ $thresholdHours }}h)
+                            </p>
+                            <div class="w-full bg-red-200 rounded-full h-2">
+                                <div class="bg-red-600 h-2 rounded-full transition-all" style="width: {{ $progressPercent }}%"></div>
+                            </div>
+                            <p class="text-xs text-red-500 mt-1">
+                                {{ floor($expiredMins / 60) }}h{{ $expiredMins % 60 > 0 ? sprintf('%02d', $expiredMins % 60) : '' }} / {{ $thresholdHours }}h
+                            </p>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
+        @endif
+
+        <!-- Jour non travaillé - Option de rattrapage -->
+        @if(isset($isWorkingDay) && !$isWorkingDay)
+            @if(isset($canStartRecoverySession) && $canStartRecoverySession && isset($recoverySessionInfo))
+                <!-- Session de rattrapage disponible -->
+                <div class="bg-gradient-to-r from-violet-50 to-purple-50 border border-violet-200 rounded-2xl p-5 mb-4 animate-fade-in-up">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div class="flex items-start gap-4">
+                            <div class="flex-shrink-0 bg-gradient-to-br from-violet-500 to-purple-600 p-3 rounded-xl shadow-lg shadow-violet-500/30">
+                                <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-violet-900">Session de rattrapage disponible</h3>
+                                <p class="text-sm text-violet-700 mt-1">
+                                    Aujourd'hui n'est pas un jour de travail, mais vous avez 
+                                    <strong class="text-violet-900">{{ $recoverySessionInfo['formatted'] }}</strong> de retard à rattraper.
+                                </p>
+                                <p class="text-xs text-violet-600 mt-2">
+                                    💡 Vous pouvez venir travailler aujourd'hui pour rattraper vos heures. Tout le temps travaillé sera comptabilisé comme rattrapage.
+                                </p>
+                            </div>
+                        </div>
+                        <form id="recoveryStartForm" action="{{ route('employee.presences.recovery.start') }}" method="POST" class="flex-shrink-0">
+                            @csrf
+                            <input type="hidden" name="latitude" id="recoveryStartLat">
+                            <input type="hidden" name="longitude" id="recoveryStartLng">
+                            <button type="button" id="recoveryStartBtn"
+                                    class="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-violet-600 to-purple-600 text-white font-medium rounded-xl hover:from-violet-700 hover:to-purple-700 transition-all shadow-lg shadow-violet-500/30 flex items-center justify-center gap-2">
+                                <svg id="recoveryStartIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <span id="recoveryStartText">Démarrer le rattrapage</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            @elseif(!isset($todayPresence) || !$todayPresence)
+                <!-- Jour non travaillé sans heures à rattraper -->
+                <div class="bg-amber-50 border-l-4 border-amber-400 p-4 rounded-r-lg mb-4">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <svg class="h-5 w-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm text-amber-700">
+                                <strong>Aujourd'hui n'est pas un jour de travail pour vous.</strong> Le pointage normal est désactivé.
+                            </p>
+                            @if(isset($totalUnrecoveredMinutes) && $totalUnrecoveredMinutes <= 0)
+                                <p class="text-xs text-amber-600 mt-1">Vous n'avez pas d'heures de retard à rattraper. Profitez de votre repos !</p>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            @endif
+        @endif
+        
+        <!-- Session de rattrapage en cours -->
+        @if(isset($isRecoverySessionToday) && $isRecoverySessionToday && $todayPresence && !$todayPresence->check_out)
+        <div class="bg-gradient-to-r from-violet-100 to-purple-100 border-2 border-violet-300 rounded-2xl p-5 mb-4 animate-fade-in-up">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div class="flex items-start gap-4">
+                    <div class="flex-shrink-0 bg-gradient-to-br from-violet-600 to-purple-700 p-3 rounded-xl shadow-lg shadow-violet-500/40">
+                        <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-violet-900 flex items-center gap-2">
+                            <span class="w-2 h-2 bg-violet-500 rounded-full animate-pulse"></span>
+                            Session de rattrapage en cours
+                        </h3>
+                        <p class="text-sm text-violet-700 mt-1">
+                            Arrivée à <strong>{{ $todayPresence->check_in->format('H:i') }}</strong>
+                            <span class="mx-2">•</span>
+                            En cours depuis <span id="recoveryDuration" class="font-medium">--</span>
+                        </p>
+                        <p class="text-xs text-violet-600 mt-2">
+                            Tout le temps travaillé aujourd'hui sera comptabilisé comme rattrapage de vos heures de retard.
+                        </p>
+                    </div>
+                </div>
+                <form id="recoveryEndForm" action="{{ route('employee.presences.recovery.end') }}" method="POST" class="flex-shrink-0">
+                    @csrf
+                    <input type="hidden" name="latitude" id="recoveryEndLat">
+                    <input type="hidden" name="longitude" id="recoveryEndLng">
+                    <button type="button" id="recoveryEndBtn"
+                            class="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-red-500 to-rose-600 text-white font-medium rounded-xl hover:from-red-600 hover:to-rose-700 transition-all shadow-lg shadow-red-500/30 flex items-center justify-center gap-2">
+                        <svg id="recoveryEndIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 10a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z"></path>
+                        </svg>
+                        <span id="recoveryEndText">Terminer le rattrapage</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+        <script>
+            // Afficher la durée de la session de rattrapage
+            (function() {
+                const checkInTime = new Date('{{ $todayPresence->check_in->toIso8601String() }}');
+                const durationEl = document.getElementById('recoveryDuration');
+                
+                function updateDuration() {
+                    const now = new Date();
+                    const diffMs = now - checkInTime;
+                    const diffMins = Math.floor(diffMs / 60000);
+                    const hours = Math.floor(diffMins / 60);
+                    const mins = diffMins % 60;
+                    
+                    if (hours > 0) {
+                        durationEl.textContent = hours + 'h' + (mins < 10 ? '0' : '') + mins;
+                    } else {
+                        durationEl.textContent = mins + ' min';
+                    }
+                }
+                
+                updateDuration();
+                setInterval(updateDuration, 60000);
+            })();
+        </script>
         @endif
 
         <!-- Avertissement Pas de Zone Configurée -->
@@ -325,13 +512,19 @@
                                 <p class="text-2xl font-bold text-blue-600">{{ $todayPresence->hours_worked }}h</p>
                             </div>
                         </div>
-                        @if($todayPresence->is_late || $todayPresence->is_early_departure)
-                        <div class="mt-3 flex gap-2">
+                        @if($todayPresence->is_late || $todayPresence->is_early_departure || $todayPresence->recovery_minutes > 0)
+                        <div class="mt-3 flex flex-wrap gap-2">
                             @if($todayPresence->is_late)
                                 <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-orange-100 text-orange-700">⚠️ Retard: {{ $todayPresence->late_minutes }} min</span>
                             @endif
                             @if($todayPresence->is_early_departure)
                                 <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-amber-100 text-amber-700">🚨 Départ anticipé: {{ $todayPresence->early_departure_minutes }} min</span>
+                            @endif
+                            @if($todayPresence->overtime_minutes > 0)
+                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-700">⏱️ Heures sup: {{ $todayPresence->overtime_minutes }} min</span>
+                            @endif
+                            @if($todayPresence->recovery_minutes > 0)
+                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-emerald-100 text-emerald-700">✅ Rattrapé: {{ $todayPresence->recovery_minutes }} min</span>
                             @endif
                         </div>
                         @endif
@@ -348,7 +541,7 @@
         </div>
 
         <!-- Stats Cards améliorées -->
-        <div class="grid grid-cols-2 lg:grid-cols-5 gap-4">
+        <div class="grid grid-cols-2 lg:grid-cols-6 gap-4">
             <!-- Jours pointés -->
             <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-5 hover:shadow-md transition-shadow">
                 <div class="flex items-center justify-between">
@@ -419,6 +612,50 @@
                 <p class="text-2xl font-bold text-red-600 mt-3">{{ $monthlyStats['total_late'] }}</p>
                 <p class="text-xs text-gray-500">Retards ({{ $monthlyStats['total_late_minutes'] }} min)</p>
             </div>
+
+            <!-- Solde Rattrapage -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-5 hover:shadow-md transition-shadow">
+                <div class="flex items-center justify-between">
+                    @php
+                        $balanceStatus = $recoveryStats['status'] ?? 'ok';
+                        $balanceColors = [
+                            'deficit' => 'from-red-500 to-rose-600 shadow-red-500/30',
+                            'warning' => 'from-amber-500 to-orange-600 shadow-amber-500/30',
+                            'ok' => 'from-emerald-500 to-green-600 shadow-emerald-500/30',
+                        ];
+                        $balanceClass = $balanceColors[$balanceStatus] ?? $balanceColors['ok'];
+                    @endphp
+                    <div class="bg-gradient-to-br {{ $balanceClass }} p-2.5 rounded-xl shadow-lg">
+                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                        </svg>
+                    </div>
+                </div>
+                @php
+                    $balance = $recoveryStats['total_balance'] ?? 0;
+                    $absBalance = abs($balance);
+                    $hours = floor($absBalance / 60);
+                    $mins = $absBalance % 60;
+                    $balanceFormatted = $hours > 0 ? "{$hours}h" . ($mins > 0 ? sprintf('%02d', $mins) : '') : "{$mins}m";
+                @endphp
+                <p class="text-2xl font-bold mt-3 {{ $balance > 0 ? 'text-red-600' : ($balance < 0 ? 'text-green-600' : 'text-gray-600') }}">
+                    {{ $balance > 0 ? '-' : ($balance < 0 ? '+' : '') }}{{ $balanceFormatted }}
+                </p>
+                <p class="text-xs text-gray-500">
+                    @if($balance > 0)
+                        À rattraper
+                    @elseif($balance < 0)
+                        Surplus
+                    @else
+                        Équilibré
+                    @endif
+                </p>
+                @if($balance != 0)
+                <p class="text-xs text-gray-400 mt-1">
+                    Ce mois: {{ $recoveryStats['monthly_recovery'] ?? 0 }} min rattrapées
+                </p>
+                @endif
+            </div>
         </div>
 
         <!-- Graphique + Calendrier -->
@@ -426,7 +663,7 @@
             <!-- Graphique hebdomadaire -->
             <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
                 <h3 class="text-lg font-semibold text-gray-900 mb-4">📈 Heures des 7 derniers jours</h3>
-                <div class="relative" style="height: 200px;">
+                <div class="h-72">
                     <canvas id="weeklyChart"></canvas>
                 </div>
             </div>
@@ -434,55 +671,211 @@
             <!-- Calendrier mensuel -->
             <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
                 <h3 class="text-lg font-semibold text-gray-900 mb-4">📅 Calendrier du mois</h3>
-                <div class="grid grid-cols-7 gap-1 text-center text-xs mb-2">
-                    <span class="text-gray-500 font-medium">Lun</span>
-                    <span class="text-gray-500 font-medium">Mar</span>
-                    <span class="text-gray-500 font-medium">Mer</span>
-                    <span class="text-gray-500 font-medium">Jeu</span>
-                    <span class="text-gray-500 font-medium">Ven</span>
-                    <span class="text-gray-500 font-medium">Sam</span>
-                    <span class="text-gray-500 font-medium">Dim</span>
-                </div>
-                <div class="grid grid-cols-7 gap-1">
-                    @php
-                        $firstDayOfMonth = \Carbon\Carbon::now()->startOfMonth();
-                        $startPadding = $firstDayOfMonth->dayOfWeekIso - 1;
-                    @endphp
-                    
-                    {{-- Padding pour le premier jour --}}
-                    @for($i = 0; $i < $startPadding; $i++)
-                        <div class="aspect-square"></div>
-                    @endfor
-                    
-                    @foreach($calendarData as $day)
+                <div class="max-w-md mx-auto">
+                    <div class="grid grid-cols-7 gap-1 text-center text-xs mb-2">
+                        <span class="text-gray-500 font-medium py-1">Lun</span>
+                        <span class="text-gray-500 font-medium py-1">Mar</span>
+                        <span class="text-gray-500 font-medium py-1">Mer</span>
+                        <span class="text-gray-500 font-medium py-1">Jeu</span>
+                        <span class="text-gray-500 font-medium py-1">Ven</span>
+                        <span class="text-gray-500 font-medium py-1">Sam</span>
+                        <span class="text-gray-500 font-medium py-1">Dim</span>
+                    </div>
+                    <div class="grid grid-cols-7 gap-1">
                         @php
-                            $statusClasses = [
-                                'present' => 'bg-green-100 text-green-800 border-green-200',
-                                'late' => 'bg-yellow-100 text-yellow-800 border-yellow-200',
-                                'absent' => 'bg-red-100 text-red-800 border-red-200',
-                                'leave' => 'bg-blue-100 text-blue-800 border-blue-200',
-                                'weekend' => 'bg-gray-50 text-gray-400',
-                                'future' => 'bg-gray-50 text-gray-400',
-                            ];
-                            $class = $statusClasses[$day['status']] ?? 'bg-gray-50 text-gray-400';
-                            $isToday = $day['date'] === now()->format('Y-m-d');
+                            $firstDayOfMonth = \Carbon\Carbon::now()->startOfMonth();
+                            $startPadding = $firstDayOfMonth->dayOfWeekIso - 1;
                         @endphp
-                        <div class="aspect-square flex items-center justify-center text-xs font-medium rounded-lg border {{ $class }} {{ $isToday ? 'ring-2 ring-blue-500 ring-offset-1' : '' }}" title="{{ $day['hours'] ? $day['hours'].'h travaillées' : '' }}">
-                            {{ $day['day'] }}
-                        </div>
-                    @endforeach
-                </div>
-                
-                <!-- Légende -->
-                <div class="mt-4 flex flex-wrap gap-3 text-xs">
-                    <div class="flex items-center gap-1"><span class="w-3 h-3 bg-green-100 border border-green-200 rounded"></span> Présent</div>
-                    <div class="flex items-center gap-1"><span class="w-3 h-3 bg-yellow-100 border border-yellow-200 rounded"></span> Retard</div>
-                    <div class="flex items-center gap-1"><span class="w-3 h-3 bg-red-100 border border-red-200 rounded"></span> Absent</div>
-                    <div class="flex items-center gap-1"><span class="w-3 h-3 bg-blue-100 border border-blue-200 rounded"></span> Congé</div>
-                    <div class="flex items-center gap-1"><span class="w-3 h-3 bg-gray-50 border border-gray-200 rounded"></span> Non travaillé</div>
+                        
+                        {{-- Padding pour le premier jour --}}
+                        @for($i = 0; $i < $startPadding; $i++)
+                            <div class="aspect-square"></div>
+                        @endfor
+                        
+                        @foreach($calendarData as $day)
+                            @php
+                                $statusClasses = [
+                                    'present' => 'bg-green-100 text-green-800 border-green-200 hover:bg-green-200',
+                                    'late' => 'bg-yellow-100 text-yellow-800 border-yellow-200 hover:bg-yellow-200',
+                                    'absent' => 'bg-red-100 text-red-800 border-red-200 hover:bg-red-200',
+                                    'leave' => 'bg-blue-100 text-blue-800 border-blue-200 hover:bg-blue-200',
+                                    'weekend' => 'bg-gray-50 text-gray-400',
+                                    'future' => 'bg-gray-50 text-gray-400',
+                                    'recovery' => 'bg-violet-100 text-violet-800 border-violet-200 hover:bg-violet-200',
+                                ];
+                                $class = $statusClasses[$day['status']] ?? 'bg-gray-50 text-gray-400';
+                                $isToday = $day['date'] === now()->format('Y-m-d');
+                                $title = $day['hours'] ? $day['hours'].'h travaillées' : '';
+                                if ($day['status'] === 'recovery') {
+                                    $title = 'Session de rattrapage' . ($day['hours'] ? ' - '.$day['hours'].'h' : '');
+                                }
+                            @endphp
+                            <div class="aspect-square flex items-center justify-center text-xs font-medium rounded-lg border transition-colors cursor-default {{ $class }} {{ $isToday ? 'ring-2 ring-blue-500 ring-offset-1' : '' }}" title="{{ $title }}">
+                                {{ $day['day'] }}
+                            </div>
+                        @endforeach
+                    </div>
+                    
+                    <!-- Légende -->
+                    <div class="mt-4 flex flex-wrap justify-center gap-3 text-xs">
+                        <div class="flex items-center gap-1"><span class="w-3 h-3 bg-green-100 border border-green-200 rounded"></span> Présent</div>
+                        <div class="flex items-center gap-1"><span class="w-3 h-3 bg-yellow-100 border border-yellow-200 rounded"></span> Retard</div>
+                        <div class="flex items-center gap-1"><span class="w-3 h-3 bg-red-100 border border-red-200 rounded"></span> Absent</div>
+                        <div class="flex items-center gap-1"><span class="w-3 h-3 bg-blue-100 border border-blue-200 rounded"></span> Congé</div>
+                        <div class="flex items-center gap-1"><span class="w-3 h-3 bg-violet-100 border border-violet-200 rounded"></span> Rattrapage</div>
+                        <div class="flex items-center gap-1"><span class="w-3 h-3 bg-gray-50 border border-gray-200 rounded"></span> Non travaillé</div>
+                    </div>
                 </div>
             </div>
         </div>
+
+        <!-- Section Rattrapage des Heures (Version compacte) -->
+        @php
+            $totalToRecover = $totalUnrecoveredMinutes;
+            $totalHours = floor($totalToRecover / 60);
+            $totalMins = $totalToRecover % 60;
+            $hasLateToRecover = $totalToRecover > 0 || $expiredLate->isNotEmpty();
+        @endphp
+        
+        @if($hasLateToRecover)
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-100 bg-gradient-to-r from-orange-50 to-amber-50">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-gradient-to-br from-orange-500 to-amber-600 rounded-xl flex items-center justify-center shadow-lg shadow-orange-500/30">
+                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-900">⏰ Heures à rattraper</h3>
+                            <p class="text-xs text-gray-500">Heures sup ou session de rattrapage</p>
+                        </div>
+                    </div>
+                    @if($totalToRecover > 0)
+                    <div class="text-right">
+                        <p class="text-2xl font-bold text-orange-600">
+                            {{ $totalHours > 0 ? $totalHours . 'h' : '' }}{{ $totalMins > 0 ? sprintf('%02d', $totalMins) : ($totalHours > 0 ? '00' : '0') }}
+                        </p>
+                        <p class="text-xs text-gray-500">
+                            @if($lateToRecoverCount > 5)
+                                {{ $lateToRecoverCount }} retards
+                            @else
+                                à rattraper
+                            @endif
+                        </p>
+                    </div>
+                    @endif
+                </div>
+            </div>
+
+            <div class="p-4">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    <!-- Retards à rattraper (compact) -->
+                    <div>
+                        <h4 class="font-medium text-gray-700 text-sm mb-2 flex items-center gap-2">
+                            <span class="w-1.5 h-1.5 bg-orange-500 rounded-full"></span>
+                            En attente ({{ $lateToRecoverCount }})
+                        </h4>
+                        
+                        @if($lateToRecover->isEmpty())
+                            <p class="text-sm text-green-600 p-2">✅ Aucun retard récent</p>
+                        @else
+                            <div class="space-y-2 max-h-48 overflow-y-auto">
+                                @foreach($lateToRecover as $late)
+                                    @php
+                                        $isUrgent = ($late['days_remaining'] ?? 999) <= 2;
+                                    @endphp
+                                    <div class="p-2 rounded-lg border text-sm {{ $isUrgent ? 'border-red-200 bg-red-50' : 'border-gray-100 bg-gray-50' }} flex items-center justify-between">
+                                        <div>
+                                            <span class="font-medium">{{ $late['date']->format('d/m') }}</span>
+                                            <span class="text-gray-400 mx-1">·</span>
+                                            <span class="text-gray-600">{{ $late['late_minutes'] }}min</span>
+                                            @if($late['recovery_minutes'] > 0)
+                                                <span class="text-green-600 text-xs">({{ $late['recovery_minutes'] }} rattrapé)</span>
+                                            @endif
+                                        </div>
+                                        <div class="text-right">
+                                            <span class="font-semibold {{ $isUrgent ? 'text-red-600' : 'text-orange-600' }}">{{ $late['unrecovered_minutes'] }}min</span>
+                                            @if($late['deadline'] && $isUrgent)
+                                                <span class="text-xs text-red-500 block">⚠️ {{ $late['deadline']->format('d/m') }}</span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                            @if($lateToRecoverCount > 5)
+                                <p class="text-xs text-gray-400 mt-2 text-center">+ {{ $lateToRecoverCount - 5 }} autres retards</p>
+                            @endif
+                        @endif
+                    </div>
+
+                    <!-- Retards expirés (compact) -->
+                    <div>
+                        <h4 class="font-medium text-gray-700 text-sm mb-2 flex items-center gap-2">
+                            <span class="w-1.5 h-1.5 bg-red-500 rounded-full"></span>
+                            Expirés
+                            @php
+                                $totalExpired = $expiringLateData['expired_minutes'];
+                                $threshold = $expiringLateData['penalty_threshold'];
+                            @endphp
+                            @if($totalExpired > 0)
+                                <span class="text-xs text-red-500">({{ $totalExpired }}min / {{ $threshold }}min)</span>
+                            @endif
+                        </h4>
+                        
+                        @if($expiredLate->isEmpty())
+                            <p class="text-sm text-green-600 p-2">✅ Aucun expiré</p>
+                        @else
+                            <div class="space-y-1 max-h-32 overflow-y-auto">
+                                @foreach($expiredLate as $expired)
+                                    <div class="p-2 rounded-lg border border-red-100 bg-red-50/50 text-sm flex items-center justify-between">
+                                        <span class="text-gray-700">{{ $expired->date->format('d/m/Y') }}</span>
+                                        <span class="font-semibold text-red-600">{{ $expired->expired_late_minutes }}min</span>
+                                    </div>
+                                @endforeach
+                            </div>
+
+                            <!-- Barre pénalité -->
+                            @if($totalExpired > 0)
+                                @php
+                                    $penaltyProgress = $threshold > 0 ? min(100, ($totalExpired / $threshold) * 100) : 0;
+                                @endphp
+                                <div class="mt-2 p-2 rounded-lg bg-red-100">
+                                    <div class="flex justify-between text-xs text-red-700 mb-1">
+                                        <span>Vers absence pénalité</span>
+                                        <span class="font-bold">{{ round($penaltyProgress) }}%</span>
+                                    </div>
+                                    <div class="w-full bg-red-200 rounded-full h-1.5">
+                                        <div class="bg-red-600 h-1.5 rounded-full" style="width: {{ $penaltyProgress }}%"></div>
+                                    </div>
+                                </div>
+                            @endif
+                        @endif
+                    </div>
+                </div>
+
+                <!-- Info compacte - 2 options de rattrapage -->
+                <div class="mt-3 p-3 rounded-lg bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100">
+                    <div class="flex items-start gap-3">
+                        <div class="bg-blue-100 p-1.5 rounded-lg">
+                            <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <div class="text-xs text-blue-800">
+                            <p class="font-semibold mb-1">💡 Comment rattraper vos heures ?</p>
+                            <ul class="space-y-1 text-blue-700">
+                                <li><span class="font-medium">1.</span> Restez après {{ $workSettings['work_end'] ?? '17:00' }} vos jours de travail → rattrapage automatique</li>
+                                <li><span class="font-medium">2.</span> Venez un jour non travaillé → démarrez une "session de rattrapage"</li>
+                            </ul>
+                            <p class="text-blue-600 mt-1 italic">Délai: {{ $expiringLateData['recovery_days'] }} jours par retard avant expiration.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endif
 
         <!-- Month Selector -->
         <div class="bg-white rounded-2xl shadow-sm p-4 border border-gray-200">
@@ -511,6 +904,7 @@
                             <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Départ</th>
                             <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Durée</th>
                             <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Statut</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Rattrapage</th>
                             <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Localisation</th>
                         </tr>
                     </thead>
@@ -547,7 +941,12 @@
                                     <div class="text-sm font-semibold text-gray-900">{{ $presence->hours_worked ? number_format($presence->hours_worked, 1) . 'h' : '-' }}</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    @if($presence->is_late || $presence->is_early_departure)
+                                    @if($presence->is_recovery_session)
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-violet-100 text-violet-700">
+                                            <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/></svg>
+                                            Rattrapage
+                                        </span>
+                                    @elseif($presence->is_late || $presence->is_early_departure)
                                         <div class="flex flex-wrap gap-1">
                                             @if($presence->is_late)
                                                 <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-orange-100 text-orange-700">Retard</span>
@@ -558,6 +957,24 @@
                                         </div>
                                     @else
                                         <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-700">✓ OK</span>
+                                    @endif
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    @if($presence->overtime_minutes > 0 || $presence->recovery_minutes > 0)
+                                        <div class="flex flex-col gap-1">
+                                            @if($presence->overtime_minutes > 0)
+                                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-700">
+                                                    +{{ $presence->overtime_minutes }}min sup
+                                                </span>
+                                            @endif
+                                            @if($presence->recovery_minutes > 0)
+                                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-emerald-100 text-emerald-700">
+                                                    ✓ {{ $presence->recovery_minutes }}min rattrapées
+                                                </span>
+                                            @endif
+                                        </div>
+                                    @else
+                                        <span class="text-xs text-gray-400">-</span>
                                     @endif
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
@@ -572,7 +989,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="px-6 py-12 text-center">
+                                <td colspan="7" class="px-6 py-12 text-center">
                                     <div class="flex flex-col items-center">
                                         <div class="bg-gray-100 rounded-full p-4 mb-4">
                                             <svg class="h-10 w-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -753,6 +1170,38 @@
                         },
                         { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
                     );
+                });
+            }
+
+            // ===== Session de rattrapage =====
+            const recoveryStartBtn = document.getElementById('recoveryStartBtn');
+            const recoveryStartForm = document.getElementById('recoveryStartForm');
+            const recoveryStartLat = document.getElementById('recoveryStartLat');
+            const recoveryStartLng = document.getElementById('recoveryStartLng');
+            const recoveryStartText = document.getElementById('recoveryStartText');
+            const recoveryStartIcon = document.getElementById('recoveryStartIcon');
+
+            const recoveryEndBtn = document.getElementById('recoveryEndBtn');
+            const recoveryEndForm = document.getElementById('recoveryEndForm');
+            const recoveryEndLat = document.getElementById('recoveryEndLat');
+            const recoveryEndLng = document.getElementById('recoveryEndLng');
+            const recoveryEndText = document.getElementById('recoveryEndText');
+            const recoveryEndIcon = document.getElementById('recoveryEndIcon');
+
+            const recoveryStartOriginalIcon = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>`;
+            const recoveryEndOriginalIcon = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 10a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z"></path>`;
+
+            if (recoveryStartBtn) {
+                recoveryStartBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    handlePointage(recoveryStartBtn, recoveryStartForm, recoveryStartLat, recoveryStartLng, recoveryStartText, recoveryStartIcon, 'Démarrer le rattrapage', recoveryStartOriginalIcon);
+                });
+            }
+
+            if (recoveryEndBtn) {
+                recoveryEndBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    handlePointage(recoveryEndBtn, recoveryEndForm, recoveryEndLat, recoveryEndLng, recoveryEndText, recoveryEndIcon, 'Terminer le rattrapage', recoveryEndOriginalIcon);
                 });
             }
         });

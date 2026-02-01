@@ -1,7 +1,7 @@
 <x-layouts.admin>
     <div class="space-y-6">
         <!-- Header -->
-        <div class="flex items-center justify-between">
+        <div class="flex items-center justify-between animate-fade-in-up">
             <div class="flex items-center gap-4">
                 <a href="{{ route('admin.messaging.index') }}" class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
                     <x-icon name="arrow-left" class="w-5 h-5" />
@@ -34,7 +34,7 @@
             </span>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-fade-in-up animation-delay-100">
             <!-- Participants -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex flex-col h-[calc(100vh-16rem)] lg:h-auto">
                 <h2 class="font-semibold text-gray-900 mb-4 flex items-center justify-between">

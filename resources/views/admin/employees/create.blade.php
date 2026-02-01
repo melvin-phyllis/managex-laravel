@@ -1,7 +1,7 @@
 <x-layouts.admin>
     <div class="space-y-6" x-data="employeeForm()">
         <!-- Breadcrumbs -->
-        <nav class="flex" aria-label="Breadcrumb">
+        <nav class="flex animate-fade-in-up" aria-label="Breadcrumb">
             <ol class="inline-flex items-center space-x-1 md:space-x-3">
                 <li class="inline-flex items-center">
                     <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600">
@@ -30,7 +30,7 @@
             </ol>
         </nav>
         <!-- Header -->
-        <div class="flex items-center justify-between">
+        <div class="flex items-center justify-between animate-fade-in-up animation-delay-100">
             <div>
                 <h1 class="text-2xl font-bold text-gray-900">Ajouter un employé</h1>
                 <p class="text-gray-500 mt-1">Créer un nouveau compte employé</p>
@@ -44,7 +44,7 @@
         </div>
 
         <!-- Info Box -->
-        <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 flex items-start space-x-3">
+        <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 flex items-start space-x-3 animate-fade-in-up animation-delay-200">
             <svg class="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
@@ -55,7 +55,7 @@
         </div>
 
         <!-- Form -->
-        <form action="{{ route('admin.employees.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+        <form action="{{ route('admin.employees.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6 animate-fade-in-up animation-delay-300">
             @csrf
 
             <!-- Section 1: Informations de base -->

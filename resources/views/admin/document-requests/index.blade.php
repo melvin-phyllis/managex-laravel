@@ -1,7 +1,7 @@
 <x-layouts.admin>
     <div class="space-y-6">
         <!-- Header -->
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 animate-fade-in-up">
             <div>
                 <h1 class="text-2xl font-bold text-gray-900">📋 Demandes de Documents</h1>
                 <p class="text-gray-500 mt-1">Gérez les demandes des employés</p>
@@ -16,7 +16,7 @@
 
         <!-- Stats -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div class="bg-amber-50 border border-amber-200 rounded-xl p-4">
+            <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 animate-fade-in-up animation-delay-100">
                 <div class="flex items-center gap-3">
                     <span class="text-2xl">⏳</span>
                     <div>
@@ -25,7 +25,7 @@
                     </div>
                 </div>
             </div>
-            <div class="bg-green-50 border border-green-200 rounded-xl p-4">
+            <div class="bg-green-50 border border-green-200 rounded-xl p-4 animate-fade-in-up animation-delay-200">
                 <div class="flex items-center gap-3">
                     <span class="text-2xl">✅</span>
                     <div>
@@ -34,7 +34,7 @@
                     </div>
                 </div>
             </div>
-            <div class="bg-blue-50 border border-blue-200 rounded-xl p-4">
+            <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 animate-fade-in-up animation-delay-300">
                 <div class="flex items-center gap-3">
                     <span class="text-2xl">📊</span>
                     <div>
@@ -46,7 +46,7 @@
         </div>
 
         <!-- Filtres -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 animate-fade-in-up animation-delay-200">
             <form method="GET" class="flex items-center gap-4">
                 <select name="status" class="rounded-lg border-gray-300 focus:border-emerald-500 focus:ring-emerald-500">
                     <option value="">En attente</option>
@@ -66,7 +66,7 @@
         </div>
 
         <!-- Liste des demandes -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden animate-fade-in-up animation-delay-300">
             @if($requests->count() > 0)
                 <table class="w-full">
                     <thead class="bg-gray-50 border-b border-gray-100">

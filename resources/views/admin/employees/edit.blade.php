@@ -1,7 +1,7 @@
 <x-layouts.admin>
     <div class="space-y-6" x-data="employeeEditForm()">
         <!-- Header -->
-        <div class="flex items-center justify-between">
+        <div class="flex items-center justify-between animate-fade-in-up">
             <div>
                 <h1 class="text-2xl font-bold text-gray-900">Modifier l'employé</h1>
                 <p class="text-gray-500 mt-1">{{ $employee->name }} <span class="text-xs bg-gray-100 px-2 py-1 rounded-full ml-2">{{ $employee->employee_id ?? 'N/A' }}</span></p>
@@ -24,7 +24,7 @@
         </div>
 
         <!-- Form -->
-        <form action="{{ route('admin.employees.update', $employee) }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+        <form action="{{ route('admin.employees.update', $employee) }}" method="POST" enctype="multipart/form-data" class="space-y-6 animate-fade-in-up animation-delay-100">
             @csrf
             @method('PUT')
 

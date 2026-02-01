@@ -1,7 +1,7 @@
 <x-layouts.admin>
     <div class="space-y-6">
         <!-- Breadcrumbs -->
-        <nav class="flex items-center gap-2 text-sm text-gray-500">
+        <nav class="flex items-center gap-2 text-sm text-gray-500 animate-fade-in-up">
             <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-1 hover:text-gray-700">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
@@ -20,7 +20,7 @@
         </nav>
 
         <!-- Header -->
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 animate-fade-in-up animation-delay-100">
             <div>
                 <h1 class="text-2xl font-bold text-gray-900">📁 Gestion des Documents</h1>
                 <p class="text-gray-500 mt-1">Contrats et documents RH des employés</p>
@@ -49,7 +49,7 @@
 
         <!-- Stats Cards -->
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 animate-fade-in-up animation-delay-100">
                 <div class="flex items-center gap-4">
                     <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
                         <span class="text-xl">📄</span>
@@ -60,7 +60,7 @@
                     </div>
                 </div>
             </div>
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 animate-fade-in-up animation-delay-200">
                 <div class="flex items-center gap-4">
                     <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
                         <span class="text-xl">📝</span>
@@ -71,7 +71,7 @@
                     </div>
                 </div>
             </div>
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 animate-fade-in-up animation-delay-300">
                 <div class="flex items-center gap-4">
                     <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
                         <span class="text-xl">👥</span>

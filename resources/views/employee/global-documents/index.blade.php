@@ -1,7 +1,7 @@
 <x-layouts.employee>
     <div class="space-y-6">
         <!-- Header -->
-        <div>
+        <div class="animate-fade-in-up">
             <h1 class="text-2xl font-bold text-gray-900">Documents de l'Entreprise</h1>
             <p class="text-gray-600 mt-1">Règlement intérieur et documents importants</p>
         </div>
@@ -13,7 +13,7 @@
         @endif
 
         <!-- Liste documents -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in-up animation-delay-100">
             @if($documents->isEmpty())
                 <div class="p-8 text-center text-gray-500">
                     <svg class="w-12 h-12 mx-auto mb-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -67,7 +67,7 @@
         </div>
 
         <!-- Note -->
-        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 animate-fade-in-up animation-delay-200">
             <p class="text-sm text-blue-800">
                 <strong>💡 Important :</strong> Veuillez lire attentivement tous les documents et confirmer votre lecture en cliquant sur "J'ai lu ce document".
             </p>

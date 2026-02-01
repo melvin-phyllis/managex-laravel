@@ -29,6 +29,7 @@ class User extends Authenticatable
         'avatar',
         'department_id',
         'position_id',
+        'supervisor_id',
         // Champs RH personnels
         'date_of_birth',
         'gender',
@@ -299,5 +300,346 @@ class User extends Authenticatable
     public function getCurrentBaseSalaryAttribute(): ?float
     {
         return $this->currentContract ? $this->currentContract->base_salary : $this->base_salary;
+    }
+
+    // ==========================================
+    // Relations Superviseur / Stagiaires
+    // ==========================================
+
+    /**
+     * Get the user's supervisor (tuteur)
+     */
+    public function supervisor(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'supervisor_id');
+    }
+
+    /**
+     * Get users supervised by this user
+     */
+    public function supervisees(): HasMany
+    {
+        return $this->hasMany(User::class, 'supervisor_id');
+    }
+
+    /**
+     * Get intern evaluations received (as intern)
+     */
+    public function internEvaluations(): HasMany
+    {
+        return $this->hasMany(InternEvaluation::class, 'intern_id');
+    }
+
+    /**
+     * Get evaluations given (as tutor)
+     */
+    public function givenEvaluations(): HasMany
+    {
+        return $this->hasMany(InternEvaluation::class, 'tutor_id');
+    }
+
+    /**
+     * Scope: only interns (contract_type = stage)
+     */
+    public function scopeInterns($query)
+    {
+        return $query->where('contract_type', 'stage');
+    }
+
+    /**
+     * Scope: users with a supervisor assigned
+     */
+    public function scopeWithSupervisor($query)
+    {
+        return $query->whereNotNull('supervisor_id');
+    }
+
+    /**
+     * Check if user is an intern
+     */
+    public function isIntern(): bool
+    {
+        return $this->contract_type === 'stage';
+    }
+
+    /**
+     * Check if user is a tutor (has interns to supervise)
+     */
+    public function isTutor(): bool
+    {
+        return $this->supervisees()->interns()->exists();
+    }
+
+    /**
+     * Get the interns supervised by this user
+     */
+    public function getInternsAttribute()
+    {
+        return $this->supervisees()->interns()->get();
+    }
+
+    /**
+     * Get the latest evaluation for this intern
+     */
+    public function getLatestEvaluationAttribute()
+    {
+        return $this->internEvaluations()->latest('week_start')->first();
+    }
+
+    /**
+     * Get the average evaluation score
+     */
+    public function getAverageEvaluationScoreAttribute(): ?float
+    {
+        $evaluations = $this->internEvaluations()->submitted()->get();
+
+        if ($evaluations->isEmpty()) {
+            return null;
+        }
+
+        return round($evaluations->avg(function ($eval) {
+            return $eval->discipline_score + $eval->behavior_score +
+                   $eval->skills_score + $eval->communication_score;
+        }), 1);
+    }
+
+    // =============================================
+    // LATE HOURS RECOVERY TRACKING
+    // =============================================
+
+    /**
+     * Get total late minutes (all time)
+     */
+    public function getTotalLateMinutesAttribute(): int
+    {
+        return (int) $this->presences()
+            ->where('is_late', true)
+            ->sum('late_minutes');
+    }
+
+    /**
+     * Get total recovery minutes (all time)
+     */
+    public function getTotalRecoveryMinutesAttribute(): int
+    {
+        return (int) $this->presences()
+            ->sum('recovery_minutes');
+    }
+
+    /**
+     * Get late hours balance (minutes to recover)
+     * Positive = needs to recover, Negative = has surplus
+     */
+    public function getLateBalanceMinutesAttribute(): int
+    {
+        return $this->total_late_minutes - $this->total_recovery_minutes;
+    }
+
+    /**
+     * Get formatted late balance
+     */
+    public function getLateBalanceFormattedAttribute(): string
+    {
+        $balance = $this->late_balance_minutes;
+        $absBalance = abs($balance);
+        $hours = floor($absBalance / 60);
+        $mins = $absBalance % 60;
+        
+        $formatted = $hours > 0 ? "{$hours}h" . ($mins > 0 ? sprintf('%02d', $mins) : '') : "{$mins} min";
+        
+        if ($balance > 0) {
+            return "-{$formatted}"; // Deficit (needs to recover)
+        } elseif ($balance < 0) {
+            return "+{$formatted}"; // Surplus
+        }
+        return "0";
+    }
+
+    /**
+     * Get late balance status
+     */
+    public function getLateBalanceStatusAttribute(): string
+    {
+        $balance = $this->late_balance_minutes;
+        if ($balance > 30) return 'deficit'; // More than 30 min to recover
+        if ($balance > 0) return 'warning'; // Small deficit
+        return 'ok'; // No deficit or surplus
+    }
+
+    /**
+     * Get monthly late minutes
+     */
+    public function getMonthlyLateMinutes(?int $month = null, ?int $year = null): int
+    {
+        $month = $month ?? now()->month;
+        $year = $year ?? now()->year;
+
+        return (int) $this->presences()
+            ->whereMonth('date', $month)
+            ->whereYear('date', $year)
+            ->where('is_late', true)
+            ->sum('late_minutes');
+    }
+
+    /**
+     * Get monthly recovery minutes
+     */
+    public function getMonthlyRecoveryMinutes(?int $month = null, ?int $year = null): int
+    {
+        $month = $month ?? now()->month;
+        $year = $year ?? now()->year;
+
+        return (int) $this->presences()
+            ->whereMonth('date', $month)
+            ->whereYear('date', $year)
+            ->sum('recovery_minutes');
+    }
+
+    /**
+     * Get monthly late balance
+     */
+    public function getMonthlyLateBalance(?int $month = null, ?int $year = null): int
+    {
+        return $this->getMonthlyLateMinutes($month, $year) - $this->getMonthlyRecoveryMinutes($month, $year);
+    }
+
+    /**
+     * Get recovery stats for the current month
+     */
+    public function getRecoveryStatsAttribute(): array
+    {
+        $month = now()->month;
+        $year = now()->year;
+
+        $monthlyLate = $this->getMonthlyLateMinutes($month, $year);
+        $monthlyRecovery = $this->getMonthlyRecoveryMinutes($month, $year);
+        $monthlyBalance = $monthlyLate - $monthlyRecovery;
+
+        return [
+            'total_late' => $this->total_late_minutes,
+            'total_recovery' => $this->total_recovery_minutes,
+            'total_balance' => $this->late_balance_minutes,
+            'monthly_late' => $monthlyLate,
+            'monthly_recovery' => $monthlyRecovery,
+            'monthly_balance' => $monthlyBalance,
+            'status' => $this->late_balance_status,
+        ];
+    }
+
+    /**
+     * Check if user has late hours to recover
+     */
+    public function hasLateHoursToRecover(): bool
+    {
+        return $this->late_balance_minutes > 0;
+    }
+
+    // =============================================
+    // LATE PENALTY ABSENCES
+    // =============================================
+
+    /**
+     * Get user's penalty absences
+     */
+    public function latePenaltyAbsences(): HasMany
+    {
+        return $this->hasMany(LatePenaltyAbsence::class);
+    }
+
+    /**
+     * Get total expired late minutes (not yet penalized)
+     */
+    public function getExpiredLateMinutesAttribute(): int
+    {
+        return (int) $this->presences()
+            ->where('is_late_expired', true)
+            ->sum('expired_late_minutes');
+    }
+
+    /**
+     * Get late hours that are about to expire (within 2 days)
+     */
+    public function getExpiringLatePresences()
+    {
+        return $this->presences()
+            ->expiringLate(2)
+            ->orderBy('late_recovery_deadline')
+            ->get();
+    }
+
+    /**
+     * Get total minutes expiring soon
+     */
+    public function getExpiringLateMinutesAttribute(): int
+    {
+        return $this->presences()
+            ->expiringLate(2)
+            ->get()
+            ->sum('unrecovered_minutes');
+    }
+
+    /**
+     * Get unacknowledged penalty absences
+     */
+    public function getUnacknowledgedPenaltiesAttribute()
+    {
+        return $this->latePenaltyAbsences()
+            ->unacknowledged()
+            ->orderBy('absence_date')
+            ->get();
+    }
+
+    /**
+     * Get count of penalty absences
+     */
+    public function getPenaltyAbsencesCountAttribute(): int
+    {
+        return $this->latePenaltyAbsences()->count();
+    }
+
+    /**
+     * Get upcoming penalty absences (future dates)
+     */
+    public function getUpcomingPenaltyAbsencesAttribute()
+    {
+        return $this->latePenaltyAbsences()
+            ->where('absence_date', '>=', today())
+            ->orderBy('absence_date')
+            ->get();
+    }
+
+    /**
+     * Get late recovery stats including expiration info
+     */
+    public function getFullRecoveryStatsAttribute(): array
+    {
+        $baseStats = $this->recovery_stats;
+        $penaltyThreshold = Setting::getLatePenaltyThresholdMinutes();
+        $recoveryDays = Setting::getLateRecoveryDays();
+
+        $expiredMinutes = $this->expired_late_minutes;
+        $expiringMinutes = $this->expiring_late_minutes;
+        $progressTowardsPenalty = $penaltyThreshold > 0 
+            ? min(100, round(($expiredMinutes / $penaltyThreshold) * 100))
+            : 0;
+
+        return array_merge($baseStats, [
+            'expired_minutes' => $expiredMinutes,
+            'expiring_minutes' => $expiringMinutes,
+            'penalty_threshold' => $penaltyThreshold,
+            'recovery_days' => $recoveryDays,
+            'progress_towards_penalty' => $progressTowardsPenalty,
+            'penalty_absences_count' => $this->penalty_absences_count,
+            'upcoming_penalties' => $this->upcoming_penalty_absences,
+            'expiring_presences' => $this->getExpiringLatePresences(),
+        ]);
+    }
+
+    /**
+     * Check if user has any late expiration warnings
+     */
+    public function hasLateExpirationWarning(): bool
+    {
+        return $this->expiring_late_minutes > 0;
     }
 }

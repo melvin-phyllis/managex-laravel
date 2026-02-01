@@ -63,3 +63,4 @@ class PayrollAddedNotification extends Notification implements ShouldQueue
         ];
     }
 }
+

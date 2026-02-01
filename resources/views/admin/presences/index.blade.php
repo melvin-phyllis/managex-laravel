@@ -1,7 +1,7 @@
 <x-layouts.admin>
     <div class="space-y-6" x-data="presenceTable()">
         <!-- Header -->
-        <x-table-header title="Gestion des Présences" subtitle="Suivi des pointages et heures travaillées">
+        <x-table-header title="Gestion des Présences" subtitle="Suivi des pointages et heures travaillées" class="animate-fade-in-up">
             <x-slot:icon>
                 <div class="w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-500/20">
                     <x-icon name="clock" class="w-6 h-6 text-white" />
@@ -29,7 +29,7 @@
         <!-- Stats Cards (4 colonnes) -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             <!-- Présents aujourd'hui -->
-            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-5 hover:shadow-md transition-shadow">
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-5 hover:shadow-md transition-shadow animate-fade-in-up animation-delay-100">
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm font-medium text-gray-500">Présents aujourd'hui</p>
@@ -42,7 +42,7 @@
             </div>
             
             <!-- Retards -->
-            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-5 hover:shadow-md transition-shadow">
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-5 hover:shadow-md transition-shadow animate-fade-in-up animation-delay-200">
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm font-medium text-gray-500">Retards ce mois</p>
@@ -55,7 +55,7 @@
             </div>
 
             <!-- Absents -->
-            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-5 hover:shadow-md transition-shadow">
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-5 hover:shadow-md transition-shadow animate-fade-in-up animation-delay-300">
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm font-medium text-gray-500">Absents injustifiés</p>
@@ -68,7 +68,7 @@
             </div>
 
             <!-- Heures moyennes -->
-            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-5 hover:shadow-md transition-shadow">
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-5 hover:shadow-md transition-shadow animate-fade-in-up animation-delay-400">
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm font-medium text-gray-500">Heures moy. / jour</p>
@@ -83,7 +83,7 @@
         @endif
 
         <!-- Filter Bar -->
-        <x-filter-bar :hasActiveFilters="request()->hasAny(['employee_id', 'date_debut', 'date_fin'])">
+        <x-filter-bar :hasActiveFilters="request()->hasAny(['employee_id', 'date_debut', 'date_fin'])" class="animate-fade-in-up animation-delay-200">
             <x-slot:filters>
                 <!-- Employee -->
                 <div class="flex-1 min-w-[200px] relative">
@@ -146,7 +146,7 @@
         </x-filter-bar>
 
         <!-- Table -->
-        <x-data-table>
+        <x-data-table class="animate-fade-in-up animation-delay-300">
             <x-slot:header>
                 <tr>
                     <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Employé</th>

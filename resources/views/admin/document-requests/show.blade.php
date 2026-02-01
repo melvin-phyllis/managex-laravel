@@ -1,7 +1,7 @@
 <x-layouts.admin>
     <div class="space-y-6">
         <!-- Header -->
-        <div class="flex items-center gap-4">
+        <div class="flex items-center gap-4 animate-fade-in-up">
             <a href="{{ route('admin.document-requests.index') }}" 
                class="p-2 rounded-lg hover:bg-gray-100 transition-colors">
                 <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -24,7 +24,7 @@
             </div>
         @endif
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-fade-in-up animation-delay-100">
             <!-- Détails de la demande -->
             <div class="lg:col-span-2 space-y-6">
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">

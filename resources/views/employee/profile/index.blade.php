@@ -1,7 +1,7 @@
 <x-layouts.employee>
     <div class="w-full mx-auto space-y-6">
         <!-- Header -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden animate-fade-in-up">
             <div class="bg-gradient-to-r from-blue-600 to-indigo-700 px-6 py-8">
                 <div class="flex items-center gap-6">
                     <!-- Avatar -->
@@ -37,7 +37,7 @@
                     <p class="text-xs text-gray-500">Congés restants</p>
                 </div>
                 <div class="px-6 py-4 text-center">
-                    <p class="text-2xl font-bold text-gray-900">{{ $user->hire_date ? \Carbon\Carbon::parse($user->hire_date)->diffInYears(now()) : '-' }}</p>
+                    <p class="text-2xl font-bold text-gray-900">{{ $user->hire_date ? (int) $user->hire_date->diffInYears(now()) : '-' }}</p>
                     <p class="text-xs text-gray-500">Années d'ancienneté</p>
                 </div>
                 <div class="px-6 py-4 text-center">
@@ -52,7 +52,7 @@
         </div>
 
         <!-- Personal Information -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 animate-fade-in-up animation-delay-100">
             <div class="flex items-center justify-between mb-6">
                 <h2 class="text-lg font-semibold text-gray-900">Informations Personnelles</h2>
                 <button onclick="document.getElementById('personalModal').classList.remove('hidden')" 
@@ -123,7 +123,7 @@
         </div>
 
         <!-- Emergency Contact -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 animate-fade-in-up animation-delay-200">
             <div class="flex items-center justify-between mb-6">
                 <h2 class="text-lg font-semibold text-gray-900">Contact d'Urgence</h2>
                 <button onclick="document.getElementById('emergencyModal').classList.remove('hidden')" 
@@ -165,7 +165,7 @@
         </div>
 
         <!-- Professional Information (Read-only) -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 animate-fade-in-up animation-delay-300">
             <h2 class="text-lg font-semibold text-gray-900 mb-6">Informations Professionnelles</h2>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -199,7 +199,7 @@
         </div>
 
         <!-- Security -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 animate-fade-in-up animation-delay-400">
             <div class="flex items-center justify-between mb-6">
                 <h2 class="text-lg font-semibold text-gray-900">Sécurité</h2>
             </div>
@@ -237,7 +237,7 @@
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Date de naissance</label>
-                        <input type="date" name="date_of_birth" value="{{ $user->date_of_birth }}"
+                        <input type="date" name="date_of_birth" value="{{ old('date_of_birth', $user->date_of_birth?->format('Y-m-d')) }}"
                                class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
                     </div>
                     <div>

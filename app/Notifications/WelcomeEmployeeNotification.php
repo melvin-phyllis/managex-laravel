@@ -69,3 +69,4 @@ class WelcomeEmployeeNotification extends Notification
         ];
     }
 }
+

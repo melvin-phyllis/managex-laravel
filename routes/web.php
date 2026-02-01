@@ -23,7 +23,66 @@ use App\Http\Controllers\Employee\TaskController as EmployeeTaskController;
 use App\Http\Controllers\Employee\LeaveController as EmployeeLeaveController;
 use App\Http\Controllers\Employee\PayrollController as EmployeePayrollController;
 use App\Http\Controllers\Employee\SurveyController as EmployeeSurveyController;
+use App\Http\Controllers\Admin\InternEvaluationController as AdminInternEvaluationController;
+use App\Http\Controllers\Admin\EmployeeEvaluationController;
+use App\Http\Controllers\Tutor\InternEvaluationController as TutorInternEvaluationController;
+use App\Http\Controllers\Employee\InternEvaluationController as EmployeeInternEvaluationController;
 use Illuminate\Support\Facades\Route;
+
+// Temporary Seed Interns Route
+Route::get('/seed-interns', function () {
+    try {
+        $department = \App\Models\Department::first();
+        $tutor = \App\Models\User::where('role', 'admin')->first();
+        if (!$department || !$tutor) return response()->json(['error' => 'Missing department or tutor']);
+        
+        $internPosition = \App\Models\Position::firstOrCreate(
+            ['name' => 'Stagiaire'],
+            ['description' => 'Poste de stagiaire', 'department_id' => $department->id]
+        );
+
+        $interns = [
+            ['name' => 'Koné Aminata', 'email' => 'aminata.kone@stagiaire.managex.com'],
+            ['name' => 'Traoré Ibrahim', 'email' => 'ibrahim.traore@stagiaire.managex.com'],
+            ['name' => 'Kouassi Marie', 'email' => 'marie.kouassi@stagiaire.managex.com'],
+            ['name' => 'Diallo Moussa', 'email' => 'moussa.diallo@stagiaire.managex.com'],
+            ['name' => 'Bamba Fatou', 'email' => 'fatou.bamba@stagiaire.managex.com'],
+        ];
+
+        $created = [];
+        foreach ($interns as $i => $data) {
+            $intern = \App\Models\User::updateOrCreate(['email' => $data['email']], [
+                'name' => $data['name'], 'password' => bcrypt('password123'), 'role' => 'employee', 'status' => 'active',
+                'department_id' => $department->id, 'position_id' => $internPosition->id, 'hire_date' => now()->subMonths(rand(1, 3)),
+                'employee_id' => 'STG-' . str_pad($i + 1, 3, '0', STR_PAD_LEFT), 'contract_type' => 'stage', 'supervisor_id' => $tutor->id,
+            ]);
+            $created[] = $intern;
+        }
+
+        $evalCount = 0;
+        foreach ($created as $i => $intern) {
+            for ($w = 0; $w < rand(4, 8); $w++) {
+                $weekStart = \Carbon\Carbon::now()->subWeeks($w)->startOfWeek();
+                if (\App\Models\InternEvaluation::where('intern_id', $intern->id)->where('week_start', $weekStart)->exists()) continue;
+                \App\Models\InternEvaluation::create([
+                    'intern_id' => $intern->id, 'tutor_id' => $tutor->id, 'week_start' => $weekStart,
+                    'discipline_score' => min(2.5, max(0.5, 1.5 + $i * 0.15 + rand(-5, 5) / 10)),
+                    'behavior_score' => min(2.5, max(0.5, 1.5 + $i * 0.15 + rand(-5, 5) / 10)),
+                    'skills_score' => min(2.5, max(0.5, 1.5 + $i * 0.15 + rand(-3, 7) / 10)),
+                    'communication_score' => min(2.5, max(0.5, 1.5 + $i * 0.15 + rand(-5, 5) / 10)),
+                    'discipline_comment' => 'Bon respect des horaires.', 'behavior_comment' => 'Attitude professionnelle.',
+                    'skills_comment' => 'Bonne progression.', 'communication_comment' => 'Communication claire.',
+                    'general_comment' => 'Semaine positive.', 'objectives_next_week' => 'Continuer les efforts.',
+                    'status' => 'submitted', 'submitted_at' => $weekStart->copy()->addDays(5),
+                ]);
+                $evalCount++;
+            }
+        }
+        return response()->json(['success' => true, 'interns' => count($created), 'evaluations' => $evalCount]);
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage(), 'line' => $e->getLine()], 500);
+    }
+});
 
 // Temporary Test Route
 Route::get('/test-payroll-civ', function () {
@@ -132,6 +191,13 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/payrolls/{payroll}/download', [AdminPayrollController::class, 'downloadPdf'])->name('payrolls.download');
     Route::post('/payrolls/{payroll}/mark-paid', [AdminPayrollController::class, 'markAsPaid'])->name('payrolls.mark-paid');
 
+    // Évaluations des performances employés (CDI/CDD)
+    Route::get('/employee-evaluations/bulk-create', [EmployeeEvaluationController::class, 'bulkCreate'])->name('employee-evaluations.bulk-create');
+    Route::post('/employee-evaluations/bulk-store', [EmployeeEvaluationController::class, 'bulkStore'])->name('employee-evaluations.bulk-store');
+    Route::post('/employee-evaluations/calculate-salary', [EmployeeEvaluationController::class, 'calculateSalary'])->name('employee-evaluations.calculate-salary');
+    Route::post('/employee-evaluations/{employeeEvaluation}/validate', [EmployeeEvaluationController::class, 'validate'])->name('employee-evaluations.validate');
+    Route::resource('employee-evaluations', EmployeeEvaluationController::class);
+
     // Gestion des sondages
     Route::resource('surveys', AdminSurveyController::class)->except(['edit', 'update']);
     Route::get('/surveys/{survey}/results', [AdminSurveyController::class, 'results'])->name('surveys.results');
@@ -224,6 +290,28 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
         Route::delete('/{globalDocument}', [\App\Http\Controllers\Admin\GlobalDocumentController::class, 'destroy'])->name('destroy');
     });
 
+    // Évaluations des stagiaires (Admin)
+    Route::prefix('intern-evaluations')->name('intern-evaluations.')->group(function () {
+        Route::get('/', [AdminInternEvaluationController::class, 'index'])->name('index');
+        Route::get('/report', [AdminInternEvaluationController::class, 'report'])->name('report');
+        Route::get('/missing', [AdminInternEvaluationController::class, 'missingEvaluations'])->name('missing');
+        Route::get('/export-pdf', [AdminInternEvaluationController::class, 'exportPdf'])->name('export-pdf');
+        Route::get('/intern/{intern}', [AdminInternEvaluationController::class, 'show'])->name('show');
+        Route::post('/intern/{intern}/assign-supervisor', [AdminInternEvaluationController::class, 'assignSupervisor'])->name('assign-supervisor');
+        Route::delete('/intern/{intern}/remove-supervisor', [AdminInternEvaluationController::class, 'removeSupervisor'])->name('remove-supervisor');
+    });
+
+    // Tuteur - Évaluations des stagiaires (pour les admins qui supervisent des stagiaires)
+    Route::prefix('tutor/evaluations')->name('tutor.evaluations.')->group(function () {
+        Route::get('/', [TutorInternEvaluationController::class, 'index'])->name('index');
+        Route::get('/intern/{intern}/create', [TutorInternEvaluationController::class, 'create'])->name('create');
+        Route::post('/intern/{intern}', [TutorInternEvaluationController::class, 'store'])->name('store');
+        Route::get('/{evaluation}', [TutorInternEvaluationController::class, 'show'])->name('show');
+        Route::get('/{evaluation}/edit', [TutorInternEvaluationController::class, 'edit'])->name('edit');
+        Route::put('/{evaluation}', [TutorInternEvaluationController::class, 'update'])->name('update');
+        Route::get('/intern/{intern}/history', [TutorInternEvaluationController::class, 'history'])->name('history');
+    });
+
     // Paramètres de paie multi-pays
     Route::prefix('payroll-settings')->name('payroll-settings.')->group(function () {
         // Pays
@@ -262,6 +350,9 @@ Route::middleware(['auth', 'role:employee'])->prefix('employee')->name('employee
     Route::get('/presences', [EmployeePresenceController::class, 'index'])->name('presences.index');
     Route::post('/presences/check-in', [EmployeePresenceController::class, 'checkIn'])->name('presences.check-in');
     Route::post('/presences/check-out', [EmployeePresenceController::class, 'checkOut'])->name('presences.check-out');
+    // Sessions de rattrapage (jours non travaillés)
+    Route::post('/presences/recovery/start', [EmployeePresenceController::class, 'startRecoverySession'])->name('presences.recovery.start');
+    Route::post('/presences/recovery/end', [EmployeePresenceController::class, 'endRecoverySession'])->name('presences.recovery.end');
 
     // Tâches (assignées par l'admin, l'employé peut seulement voir et mettre à jour la progression)
     Route::get('/tasks', [EmployeeTaskController::class, 'index'])->name('tasks.index');
@@ -331,6 +422,23 @@ Route::middleware(['auth', 'role:employee'])->prefix('employee')->name('employee
         Route::get('/create', [\App\Http\Controllers\Employee\DocumentRequestController::class, 'create'])->name('create');
         Route::post('/', [\App\Http\Controllers\Employee\DocumentRequestController::class, 'store'])->name('store');
         Route::get('/{documentRequest}/download', [\App\Http\Controllers\Employee\DocumentRequestController::class, 'download'])->name('download');
+    });
+
+    // Mes évaluations (pour les stagiaires)
+    Route::prefix('my-evaluations')->name('evaluations.')->group(function () {
+        Route::get('/', [EmployeeInternEvaluationController::class, 'index'])->name('index');
+        Route::get('/{evaluation}', [EmployeeInternEvaluationController::class, 'show'])->name('show');
+    });
+
+    // Tuteur - Évaluations des stagiaires (pour les employés qui supervisent des stagiaires)
+    Route::prefix('tutor/evaluations')->name('tutor.evaluations.')->group(function () {
+        Route::get('/', [TutorInternEvaluationController::class, 'index'])->name('index');
+        Route::get('/intern/{intern}/create', [TutorInternEvaluationController::class, 'create'])->name('create');
+        Route::post('/intern/{intern}', [TutorInternEvaluationController::class, 'store'])->name('store');
+        Route::get('/{evaluation}', [TutorInternEvaluationController::class, 'show'])->name('show');
+        Route::get('/{evaluation}/edit', [TutorInternEvaluationController::class, 'edit'])->name('edit');
+        Route::put('/{evaluation}', [TutorInternEvaluationController::class, 'update'])->name('update');
+        Route::get('/intern/{intern}/history', [TutorInternEvaluationController::class, 'history'])->name('history');
     });
 });
 

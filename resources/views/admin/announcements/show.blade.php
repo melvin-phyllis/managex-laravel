@@ -1,7 +1,7 @@
 <x-layouts.admin>
     <div class="max-w-5xl mx-auto space-y-6">
         <!-- Breadcrumb -->
-        <nav class="flex" aria-label="Breadcrumb">
+        <nav class="flex animate-fade-in-up" aria-label="Breadcrumb">
             <ol class="inline-flex items-center space-x-1 md:space-x-3">
                 <li class="inline-flex items-center">
                     <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600">
@@ -30,7 +30,7 @@
             </ol>
         </nav>
         <!-- Header -->
-        <div class="flex items-center justify-between">
+        <div class="flex items-center justify-between animate-fade-in-up animation-delay-100">
             <div class="flex items-center gap-4">
                 <a href="{{ route('admin.announcements.index') }}" 
                    class="p-2 rounded-lg hover:bg-gray-100 transition-colors">
@@ -78,7 +78,7 @@
             @endif
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-fade-in-up animation-delay-200">
             <!-- Content -->
             <div class="lg:col-span-2 space-y-6">
                 <!-- Announcement Content -->

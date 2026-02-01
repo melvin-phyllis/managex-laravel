@@ -11,10 +11,6 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
-    <!-- Toastify CSS -->
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
-
-
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -83,6 +79,13 @@
                         Congés
                     </x-sidebar-link>
 
+                    <x-sidebar-link :href="route('admin.intern-evaluations.index')" :active="request()->routeIs('admin.intern-evaluations.*')">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                        </svg>
+                        Suivi Stagiaires
+                    </x-sidebar-link>
+
                     <!-- Paie Dropdown -->
                     <div x-data="{ open: {{ (request()->routeIs('admin.payrolls.*') || request()->routeIs('admin.payroll-settings.*')) ? 'true' : 'false' }} }">
                         <button @click="open = !open" 
@@ -98,20 +101,13 @@
                             </svg>
                         </button>
                         
-                        <div x-show="open" 
-                             x-cloak
-                             x-transition:enter="transition ease-out duration-100"
-                             x-transition:enter-start="opacity-0 -translate-y-2"
-                             x-transition:enter-end="opacity-100 translate-y-0"
-                             x-transition:leave="transition ease-in duration-75"
-                             x-transition:leave-start="opacity-100 translate-y-0"
-                             x-transition:leave-end="opacity-0 -translate-y-2"
-                             class="space-y-1 mt-1">
-                            
+                        <div x-show="open" x-cloak x-transition class="space-y-1 mt-1">
+                            <x-sidebar-link :href="route('admin.employee-evaluations.index')" :active="request()->routeIs('admin.employee-evaluations.*')" class="pl-12 text-sm">
+                                Évaluations performances
+                            </x-sidebar-link>
                             <x-sidebar-link :href="route('admin.payrolls.index')" :active="request()->routeIs('admin.payrolls.*')" class="pl-12 text-sm">
                                 Fiches de paie
                             </x-sidebar-link>
-
                             <x-sidebar-link :href="route('admin.payroll-settings.countries')" :active="request()->routeIs('admin.payroll-settings.*')" class="pl-12 text-sm">
                                 Config. Paie Pays
                             </x-sidebar-link>
@@ -154,20 +150,10 @@
                             </svg>
                         </button>
                         
-                        <div x-show="open" 
-                             x-cloak
-                             x-transition:enter="transition ease-out duration-100"
-                             x-transition:enter-start="opacity-0 -translate-y-2"
-                             x-transition:enter-end="opacity-100 translate-y-0"
-                             x-transition:leave="transition ease-in duration-75"
-                             x-transition:leave-start="opacity-100 translate-y-0"
-                             x-transition:leave-end="opacity-0 -translate-y-2"
-                             class="space-y-1 mt-1">
-                            
+                        <div x-show="open" x-cloak x-transition class="space-y-1 mt-1">
                             <x-sidebar-link :href="route('messaging.admin.chat')" :active="request()->routeIs('messaging.admin.chat')" class="pl-12 text-sm">
                                 Chat
                             </x-sidebar-link>
-
                             <x-sidebar-link :href="route('admin.messaging.index')" :active="request()->routeIs('admin.messaging.*')" class="pl-12 text-sm">
                                 Gestion Messages
                             </x-sidebar-link>
@@ -175,8 +161,7 @@
                     </div>
 
                     <!-- Séparateur Organisation -->
-                    <!-- Séparateur Organisation -->
-                    <div class="pt-4 mt-4 border-t border-gray-700">
+                    <div class="pt-4 mt-4 border-t border-gray-200">
                         <p class="px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider">Organisation</p>
                     </div>
 
@@ -194,7 +179,6 @@
                         </svg>
                         Analytics
                     </x-sidebar-link>
-
                 </div>
             </nav>
         </aside>
@@ -207,10 +191,10 @@
                     <div>
                         <button class="lg:hidden p-2 rounded-xl hover:bg-gray-100 transition-colors" 
                                 onclick="document.getElementById('sidebar').classList.toggle('-translate-x-full'); document.getElementById('sidebarBackdrop').classList.toggle('hidden')">
-                        <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                        </svg>
-                    </button>
+                            <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                            </svg>
+                        </button>
                     </div>
 
                     <div class="flex items-center space-x-4">
@@ -221,8 +205,7 @@
                         <div class="relative" x-data="{ open: false }">
                             <button @click="open = !open" @click.away="open = false" 
                                     class="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 transition-colors">
-                                <!-- Avatar -->
-                                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white text-sm font-semibold overflow-hidden">
+                                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white text-sm font-semibold overflow-hidden">
                                     @if(auth()->user()->avatar)
                                         <img src="{{ Storage::url(auth()->user()->avatar) }}" alt="{{ auth()->user()->name }}" class="w-full h-full object-cover">
                                     @else
@@ -236,26 +219,14 @@
                             </button>
 
                             <!-- Dropdown Menu -->
-                            <div x-show="open" 
-                                 x-cloak
-                                 x-transition:enter="transition ease-out duration-100"
-                                 x-transition:enter-start="opacity-0 scale-95"
-                                 x-transition:enter-end="opacity-100 scale-100"
-                                 x-transition:leave="transition ease-in duration-75"
-                                 x-transition:leave-start="opacity-100 scale-100"
-                                 x-transition:leave-end="opacity-0 scale-95"
-                                 class="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-50">
-                                
-                                <!-- User Info -->
+                            <div x-show="open" x-cloak x-transition class="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-50">
                                 <div class="px-4 py-3 border-b border-gray-100">
                                     <p class="text-sm font-semibold text-gray-900">{{ auth()->user()->name }}</p>
                                     <p class="text-xs text-gray-500 truncate">{{ auth()->user()->email }}</p>
-                                    <span class="inline-flex items-center px-2 py-0.5 mt-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">
+                                    <span class="inline-flex items-center px-2 py-0.5 mt-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                                         Administrateur
                                     </span>
                                 </div>
-
-                                <!-- Menu Items -->
                                 <div class="py-1">
                                     <a href="{{ route('admin.settings.index') }}" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
                                         <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -264,15 +235,7 @@
                                         </svg>
                                         Paramètres
                                     </a>
-                                    <a href="{{ route('admin.messaging.index') }}" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
-                                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
-                                        </svg>
-                                        Gestion Messagerie
-                                    </a>
                                 </div>
-
-                                <!-- Logout -->
                                 <div class="border-t border-gray-100 pt-1">
                                     <button type="button" @click="showLogoutModal = true" class="flex items-center gap-3 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -285,138 +248,34 @@
                         </div>
                     </div>
 
-    <!-- Hidden Logout Form -->
-    <form method="POST" action="{{ route('logout') }}" x-ref="logoutForm" class="hidden">
-        @csrf
-    </form>
+                    <!-- Hidden Logout Form -->
+                    <form method="POST" action="{{ route('logout') }}" x-ref="logoutForm" class="hidden">
+                        @csrf
+                    </form>
                 </div>
             </header>
 
-    <!-- Toastify JS -->
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Success Toast
-            @if(session('success') || session('status'))
-                Toastify({
-                    text: "{{ session('success') ?? session('status') }}",
-                    duration: 4000,
-                    close: true,
-                    gravity: "top",
-                    position: "right",
-                    stopOnFocus: true,
-                    style: {
-                        background: "linear-gradient(to right, #10b981, #059669)", // Emerald gradient
-                        borderRadius: "10px",
-                        boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
-                    },
-                }).showToast();
-            @endif
-
-            // Error Toast
-            @if(session('error'))
-                Toastify({
-                    text: "{{ session('error') }}",
-                    duration: 4000,
-                    close: true,
-                    gravity: "top",
-                    position: "right",
-                    stopOnFocus: true,
-                    style: {
-                        background: "linear-gradient(to right, #ef4444, #b91c1c)", // Red gradient
-                        borderRadius: "10px",
-                        boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
-                    },
-                }).showToast();
-            @endif
-
-            // Validation Errors
-            @if($errors->any())
-                 Toastify({
-                    text: "Une erreur est survenue. Veuillez vérifier vos entrées.", 
-                    duration: 4000,
-                    close: true,
-                    gravity: "top",
-                    position: "right",
-                    stopOnFocus: true,
-                    style: {
-                        background: "linear-gradient(to right, #ef4444, #b91c1c)", // Red gradient
-                        borderRadius: "10px",
-                        boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
-                    },
-                }).showToast();
-            @endif
-        });
-    </script>
             <!-- Page Content -->
             <main class="p-6">
-                <!-- Flash Messages -->
-                @if(session('success'))
-                    <div class="mb-6 p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-2xl flex items-center gap-3">
-                        <div class="flex-shrink-0 w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center">
-                            <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                            </svg>
-                        </div>
-                        <span class="font-medium">{{ session('success') }}</span>
-                    </div>
-                @endif
-
-                @if(session('error'))
-                    <div class="mb-6 p-4 bg-red-50 border border-red-200 text-red-800 rounded-2xl flex items-center gap-3">
-                        <div class="flex-shrink-0 w-10 h-10 bg-red-100 rounded-xl flex items-center justify-center">
-                            <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                            </svg>
-                        </div>
-                        <span class="font-medium">{{ session('error') }}</span>
-                    </div>
-                @endif
-
                 {{ $slot }}
             </main>
         </div>
     </div>
 
     <!-- Logout Confirmation Modal -->
-    <div x-show="showLogoutModal" 
-         class="fixed inset-0 z-[100] overflow-y-auto" 
-         aria-labelledby="modal-title" 
-         role="dialog" 
-         aria-modal="true"
-         style="display: none;">
-        
-        <!-- Backdrop -->
-        <div x-show="showLogoutModal"
-             x-transition:enter="ease-out duration-300"
-             x-transition:enter-start="opacity-0"
-             x-transition:enter-end="opacity-100"
-             x-transition:leave="ease-in duration-200"
-             x-transition:leave-start="opacity-100"
-             x-transition:leave-end="opacity-0"
-             class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" 
-             @click="showLogoutModal = false"></div>
-
+    <div x-show="showLogoutModal" class="fixed inset-0 z-[100] overflow-y-auto" style="display: none;">
+        <div x-show="showLogoutModal" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" @click="showLogoutModal = false"></div>
         <div class="flex min-h-screen items-end justify-center p-4 text-center sm:items-center sm:p-0">
-            <div x-show="showLogoutModal"
-                 x-transition:enter="ease-out duration-300"
-                 x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                 x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
-                 x-transition:leave="ease-in duration-200"
-                 x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
-                 x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                 class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
-                
+            <div x-show="showLogoutModal" x-transition class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
                 <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                     <div class="sm:flex sm:items-start">
                         <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
-                            <svg class="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                            <svg class="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
                             </svg>
                         </div>
                         <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-                            <h3 class="text-base font-semibold leading-6 text-gray-900" id="modal-title">Déconnexion</h3>
+                            <h3 class="text-base font-semibold leading-6 text-gray-900">Déconnexion</h3>
                             <div class="mt-2">
                                 <p class="text-sm text-gray-500">Êtes-vous sûr de vouloir vous déconnecter ?</p>
                             </div>
@@ -424,75 +283,123 @@
                     </div>
                 </div>
                 <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                    <button type="button" 
-                            @click="$refs.logoutForm.submit()"
-                            class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto">
-                        Déconnexion
-                    </button>
-                    <button type="button" 
-                            @click="showLogoutModal = false"
-                            class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto">
-                        Annuler
-                    </button>
+                    <button type="button" @click="$refs.logoutForm.submit()" class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto">Déconnexion</button>
+                    <button type="button" @click="showLogoutModal = false" class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto">Annuler</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Toastify JS -->
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <!-- Custom Toast Container - Must be outside all other containers -->
+    <div id="toast-container" class="fixed top-20 right-4 flex flex-col gap-3 pointer-events-none" style="z-index: 99999;"></div>
+
+    <style>
+        @keyframes toast-slide-in {
+            0% { transform: translateX(100%); opacity: 0; }
+            100% { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes toast-slide-out {
+            0% { transform: translateX(0); opacity: 1; }
+            100% { transform: translateX(100%); opacity: 0; }
+        }
+        @keyframes toast-progress {
+            0% { width: 100%; }
+            100% { width: 0%; }
+        }
+        .toast-enter { animation: toast-slide-in 0.4s cubic-bezier(0.21, 1.02, 0.73, 1) forwards; }
+        .toast-exit { animation: toast-slide-out 0.3s cubic-bezier(0.21, 1.02, 0.73, 1) forwards; }
+        .toast-progress { animation: toast-progress linear forwards; }
+    </style>
 
     <script>
+        function showToast(type, message, duration = 5000) {
+            const container = document.getElementById('toast-container');
+            const id = 'toast-' + Date.now();
+            
+            const configs = {
+                success: {
+                    bg: 'bg-gradient-to-r from-emerald-500 to-green-600',
+                    icon: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>`,
+                    title: 'Succès',
+                    progressBg: 'bg-emerald-300/50'
+                },
+                error: {
+                    bg: 'bg-gradient-to-r from-red-500 to-rose-600',
+                    icon: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>`,
+                    title: 'Erreur',
+                    progressBg: 'bg-red-300/50'
+                },
+                warning: {
+                    bg: 'bg-gradient-to-r from-amber-500 to-orange-600',
+                    icon: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>`,
+                    title: 'Attention',
+                    progressBg: 'bg-amber-300/50'
+                },
+                info: {
+                    bg: 'bg-gradient-to-r from-blue-500 to-indigo-600',
+                    icon: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>`,
+                    title: 'Info',
+                    progressBg: 'bg-blue-300/50'
+                }
+            };
+            
+            const config = configs[type] || configs.info;
+            
+            const toast = document.createElement('div');
+            toast.id = id;
+            toast.className = `pointer-events-auto max-w-sm w-full ${config.bg} rounded-2xl shadow-2xl overflow-hidden toast-enter`;
+            toast.innerHTML = `
+                <div class="p-4">
+                    <div class="flex items-start gap-3">
+                        <div class="flex-shrink-0 w-10 h-10 bg-white/20 backdrop-blur rounded-xl flex items-center justify-center text-white">
+                            ${config.icon}
+                        </div>
+                        <div class="flex-1 min-w-0 pt-0.5">
+                            <p class="text-sm font-semibold text-white">${config.title}</p>
+                            <p class="text-sm text-white/90 mt-1 break-words">${message}</p>
+                        </div>
+                        <button onclick="closeToast('${id}')" class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-lg bg-white/10 hover:bg-white/20 text-white/80 hover:text-white transition-all">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="h-1 ${config.progressBg}">
+                    <div class="h-full bg-white/60 toast-progress" style="animation-duration: ${duration}ms;"></div>
+                </div>
+            `;
+            
+            container.appendChild(toast);
+            setTimeout(() => closeToast(id), duration);
+        }
+        
+        function closeToast(id) {
+            const toast = document.getElementById(id);
+            if (toast) {
+                toast.classList.remove('toast-enter');
+                toast.classList.add('toast-exit');
+                setTimeout(() => toast.remove(), 300);
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
-            // Success Toast
             @if(session('success') || session('status'))
-                Toastify({
-                    text: "{{ session('success') ?? session('status') }}",
-                    duration: 4000,
-                    close: true,
-                    gravity: "top",
-                    position: "right",
-                    stopOnFocus: true,
-                    style: {
-                        background: "linear-gradient(to right, #10b981, #059669)", // Emerald gradient
-                        borderRadius: "10px",
-                        boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
-                    },
-                }).showToast();
+                showToast('success', @json(session('success') ?? session('status')));
             @endif
 
-            // Error Toast
             @if(session('error'))
-                Toastify({
-                    text: "{{ session('error') }}",
-                    duration: 4000,
-                    close: true,
-                    gravity: "top",
-                    position: "right",
-                    stopOnFocus: true,
-                    style: {
-                        background: "linear-gradient(to right, #ef4444, #b91c1c)", // Red gradient
-                        borderRadius: "10px",
-                        boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
-                    },
-                }).showToast();
+                showToast('error', @json(session('error')));
             @endif
-
-            // Validation Errors
+            
+            @if(session('warning'))
+                showToast('warning', @json(session('warning')));
+            @endif
+            
+            @if(session('info'))
+                showToast('info', @json(session('info')));
+            @endif
+            
             @if($errors->any())
-                 Toastify({
-                    text: "Une erreur est survenue. Veuillez vérifier vos entrées.", 
-                    duration: 4000,
-                    close: true,
-                    gravity: "top",
-                    position: "right",
-                    stopOnFocus: true,
-                    style: {
-                        background: "linear-gradient(to right, #ef4444, #b91c1c)", // Red gradient
-                        borderRadius: "10px",
-                        boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
-                    },
-                }).showToast();
+                showToast('error', 'Une erreur est survenue. Veuillez vérifier vos entrées.');
             @endif
         });
     </script>

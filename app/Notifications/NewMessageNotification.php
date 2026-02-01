@@ -33,6 +33,10 @@ class NewMessageNotification extends Notification implements ShouldQueue
             $title = $conversation->name ?? 'Groupe';
         }
 
+        $senderName = $sender?->name ?? 'Quelqu\'un';
+        $isAdmin = $notifiable->role === 'admin';
+        $routeName = $isAdmin ? 'admin.messaging.show' : 'employee.messaging.show';
+
         return [
             'type' => 'new_message',
             'message_id' => $this->message->id,
@@ -40,10 +44,12 @@ class NewMessageNotification extends Notification implements ShouldQueue
             'conversation_type' => $conversation->type,
             'conversation_name' => $title,
             'sender_id' => $sender?->id,
-            'sender_name' => $sender?->name ?? 'Système',
+            'sender_name' => $senderName,
             'sender_avatar' => $sender?->avatar,
             'content_preview' => \Str::limit($this->message->content, 100),
             'has_attachments' => $this->message->attachments()->exists(),
+            'message' => "💬 Nouveau message de {$senderName}",
+            'url' => route($routeName, $conversation->id),
         ];
     }
 
@@ -52,3 +58,4 @@ class NewMessageNotification extends Notification implements ShouldQueue
         return $this->toDatabase($notifiable);
     }
 }
+

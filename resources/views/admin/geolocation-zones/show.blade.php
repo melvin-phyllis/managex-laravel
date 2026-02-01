@@ -18,7 +18,7 @@
     <div class="py-6">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <!-- Info zone -->
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6 animate-fade-in-up">
                 <div class="p-6">
                     <div class="flex justify-between items-start mb-4">
                         <div>
@@ -70,7 +70,7 @@
             </div>
 
             <!-- Carte -->
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg animate-fade-in-up animation-delay-100">
                 <div class="p-6">
                     <h4 class="text-lg font-semibold text-gray-900 mb-4">Visualisation de la zone</h4>
                     <div id="map" class="h-96 rounded-lg border border-gray-300"></div>

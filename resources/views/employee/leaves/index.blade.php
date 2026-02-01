@@ -1,7 +1,7 @@
 <x-layouts.employee>
     <div class="space-y-6">
         <!-- Header -->
-        <div class="flex items-center justify-between">
+        <div class="flex items-center justify-between animate-fade-in-up">
             <h1 class="text-2xl font-bold text-gray-900">Mes demandes de congés</h1>
             <a href="{{ route('employee.leaves.create') }}" class="inline-flex items-center px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition-colors">
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -12,7 +12,7 @@
         </div>
 
         <!-- Stats Summary -->
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 animate-fade-in-up animation-delay-100">
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                 <div class="text-center">
                     <p class="text-3xl font-bold text-gray-900">{{ $stats['total'] ?? 0 }}</p>
@@ -40,7 +40,7 @@
         </div>
 
         <!-- Leaves Table -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden animate-fade-in-up animation-delay-200">
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">

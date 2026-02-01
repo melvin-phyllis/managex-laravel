@@ -1,7 +1,7 @@
 <x-layouts.admin>
     <div class="space-y-6" x-data="taskTable()">
         <!-- Breadcrumbs -->
-        <nav class="flex" aria-label="Breadcrumb">
+        <nav class="flex animate-fade-in-up" aria-label="Breadcrumb">
             <ol class="inline-flex items-center space-x-1 md:space-x-3">
                 <li class="inline-flex items-center">
                     <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600">
@@ -22,7 +22,7 @@
             </ol>
         </nav>
         <!-- Header -->
-        <x-table-header title="Gestion des Tâches" subtitle="Assignation, suivi et validation des tâches collaborateurs">
+        <x-table-header title="Gestion des Tâches" subtitle="Assignation, suivi et validation des tâches collaborateurs" class="animate-fade-in-up animation-delay-100">
             <x-slot:icon>
                 <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-purple-500/20">
                     <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -41,7 +41,7 @@
         </x-table-header>
 
         <!-- Filter Bar -->
-        <x-filter-bar :hasActiveFilters="request()->hasAny(['search', 'employee_id', 'statut', 'priorite'])">
+        <x-filter-bar :hasActiveFilters="request()->hasAny(['search', 'employee_id', 'statut', 'priorite'])" class="animate-fade-in-up animation-delay-200">
             <x-slot:filters>
                 <!-- Search -->
                 <div class="flex-1 min-w-[200px] relative">

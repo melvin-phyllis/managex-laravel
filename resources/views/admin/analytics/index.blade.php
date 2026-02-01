@@ -2,7 +2,7 @@
     <div class="space-y-6" x-data="analyticsPage()">
 
         {{-- Header --}}
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 animate-fade-in-up">
             <div>
                 <h1 class="text-2xl font-bold text-gray-900 flex items-center gap-3">
                     <div class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/20">
@@ -22,7 +22,7 @@
         </div>
 
         {{-- Filtres --}}
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 flex flex-wrap gap-4 items-center">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 flex flex-wrap gap-4 items-center animate-fade-in-up animation-delay-100">
             <div class="flex items-center gap-2 text-sm text-gray-500">
                 <x-icon name="filter" class="w-4 h-4" />
                 Filtrer par :
@@ -78,7 +78,7 @@
         </div>
 
         {{-- KPI Cards --}}
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 animate-fade-in-up animation-delay-200">
             {{-- 1. Effectif total --}}
             <div class="bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl p-5 text-white shadow-lg shadow-blue-500/20 relative overflow-hidden group">
                 <div class="absolute right-0 top-0 p-4 opacity-10 group-hover:scale-110 transition-transform">
@@ -170,7 +170,7 @@
         </div>
 
         {{-- Graphiques Row 1 --}}
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-fade-in-up animation-delay-300">
             {{-- Evolution presences (Line) - Takes 2 cols --}}
             <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-100 p-5">
                 <h3 class="font-semibold text-gray-900 mb-4 flex items-center gap-2">
@@ -195,7 +195,7 @@
         </div>
 
         {{-- Graphiques Row 2 --}}
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-fade-in-up animation-delay-400">
             {{-- Recrutements vs Departs --}}
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
                 <h3 class="font-semibold text-gray-900 mb-4 flex items-center gap-2">
@@ -220,7 +220,7 @@
         </div>
 
         {{-- Heures par semaine (Area) --}}
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 animate-fade-in-up animation-delay-400">
             <h3 class="font-semibold text-gray-900 mb-4 flex items-center gap-2">
                 <x-icon name="clock" class="w-4 h-4 text-gray-500"/>
                 Heures travaillées (Total hebdomadaire)
@@ -231,7 +231,7 @@
         </div>
 
         {{-- Tableaux Grid --}}
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-fade-in-up animation-delay-500">
             {{-- Activité récente --}}
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                 <div class="p-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center">

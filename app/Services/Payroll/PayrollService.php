@@ -7,6 +7,7 @@ use App\Models\Payroll;
 use App\Models\Contract;
 use App\Models\Setting;
 use App\Models\PayrollCountry;
+use App\Models\EmployeeEvaluation;
 use App\Services\Payroll\PayrollCalculator;
 
 class PayrollService
@@ -49,8 +50,10 @@ class PayrollService
             throw new \Exception("Aucun contrat actif pour l'employé {$user->name}.");
         }
 
-        // 2. Préparer les inputs pour le calculateur
-        $baseSalary = $contract->base_salary;
+        // 2. Déterminer le salaire de base
+        // Pour les CDI/CDD : basé sur l'évaluation mensuelle
+        // Pour les stagiaires : salaire fixe du contrat
+        $baseSalary = $this->determineBaseSalary($user, $contract, $month, $year);
         
         $inputs = [
             'base_salary' => $baseSalary,
@@ -293,5 +296,54 @@ class PayrollService
             'amount' => $amount,
             'is_taxable' => ($type === 'earning' && $isTaxable),
         ]);
+    }
+
+    /**
+     * Détermine le salaire de base en fonction du type de contrat
+     * - CDI/CDD : basé sur l'évaluation mensuelle des performances
+     * - Stagiaires : salaire fixe du contrat
+     */
+    protected function determineBaseSalary(User $user, Contract $contract, int $month, int $year): float
+    {
+        // Les stagiaires utilisent le salaire fixe du contrat
+        if ($user->contract_type === 'stage' || $contract->type === 'stage') {
+            return $contract->base_salary;
+        }
+
+        // Pour les CDI/CDD, chercher l'évaluation mensuelle validée
+        $evaluation = EmployeeEvaluation::where('user_id', $user->id)
+            ->forPeriod($month, $year)
+            ->validated()
+            ->first();
+
+        if ($evaluation) {
+            // Utiliser le salaire calculé par l'évaluation
+            return $evaluation->calculated_salary;
+        }
+
+        // Pas d'évaluation validée : utiliser le SMIC par défaut
+        // On peut aussi lever une exception si on veut obliger l'évaluation
+        return Setting::getSmicAmount();
+    }
+
+    /**
+     * Vérifie si un employé a une évaluation validée pour le mois
+     */
+    public function hasValidatedEvaluation(User $user, int $month, int $year): bool
+    {
+        return EmployeeEvaluation::where('user_id', $user->id)
+            ->forPeriod($month, $year)
+            ->validated()
+            ->exists();
+    }
+
+    /**
+     * Récupère l'évaluation d'un employé pour un mois donné
+     */
+    public function getEvaluation(User $user, int $month, int $year): ?EmployeeEvaluation
+    {
+        return EmployeeEvaluation::where('user_id', $user->id)
+            ->forPeriod($month, $year)
+            ->first();
     }
 }

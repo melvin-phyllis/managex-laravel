@@ -1,7 +1,7 @@
 <x-layouts.admin>
     <div class="space-y-6">
         <!-- Breadcrumbs -->
-        <nav class="flex" aria-label="Breadcrumb">
+        <nav class="flex animate-fade-in-up" aria-label="Breadcrumb">
             <ol class="inline-flex items-center space-x-1 md:space-x-3">
                 <li class="inline-flex items-center">
                     <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600">
@@ -30,7 +30,7 @@
             </ol>
         </nav>
         <!-- Header -->
-        <div class="flex items-center justify-between">
+        <div class="flex items-center justify-between animate-fade-in-up animation-delay-100">
             <div>
                 <h1 class="text-2xl font-bold text-gray-900">Modifier la tâche</h1>
                 <p class="text-gray-500 mt-1">{{ $task->titre }}</p>
@@ -44,7 +44,7 @@
         </div>
 
         <!-- Form -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 animate-fade-in-up animation-delay-200">
             <form action="{{ route('admin.tasks.update', $task) }}" method="POST" class="p-6 space-y-6">
                 @csrf
                 @method('PUT')

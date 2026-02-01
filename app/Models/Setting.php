@@ -131,4 +131,56 @@ class Setting extends Model
         }
         return \App\Models\PayrollCountry::find($countryId);
     }
+
+    /**
+     * Helpers pour le système de rattrapage des retards
+     */
+
+    /**
+     * Get number of days to recover late hours
+     */
+    public static function getLateRecoveryDays(): int
+    {
+        return static::get('late_recovery_days', 7);
+    }
+
+    /**
+     * Get penalty threshold in minutes
+     */
+    public static function getLatePenaltyThresholdMinutes(): int
+    {
+        return static::get('late_penalty_threshold_minutes', 480); // 8h default
+    }
+
+    /**
+     * Check if late penalty system is enabled
+     */
+    public static function isLatePenaltyEnabled(): bool
+    {
+        return static::get('late_penalty_enabled', true);
+    }
+
+    /**
+     * Get penalty threshold in hours
+     */
+    public static function getLatePenaltyThresholdHours(): float
+    {
+        return static::getLatePenaltyThresholdMinutes() / 60;
+    }
+
+    /**
+     * Get SMIC amount (Salaire Minimum Interprofessionnel de Croissance)
+     */
+    public static function getSmicAmount(): float
+    {
+        return (float) static::get('smic_amount', 75000);
+    }
+
+    /**
+     * Get evaluation criteria max scores
+     */
+    public static function getEvaluationMaxScore(): float
+    {
+        return 5.5; // Total des critères d'évaluation
+    }
 }

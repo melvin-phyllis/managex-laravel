@@ -1,7 +1,7 @@
 <x-layouts.admin>
     <div class="space-y-6">
         <!-- Header -->
-        <div class="flex items-center justify-between">
+        <div class="flex items-center justify-between animate-fade-in-up">
             <div>
                 <nav class="flex items-center text-sm text-gray-500 mb-2">
                     <a href="{{ route('admin.payrolls.index') }}" class="hover:text-red-600">Fiches de paie</a>
@@ -51,7 +51,7 @@
             @method('PUT')
 
             <!-- Employee Info Card -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 animate-fade-in-up animation-delay-100">
                 <h2 class="text-lg font-semibold text-gray-900 mb-4">Informations Employé</h2>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                     <div>
@@ -74,7 +74,7 @@
             </div>
 
             <!-- Gains -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 animate-fade-in-up animation-delay-200">
                 <h2 class="text-lg font-semibold text-gray-900 mb-4">Gains & Indemnités</h2>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>

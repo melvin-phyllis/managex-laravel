@@ -1,7 +1,7 @@
 <x-layouts.admin>
     <div class="space-y-6" x-data="{ showCreateModal: false }">
         <!-- Header -->
-        <x-table-header title="Messagerie & Canaux" subtitle="Gérez les canaux de communication, les groupes et modérez les échanges">
+        <x-table-header title="Messagerie & Canaux" subtitle="Gérez les canaux de communication, les groupes et modérez les échanges" class="animate-fade-in-up">
             <x-slot:icon>
                 <div class="w-12 h-12 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-cyan-500/20">
                     <x-icon name="messages-square" class="w-6 h-6 text-white" />
@@ -18,7 +18,7 @@
         <!-- Stats Cards -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <!-- Total Messages -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 hover:shadow-md transition-shadow">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 hover:shadow-md transition-shadow animate-fade-in-up animation-delay-100">
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm font-medium text-gray-500">Total Messages</p>
@@ -38,7 +38,7 @@
             </div>
 
             <!-- Conversations -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 hover:shadow-md transition-shadow">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 hover:shadow-md transition-shadow animate-fade-in-up animation-delay-200">
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm font-medium text-gray-500">Conversations</p>
@@ -55,7 +55,7 @@
             </div>
 
             <!-- Active Users -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 hover:shadow-md transition-shadow">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 hover:shadow-md transition-shadow animate-fade-in-up animation-delay-300">
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm font-medium text-gray-500">Utilisateurs actifs</p>
@@ -71,7 +71,7 @@
             </div>
 
             <!-- This Week -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 hover:shadow-md transition-shadow">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 hover:shadow-md transition-shadow animate-fade-in-up animation-delay-400">
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm font-medium text-gray-500">Cette semaine</p>
@@ -87,7 +87,7 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-fade-in-up animation-delay-300">
             <!-- Channels List -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden lg:col-span-1">
                 <div class="px-5 py-4 border-b border-gray-100 flex items-center justify-between bg-gray-50/50">

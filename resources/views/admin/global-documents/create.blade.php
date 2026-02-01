@@ -1,7 +1,7 @@
 <x-layouts.admin>
     <div class="max-w-2xl mx-auto space-y-6">
         <!-- Header -->
-        <div class="flex items-center gap-4">
+        <div class="flex items-center gap-4 animate-fade-in-up">
             <a href="{{ route('admin.global-documents.index') }}" class="p-2 text-gray-400 hover:text-gray-600 transition">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
@@ -15,7 +15,7 @@
 
         <!-- Form -->
         <form action="{{ route('admin.global-documents.store') }}" method="POST" enctype="multipart/form-data"
-              class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 space-y-6">
+              class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 space-y-6 animate-fade-in-up animation-delay-100">
             @csrf
 
             @if($errors->any())

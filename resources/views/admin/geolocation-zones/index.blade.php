@@ -16,7 +16,7 @@
     <div class="py-6">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <!-- Info box -->
-            <div class="bg-blue-50 border-l-4 border-blue-400 p-4 mb-6">
+            <div class="bg-blue-50 border-l-4 border-blue-400 p-4 mb-6 animate-fade-in-up">
                 <div class="flex">
                     <div class="flex-shrink-0">
                         <svg class="h-5 w-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
@@ -32,7 +32,7 @@
                 </div>
             </div>
 
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg animate-fade-in-up animation-delay-100">
                 <div class="p-6">
                     @if($zones->count() > 0)
                         <table class="min-w-full divide-y divide-gray-200">

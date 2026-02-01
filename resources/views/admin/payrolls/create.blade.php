@@ -1,7 +1,7 @@
 <x-layouts.admin>
     <div class="space-y-6">
         <!-- Header -->
-        <div class="flex items-center justify-between">
+        <div class="flex items-center justify-between animate-fade-in-up">
             <div>
                 <h1 class="text-2xl font-bold text-gray-900">Nouvelle fiche de paie</h1>
                 <p class="text-gray-500 mt-1">Créer une fiche de paie pour un employé</p>
@@ -15,7 +15,7 @@
         </div>
 
         <!-- Form -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 animate-fade-in-up animation-delay-100">
             <form action="{{ route('admin.payrolls.store') }}" method="POST" class="p-6 space-y-6">
                 @csrf
 

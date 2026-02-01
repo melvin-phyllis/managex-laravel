@@ -1,12 +1,12 @@
 <x-layouts.employee>
     <div class="space-y-6">
         <!-- Header -->
-        <div class="flex items-center justify-between">
+        <div class="flex items-center justify-between animate-fade-in-up">
             <h1 class="text-2xl font-bold text-gray-900">Sondages</h1>
         </div>
 
         <!-- Tabs -->
-        <div class="border-b border-gray-200">
+        <div class="border-b border-gray-200 animate-fade-in-up animation-delay-100">
             <nav class="-mb-px flex space-x-8">
                 <a href="{{ route('employee.surveys.index', ['filter' => 'pending']) }}" class="py-4 px-1 border-b-2 font-medium text-sm {{ request('filter', 'pending') === 'pending' ? 'border-green-500 text-green-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }}">
                     À compléter
@@ -18,7 +18,7 @@
         </div>
 
         <!-- Surveys Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in-up animation-delay-200">
             @forelse($surveys as $survey)
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                     <div class="p-6">

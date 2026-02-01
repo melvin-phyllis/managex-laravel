@@ -1,7 +1,7 @@
 <x-layouts.employee>
     <div class="max-w-3xl mx-auto space-y-6">
         <!-- Header -->
-        <div class="flex items-center justify-between">
+        <div class="flex items-center justify-between animate-fade-in-up">
             <div>
                 <h1 class="text-2xl font-bold text-gray-900">Paramètres</h1>
                 <p class="text-gray-500 mt-1">Gérez vos préférences de compte</p>
@@ -27,7 +27,7 @@
         @endif
 
         <!-- Tabs Navigation -->
-        <div class="border-b border-gray-200" x-data="{ activeTab: 'security' }">
+        <div class="border-b border-gray-200 animate-fade-in-up animation-delay-100" x-data="{ activeTab: 'security' }">
             <nav class="flex space-x-8" aria-label="Tabs">
                 <button @click="activeTab = 'security'"
                         :class="activeTab === 'security' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"

@@ -1,7 +1,7 @@
 <x-layouts.admin>
     <div class="space-y-6" x-data="employeeTable()">
         <!-- Breadcrumbs -->
-        <nav class="flex" aria-label="Breadcrumb">
+        <nav class="flex animate-fade-in-up" aria-label="Breadcrumb">
             <ol class="inline-flex items-center space-x-1 md:space-x-3">
                 <li class="inline-flex items-center">
                     <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600">
@@ -22,7 +22,7 @@
             </ol>
         </nav>
         <!-- Header -->
-        <x-table-header title="Gestion des Employés" subtitle="Gérez et suivez toute votre équipe de manière centralisée">
+        <x-table-header title="Gestion des Employés" subtitle="Gérez et suivez toute votre équipe de manière centralisée" class="animate-fade-in-up animation-delay-100">
             <x-slot:icon>
                 <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20">
                     <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -51,7 +51,7 @@
         <!-- Stats Cards -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             <!-- Total Employés -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 hover:shadow-md transition-shadow group">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 hover:shadow-md transition-shadow group animate-fade-in-up animation-delay-100">
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm font-medium text-gray-500">Total employés</p>
@@ -76,7 +76,7 @@
             </div>
 
             <!-- Présents Aujourd'hui -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 hover:shadow-md transition-shadow group">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 hover:shadow-md transition-shadow group animate-fade-in-up animation-delay-200">
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm font-medium text-gray-500">Présents ce jour</p>
@@ -100,7 +100,7 @@
             </div>
 
             <!-- En Congé -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 hover:shadow-md transition-shadow group">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 hover:shadow-md transition-shadow group animate-fade-in-up animation-delay-300">
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm font-medium text-gray-500">En congé</p>
@@ -122,7 +122,7 @@
             </div>
 
             <!-- Nouveaux -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 hover:shadow-md transition-shadow group">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 hover:shadow-md transition-shadow group animate-fade-in-up animation-delay-400">
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm font-medium text-gray-500">Nouveaux (Mois)</p>
@@ -145,7 +145,7 @@
         </div>
 
         <!-- Filter Bar -->
-        <x-filter-bar :hasActiveFilters="request()->hasAny(['search', 'department_id', 'status', 'contract_type'])">
+        <x-filter-bar :hasActiveFilters="request()->hasAny(['search', 'department_id', 'status', 'contract_type'])" class="animate-fade-in-up animation-delay-200">
             <x-slot:filters>
                 <input type="hidden" name="sort" value="{{ request('sort') }}">
                 <input type="hidden" name="direction" value="{{ request('direction') }}">
@@ -231,7 +231,7 @@
         </x-filter-bar>
 
         <!-- Table -->
-        <x-data-table>
+        <x-data-table class="animate-fade-in-up animation-delay-300">
             <x-slot:bulkActions>
                 <button @click="deleteSelected" class="text-red-600 hover:text-red-800 font-medium text-sm flex items-center">
                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">

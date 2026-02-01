@@ -1,7 +1,7 @@
 <x-layouts.admin>
     <div class="space-y-6" x-data="settingsPage()">
         <!-- Header -->
-        <div class="flex items-center justify-between">
+        <div class="flex items-center justify-between animate-fade-in-up">
             <h1 class="text-2xl font-bold text-gray-900">Paramètres</h1>
         </div>
 
@@ -18,7 +18,7 @@
         @endif
 
         <!-- Tabs Navigation -->
-        <div class="border-b border-gray-200">
+        <div class="border-b border-gray-200 animate-fade-in-up animation-delay-100">
             <nav class="flex space-x-8" aria-label="Tabs">
                 <button @click="activeTab = 'horaires'"
                         :class="activeTab === 'horaires' ? 'border-green-500 text-green-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"

@@ -1,7 +1,7 @@
 <x-layouts.admin>
     <div class="space-y-6">
         <!-- Header -->
-        <div>
+        <div class="animate-fade-in-up">
             <nav class="flex items-center text-sm text-gray-500 mb-2">
                 <a href="{{ route('admin.payroll-settings.countries') }}" class="hover:text-red-600">Configuration Paie</a>
                 <svg class="w-4 h-4 mx-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -13,7 +13,7 @@
         </div>
 
         <!-- Form -->
-        <form action="{{ route('admin.payroll-settings.countries.store') }}" method="POST" class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <form action="{{ route('admin.payroll-settings.countries.store') }}" method="POST" class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 animate-fade-in-up animation-delay-100">
             @csrf
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
