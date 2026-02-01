@@ -116,6 +116,64 @@ class AnalyticsController extends Controller
             return max(0, $workedHours - 8);
         });
 
+        // 7. Turnover (NOUVEAU)
+        $startOfYear = Carbon::create($currentYear, 1, 1);
+        $entries = User::where('role', 'employee')
+            ->whereYear('hire_date', $currentYear)
+            ->when($departmentId, fn($q) => $q->where('department_id', $departmentId))
+            ->count();
+        $exits = User::where('role', 'employee')
+            ->whereYear('contract_end_date', $currentYear)
+            ->whereNotNull('contract_end_date')
+            ->when($departmentId, fn($q) => $q->where('department_id', $departmentId))
+            ->count();
+        $avgEmployees = max(1, $currentCount);
+        $turnoverRate = round((($entries + $exits) / 2) / $avgEmployees * 100, 1);
+
+        // 8. Masse salariale mois précédent (pour variation)
+        $previousMonth = $currentMonth > 1 ? $currentMonth - 1 : 12;
+        $previousYear = $currentMonth > 1 ? $currentYear : $currentYear - 1;
+        $previousPayrollTotal = Payroll::where('mois', $previousMonth)
+            ->where('annee', $previousYear)
+            ->when($departmentId, fn($q) => $q->whereHas('user', fn($u) => $u->where('department_id', $departmentId)))
+            ->sum('net_salary');
+        $payrollVariation = $previousPayrollTotal > 0 
+            ? round((($payrollTotal - $previousPayrollTotal) / $previousPayrollTotal) * 100, 1) 
+            : 0;
+
+        // 9. Tâches (NOUVEAU)
+        $tasksCompleted = Task::where('statut', 'completed')
+            ->whereMonth('updated_at', $currentMonth)
+            ->whereYear('updated_at', $currentYear)
+            ->when($departmentId, fn($q) => $q->whereHas('user', fn($u) => $u->where('department_id', $departmentId)))
+            ->count();
+        $tasksPending = Task::whereIn('statut', ['pending', 'approved', 'in_progress'])
+            ->when($departmentId, fn($q) => $q->whereHas('user', fn($u) => $u->where('department_id', $departmentId)))
+            ->count();
+
+        // 10. Stagiaires (NOUVEAU)
+        $internsCount = User::where('role', 'employee')
+            ->where('contract_type', 'stage')
+            ->when($departmentId, fn($q) => $q->where('department_id', $departmentId))
+            ->count();
+        $internsToEvaluate = User::where('role', 'employee')
+            ->where('contract_type', 'stage')
+            ->whereDoesntHave('internEvaluations', function($q) {
+                $q->where('week_start', '>=', now()->startOfWeek()->subWeek());
+            })
+            ->when($departmentId, fn($q) => $q->where('department_id', $departmentId))
+            ->count();
+
+        // 11. Heures de retard à rattraper (NOUVEAU)
+        $lateHoursData = Presence::where('is_late', true)
+            ->whereMonth('date', $currentMonth)
+            ->whereYear('date', $currentYear)
+            ->when($departmentId, fn($q) => $q->forDepartment($departmentId))
+            ->selectRaw('SUM(late_minutes) as total, COUNT(DISTINCT user_id) as employees')
+            ->first();
+        $totalLateMinutes = $lateHoursData->total ?? 0;
+        $lateEmployees = $lateHoursData->employees ?? 0;
+
         return response()->json([
             'effectif_total' => [
                 'value' => $currentCount,
@@ -140,11 +198,30 @@ class AnalyticsController extends Controller
             ],
             'masse_salariale' => [
                 'value' => $payrollTotal,
-                'formatted' => number_format($payrollTotal, 0, ',', ' ') . ' FCFA'
+                'formatted' => number_format($payrollTotal, 0, ',', ' ') . ' FCFA',
+                'variation' => $payrollVariation
             ],
             'heures_supplementaires' => [
                 'value' => round($overtimeData, 1),
                 'count' => $presencesMonth->filter(fn($p) => ($p->worked_hours ?? 0) > 8)->unique('user_id')->count()
+            ],
+            'turnover' => [
+                'rate' => $turnoverRate,
+                'entries' => $entries,
+                'exits' => $exits
+            ],
+            'tasks' => [
+                'completed' => $tasksCompleted,
+                'pending' => $tasksPending,
+                'total' => $tasksCompleted + $tasksPending
+            ],
+            'interns' => [
+                'count' => $internsCount,
+                'to_evaluate' => $internsToEvaluate
+            ],
+            'late_hours' => [
+                'total' => round($totalLateMinutes / 60, 1), // En heures
+                'employees' => $lateEmployees
             ]
         ]);
     }
@@ -221,6 +298,7 @@ class AnalyticsController extends Controller
 
         // 5. Heures travaillees par semaine
         $weeklyHours = collect();
+        $totalWeeklyHours = 0;
         for ($w = 4; $w >= 0; $w--) {
             $weekStart = now()->subWeeks($w)->startOfWeek();
             $weekEnd = now()->subWeeks($w)->endOfWeek();
@@ -228,12 +306,56 @@ class AnalyticsController extends Controller
             $hoursQuery = Presence::whereBetween('date', [$weekStart, $weekEnd]);
             if ($departmentId) $hoursQuery->forDepartment($departmentId);
             $hours = $hoursQuery->get()->sum('hours_worked') ?? 0;
+            $totalWeeklyHours += $hours;
             
             $weeklyHours->push([
                 'label' => 'Sem ' . $weekStart->weekOfYear,
                 'hours' => round($hours, 1)
             ]);
         }
+
+        // 6. Répartition par type de contrat (NOUVEAU)
+        $contractTypes = User::where('role', 'employee')
+            ->when($departmentId, fn($q) => $q->where('department_id', $departmentId))
+            ->selectRaw('contract_type, COUNT(*) as count')
+            ->groupBy('contract_type')
+            ->get()
+            ->map(fn($c) => [
+                'label' => match($c->contract_type) {
+                    'cdi' => 'CDI',
+                    'cdd' => 'CDD',
+                    'stage' => 'Stage',
+                    'alternance' => 'Alternance',
+                    'freelance' => 'Freelance',
+                    'interim' => 'Intérim',
+                    default => $c->contract_type ?? 'Autre'
+                },
+                'value' => $c->count
+            ]);
+
+        // 7. Performance des tâches (NOUVEAU)
+        $taskStats = Task::when($departmentId, fn($q) => $q->whereHas('user', fn($u) => $u->where('department_id', $departmentId)))
+            ->selectRaw("statut, COUNT(*) as count")
+            ->groupBy('statut')
+            ->get()
+            ->mapWithKeys(fn($t) => [$t->statut => $t->count]);
+
+        // 8. Ponctualité par département (NOUVEAU)
+        $punctuality = Department::with(['users' => fn($q) => $q->where('role', 'employee')])->get()->map(function($dept) use ($startDate, $endDate) {
+            $userIds = $dept->users->pluck('id');
+            if ($userIds->isEmpty()) return ['label' => $dept->name, 'on_time' => 0, 'late' => 0];
+            
+            $onTime = Presence::whereIn('user_id', $userIds)
+                ->whereBetween('date', [$startDate, $endDate])
+                ->where('is_late', false)
+                ->count();
+            $late = Presence::whereIn('user_id', $userIds)
+                ->whereBetween('date', [$startDate, $endDate])
+                ->where('is_late', true)
+                ->count();
+                
+            return ['label' => $dept->name, 'on_time' => $onTime, 'late' => $late];
+        })->filter(fn($d) => $d['on_time'] > 0 || $d['late'] > 0);
 
         return response()->json([
             'presence_trend' => [
@@ -243,7 +365,7 @@ class AnalyticsController extends Controller
             'department_distribution' => [
                 'labels' => $deptDistribution->pluck('label'),
                 'data' => $deptDistribution->pluck('value'),
-                'colors' => ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899']
+                'colors' => ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899', '#14B8A6', '#F97316']
             ],
             'recruitment_turnover' => [
                 'labels' => $months->pluck('label'),
@@ -256,7 +378,25 @@ class AnalyticsController extends Controller
             ],
             'heures_travaillees_semaine' => [
                 'labels' => $weeklyHours->pluck('label'),
-                'data' => $weeklyHours->pluck('hours')
+                'data' => $weeklyHours->pluck('hours'),
+                'total' => round($totalWeeklyHours, 1)
+            ],
+            'contract_types' => [
+                'labels' => $contractTypes->pluck('label'),
+                'data' => $contractTypes->pluck('value'),
+                'colors' => ['#6366F1', '#22C55E', '#F59E0B', '#EC4899', '#8B5CF6', '#06B6D4']
+            ],
+            'task_performance' => [
+                'completed' => $taskStats['completed'] ?? 0,
+                'in_progress' => $taskStats['in_progress'] ?? 0,
+                'approved' => $taskStats['approved'] ?? 0,
+                'pending' => $taskStats['pending'] ?? 0,
+                'cancelled' => $taskStats['cancelled'] ?? 0,
+            ],
+            'punctuality' => [
+                'labels' => $punctuality->pluck('label'),
+                'on_time' => $punctuality->pluck('on_time'),
+                'late' => $punctuality->pluck('late')
             ]
         ]);
     }

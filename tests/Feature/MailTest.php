@@ -20,8 +20,8 @@ class MailTest extends TestCase
             'name' => 'Test User',
         ]);
 
-        $password = 'TestPassword123';
-        $user->notify(new WelcomeEmployeeNotification($password, $user->name));
+        // Le mot de passe n'est plus envoyé - utilisation d'un lien de réinitialisation sécurisé
+        $user->notify(new WelcomeEmployeeNotification($user->name));
 
         Mail::assertSent(function (\Illuminate\Mail\Mailable $mail) use ($user) {
             return in_array($user->email, array_map(fn($to) => $to['address'], $mail->to ?? []));

@@ -22,11 +22,27 @@ class TaskController extends Controller
             $query->where('user_id', $request->user_id);
         }
 
-        if ($request->filled('search')) {
-            $query->where('titre', 'like', '%' . $request->search . '%');
+        if ($request->filled('priorite')) {
+            $query->where('priorite', $request->priorite);
         }
 
-        $tasks = $query->orderBy('created_at', 'desc')->paginate(15);
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('titre', 'like', '%' . $search . '%')
+                  ->orWhere('description', 'like', '%' . $search . '%');
+            });
+        }
+
+        // Tri par défaut: tâches en retard d'abord, puis par priorité, puis par date
+        $tasks = $query->orderByRaw("CASE 
+            WHEN date_fin < NOW() AND statut NOT IN ('validated', 'completed') THEN 0 
+            ELSE 1 
+        END")
+        ->orderByRaw("CASE priorite WHEN 'high' THEN 0 WHEN 'medium' THEN 1 ELSE 2 END")
+        ->orderBy('created_at', 'desc')
+        ->paginate(15);
+        
         $employees = User::where('role', 'employee')->orderBy('name')->get();
 
         return view('admin.tasks.index', compact('tasks', 'employees'));
@@ -131,6 +147,53 @@ class TaskController extends Controller
         $task->user->notify(new TaskStatusNotification($task, 'validated'));
 
         return redirect()->back()->with('success', 'Tâche validée avec succès.');
+    }
+
+    /**
+     * Update task status via AJAX (for Kanban drag & drop)
+     */
+    public function updateStatus(Request $request, Task $task)
+    {
+        $request->validate([
+            'statut' => ['required', 'in:pending,approved,rejected,completed,validated,in_progress'],
+        ]);
+
+        $oldStatus = $task->statut;
+        $newStatus = $request->statut;
+
+        // Validation des transitions de statut
+        $allowedTransitions = [
+            'pending' => ['approved', 'rejected'],
+            'approved' => ['in_progress', 'completed', 'pending'],
+            'in_progress' => ['completed', 'approved'],
+            'completed' => ['validated', 'approved', 'in_progress'],
+            'validated' => [], // Tâche finale, pas de retour
+            'rejected' => ['pending', 'approved'],
+        ];
+
+        // Admin peut faire toutes les transitions sauf depuis validated
+        if ($oldStatus === 'validated' && $newStatus !== 'validated') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Une tâche validée ne peut pas être modifiée.'
+            ], 422);
+        }
+
+        $task->update(['statut' => $newStatus]);
+
+        // Notifier l'employé du changement de statut
+        if ($oldStatus !== $newStatus) {
+            $task->user->notify(new TaskStatusNotification($task, $newStatus));
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Statut mis à jour avec succès.',
+            'task' => [
+                'id' => $task->id,
+                'statut' => $task->statut
+            ]
+        ]);
     }
 
     public function destroy(Task $task)

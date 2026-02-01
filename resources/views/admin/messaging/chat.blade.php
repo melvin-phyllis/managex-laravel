@@ -452,6 +452,23 @@
                 async selectConversation(conv) {
                     this.selectedConversation = conv;
                     await this.loadMessages(conv.id);
+                    await this.markAsRead(conv.id);
+                    // Reset unread count for this conversation
+                    conv.unread_count = 0;
+                },
+
+                async markAsRead(conversationId) {
+                    try {
+                        await fetch(`/admin/messaging/${conversationId}/read`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                            }
+                        });
+                    } catch (error) {
+                        console.error('Error marking as read:', error);
+                    }
                 },
 
                 async loadMessages(conversationId) {

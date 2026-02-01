@@ -1,69 +1,237 @@
 <x-layouts.admin>
     <div class="space-y-6" x-data="settingsPage()">
-        <!-- Header -->
-        <div class="flex items-center justify-between animate-fade-in-up">
-            <h1 class="text-2xl font-bold text-gray-900">Paramètres</h1>
+        <!-- Header avec gradient -->
+        <div class="relative overflow-hidden bg-gradient-to-r from-slate-700 via-slate-800 to-slate-900 rounded-2xl shadow-xl">
+            <div class="absolute inset-0 bg-black/10"></div>
+            <div class="absolute -top-24 -right-24 w-64 h-64 bg-white/5 rounded-full blur-3xl"></div>
+            <div class="absolute -bottom-24 -left-24 w-64 h-64 bg-white/5 rounded-full blur-3xl"></div>
+            
+            <div class="relative p-6 md:p-8">
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                    <div class="flex items-center gap-4">
+                        <div class="w-14 h-14 bg-white/10 backdrop-blur-sm rounded-2xl flex items-center justify-center border border-white/20">
+                            <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h1 class="text-2xl md:text-3xl font-bold text-white">Paramètres</h1>
+                            <p class="text-white/70 mt-1">Configuration générale du système</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Admin info -->
+                    <div class="flex items-center gap-3 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20">
+                        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-white font-bold">
+                            {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
+                        </div>
+                        <div>
+                            <p class="text-white font-medium text-sm">{{ auth()->user()->name }}</p>
+                            <p class="text-white/60 text-xs">Administrateur</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         @if(session('success'))
-            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
+            <div class="bg-emerald-50 border border-emerald-200 text-emerald-700 px-4 py-3 rounded-xl flex items-center gap-3">
+                <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
                 {{ session('success') }}
             </div>
         @endif
 
         @if(session('error'))
-            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+            <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl flex items-center gap-3">
+                <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
                 {{ session('error') }}
             </div>
         @endif
 
         <!-- Tabs Navigation -->
-        <div class="border-b border-gray-200 animate-fade-in-up animation-delay-100">
-            <nav class="flex space-x-8" aria-label="Tabs">
-                <button @click="activeTab = 'horaires'"
-                        :class="activeTab === 'horaires' ? 'border-green-500 text-green-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
-                        class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm flex items-center gap-2 transition-colors">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-1.5">
+            <nav class="flex flex-wrap gap-1" aria-label="Tabs">
+                <button @click="activeTab = 'compte'"
+                        :class="activeTab === 'compte' ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg shadow-indigo-500/30' : 'text-gray-600 hover:bg-gray-100'"
+                        class="whitespace-nowrap py-2.5 px-4 font-medium text-sm flex items-center gap-2 transition-all rounded-lg">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                    </svg>
+                    Mon compte
+                </button>
+                <button @click="activeTab = 'horaires'"
+                        :class="activeTab === 'horaires' ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-lg shadow-green-500/30' : 'text-gray-600 hover:bg-gray-100'"
+                        class="whitespace-nowrap py-2.5 px-4 font-medium text-sm flex items-center gap-2 transition-all rounded-lg">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
                     Horaires
                 </button>
                 <button @click="activeTab = 'pauses'"
-                        :class="activeTab === 'pauses' ? 'border-orange-500 text-orange-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
-                        class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm flex items-center gap-2 transition-colors">
+                        :class="activeTab === 'pauses' ? 'bg-gradient-to-r from-orange-500 to-amber-600 text-white shadow-lg shadow-orange-500/30' : 'text-gray-600 hover:bg-gray-100'"
+                        class="whitespace-nowrap py-2.5 px-4 font-medium text-sm flex items-center gap-2 transition-all rounded-lg">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707"/>
                     </svg>
                     Pauses
                 </button>
                 <button @click="activeTab = 'retards'"
-                        :class="activeTab === 'retards' ? 'border-red-500 text-red-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
-                        class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm flex items-center gap-2 transition-colors">
+                        :class="activeTab === 'retards' ? 'bg-gradient-to-r from-red-500 to-rose-600 text-white shadow-lg shadow-red-500/30' : 'text-gray-600 hover:bg-gray-100'"
+                        class="whitespace-nowrap py-2.5 px-4 font-medium text-sm flex items-center gap-2 transition-all rounded-lg">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
                     </svg>
                     Retards
                 </button>
                 <button @click="activeTab = 'organisation'"
-                        :class="activeTab === 'organisation' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
-                        class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm flex items-center gap-2 transition-colors">
+                        :class="activeTab === 'organisation' ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/30' : 'text-gray-600 hover:bg-gray-100'"
+                        class="whitespace-nowrap py-2.5 px-4 font-medium text-sm flex items-center gap-2 transition-all rounded-lg">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
                     </svg>
                     Organisation
-                    <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-0.5 rounded-full">
+                    <span class="bg-white/20 text-xs font-medium px-2 py-0.5 rounded-full" :class="activeTab === 'organisation' ? 'bg-white/20' : 'bg-blue-100 text-blue-700'">
                         {{ $departments->count() }}
                     </span>
                 </button>
                 <button @click="activeTab = 'paie'"
-                        :class="activeTab === 'paie' ? 'border-emerald-500 text-emerald-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
-                        class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm flex items-center gap-2 transition-colors">
+                        :class="activeTab === 'paie' ? 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-lg shadow-emerald-500/30' : 'text-gray-600 hover:bg-gray-100'"
+                        class="whitespace-nowrap py-2.5 px-4 font-medium text-sm flex items-center gap-2 transition-all rounded-lg">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/>
                     </svg>
                     Paie
                 </button>
             </nav>
+        </div>
+
+        <!-- Tab: Compte -->
+        <div x-show="activeTab === 'compte'" x-cloak>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Changer l'email -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="bg-gradient-to-r from-indigo-500 to-purple-600 px-5 py-4">
+                        <h3 class="text-white font-semibold flex items-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                            </svg>
+                            Changer mon email
+                        </h3>
+                    </div>
+                    <form action="{{ route('admin.settings.update-email') }}" method="POST" class="p-6">
+                        @csrf
+                        @method('PUT')
+                        
+                        <div class="space-y-4">
+                            <div>
+                                <label for="current_email" class="block text-sm font-medium text-gray-700 mb-1">Email actuel</label>
+                                <input type="email" id="current_email" value="{{ auth()->user()->email }}" disabled
+                                       class="w-full rounded-xl border-gray-300 bg-gray-50 text-gray-500">
+                            </div>
+                            
+                            <div>
+                                <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Nouvel email</label>
+                                <input type="email" name="email" id="email" required
+                                       class="w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
+                                       placeholder="nouveau@email.com">
+                                @error('email')
+                                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            
+                            <div>
+                                <label for="email_password" class="block text-sm font-medium text-gray-700 mb-1">Mot de passe actuel</label>
+                                <input type="password" name="password" id="email_password" required
+                                       class="w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
+                                       placeholder="••••••••">
+                                @error('password')
+                                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+                        
+                        <div class="mt-6">
+                            <button type="submit" class="w-full px-6 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-medium rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all shadow-lg shadow-indigo-500/30">
+                                Mettre à jour l'email
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Changer le mot de passe -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="bg-gradient-to-r from-rose-500 to-pink-600 px-5 py-4">
+                        <h3 class="text-white font-semibold flex items-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                            </svg>
+                            Changer mon mot de passe
+                        </h3>
+                    </div>
+                    <form action="{{ route('admin.settings.update-password') }}" method="POST" class="p-6">
+                        @csrf
+                        @method('PUT')
+                        
+                        <div class="space-y-4">
+                            <div>
+                                <label for="current_password" class="block text-sm font-medium text-gray-700 mb-1">Mot de passe actuel</label>
+                                <input type="password" name="current_password" id="current_password" required
+                                       class="w-full rounded-xl border-gray-300 focus:border-rose-500 focus:ring-rose-500"
+                                       placeholder="••••••••">
+                                @error('current_password')
+                                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            
+                            <div>
+                                <label for="new_password" class="block text-sm font-medium text-gray-700 mb-1">Nouveau mot de passe</label>
+                                <input type="password" name="new_password" id="new_password" required minlength="8"
+                                       class="w-full rounded-xl border-gray-300 focus:border-rose-500 focus:ring-rose-500"
+                                       placeholder="••••••••">
+                                @error('new_password')
+                                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                                @enderror
+                                <p class="mt-1 text-xs text-gray-500">Minimum 8 caractères</p>
+                            </div>
+                            
+                            <div>
+                                <label for="new_password_confirmation" class="block text-sm font-medium text-gray-700 mb-1">Confirmer le nouveau mot de passe</label>
+                                <input type="password" name="new_password_confirmation" id="new_password_confirmation" required
+                                       class="w-full rounded-xl border-gray-300 focus:border-rose-500 focus:ring-rose-500"
+                                       placeholder="••••••••">
+                            </div>
+                        </div>
+                        
+                        <div class="mt-6">
+                            <button type="submit" class="w-full px-6 py-2.5 bg-gradient-to-r from-rose-600 to-pink-600 text-white font-medium rounded-xl hover:from-rose-700 hover:to-pink-700 transition-all shadow-lg shadow-rose-500/30">
+                                Mettre à jour le mot de passe
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Info sécurité -->
+            <div class="mt-6 p-4 bg-amber-50 border border-amber-200 rounded-xl">
+                <div class="flex items-start gap-3">
+                    <svg class="w-5 h-5 text-amber-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                    </svg>
+                    <div>
+                        <h4 class="font-semibold text-amber-800">Conseils de sécurité</h4>
+                        <ul class="mt-1 text-sm text-amber-700 list-disc list-inside space-y-1">
+                            <li>Utilisez un mot de passe fort avec des lettres, chiffres et caractères spéciaux</li>
+                            <li>Ne partagez jamais vos identifiants de connexion</li>
+                            <li>Changez régulièrement votre mot de passe</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Tab: Horaires -->
@@ -590,7 +758,7 @@
     <script>
         function settingsPage() {
             return {
-                activeTab: '{{ request('tab', 'horaires') }}',
+                activeTab: '{{ request('tab', 'compte') }}',
                 showDepartmentModal: false,
                 showPositionModal: false,
                 editingDepartment: null,

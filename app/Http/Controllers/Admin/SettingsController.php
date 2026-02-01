@@ -8,6 +8,8 @@ use App\Models\Department;
 use App\Models\Position;
 use App\Models\PayrollCountry;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules\Password;
 
 class SettingsController extends Controller
 {
@@ -265,5 +267,63 @@ class SettingsController extends Controller
 
         return redirect()->route('admin.settings.index', ['tab' => 'organisation'])
             ->with('success', 'Poste supprimé avec succès.');
+    }
+
+    /**
+     * Mettre à jour l'email de l'administrateur
+     */
+    public function updateEmail(Request $request)
+    {
+        $user = auth()->user();
+
+        $validated = $request->validate([
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'password' => 'required|string',
+        ], [
+            'email.required' => 'L\'email est obligatoire.',
+            'email.email' => 'L\'email doit être valide.',
+            'email.unique' => 'Cet email est déjà utilisé.',
+            'password.required' => 'Le mot de passe est obligatoire pour confirmer cette action.',
+        ]);
+
+        // Vérifier le mot de passe actuel
+        if (!Hash::check($validated['password'], $user->password)) {
+            return redirect()->route('admin.settings.index', ['tab' => 'compte'])
+                ->with('error', 'Le mot de passe est incorrect.');
+        }
+
+        $user->update(['email' => $validated['email']]);
+
+        return redirect()->route('admin.settings.index', ['tab' => 'compte'])
+            ->with('success', 'Email mis à jour avec succès.');
+    }
+
+    /**
+     * Mettre à jour le mot de passe de l'administrateur
+     */
+    public function updatePassword(Request $request)
+    {
+        $user = auth()->user();
+
+        $validated = $request->validate([
+            'current_password' => 'required|string',
+            'new_password' => ['required', 'string', 'min:8', 'confirmed'],
+        ], [
+            'current_password.required' => 'Le mot de passe actuel est obligatoire.',
+            'new_password.required' => 'Le nouveau mot de passe est obligatoire.',
+            'new_password.min' => 'Le nouveau mot de passe doit contenir au moins 8 caractères.',
+            'new_password.confirmed' => 'La confirmation du mot de passe ne correspond pas.',
+        ]);
+
+        // Vérifier le mot de passe actuel
+        if (!Hash::check($validated['current_password'], $user->password)) {
+            return redirect()->route('admin.settings.index', ['tab' => 'compte'])
+                ->with('error', 'Le mot de passe actuel est incorrect.');
+        }
+
+        $user->update(['password' => Hash::make($validated['new_password'])]);
+
+        return redirect()->route('admin.settings.index', ['tab' => 'compte'])
+            ->with('success', 'Mot de passe mis à jour avec succès.');
     }
 }

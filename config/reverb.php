@@ -82,7 +82,12 @@ return [
                     'scheme' => env('REVERB_SCHEME', 'https'),
                     'useTLS' => env('REVERB_SCHEME', 'https') === 'https',
                 ],
-                'allowed_origins' => ['*'],
+                // SÉCURITÉ: Restreindre les origines autorisées
+                // En production, définir REVERB_ALLOWED_ORIGINS avec vos domaines
+                // Exemple: REVERB_ALLOWED_ORIGINS=https://managex.com,https://app.managex.com
+                'allowed_origins' => env('REVERB_ALLOWED_ORIGINS') 
+                    ? explode(',', env('REVERB_ALLOWED_ORIGINS'))
+                    : (env('APP_ENV') === 'local' ? ['*'] : [env('APP_URL')]),
                 'ping_interval' => env('REVERB_APP_PING_INTERVAL', 60),
                 'activity_timeout' => env('REVERB_APP_ACTIVITY_TIMEOUT', 30),
                 'max_connections' => env('REVERB_APP_MAX_CONNECTIONS'),

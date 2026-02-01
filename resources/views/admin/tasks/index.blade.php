@@ -1,47 +1,97 @@
 <x-layouts.admin>
-    <div class="space-y-6" x-data="taskTable()">
-        <!-- Breadcrumbs -->
-        <nav class="flex animate-fade-in-up" aria-label="Breadcrumb">
-            <ol class="inline-flex items-center space-x-1 md:space-x-3">
-                <li class="inline-flex items-center">
-                    <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600">
-                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
-                        </svg>
-                        Dashboard
-                    </a>
-                </li>
-                <li aria-current="page">
-                    <div class="flex items-center">
-                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                        </svg>
-                        <span class="ml-1 text-sm font-medium text-gray-500 md:ml-2">Tâches</span>
+    <div class="space-y-6" x-data="taskManager()">
+        <!-- Header amélioré -->
+        <div class="relative overflow-hidden bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 rounded-2xl shadow-xl animate-fade-in-up">
+            <div class="absolute inset-0 bg-black/10"></div>
+            <div class="absolute -top-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+            <div class="absolute -bottom-24 -left-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+            
+            <div class="relative p-6 md:p-8">
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                    <div>
+                        <nav class="flex mb-3" aria-label="Breadcrumb">
+                            <ol class="inline-flex items-center space-x-1">
+                                <li><a href="{{ route('admin.dashboard') }}" class="text-white/70 hover:text-white text-sm">Dashboard</a></li>
+                                <li><span class="text-white/50 mx-2">/</span></li>
+                                <li><span class="text-white text-sm font-medium">Tâches</span></li>
+                            </ol>
+                        </nav>
+                        <h1 class="text-2xl md:text-3xl font-bold text-white flex items-center gap-3">
+                            <div class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
+                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+                                </svg>
+                            </div>
+                            Gestion des Tâches
+                        </h1>
+                        <p class="text-white/80 mt-2">Assignation, suivi et validation des tâches collaborateurs</p>
                     </div>
-                </li>
-            </ol>
-        </nav>
-        <!-- Header -->
-        <x-table-header title="Gestion des Tâches" subtitle="Assignation, suivi et validation des tâches collaborateurs" class="animate-fade-in-up animation-delay-100">
-            <x-slot:icon>
-                <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-purple-500/20">
-                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
-                    </svg>
+                    <div class="flex flex-wrap items-center gap-2">
+                        <!-- Toggle View -->
+                        <div class="bg-white/20 backdrop-blur-sm rounded-xl p-1 flex">
+                            <button @click="viewMode = 'table'" 
+                                    :class="viewMode === 'table' ? 'bg-white text-purple-700' : 'text-white hover:bg-white/20'"
+                                    class="px-3 py-2 rounded-lg font-medium text-sm transition-all flex items-center gap-1">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
+                                Liste
+                            </button>
+                            <button @click="viewMode = 'kanban'" 
+                                    :class="viewMode === 'kanban' ? 'bg-white text-purple-700' : 'text-white hover:bg-white/20'"
+                                    class="px-3 py-2 rounded-lg font-medium text-sm transition-all flex items-center gap-1">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/></svg>
+                                Kanban
+                            </button>
+                        </div>
+                        <a href="{{ route('admin.tasks.create') }}" class="px-4 py-2.5 bg-white text-purple-700 font-semibold rounded-xl hover:bg-purple-50 transition-all shadow-lg flex items-center">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                            </svg>
+                            Nouvelle tâche
+                        </a>
+                    </div>
                 </div>
-            </x-slot:icon>
-            <x-slot:actions>
-                <a href="{{ route('admin.tasks.create') }}" class="inline-flex items-center px-4 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-medium rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg shadow-blue-500/25">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
-                    </svg>
-                    Assigner une tâche
-                </a>
-            </x-slot:actions>
-        </x-table-header>
+            </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 animate-fade-in-up animation-delay-100">
+            @php
+                $stats = [
+                    ['label' => 'Total', 'value' => $tasks->total(), 'color' => 'gray', 'icon' => 'clipboard-list'],
+                    ['label' => 'En attente', 'value' => \App\Models\Task::where('statut', 'pending')->count(), 'color' => 'amber', 'icon' => 'clock'],
+                    ['label' => 'En cours', 'value' => \App\Models\Task::whereIn('statut', ['approved', 'in_progress'])->count(), 'color' => 'blue', 'icon' => 'play'],
+                    ['label' => 'Terminées', 'value' => \App\Models\Task::where('statut', 'completed')->count(), 'color' => 'purple', 'icon' => 'check'],
+                    ['label' => 'Validées', 'value' => \App\Models\Task::where('statut', 'validated')->count(), 'color' => 'emerald', 'icon' => 'badge-check'],
+                    ['label' => 'En retard', 'value' => \App\Models\Task::where('date_fin', '<', now())->whereNotIn('statut', ['validated', 'completed'])->count(), 'color' => 'red', 'icon' => 'exclamation'],
+                ];
+            @endphp
+            @foreach($stats as $stat)
+                <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+                    <div class="flex items-center justify-between">
+                        <div class="w-10 h-10 bg-{{ $stat['color'] }}-100 rounded-lg flex items-center justify-center">
+                            @if($stat['icon'] === 'clipboard-list')
+                                <svg class="w-5 h-5 text-{{ $stat['color'] }}-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
+                            @elseif($stat['icon'] === 'clock')
+                                <svg class="w-5 h-5 text-{{ $stat['color'] }}-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            @elseif($stat['icon'] === 'play')
+                                <svg class="w-5 h-5 text-{{ $stat['color'] }}-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            @elseif($stat['icon'] === 'check')
+                                <svg class="w-5 h-5 text-{{ $stat['color'] }}-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                            @elseif($stat['icon'] === 'badge-check')
+                                <svg class="w-5 h-5 text-{{ $stat['color'] }}-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+                            @elseif($stat['icon'] === 'exclamation')
+                                <svg class="w-5 h-5 text-{{ $stat['color'] }}-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                            @endif
+                        </div>
+                        <span class="text-2xl font-bold text-gray-900">{{ $stat['value'] }}</span>
+                    </div>
+                    <p class="text-sm text-gray-500 mt-2">{{ $stat['label'] }}</p>
+                </div>
+            @endforeach
+        </div>
 
         <!-- Filter Bar -->
-        <x-filter-bar :hasActiveFilters="request()->hasAny(['search', 'employee_id', 'statut', 'priorite'])" class="animate-fade-in-up animation-delay-200">
+        <x-filter-bar :hasActiveFilters="request()->hasAny(['search', 'user_id', 'statut', 'priorite'])" class="animate-fade-in-up animation-delay-200">
             <x-slot:filters>
                 <!-- Search -->
                 <div class="flex-1 min-w-[200px] relative">
@@ -55,10 +105,10 @@
 
                 <!-- Employé -->
                 <div class="w-full sm:w-auto">
-                    <select name="employee_id" class="w-full sm:w-48 px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-sm bg-white">
+                    <select name="user_id" class="w-full sm:w-48 px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-sm bg-white">
                         <option value="">Tous les employés</option>
                         @foreach($employees as $emp)
-                            <option value="{{ $emp->id }}" {{ request('employee_id') == $emp->id ? 'selected' : '' }}>{{ $emp->name }}</option>
+                            <option value="{{ $emp->id }}" {{ request('user_id') == $emp->id ? 'selected' : '' }}>{{ $emp->name }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -88,9 +138,10 @@
                 <!-- Buttons -->
                 <div class="flex gap-2">
                     <button type="submit" class="px-6 py-2.5 bg-purple-600 text-white font-medium rounded-xl hover:bg-purple-700 transition-colors shadow-lg shadow-purple-500/25 flex items-center">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
                         Filtrer
                     </button>
-                    @if(request()->hasAny(['search', 'employee_id', 'statut', 'priorite']))
+                    @if(request()->hasAny(['search', 'user_id', 'statut', 'priorite']))
                         <a href="{{ route('admin.tasks.index') }}" class="px-4 py-2.5 bg-gray-100 text-gray-700 font-medium rounded-xl hover:bg-gray-200 transition-colors flex items-center">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
@@ -106,8 +157,8 @@
                         Recherche: {{ request('search') }}
                     </span>
                 @endif
-                @if(request('employee_id'))
-                    @php $emp = $employees->find(request('employee_id')); @endphp
+                @if(request('user_id'))
+                    @php $emp = $employees->find(request('user_id')); @endphp
                     @if($emp)
                         <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-100">
                             Employé: {{ $emp->name }}
@@ -119,10 +170,149 @@
                         Statut: {{ request('statut') }}
                     </span>
                 @endif
+                @if(request('priorite'))
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-100">
+                        Priorité: {{ request('priorite') }}
+                    </span>
+                @endif
             </x-slot:activeFilters>
         </x-filter-bar>
 
-        <!-- Table -->
+        <!-- Kanban View -->
+        <div x-show="viewMode === 'kanban'" x-cloak class="animate-fade-in-up" x-data="kanbanBoard()">
+            <!-- Toast notification -->
+            <div x-show="toast.show" 
+                 x-transition:enter="transition ease-out duration-300"
+                 x-transition:enter-start="opacity-0 transform translate-y-2"
+                 x-transition:enter-end="opacity-100 transform translate-y-0"
+                 x-transition:leave="transition ease-in duration-200"
+                 x-transition:leave-start="opacity-100"
+                 x-transition:leave-end="opacity-0"
+                 :class="toast.type === 'success' ? 'bg-emerald-500' : 'bg-red-500'"
+                 class="fixed bottom-4 right-4 text-white px-4 py-3 rounded-xl shadow-lg z-50 flex items-center gap-2">
+                <svg x-show="toast.type === 'success'" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                <svg x-show="toast.type === 'error'" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                <span x-text="toast.message"></span>
+            </div>
+
+            <!-- Help text -->
+            <div class="bg-indigo-50 border border-indigo-100 rounded-xl p-3 mb-4 flex items-center gap-3">
+                <div class="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                </div>
+                <p class="text-sm text-indigo-700">Glissez-déposez les tâches entre les colonnes pour changer leur statut</p>
+            </div>
+
+            @php
+                $kanbanTasks = \App\Models\Task::with('user')->get()->groupBy('statut');
+                $columns = [
+                    'pending' => ['title' => 'En attente', 'color' => 'amber', 'icon' => 'clock'],
+                    'approved' => ['title' => 'En cours', 'color' => 'blue', 'icon' => 'play'],
+                    'completed' => ['title' => 'Terminées', 'color' => 'purple', 'icon' => 'check'],
+                    'validated' => ['title' => 'Validées', 'color' => 'emerald', 'icon' => 'badge-check'],
+                    'rejected' => ['title' => 'Rejetées', 'color' => 'red', 'icon' => 'x-circle'],
+                ];
+            @endphp
+            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                @foreach($columns as $status => $config)
+                    <div class="bg-gray-50 rounded-xl p-3 min-h-[400px] kanban-column transition-all"
+                         data-status="{{ $status }}"
+                         @dragover.prevent="onDragOver($event, '{{ $status }}')"
+                         @dragleave="onDragLeave($event, '{{ $status }}')"
+                         @drop="onDrop($event, '{{ $status }}')"
+                         :class="{ 'ring-2 ring-indigo-400 ring-offset-2 bg-indigo-50': dragOverColumn === '{{ $status }}' }">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center gap-2">
+                                <div class="w-8 h-8 bg-{{ $config['color'] }}-100 rounded-lg flex items-center justify-center">
+                                    @if($config['icon'] === 'clock')
+                                        <svg class="w-4 h-4 text-{{ $config['color'] }}-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                    @elseif($config['icon'] === 'play')
+                                        <svg class="w-4 h-4 text-{{ $config['color'] }}-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/></svg>
+                                    @elseif($config['icon'] === 'check')
+                                        <svg class="w-4 h-4 text-{{ $config['color'] }}-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                    @elseif($config['icon'] === 'badge-check')
+                                        <svg class="w-4 h-4 text-{{ $config['color'] }}-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+                                    @elseif($config['icon'] === 'x-circle')
+                                        <svg class="w-4 h-4 text-{{ $config['color'] }}-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                    @endif
+                                </div>
+                                <h3 class="font-semibold text-gray-700 text-sm">{{ $config['title'] }}</h3>
+                            </div>
+                            <span class="kanban-count-{{ $status }} bg-{{ $config['color'] }}-100 text-{{ $config['color'] }}-700 text-xs font-bold px-2 py-0.5 rounded-full">
+                                {{ $kanbanTasks->get($status)?->count() ?? 0 }}
+                            </span>
+                        </div>
+                        <div class="space-y-3 kanban-tasks min-h-[100px]" data-status="{{ $status }}">
+                            @foreach($kanbanTasks->get($status, collect()) as $task)
+                                <div class="kanban-card bg-white rounded-lg p-3 shadow-sm border border-gray-100 hover:shadow-md transition-all cursor-grab active:cursor-grabbing group"
+                                     draggable="true"
+                                     data-task-id="{{ $task->id }}"
+                                     data-task-status="{{ $task->statut }}"
+                                     @dragstart="onDragStart($event, {{ $task->id }}, '{{ $task->statut }}')"
+                                     @dragend="onDragEnd($event)"
+                                     :class="{ 'opacity-50 scale-95': draggingTaskId === {{ $task->id }} }">
+                                    <!-- Drag handle indicator -->
+                                    <div class="flex items-center justify-center mb-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <div class="flex gap-0.5">
+                                            <span class="w-1 h-1 bg-gray-300 rounded-full"></span>
+                                            <span class="w-1 h-1 bg-gray-300 rounded-full"></span>
+                                            <span class="w-1 h-1 bg-gray-300 rounded-full"></span>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start justify-between gap-2">
+                                        <h4 class="font-medium text-gray-900 text-sm line-clamp-2">{{ $task->titre }}</h4>
+                                        <span class="flex-shrink-0 px-1.5 py-0.5 text-[10px] font-bold rounded {{ $task->priorite === 'high' ? 'bg-red-100 text-red-700' : ($task->priorite === 'medium' ? 'bg-amber-100 text-amber-700' : 'bg-gray-100 text-gray-600') }}">
+                                            {{ strtoupper(substr($task->priorite, 0, 1)) }}
+                                        </span>
+                                    </div>
+                                    @if($task->description)
+                                        <p class="text-xs text-gray-500 mt-1 line-clamp-2">{{ Str::limit($task->description, 60) }}</p>
+                                    @endif
+                                    <div class="flex items-center justify-between mt-3">
+                                        <div class="flex items-center gap-2">
+                                            @if($task->user->avatar)
+                                                <img class="w-6 h-6 rounded-full object-cover ring-2 ring-white" src="{{ Storage::url($task->user->avatar) }}" alt="{{ $task->user->name }}">
+                                            @else
+                                                <div class="w-6 h-6 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center ring-2 ring-white">
+                                                    <span class="text-white font-bold text-[10px]">{{ strtoupper(substr($task->user->name, 0, 2)) }}</span>
+                                                </div>
+                                            @endif
+                                            <span class="text-xs text-gray-600">{{ Str::limit($task->user->name, 12) }}</span>
+                                        </div>
+                                        @if($task->date_fin)
+                                            <span class="text-[10px] {{ $task->date_fin->isPast() && !in_array($task->statut, ['validated', 'completed']) ? 'text-red-600 font-bold' : 'text-gray-400' }}">
+                                                {{ $task->date_fin->format('d/m') }}
+                                            </span>
+                                        @endif
+                                    </div>
+                                    <div class="w-full bg-gray-100 rounded-full h-1 mt-2">
+                                        <div class="h-1 rounded-full transition-all {{ $task->progression < 30 ? 'bg-red-500' : ($task->progression < 70 ? 'bg-amber-500' : 'bg-green-500') }}" style="width: {{ $task->progression }}%"></div>
+                                    </div>
+                                    <!-- Actions on hover -->
+                                    <div class="hidden group-hover:flex items-center justify-end gap-1 mt-2 pt-2 border-t border-gray-100">
+                                        <a href="{{ route('admin.tasks.show', $task) }}" class="p-1 text-gray-400 hover:text-blue-600 rounded" @click.stop>
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                        </a>
+                                        <a href="{{ route('admin.tasks.edit', $task) }}" class="p-1 text-gray-400 hover:text-amber-600 rounded" @click.stop>
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                                        </a>
+                                    </div>
+                                </div>
+                            @endforeach
+                            @if(($kanbanTasks->get($status)?->count() ?? 0) === 0)
+                                <div class="kanban-empty text-center py-8 text-gray-400 text-sm">
+                                    <svg class="w-8 h-8 mx-auto mb-2 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                                    Déposez une tâche ici
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+
+        <!-- Table View -->
+        <div x-show="viewMode === 'table'" class="animate-fade-in-up">
         <x-data-table>
             <x-slot:header>
                 <tr>
@@ -251,14 +441,22 @@
                 {{ $tasks->links() }}
             </x-slot:pagination>
         </x-data-table>
-
+        </div>
 
     <script>
-        function taskTable() {
+        function taskManager() {
             return {
+                viewMode: localStorage.getItem('taskViewMode') || 'table',
                 selected: [],
                 get selectedCount() {
                     return this.selected.length;
+                },
+                
+                // Watch viewMode changes
+                init() {
+                    this.$watch('viewMode', (value) => {
+                        localStorage.setItem('taskViewMode', value);
+                    });
                 },
                 
                 // Delete Modal Logic
@@ -267,6 +465,145 @@
                 confirmDelete(url) {
                     this.deleteUrl = url;
                     this.showDeleteModal = true;
+                }
+            }
+        }
+
+        function kanbanBoard() {
+            return {
+                draggingTaskId: null,
+                draggingFromStatus: null,
+                dragOverColumn: null,
+                toast: {
+                    show: false,
+                    message: '',
+                    type: 'success'
+                },
+
+                onDragStart(event, taskId, currentStatus) {
+                    this.draggingTaskId = taskId;
+                    this.draggingFromStatus = currentStatus;
+                    event.dataTransfer.effectAllowed = 'move';
+                    event.dataTransfer.setData('text/plain', taskId);
+                    
+                    // Add visual feedback
+                    setTimeout(() => {
+                        event.target.classList.add('opacity-50', 'scale-95');
+                    }, 0);
+                },
+
+                onDragEnd(event) {
+                    this.draggingTaskId = null;
+                    this.draggingFromStatus = null;
+                    this.dragOverColumn = null;
+                    event.target.classList.remove('opacity-50', 'scale-95');
+                },
+
+                onDragOver(event, status) {
+                    event.preventDefault();
+                    this.dragOverColumn = status;
+                },
+
+                onDragLeave(event, status) {
+                    // Only clear if we're leaving the column entirely
+                    if (!event.currentTarget.contains(event.relatedTarget)) {
+                        this.dragOverColumn = null;
+                    }
+                },
+
+                async onDrop(event, newStatus) {
+                    event.preventDefault();
+                    this.dragOverColumn = null;
+                    
+                    const taskId = event.dataTransfer.getData('text/plain');
+                    const oldStatus = this.draggingFromStatus;
+                    
+                    if (!taskId || oldStatus === newStatus) {
+                        return;
+                    }
+
+                    // Optimistic UI update
+                    const taskCard = document.querySelector(`[data-task-id="${taskId}"]`);
+                    const targetColumn = document.querySelector(`.kanban-tasks[data-status="${newStatus}"]`);
+                    const sourceColumn = document.querySelector(`.kanban-tasks[data-status="${oldStatus}"]`);
+                    
+                    if (taskCard && targetColumn) {
+                        // Move the card visually
+                        targetColumn.appendChild(taskCard);
+                        taskCard.dataset.taskStatus = newStatus;
+                        
+                        // Update counts
+                        this.updateColumnCount(oldStatus, -1);
+                        this.updateColumnCount(newStatus, 1);
+                        
+                        // Hide empty message in target
+                        const targetEmpty = targetColumn.querySelector('.kanban-empty');
+                        if (targetEmpty) targetEmpty.style.display = 'none';
+                        
+                        // Show empty message in source if needed
+                        if (sourceColumn && sourceColumn.querySelectorAll('.kanban-card').length === 0) {
+                            let emptyDiv = sourceColumn.querySelector('.kanban-empty');
+                            if (!emptyDiv) {
+                                emptyDiv = document.createElement('div');
+                                emptyDiv.className = 'kanban-empty text-center py-8 text-gray-400 text-sm';
+                                emptyDiv.innerHTML = '<svg class="w-8 h-8 mx-auto mb-2 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>Déposez une tâche ici';
+                                sourceColumn.appendChild(emptyDiv);
+                            }
+                            emptyDiv.style.display = 'block';
+                        }
+                    }
+
+                    // Send to server
+                    try {
+                        const response = await fetch(`/admin/tasks/${taskId}/update-status`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                                'Accept': 'application/json'
+                            },
+                            body: JSON.stringify({ statut: newStatus })
+                        });
+
+                        const data = await response.json();
+
+                        if (data.success) {
+                            this.showToast('Statut mis à jour avec succès', 'success');
+                        } else {
+                            // Revert on error
+                            this.revertMove(taskCard, sourceColumn, oldStatus, newStatus);
+                            this.showToast(data.message || 'Erreur lors de la mise à jour', 'error');
+                        }
+                    } catch (error) {
+                        console.error('Error updating task:', error);
+                        // Revert on error
+                        this.revertMove(taskCard, sourceColumn, oldStatus, newStatus);
+                        this.showToast('Erreur de connexion', 'error');
+                    }
+                },
+
+                revertMove(taskCard, sourceColumn, oldStatus, newStatus) {
+                    if (taskCard && sourceColumn) {
+                        sourceColumn.appendChild(taskCard);
+                        taskCard.dataset.taskStatus = oldStatus;
+                        this.updateColumnCount(oldStatus, 1);
+                        this.updateColumnCount(newStatus, -1);
+                    }
+                },
+
+                updateColumnCount(status, delta) {
+                    const countEl = document.querySelector(`.kanban-count-${status}`);
+                    if (countEl) {
+                        const currentCount = parseInt(countEl.textContent) || 0;
+                        countEl.textContent = Math.max(0, currentCount + delta);
+                    }
+                },
+
+                showToast(message, type = 'success') {
+                    this.toast = { show: true, message, type };
+                    setTimeout(() => {
+                        this.toast.show = false;
+                    }, 3000);
                 }
             }
         }

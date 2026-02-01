@@ -162,7 +162,7 @@ class EmployeeController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($password),
-            'role' => 'employee',
+            // 'role' défini explicitement après création pour sécurité
             'poste' => $request->poste,
             'telephone' => $request->telephone,
             'department_id' => $request->department_id,
@@ -190,6 +190,9 @@ class EmployeeController extends Controller
             'status' => 'active',
         ]);
 
+        // Définir le rôle de manière sécurisée (non mass-assignable)
+        $employee->setRole('employee')->save();
+
         // Enregistrer les jours de travail
         foreach ($request->work_days as $day) {
             EmployeeWorkDay::create([
@@ -198,11 +201,12 @@ class EmployeeController extends Controller
             ]);
         }
 
-        // Envoyer l'email de bienvenue avec les identifiants
-        $employee->notify(new WelcomeEmployeeNotification($password, $employee->name));
+        // Envoyer l'email de bienvenue avec lien de réinitialisation sécurisé
+        // Le mot de passe n'est plus envoyé en clair pour des raisons de sécurité
+        $employee->notify(new WelcomeEmployeeNotification($employee->name));
 
         return redirect()->route('admin.employees.index')
-            ->with('success', 'Employé créé avec succès. Un email contenant les identifiants de connexion a été envoyé.');
+            ->with('success', 'Employé créé avec succès. Un email avec un lien d\'activation a été envoyé.');
     }
 
     /**

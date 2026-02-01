@@ -1,23 +1,43 @@
 <x-layouts.admin>
     <div class="space-y-6" x-data="analyticsPage()">
 
-        {{-- Header --}}
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 animate-fade-in-up">
-            <div>
-                <h1 class="text-2xl font-bold text-gray-900 flex items-center gap-3">
-                    <div class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/20">
-                        <x-icon name="bar-chart-2" class="w-5 h-5 text-white" />
+        {{-- Header amélioré --}}
+        <div class="relative overflow-hidden bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 rounded-2xl shadow-xl">
+            <div class="absolute inset-0 bg-black/10"></div>
+            <div class="absolute -top-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+            <div class="absolute -bottom-24 -left-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+            
+            <div class="relative p-6 md:p-8 bg-blue-400">
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                    <div>
+                        <h1 class="text-2xl md:text-3xl font-bold text-white flex items-center gap-3">
+                            <div class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
+                                <x-icon name="bar-chart-2" class="w-6 h-6 text-white" />
+                            </div>
+                            Analytics RH
+                        </h1>
+                        <p class="text-white/80 mt-2">Tableau de bord de performance et statistiques en temps réel</p>
+                        <div class="flex items-center gap-4 mt-3">
+                            <span class="px-3 py-1 bg-white/20 backdrop-blur-sm text-white text-xs font-medium rounded-full">
+                                Dernière mise à jour: <span x-text="lastUpdate">-</span>
+                            </span>
+                            <span class="px-3 py-1 bg-emerald-500/80 text-white text-xs font-medium rounded-full flex items-center gap-1" x-show="!loading">
+                                <span class="w-2 h-2 bg-white rounded-full animate-pulse"></span>
+                                En direct
+                            </span>
+                        </div>
                     </div>
-                    Analytics RH
-                </h1>
-                <p class="text-gray-500 mt-1 ml-13">Tableau de bord de performance et statistiques</p>
-            </div>
-            <div class="flex items-center gap-2">
-                <span class="text-xs text-gray-400" x-show="loading">Actualisation...</span>
-                <button @click="loadData()" class="px-4 py-2 bg-white border border-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors flex items-center shadow-sm">
-                    <x-icon name="refresh-cw" class="w-4 h-4 mr-2" x-bind:class="{'animate-spin': loading}"/>
-                    Actualiser
-                </button>
+                    <div class="flex items-center gap-2">
+                        <button @click="exportData('pdf')" class="px-4 py-2.5 bg-white/20 backdrop-blur-sm text-white font-medium rounded-xl hover:bg-white/30 transition-all flex items-center">
+                            <x-icon name="download" class="w-4 h-4 mr-2"/>
+                            Export PDF
+                        </button>
+                        <button @click="loadData()" class="px-4 py-2.5 bg-white text-indigo-700 font-semibold rounded-xl hover:bg-indigo-50 transition-all shadow-lg flex items-center">
+                            <x-icon name="refresh-cw" class="w-4 h-4 mr-2" x-bind:class="{'animate-spin': loading}"/>
+                            Actualiser
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -77,95 +97,148 @@
             </select>
         </div>
 
-        {{-- KPI Cards --}}
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 animate-fade-in-up animation-delay-200">
+        {{-- KPI Cards - Ligne 1 (Principaux) --}}
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 animate-fade-in-up animation-delay-200">
             {{-- 1. Effectif total --}}
-            <div class="bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl p-5 text-white shadow-lg shadow-blue-500/20 relative overflow-hidden group">
-                <div class="absolute right-0 top-0 p-4 opacity-10 group-hover:scale-110 transition-transform">
-                    <x-icon name="users" class="w-16 h-16"/>
-                </div>
+            <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100 relative overflow-hidden group hover:shadow-md transition-all">
+                <div class="absolute right-0 top-0 w-24 h-24 bg-gradient-to-br from-blue-500/10 to-indigo-500/10 rounded-full -mr-8 -mt-8 group-hover:scale-125 transition-transform"></div>
                 <div class="relative z-10">
-                    <p class="text-blue-100 text-xs font-medium uppercase tracking-wider">Effectif total</p>
-                    <p class="text-3xl font-bold mt-1" x-text="kpis.effectif_total?.value || '-'"></p>
-                    <div class="flex items-center mt-2 text-xs font-medium" :class="kpis.effectif_total?.variation >= 0 ? 'text-blue-100' : 'text-red-200'">
-                        <span class="bg-white/20 px-1.5 py-0.5 rounded flex items-center">
+                    <div class="flex items-center justify-between">
+                        <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/30">
+                            <x-icon name="users" class="w-6 h-6 text-white"/>
+                        </div>
+                        <div class="flex items-center px-2 py-1 rounded-full text-xs font-semibold" 
+                             :class="kpis.effectif_total?.variation >= 0 ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'">
                             <x-icon name="trending-up" class="w-3 h-3 mr-1" x-show="kpis.effectif_total?.variation >= 0"/>
                             <x-icon name="trending-down" class="w-3 h-3 mr-1" x-show="kpis.effectif_total?.variation < 0"/>
                             <span x-text="(kpis.effectif_total?.variation > 0 ? '+' : '') + (kpis.effectif_total?.variation || 0) + '%'"></span>
-                        </span>
-                        <span class="ml-2 opacity-70">vs m-1</span>
+                        </div>
+                    </div>
+                    <p class="text-3xl font-bold text-gray-900 mt-4" x-text="kpis.effectif_total?.value || '-'"></p>
+                    <p class="text-sm text-gray-500 mt-1">Effectif total</p>
+                </div>
+            </div>
+
+            {{-- 2. Taux de présence --}}
+            <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100 relative overflow-hidden group hover:shadow-md transition-all">
+                <div class="absolute right-0 top-0 w-24 h-24 bg-gradient-to-br from-emerald-500/10 to-teal-500/10 rounded-full -mr-8 -mt-8 group-hover:scale-125 transition-transform"></div>
+                <div class="relative z-10">
+                    <div class="flex items-center justify-between">
+                        <div class="w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-500/30">
+                            <x-icon name="check-circle" class="w-6 h-6 text-white"/>
+                        </div>
+                        <span class="text-xs font-medium text-gray-500" x-text="(kpis.presents_today?.value || 0) + '/' + (kpis.presents_today?.expected || 0)"></span>
+                    </div>
+                    <p class="text-3xl font-bold text-gray-900 mt-4"><span x-text="kpis.presents_today?.percentage || '0'"></span>%</p>
+                    <p class="text-sm text-gray-500 mt-1">Taux de présence</p>
+                    <div class="w-full bg-gray-200 rounded-full h-2 mt-3">
+                        <div class="bg-gradient-to-r from-emerald-500 to-teal-500 h-2 rounded-full transition-all duration-1000" :style="'width: ' + (kpis.presents_today?.percentage || 0) + '%'"></div>
                     </div>
                 </div>
             </div>
 
-            {{-- 2. Présences du mois --}}
-            <div class="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl p-5 text-white shadow-lg shadow-emerald-500/20 relative overflow-hidden group">
-                <div class="absolute right-0 top-0 p-4 opacity-10 group-hover:scale-110 transition-transform">
-                    <x-icon name="check-circle" class="w-16 h-16"/>
-                </div>
+            {{-- 3. Turnover --}}
+            <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100 relative overflow-hidden group hover:shadow-md transition-all">
+                <div class="absolute right-0 top-0 w-24 h-24 bg-gradient-to-br from-amber-500/10 to-orange-500/10 rounded-full -mr-8 -mt-8 group-hover:scale-125 transition-transform"></div>
                 <div class="relative z-10">
-                    <p class="text-emerald-100 text-xs font-medium uppercase tracking-wider">Présences mois</p>
-                    <div class="flex items-end gap-2 mt-1">
-                        <p class="text-3xl font-bold" x-text="kpis.presents_today?.value || '0'"></p>
-                        <p class="text-sm text-emerald-100 mb-1" x-text="'/ ' + (kpis.presents_today?.expected || '0')"></p>
+                    <div class="flex items-center justify-between">
+                        <div class="w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-600 rounded-xl flex items-center justify-center shadow-lg shadow-amber-500/30">
+                            <x-icon name="repeat" class="w-6 h-6 text-white"/>
+                        </div>
+                        <span class="text-xs font-medium px-2 py-1 rounded-full" 
+                              :class="(kpis.turnover?.rate || 0) > 10 ? 'bg-red-100 text-red-700' : 'bg-emerald-100 text-emerald-700'"
+                              x-text="(kpis.turnover?.rate || 0) > 10 ? 'Élevé' : 'Normal'"></span>
                     </div>
-                    <div class="w-full bg-black/10 rounded-full h-1.5 mt-3">
-                        <div class="bg-white h-1.5 rounded-full transition-all duration-1000" :style="'width: ' + (kpis.presents_today?.percentage || 0) + '%'"></div>
-                    </div>
-                </div>
-            </div>
-
-            {{-- 3. En congé --}}
-            <div class="bg-gradient-to-br from-violet-500 to-purple-600 rounded-xl p-5 text-white shadow-lg shadow-violet-500/20 relative overflow-hidden group">
-                <div class="absolute right-0 top-0 p-4 opacity-10 group-hover:scale-110 transition-transform">
-                    <x-icon name="coffee" class="w-16 h-16"/>
-                </div>
-                <div class="relative z-10">
-                    <p class="text-violet-100 text-xs font-medium uppercase tracking-wider">En congé</p>
-                    <p class="text-3xl font-bold mt-1" x-text="kpis.en_conge?.value || '0'"></p>
-                    <div class="mt-2 flex flex-wrap gap-1">
-                        <span class="text-[10px] bg-white/20 px-1.5 py-0.5 rounded" x-show="kpis.en_conge?.types?.conge > 0" x-text="'CP: ' + kpis.en_conge?.types?.conge"></span>
-                        <span class="text-[10px] bg-white/20 px-1.5 py-0.5 rounded" x-show="kpis.en_conge?.types?.maladie > 0" x-text="'Mal: ' + kpis.en_conge?.types?.maladie"></span>
-                    </div>
-                </div>
-            </div>
-
-            {{-- 4. Absents --}}
-            <div class="bg-gradient-to-br from-rose-500 to-pink-600 rounded-xl p-5 text-white shadow-lg shadow-rose-500/20 relative overflow-hidden group">
-                <div class="absolute right-0 top-0 p-4 opacity-10 group-hover:scale-110 transition-transform">
-                    <x-icon name="alert-circle" class="w-16 h-16"/>
-                </div>
-                <div class="relative z-10">
-                    <p class="text-rose-100 text-xs font-medium uppercase tracking-wider">Absents injustifiés</p>
-                    <p class="text-3xl font-bold mt-1" x-text="kpis.absents_non_justifies?.value || '0'"></p>
-                    <p class="text-xs text-rose-100 mt-2 opacity-80">Action requise</p>
-                </div>
-            </div>
-
-            {{-- 5. Masse salariale --}}
-            <div class="bg-gradient-to-br from-amber-500 to-orange-600 rounded-xl p-5 text-white shadow-lg shadow-amber-500/20 relative overflow-hidden group">
-                <div class="absolute right-0 top-0 p-4 opacity-10 group-hover:scale-110 transition-transform">
-                    <x-icon name="dollar-sign" class="w-16 h-16"/>
-                </div>
-                <div class="relative z-10">
-                    <p class="text-amber-100 text-xs font-medium uppercase tracking-wider">Masse Salariale</p>
-                    <p class="text-xl font-bold mt-2 truncate" x-text="kpis.masse_salariale?.formatted || '0 €'"></p>
-                    <p class="text-xs text-amber-100 mt-1 opacity-80">Ce mois</p>
-                </div>
-            </div>
-
-            {{-- 6. Heures sup --}}
-            <div class="bg-gradient-to-br from-cyan-500 to-blue-600 rounded-xl p-5 text-white shadow-lg shadow-cyan-500/20 relative overflow-hidden group">
-                <div class="absolute right-0 top-0 p-4 opacity-10 group-hover:scale-110 transition-transform">
-                    <x-icon name="clock" class="w-16 h-16"/>
-                </div>
-                <div class="relative z-10">
-                    <p class="text-cyan-100 text-xs font-medium uppercase tracking-wider">Heures Sup.</p>
-                    <p class="text-3xl font-bold mt-1" x-text="kpis.heures_supplementaires?.value || '0'"></p>
-                    <p class="text-xs text-cyan-100 mt-2">
-                        <span x-text="kpis.heures_supplementaires?.count || 0"></span> employés
+                    <p class="text-3xl font-bold text-gray-900 mt-4"><span x-text="kpis.turnover?.rate || '0'"></span>%</p>
+                    <p class="text-sm text-gray-500 mt-1">Taux de turnover</p>
+                    <p class="text-xs text-gray-400 mt-1">
+                        <span class="text-emerald-600" x-text="'+' + (kpis.turnover?.entries || 0)"></span> entrées / 
+                        <span class="text-red-600" x-text="'-' + (kpis.turnover?.exits || 0)"></span> sorties
                     </p>
                 </div>
+            </div>
+
+            {{-- 4. Masse salariale --}}
+            <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100 relative overflow-hidden group hover:shadow-md transition-all">
+                <div class="absolute right-0 top-0 w-24 h-24 bg-gradient-to-br from-violet-500/10 to-purple-500/10 rounded-full -mr-8 -mt-8 group-hover:scale-125 transition-transform"></div>
+                <div class="relative z-10">
+                    <div class="flex items-center justify-between">
+                        <div class="w-12 h-12 bg-gradient-to-br from-violet-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-violet-500/30">
+                            <x-icon name="dollar-sign" class="w-6 h-6 text-white"/>
+                        </div>
+                        <div class="flex items-center px-2 py-1 rounded-full text-xs font-semibold"
+                             :class="kpis.masse_salariale?.variation >= 0 ? 'bg-amber-100 text-amber-700' : 'bg-emerald-100 text-emerald-700'">
+                            <span x-text="(kpis.masse_salariale?.variation > 0 ? '+' : '') + (kpis.masse_salariale?.variation || 0) + '%'"></span>
+                        </div>
+                    </div>
+                    <p class="text-2xl font-bold text-gray-900 mt-4 truncate" x-text="kpis.masse_salariale?.formatted || '0 FCFA'"></p>
+                    <p class="text-sm text-gray-500 mt-1">Masse salariale</p>
+                </div>
+            </div>
+        </div>
+
+        {{-- KPI Cards - Ligne 2 (Secondaires) --}}
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 animate-fade-in-up animation-delay-250">
+            {{-- En congé --}}
+            <div class="bg-gradient-to-br from-violet-500 to-purple-600 rounded-xl p-4 text-white shadow-lg shadow-violet-500/20">
+                <div class="flex items-center justify-between">
+                    <x-icon name="coffee" class="w-5 h-5 opacity-80"/>
+                    <span class="text-2xl font-bold" x-text="kpis.en_conge?.value || '0'"></span>
+                </div>
+                <p class="text-xs text-white/80 mt-2">En congé</p>
+                <div class="flex gap-1 mt-1">
+                    <span class="text-[9px] bg-white/20 px-1 rounded" x-show="kpis.en_conge?.types?.conge > 0" x-text="'CP:' + kpis.en_conge?.types?.conge"></span>
+                    <span class="text-[9px] bg-white/20 px-1 rounded" x-show="kpis.en_conge?.types?.maladie > 0" x-text="'Mal:' + kpis.en_conge?.types?.maladie"></span>
+                </div>
+            </div>
+
+            {{-- Absents --}}
+            <div class="bg-gradient-to-br from-rose-500 to-pink-600 rounded-xl p-4 text-white shadow-lg shadow-rose-500/20">
+                <div class="flex items-center justify-between">
+                    <x-icon name="alert-circle" class="w-5 h-5 opacity-80"/>
+                    <span class="text-2xl font-bold" x-text="kpis.absents_non_justifies?.value || '0'"></span>
+                </div>
+                <p class="text-xs text-white/80 mt-2">Absents injustifiés</p>
+            </div>
+
+            {{-- Heures sup --}}
+            <div class="bg-gradient-to-br from-cyan-500 to-blue-600 rounded-xl p-4 text-white shadow-lg shadow-cyan-500/20">
+                <div class="flex items-center justify-between">
+                    <x-icon name="clock" class="w-5 h-5 opacity-80"/>
+                    <span class="text-2xl font-bold" x-text="kpis.heures_supplementaires?.value || '0'"></span>
+                </div>
+                <p class="text-xs text-white/80 mt-2">Heures sup.</p>
+                <p class="text-[9px] text-white/60"><span x-text="kpis.heures_supplementaires?.count || 0"></span> employés</p>
+            </div>
+
+            {{-- Tâches complétées --}}
+            <div class="bg-gradient-to-br from-emerald-500 to-green-600 rounded-xl p-4 text-white shadow-lg shadow-emerald-500/20">
+                <div class="flex items-center justify-between">
+                    <x-icon name="check-square" class="w-5 h-5 opacity-80"/>
+                    <span class="text-2xl font-bold" x-text="kpis.tasks?.completed || '0'"></span>
+                </div>
+                <p class="text-xs text-white/80 mt-2">Tâches complétées</p>
+                <p class="text-[9px] text-white/60"><span x-text="kpis.tasks?.pending || 0"></span> en attente</p>
+            </div>
+
+            {{-- Stagiaires --}}
+            <div class="bg-gradient-to-br from-indigo-500 to-blue-600 rounded-xl p-4 text-white shadow-lg shadow-indigo-500/20">
+                <div class="flex items-center justify-between">
+                    <x-icon name="user-plus" class="w-5 h-5 opacity-80"/>
+                    <span class="text-2xl font-bold" x-text="kpis.interns?.count || '0'"></span>
+                </div>
+                <p class="text-xs text-white/80 mt-2">Stagiaires actifs</p>
+                <p class="text-[9px] text-white/60"><span x-text="kpis.interns?.to_evaluate || 0"></span> à évaluer</p>
+            </div>
+
+            {{-- Retards à rattraper --}}
+            <div class="bg-[#3506a2] rounded-xl p-4 text-orange-500 shadow-lg shadow-orange-500/20">
+                <div class="flex items-center justify-between text-white">
+                    <x-icon name="alert-triangle" class="w-5 h-5 opacity-80"/>
+                    <span class="text-2xl font-bold" x-text="kpis.late_hours?.total || '0'"></span>
+                </div>
+                <p class="text-xs text-white/80 mt-2">Heures de retard</p>
+                <p class="text-[9px] text-white/60"><span x-text="kpis.late_hours?.employees || 0"></span> employés concernés</p>
             </div>
         </div>
 
@@ -173,11 +246,25 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-fade-in-up animation-delay-300">
             {{-- Evolution presences (Line) - Takes 2 cols --}}
             <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-100 p-5">
-                <h3 class="font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                    <x-icon name="activity" class="w-4 h-4 text-gray-500"/>
-                    Évolution des présences
-                </h3>
-                <div class="h-64 relative w-full">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="font-semibold text-gray-900 flex items-center gap-2">
+                        <div class="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center">
+                            <x-icon name="activity" class="w-4 h-4 text-indigo-600"/>
+                        </div>
+                        Évolution des présences
+                    </h3>
+                    <div class="flex items-center gap-2">
+                        <span class="flex items-center text-xs text-gray-500">
+                            <span class="w-3 h-3 rounded-full bg-indigo-500 mr-1"></span>
+                            Présences
+                        </span>
+                        <span class="flex items-center text-xs text-gray-500">
+                            <span class="w-3 h-3 rounded-full bg-emerald-500 mr-1"></span>
+                            Objectif
+                        </span>
+                    </div>
+                </div>
+                <div class="h-72 relative w-full">
                     <canvas id="presenceTrendChart"></canvas>
                 </div>
             </div>
@@ -185,21 +272,25 @@
             {{-- Repartition departements (Donut) --}}
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
                 <h3 class="font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                    <x-icon name="pie-chart" class="w-4 h-4 text-gray-500"/>
-                    Répartition
+                    <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+                        <x-icon name="pie-chart" class="w-4 h-4 text-purple-600"/>
+                    </div>
+                    Répartition par département
                 </h3>
-                <div class="h-64 relative w-full flex justify-center">
+                <div class="h-72 relative w-full flex justify-center">
                     <canvas id="departmentChart"></canvas>
                 </div>
             </div>
         </div>
 
         {{-- Graphiques Row 2 --}}
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-fade-in-up animation-delay-400">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-fade-in-up animation-delay-350">
             {{-- Recrutements vs Departs --}}
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
                 <h3 class="font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                    <x-icon name="users" class="w-4 h-4 text-gray-500"/>
+                    <div class="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center">
+                        <x-icon name="users" class="w-4 h-4 text-emerald-600"/>
+                    </div>
                     Recrutements vs Départs
                 </h3>
                 <div class="h-64 relative w-full">
@@ -207,35 +298,129 @@
                 </div>
             </div>
 
+            {{-- Répartition par type de contrat (NOUVEAU) --}}
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+                <h3 class="font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                    <div class="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center">
+                        <x-icon name="file-text" class="w-4 h-4 text-amber-600"/>
+                    </div>
+                    Types de contrats
+                </h3>
+                <div class="h-64 relative w-full flex justify-center">
+                    <canvas id="contractTypeChart"></canvas>
+                </div>
+            </div>
+
+            {{-- Performance Tâches (NOUVEAU) --}}
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+                <h3 class="font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                    <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                        <x-icon name="check-square" class="w-4 h-4 text-blue-600"/>
+                    </div>
+                    Performance des tâches
+                </h3>
+                <div class="h-64 relative w-full flex justify-center">
+                    <canvas id="taskPerformanceChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        {{-- Graphiques Row 3 --}}
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-fade-in-up animation-delay-400">
             {{-- Absenteisme par service --}}
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
                 <h3 class="font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                    <x-icon name="user-x" class="w-4 h-4 text-gray-500"/>
+                    <div class="w-8 h-8 bg-rose-100 rounded-lg flex items-center justify-center">
+                        <x-icon name="user-x" class="w-4 h-4 text-rose-600"/>
+                    </div>
                     Taux d'absentéisme par service
                 </h3>
                 <div class="h-64 relative w-full">
                     <canvas id="absenteismChart"></canvas>
                 </div>
             </div>
+
+            {{-- Ponctualité par département (NOUVEAU) --}}
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+                <h3 class="font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                    <div class="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center">
+                        <x-icon name="clock" class="w-4 h-4 text-orange-600"/>
+                    </div>
+                    Ponctualité par département
+                </h3>
+                <div class="h-64 relative w-full">
+                    <canvas id="punctualityChart"></canvas>
+                </div>
+            </div>
         </div>
 
         {{-- Heures par semaine (Area) --}}
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 animate-fade-in-up animation-delay-400">
-            <h3 class="font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                <x-icon name="clock" class="w-4 h-4 text-gray-500"/>
-                Heures travaillées (Total hebdomadaire)
-            </h3>
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 animate-fade-in-up animation-delay-450">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="font-semibold text-gray-900 flex items-center gap-2">
+                    <div class="w-8 h-8 bg-cyan-100 rounded-lg flex items-center justify-center">
+                        <x-icon name="clock" class="w-4 h-4 text-cyan-600"/>
+                    </div>
+                    Heures travaillées (5 dernières semaines)
+                </h3>
+                <div class="text-sm text-gray-500">
+                    Total: <span class="font-bold text-gray-900" x-text="charts.heures_travaillees_semaine?.total || 0"></span>h
+                </div>
+            </div>
             <div class="h-64 relative w-full">
                 <canvas id="weeklyHoursChart"></canvas>
             </div>
         </div>
 
+        {{-- Insights & Recommendations (NOUVEAU) --}}
+        <div class="bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 rounded-xl border border-indigo-100 p-6 animate-fade-in-up animation-delay-500">
+            <div class="flex items-start gap-4">
+                <div class="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <x-icon name="zap" class="w-6 h-6 text-white"/>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-gray-900 mb-2">Insights & Recommandations</h3>
+                    <div class="space-y-2">
+                        <div class="flex items-center gap-2 text-sm" x-show="kpis.turnover?.rate > 10">
+                            <span class="w-2 h-2 rounded-full bg-red-500"></span>
+                            <span class="text-gray-700">Taux de turnover élevé (<span x-text="kpis.turnover?.rate"></span>%) - Analyser les causes de départ</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-sm" x-show="kpis.presents_today?.percentage < 80">
+                            <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                            <span class="text-gray-700">Taux de présence faible (<span x-text="kpis.presents_today?.percentage"></span>%) - Vérifier les absences non justifiées</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-sm" x-show="kpis.interns?.to_evaluate > 0">
+                            <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+                            <span class="text-gray-700"><span x-text="kpis.interns?.to_evaluate"></span> stagiaire(s) en attente d'évaluation cette semaine</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-sm" x-show="kpis.late_hours?.total > 10">
+                            <span class="w-2 h-2 rounded-full bg-orange-500"></span>
+                            <span class="text-gray-700"><span x-text="kpis.late_hours?.total"></span>h de retard cumulées - Planifier des sessions de rattrapage</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-sm" x-show="tables.pending?.length > 5">
+                            <span class="w-2 h-2 rounded-full bg-purple-500"></span>
+                            <span class="text-gray-700"><span x-text="tables.pending?.length"></span> demandes de congés en attente de validation</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-sm" x-show="kpis.turnover?.rate <= 10 && kpis.presents_today?.percentage >= 80">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                            <span class="text-gray-700">Les indicateurs RH sont dans la norme. Continuez ainsi !</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         {{-- Tableaux Grid --}}
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-fade-in-up animation-delay-500">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-fade-in-up animation-delay-550">
             {{-- Activité récente --}}
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                <div class="p-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
-                    <h3 class="font-semibold text-gray-900">Activité Récente</h3>
+                <div class="p-4 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white flex justify-between items-center">
+                    <h3 class="font-semibold text-gray-900 flex items-center gap-2">
+                        <div class="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center">
+                            <x-icon name="activity" class="w-4 h-4 text-indigo-600"/>
+                        </div>
+                        Activité Récente
+                    </h3>
                 </div>
                 <div class="divide-y divide-gray-100 max-h-80 overflow-y-auto">
                     <template x-for="(activity, index) in tables.activities" :key="index">
@@ -263,9 +448,14 @@
 
             {{-- Demandes en attente --}}
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                <div class="p-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
-                    <h3 class="font-semibold text-gray-900">Demandes en attente</h3>
-                    <span class="bg-yellow-100 text-yellow-700 text-xs font-bold px-2 py-0.5 rounded-full" x-show="tables.pending.length > 0" x-text="tables.pending.length"></span>
+                <div class="p-4 border-b border-gray-100 bg-gradient-to-r from-amber-50 to-white flex justify-between items-center">
+                    <h3 class="font-semibold text-gray-900 flex items-center gap-2">
+                        <div class="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center">
+                            <x-icon name="clock" class="w-4 h-4 text-amber-600"/>
+                        </div>
+                        Demandes en attente
+                    </h3>
+                    <span class="bg-amber-500 text-white text-xs font-bold px-2.5 py-1 rounded-full animate-pulse" x-show="tables.pending.length > 0" x-text="tables.pending.length"></span>
                 </div>
                 <div class="divide-y divide-gray-100 max-h-80 overflow-y-auto">
                     <template x-for="item in tables.pending" :key="item.id">
@@ -284,7 +474,10 @@
 
             {{-- Alertes RH --}}
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                <div class="p-4 border-b border-gray-100 bg-gray-50">
+                <div class="p-4 border-b border-gray-100 bg-gradient-to-r from-red-50 to-white flex items-center gap-2">
+                    <div class="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center">
+                        <x-icon name="alert-triangle" class="w-4 h-4 text-red-600"/>
+                    </div>
                     <h3 class="font-semibold text-gray-900">Alertes RH</h3>
                 </div>
                 <div class="p-4 space-y-4">
@@ -326,7 +519,10 @@
 
             {{-- Top Retardataires --}}
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                <div class="p-4 border-b border-gray-100 bg-gray-50">
+                <div class="p-4 border-b border-gray-100 bg-gradient-to-r from-orange-50 to-white flex items-center gap-2">
+                    <div class="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center">
+                        <x-icon name="clock" class="w-4 h-4 text-orange-600"/>
+                    </div>
                     <h3 class="font-semibold text-gray-900">Top Retards (Ce mois)</h3>
                 </div>
                 <table class="w-full text-sm">
@@ -369,7 +565,8 @@
         function analyticsPage() {
             return {
                 loading: false,
-                filters: { period: 'month', department_id: '', contract_type: '', custom_month: '12', custom_year: '2025' },
+                lastUpdate: '-',
+                filters: { period: 'month', department_id: '', contract_type: '', custom_month: new Date().getMonth() + 1, custom_year: new Date().getFullYear() },
                 kpis: {},
                 charts: {},
                 tables: {
@@ -382,6 +579,8 @@
 
                 init() {
                     this.loadData();
+                    // Auto-refresh toutes les 5 minutes
+                    setInterval(() => this.loadData(), 300000);
                 },
 
                 async loadData() {
@@ -401,16 +600,20 @@
                         this.kpis = kpis;
                         this.charts = charts;
                         this.tables = { activities, pending, alerts, latecomers };
+                        this.lastUpdate = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
                         
                         this.$nextTick(() => {
                             this.updateCharts();
                         });
                     } catch (error) {
                         console.error('Error loading analytics:', error);
-                        // Optional: Show error toast
                     } finally {
                         this.loading = false;
                     }
+                },
+
+                exportData(format) {
+                    window.open(`{{ route('admin.presences.export.pdf') }}?${new URLSearchParams(this.filters).toString()}`, '_blank');
                 },
 
                 updateCharts() {
@@ -419,6 +622,9 @@
                     this.renderRecruitmentChart();
                     this.renderAbsenteismChart();
                     this.renderWeeklyHoursChart();
+                    this.renderContractTypeChart();
+                    this.renderTaskPerformanceChart();
+                    this.renderPunctualityChart();
                 },
 
                 renderPresenceTrend() {
@@ -559,15 +765,145 @@
                                 label: 'Heures',
                                 data: this.charts.heures_travaillees_semaine?.data || [],
                                 borderColor: '#0EA5E9',
-                                backgroundColor: 'rgba(14, 165, 233, 0.2)',
+                                backgroundColor: 'rgba(14, 165, 233, 0.15)',
                                 fill: true,
-                                tension: 0.4
+                                tension: 0.4,
+                                borderWidth: 3,
+                                pointBackgroundColor: '#0EA5E9',
+                                pointBorderColor: '#fff',
+                                pointBorderWidth: 2,
+                                pointRadius: 5,
+                                pointHoverRadius: 7
                             }]
                         },
                         options: {
                             responsive: true,
                             maintainAspectRatio: false,
-                            scales: { y: { beginAtZero: true } }
+                            plugins: { legend: { display: false } },
+                            scales: { 
+                                y: { beginAtZero: true, grid: { borderDash: [2, 4] } },
+                                x: { grid: { display: false } }
+                            }
+                        }
+                    });
+                },
+
+                renderContractTypeChart() {
+                    const ctx = document.getElementById('contractTypeChart');
+                    if (!ctx) return;
+
+                    if (this.chartInstances.contractType) this.chartInstances.contractType.destroy();
+
+                    this.chartInstances.contractType = new Chart(ctx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: this.charts.contract_types?.labels || [],
+                            datasets: [{
+                                data: this.charts.contract_types?.data || [],
+                                backgroundColor: this.charts.contract_types?.colors || ['#6366F1', '#22C55E', '#F59E0B', '#EC4899'],
+                                borderWidth: 0,
+                                hoverOffset: 4
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            cutout: '65%',
+                            plugins: {
+                                legend: { 
+                                    position: 'bottom', 
+                                    labels: { usePointStyle: true, padding: 15, font: { size: 11 } } 
+                                }
+                            }
+                        }
+                    });
+                },
+
+                renderTaskPerformanceChart() {
+                    const ctx = document.getElementById('taskPerformanceChart');
+                    if (!ctx) return;
+
+                    if (this.chartInstances.taskPerf) this.chartInstances.taskPerf.destroy();
+
+                    const taskData = this.charts.task_performance || {};
+                    this.chartInstances.taskPerf = new Chart(ctx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: ['Complétées', 'En cours', 'Approuvées', 'En attente', 'Annulées'],
+                            datasets: [{
+                                data: [
+                                    taskData.completed || 0,
+                                    taskData.in_progress || 0,
+                                    taskData.approved || 0,
+                                    taskData.pending || 0,
+                                    taskData.cancelled || 0
+                                ],
+                                backgroundColor: ['#22C55E', '#3B82F6', '#8B5CF6', '#F59E0B', '#EF4444'],
+                                borderWidth: 0,
+                                hoverOffset: 4
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            cutout: '65%',
+                            plugins: {
+                                legend: { 
+                                    position: 'bottom', 
+                                    labels: { usePointStyle: true, padding: 10, font: { size: 10 } } 
+                                }
+                            }
+                        }
+                    });
+                },
+
+                renderPunctualityChart() {
+                    const ctx = document.getElementById('punctualityChart');
+                    if (!ctx) return;
+
+                    if (this.chartInstances.punctuality) this.chartInstances.punctuality.destroy();
+
+                    this.chartInstances.punctuality = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: this.charts.punctuality?.labels || [],
+                            datasets: [
+                                {
+                                    label: 'À l\'heure',
+                                    data: this.charts.punctuality?.on_time || [],
+                                    backgroundColor: '#22C55E',
+                                    borderRadius: 4,
+                                    barPercentage: 0.6
+                                },
+                                {
+                                    label: 'En retard',
+                                    data: this.charts.punctuality?.late || [],
+                                    backgroundColor: '#EF4444',
+                                    borderRadius: 4,
+                                    barPercentage: 0.6
+                                }
+                            ]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: { 
+                                    position: 'top',
+                                    labels: { usePointStyle: true, font: { size: 11 } }
+                                }
+                            },
+                            scales: {
+                                y: { 
+                                    beginAtZero: true, 
+                                    stacked: true,
+                                    grid: { borderDash: [2, 4] }
+                                },
+                                x: { 
+                                    stacked: true,
+                                    grid: { display: false } 
+                                }
+                            }
                         }
                     });
                 }

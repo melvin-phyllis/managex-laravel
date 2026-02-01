@@ -206,6 +206,14 @@
                 weight: 2
             }).addTo(map);
 
+            // SÉCURITÉ: Fonction d'échappement HTML pour prévenir les XSS
+            function escapeHtml(text) {
+                if (!text) return '';
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+
             // Mise à jour de la position
             function updatePosition(lat, lng, doReverseGeocode = true) {
                 latInput.value = lat.toFixed(8);
@@ -249,10 +257,13 @@
                     const data = await response.json();
 
                     if (data.length > 0) {
+                        // SÉCURITÉ: Échapper les données de l'API externe pour prévenir XSS
                         searchResults.innerHTML = data.map((item, index) => `
                             <div class="p-3 hover:bg-blue-50 cursor-pointer border-b last:border-b-0 transition"
-                                 data-lat="${item.lat}" data-lng="${item.lon}" data-address="${item.display_name}">
-                                <p class="text-sm text-gray-800">${item.display_name}</p>
+                                 data-lat="${escapeHtml(String(item.lat))}" 
+                                 data-lng="${escapeHtml(String(item.lon))}" 
+                                 data-address="${escapeHtml(item.display_name)}">
+                                <p class="text-sm text-gray-800">${escapeHtml(item.display_name)}</p>
                             </div>
                         `).join('');
                         searchResults.classList.remove('hidden');

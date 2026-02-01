@@ -23,7 +23,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'role',
+        // 'role' - RETIRÉ pour prévenir l'élévation de privilèges via mass assignment
+        // Utiliser setRole() ou $user->role = 'xxx' explicitement
         'poste',
         'telephone',
         'avatar',
@@ -93,6 +94,24 @@ class User extends Authenticatable
             'sick_leave_balance' => 'decimal:2',
             'rtt_balance' => 'decimal:2',
         ];
+    }
+
+    /**
+     * Rôles valides pour l'application
+     */
+    public const VALID_ROLES = ['admin', 'employee'];
+
+    /**
+     * Définir le rôle de manière sécurisée
+     * Cette méthode doit être utilisée au lieu du mass assignment
+     */
+    public function setRole(string $role): self
+    {
+        if (!in_array($role, self::VALID_ROLES)) {
+            throw new \InvalidArgumentException("Rôle invalide: {$role}. Rôles valides: " . implode(', ', self::VALID_ROLES));
+        }
+        $this->role = $role;
+        return $this;
     }
 
     /**

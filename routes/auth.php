@@ -15,23 +15,31 @@ Route::middleware('guest')->group(function () {
     Route::get('register', [RegisteredUserController::class, 'create'])
                 ->name('register');
 
-    Route::post('register', [RegisteredUserController::class, 'store']);
+    // SÉCURITÉ: Rate limit sur l'inscription (5 tentatives par minute)
+    Route::post('register', [RegisteredUserController::class, 'store'])
+                ->middleware('throttle:5,1');
 
     Route::get('login', [AuthenticatedSessionController::class, 'create'])
                 ->name('login');
 
-    Route::post('login', [AuthenticatedSessionController::class, 'store']);
+    // SÉCURITÉ: Rate limit sur le login (géré aussi dans LoginRequest)
+    Route::post('login', [AuthenticatedSessionController::class, 'store'])
+                ->middleware('throttle:10,1');
 
     Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
                 ->name('password.request');
 
+    // SÉCURITÉ: Rate limit sur la demande de reset (3 tentatives par minute)
     Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])
+                ->middleware('throttle:3,1')
                 ->name('password.email');
 
     Route::get('reset-password/{token}', [NewPasswordController::class, 'create'])
                 ->name('password.reset');
 
+    // SÉCURITÉ: Rate limit sur le reset de mot de passe
     Route::post('reset-password', [NewPasswordController::class, 'store'])
+                ->middleware('throttle:5,1')
                 ->name('password.store');
 });
 

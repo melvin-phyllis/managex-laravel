@@ -220,6 +220,25 @@ class MessagingController extends Controller
         return redirect()->back()->with('success', 'Message supprimé.');
     }
     /**
+     * Mark conversation as read for current user
+     */
+    public function markAsRead(Conversation $conversation)
+    {
+        $userId = auth()->id();
+        
+        $participant = $conversation->participants()
+            ->where('user_id', $userId)
+            ->whereNull('left_at')
+            ->first();
+        
+        if ($participant) {
+            $participant->update(['last_read_at' => now()]);
+        }
+        
+        return response()->json(['success' => true]);
+    }
+
+    /**
      * Get messages for a conversation (API)
      */
     public function getMessages(Request $request, Conversation $conversation)

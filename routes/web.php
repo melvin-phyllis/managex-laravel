@@ -29,104 +29,117 @@ use App\Http\Controllers\Tutor\InternEvaluationController as TutorInternEvaluati
 use App\Http\Controllers\Employee\InternEvaluationController as EmployeeInternEvaluationController;
 use Illuminate\Support\Facades\Route;
 
-// Temporary Seed Interns Route
-Route::get('/seed-interns', function () {
-    try {
-        $department = \App\Models\Department::first();
-        $tutor = \App\Models\User::where('role', 'admin')->first();
-        if (!$department || !$tutor) return response()->json(['error' => 'Missing department or tutor']);
-        
-        $internPosition = \App\Models\Position::firstOrCreate(
-            ['name' => 'Stagiaire'],
-            ['description' => 'Poste de stagiaire', 'department_id' => $department->id]
-        );
+// ============================================================================
+// ROUTES DE DÉVELOPPEMENT - PROTÉGÉES PAR ENVIRONNEMENT + AUTHENTIFICATION
+// Ces routes sont UNIQUEMENT accessibles en environnement local par un admin
+// ============================================================================
+if (app()->environment('local')) {
+    Route::middleware(['auth', 'role:admin'])->prefix('dev')->name('dev.')->group(function () {
+        // Seed Interns Route (DEV ONLY)
+        Route::get('/seed-interns', function () {
+            try {
+                $department = \App\Models\Department::first();
+                $tutor = \App\Models\User::where('role', 'admin')->first();
+                if (!$department || !$tutor) return response()->json(['error' => 'Missing department or tutor']);
+                
+                $internPosition = \App\Models\Position::firstOrCreate(
+                    ['name' => 'Stagiaire'],
+                    ['description' => 'Poste de stagiaire', 'department_id' => $department->id]
+                );
 
-        $interns = [
-            ['name' => 'Koné Aminata', 'email' => 'aminata.kone@stagiaire.managex.com'],
-            ['name' => 'Traoré Ibrahim', 'email' => 'ibrahim.traore@stagiaire.managex.com'],
-            ['name' => 'Kouassi Marie', 'email' => 'marie.kouassi@stagiaire.managex.com'],
-            ['name' => 'Diallo Moussa', 'email' => 'moussa.diallo@stagiaire.managex.com'],
-            ['name' => 'Bamba Fatou', 'email' => 'fatou.bamba@stagiaire.managex.com'],
-        ];
+                $interns = [
+                    ['name' => 'Koné Aminata', 'email' => 'aminata.kone@stagiaire.managex.com'],
+                    ['name' => 'Traoré Ibrahim', 'email' => 'ibrahim.traore@stagiaire.managex.com'],
+                    ['name' => 'Kouassi Marie', 'email' => 'marie.kouassi@stagiaire.managex.com'],
+                    ['name' => 'Diallo Moussa', 'email' => 'moussa.diallo@stagiaire.managex.com'],
+                    ['name' => 'Bamba Fatou', 'email' => 'fatou.bamba@stagiaire.managex.com'],
+                ];
 
-        $created = [];
-        foreach ($interns as $i => $data) {
-            $intern = \App\Models\User::updateOrCreate(['email' => $data['email']], [
-                'name' => $data['name'], 'password' => bcrypt('password123'), 'role' => 'employee', 'status' => 'active',
-                'department_id' => $department->id, 'position_id' => $internPosition->id, 'hire_date' => now()->subMonths(rand(1, 3)),
-                'employee_id' => 'STG-' . str_pad($i + 1, 3, '0', STR_PAD_LEFT), 'contract_type' => 'stage', 'supervisor_id' => $tutor->id,
-            ]);
-            $created[] = $intern;
-        }
+                $created = [];
+                foreach ($interns as $i => $data) {
+                    $intern = \App\Models\User::updateOrCreate(['email' => $data['email']], [
+                        'name' => $data['name'], 
+                        'password' => bcrypt(\Illuminate\Support\Str::random(16)), // Mot de passe aléatoire sécurisé
+                        'status' => 'active',
+                        'department_id' => $department->id, 
+                        'position_id' => $internPosition->id, 
+                        'hire_date' => now()->subMonths(rand(1, 3)),
+                        'employee_id' => 'STG-' . str_pad($i + 1, 3, '0', STR_PAD_LEFT), 
+                        'contract_type' => 'stage', 
+                        'supervisor_id' => $tutor->id,
+                    ]);
+                    // Définir le rôle de manière sécurisée
+                    $intern->setRole('employee')->save();
+                    $created[] = $intern;
+                }
 
-        $evalCount = 0;
-        foreach ($created as $i => $intern) {
-            for ($w = 0; $w < rand(4, 8); $w++) {
-                $weekStart = \Carbon\Carbon::now()->subWeeks($w)->startOfWeek();
-                if (\App\Models\InternEvaluation::where('intern_id', $intern->id)->where('week_start', $weekStart)->exists()) continue;
-                \App\Models\InternEvaluation::create([
-                    'intern_id' => $intern->id, 'tutor_id' => $tutor->id, 'week_start' => $weekStart,
-                    'discipline_score' => min(2.5, max(0.5, 1.5 + $i * 0.15 + rand(-5, 5) / 10)),
-                    'behavior_score' => min(2.5, max(0.5, 1.5 + $i * 0.15 + rand(-5, 5) / 10)),
-                    'skills_score' => min(2.5, max(0.5, 1.5 + $i * 0.15 + rand(-3, 7) / 10)),
-                    'communication_score' => min(2.5, max(0.5, 1.5 + $i * 0.15 + rand(-5, 5) / 10)),
-                    'discipline_comment' => 'Bon respect des horaires.', 'behavior_comment' => 'Attitude professionnelle.',
-                    'skills_comment' => 'Bonne progression.', 'communication_comment' => 'Communication claire.',
-                    'general_comment' => 'Semaine positive.', 'objectives_next_week' => 'Continuer les efforts.',
-                    'status' => 'submitted', 'submitted_at' => $weekStart->copy()->addDays(5),
-                ]);
-                $evalCount++;
+                $evalCount = 0;
+                foreach ($created as $i => $intern) {
+                    for ($w = 0; $w < rand(4, 8); $w++) {
+                        $weekStart = \Carbon\Carbon::now()->subWeeks($w)->startOfWeek();
+                        if (\App\Models\InternEvaluation::where('intern_id', $intern->id)->where('week_start', $weekStart)->exists()) continue;
+                        \App\Models\InternEvaluation::create([
+                            'intern_id' => $intern->id, 'tutor_id' => $tutor->id, 'week_start' => $weekStart,
+                            'discipline_score' => min(2.5, max(0.5, 1.5 + $i * 0.15 + rand(-5, 5) / 10)),
+                            'behavior_score' => min(2.5, max(0.5, 1.5 + $i * 0.15 + rand(-5, 5) / 10)),
+                            'skills_score' => min(2.5, max(0.5, 1.5 + $i * 0.15 + rand(-3, 7) / 10)),
+                            'communication_score' => min(2.5, max(0.5, 1.5 + $i * 0.15 + rand(-5, 5) / 10)),
+                            'discipline_comment' => 'Bon respect des horaires.', 'behavior_comment' => 'Attitude professionnelle.',
+                            'skills_comment' => 'Bonne progression.', 'communication_comment' => 'Communication claire.',
+                            'general_comment' => 'Semaine positive.', 'objectives_next_week' => 'Continuer les efforts.',
+                            'status' => 'submitted', 'submitted_at' => $weekStart->copy()->addDays(5),
+                        ]);
+                        $evalCount++;
+                    }
+                }
+                return response()->json(['success' => true, 'interns' => count($created), 'evaluations' => $evalCount]);
+            } catch (\Exception $e) {
+                return response()->json(['error' => $e->getMessage(), 'line' => $e->getLine()], 500);
             }
-        }
-        return response()->json(['success' => true, 'interns' => count($created), 'evaluations' => $evalCount]);
-    } catch (\Exception $e) {
-        return response()->json(['error' => $e->getMessage(), 'line' => $e->getLine()], 500);
-    }
-});
+        })->name('seed-interns');
 
-// Temporary Test Route
-Route::get('/test-payroll-civ', function () {
-    $user = \App\Models\User::where('role', 'employee')->first();
-    if (!$user) return 'No employee found. Create an employee first.';
+        // Test Payroll Route (DEV ONLY)
+        Route::get('/test-payroll-civ', function () {
+            $user = \App\Models\User::where('role', 'employee')->first();
+            if (!$user) return 'No employee found. Create an employee first.';
 
-    // Ensure user has contract
-    if (!$user->currentContract) {
-         // Create dummy contract
-         \App\Models\Contract::create([
-            'user_id' => $user->id,
-            'base_salary' => 500000,
-            'start_date' => now()->subYear(),
-            'contract_type' => 'cdi',
-            'is_current' => true
-         ]);
-         $user->refresh();
-    }
-    
-    // Create service
-    $service = new \App\Services\Payroll\PayrollService();
-    
-    // Generate Payroll (will save to DB, which is fine for a test)
-    try {
-        $payroll = $service->calculatePayroll($user, now()->month, now()->year, [
-            'transport_allowance' => 30000,
-            'housing_allowance' => 50000,
-            'bonuses' => 15000
-        ]);
-        
-        $payroll->load(['user', 'items']);
-        
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pdf.payroll-civ', [
-                'payroll' => $payroll,
-                'user' => $payroll->user,
-                'contract' => $payroll->user->currentContract,
-                'generatedAt' => now(),
-        ]);
-        
-        return $pdf->stream('bulletin-test.pdf');
-    } catch (\Exception $e) {
-        return "Error: " . $e->getMessage();
-    }
-});
+            if (!$user->currentContract) {
+                \App\Models\Contract::create([
+                    'user_id' => $user->id,
+                    'base_salary' => 500000,
+                    'start_date' => now()->subYear(),
+                    'contract_type' => 'cdi',
+                    'is_current' => true
+                ]);
+                $user->refresh();
+            }
+            
+            $service = new \App\Services\Payroll\PayrollService();
+            
+            try {
+                $payroll = $service->calculatePayroll($user, now()->month, now()->year, [
+                    'transport_allowance' => 30000,
+                    'housing_allowance' => 50000,
+                    'bonuses' => 15000
+                ]);
+                
+                $payroll->load(['user', 'items']);
+                
+                $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pdf.payroll-civ', [
+                        'payroll' => $payroll,
+                        'user' => $payroll->user,
+                        'contract' => $payroll->user->currentContract,
+                        'generatedAt' => now(),
+                ]);
+                
+                return $pdf->stream('bulletin-test.pdf');
+            } catch (\Exception $e) {
+                return "Error: " . $e->getMessage();
+            }
+        })->name('test-payroll');
+    });
+}
+// ============================================================================
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -175,6 +188,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::post('/tasks/{task}/approve', [AdminTaskController::class, 'approve'])->name('tasks.approve');
     Route::post('/tasks/{task}/reject', [AdminTaskController::class, 'reject'])->name('tasks.reject');
     Route::post('/tasks/{task}/validate', [AdminTaskController::class, 'validate'])->name('tasks.validate');
+    Route::post('/tasks/{task}/update-status', [AdminTaskController::class, 'updateStatus'])->name('tasks.update-status');
     Route::delete('/tasks/{task}', [AdminTaskController::class, 'destroy'])->name('tasks.destroy');
 
     // Gestion des congés
@@ -225,6 +239,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     // Paramètres
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');
     Route::put('/settings', [SettingsController::class, 'update'])->name('settings.update');
+    Route::put('/settings/email', [SettingsController::class, 'updateEmail'])->name('settings.update-email');
+    Route::put('/settings/password', [SettingsController::class, 'updatePassword'])->name('settings.update-password');
 
     // Départements (dans settings)
     Route::post('/settings/departments', [SettingsController::class, 'storeDepartment'])->name('settings.departments.store');
@@ -248,6 +264,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::delete('/messaging/messages/{message}', [\App\Http\Controllers\Admin\MessagingController::class, 'deleteMessage'])->name('messaging.message.delete');
     Route::get('/messaging/{conversation}/messages', [\App\Http\Controllers\Admin\MessagingController::class, 'getMessages'])->name('messaging.messages.index');
     Route::post('/messaging/{conversation}/messages', [\App\Http\Controllers\Admin\MessagingController::class, 'storeMessage'])->name('messaging.messages.store');
+    Route::post('/messaging/{conversation}/read', [\App\Http\Controllers\Admin\MessagingController::class, 'markAsRead'])->name('messaging.read');
 
     // Notifications admin
     Route::post('/notifications/{id}/read', [AdminDashboardController::class, 'markNotificationAsRead'])->name('notifications.read');
@@ -346,23 +363,33 @@ Route::middleware(['auth', 'role:employee'])->prefix('employee')->name('employee
     Route::post('/notifications/{id}/read', [EmployeeDashboardController::class, 'markNotificationAsRead'])->name('notifications.read');
     Route::post('/notifications/read-all', [EmployeeDashboardController::class, 'markAllNotificationsAsRead'])->name('notifications.read-all');
 
-    // Présences
+    // Présences (rate limiting pour éviter les abus)
     Route::get('/presences', [EmployeePresenceController::class, 'index'])->name('presences.index');
-    Route::post('/presences/check-in', [EmployeePresenceController::class, 'checkIn'])->name('presences.check-in');
-    Route::post('/presences/check-out', [EmployeePresenceController::class, 'checkOut'])->name('presences.check-out');
+    Route::post('/presences/check-in', [EmployeePresenceController::class, 'checkIn'])
+        ->middleware('throttle:5,1') // 5 tentatives par minute
+        ->name('presences.check-in');
+    Route::post('/presences/check-out', [EmployeePresenceController::class, 'checkOut'])
+        ->middleware('throttle:5,1')
+        ->name('presences.check-out');
     // Sessions de rattrapage (jours non travaillés)
-    Route::post('/presences/recovery/start', [EmployeePresenceController::class, 'startRecoverySession'])->name('presences.recovery.start');
-    Route::post('/presences/recovery/end', [EmployeePresenceController::class, 'endRecoverySession'])->name('presences.recovery.end');
+    Route::post('/presences/recovery/start', [EmployeePresenceController::class, 'startRecoverySession'])
+        ->middleware('throttle:5,1')
+        ->name('presences.recovery.start');
+    Route::post('/presences/recovery/end', [EmployeePresenceController::class, 'endRecoverySession'])
+        ->middleware('throttle:5,1')
+        ->name('presences.recovery.end');
 
     // Tâches (assignées par l'admin, l'employé peut seulement voir et mettre à jour la progression)
     Route::get('/tasks', [EmployeeTaskController::class, 'index'])->name('tasks.index');
     Route::get('/tasks/{task}', [EmployeeTaskController::class, 'show'])->name('tasks.show');
     Route::patch('/tasks/{task}/progress', [EmployeeTaskController::class, 'updateProgress'])->name('tasks.progress');
 
-    // Congés
+    // Congés (rate limiting sur la création)
     Route::get('/leaves', [EmployeeLeaveController::class, 'index'])->name('leaves.index');
     Route::get('/leaves/create', [EmployeeLeaveController::class, 'create'])->name('leaves.create');
-    Route::post('/leaves', [EmployeeLeaveController::class, 'store'])->name('leaves.store');
+    Route::post('/leaves', [EmployeeLeaveController::class, 'store'])
+        ->middleware('throttle:10,1') // 10 demandes par minute
+        ->name('leaves.store');
     Route::get('/leaves/{leave}', [EmployeeLeaveController::class, 'show'])->name('leaves.show');
     Route::delete('/leaves/{leave}', [EmployeeLeaveController::class, 'destroy'])->name('leaves.destroy');
 

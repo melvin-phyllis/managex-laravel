@@ -13,19 +13,36 @@ use Illuminate\Support\Str;
 class AttachmentController extends Controller
 {
     /**
-     * Allowed file types and max size
+     * Allowed file types (MIME type => extensions autorisées)
+     * SÉCURITÉ: Validation double MIME type + extension
      */
     protected array $allowedTypes = [
-        'image/jpeg', 'image/png', 'image/gif', 'image/webp',
-        'application/pdf',
-        'application/msword',
-        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-        'application/vnd.ms-excel',
-        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        'application/vnd.ms-powerpoint',
-        'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-        'video/mp4', 'video/webm',
-        'audio/mpeg', 'audio/wav', 'audio/ogg',
+        'image/jpeg' => ['jpg', 'jpeg'],
+        'image/png' => ['png'],
+        'image/gif' => ['gif'],
+        'image/webp' => ['webp'],
+        'application/pdf' => ['pdf'],
+        'application/msword' => ['doc'],
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document' => ['docx'],
+        'application/vnd.ms-excel' => ['xls'],
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' => ['xlsx'],
+        'application/vnd.ms-powerpoint' => ['ppt'],
+        'application/vnd.openxmlformats-officedocument.presentationml.presentation' => ['pptx'],
+        'video/mp4' => ['mp4'],
+        'video/webm' => ['webm'],
+        'audio/mpeg' => ['mp3'],
+        'audio/wav' => ['wav'],
+        'audio/ogg' => ['ogg'],
+    ];
+
+    /**
+     * Extensions dangereuses à bloquer absolument
+     */
+    protected array $dangerousExtensions = [
+        'php', 'phtml', 'php3', 'php4', 'php5', 'php7', 'phar',
+        'exe', 'bat', 'cmd', 'sh', 'bash', 'ps1',
+        'js', 'vbs', 'wsf', 'hta',
+        'jar', 'jsp', 'asp', 'aspx',
     ];
 
     protected int $maxSize = 25 * 1024 * 1024; // 25 MB
@@ -50,21 +67,42 @@ class AttachmentController extends Controller
         $attachments = [];
 
         foreach ($request->file('files') as $file) {
-            // Validate mime type
-            if (!in_array($file->getMimeType(), $this->allowedTypes)) {
+            $mimeType = $file->getMimeType();
+            $extension = strtolower($file->getClientOriginalExtension());
+
+            // SÉCURITÉ: Bloquer les extensions dangereuses
+            if (in_array($extension, $this->dangerousExtensions)) {
+                return response()->json([
+                    'error' => "Extension de fichier non autorisée: .{$extension}"
+                ], 422);
+            }
+
+            // SÉCURITÉ: Valider le MIME type
+            if (!array_key_exists($mimeType, $this->allowedTypes)) {
                 return response()->json([
                     'error' => "Type de fichier non autorisé: {$file->getClientOriginalName()}"
                 ], 422);
             }
 
-            // Generate unique filename
-            $filename = Str::uuid() . '.' . $file->getClientOriginalExtension();
-            $path = $file->storeAs('messaging/attachments/' . date('Y/m'), $filename, 'public');
+            // SÉCURITÉ: Vérifier que l'extension correspond au MIME type
+            $allowedExtensions = $this->allowedTypes[$mimeType];
+            if (!in_array($extension, $allowedExtensions)) {
+                return response()->json([
+                    'error' => "Extension '{$extension}' non valide pour ce type de fichier"
+                ], 422);
+            }
+
+            // SÉCURITÉ: Générer un nom de fichier sécurisé (UUID + extension validée)
+            $safeExtension = $allowedExtensions[0]; // Utiliser l'extension standard
+            $filename = Str::uuid() . '.' . $safeExtension;
+            
+            // SÉCURITÉ: Stockage privé (non accessible publiquement)
+            $path = $file->storeAs('messaging/attachments/' . date('Y/m'), $filename, 'local');
 
             $attachments[] = [
                 'original_name' => $file->getClientOriginalName(),
                 'path' => $path,
-                'mime_type' => $file->getMimeType(),
+                'mime_type' => $mimeType,
                 'size' => $file->getSize(),
                 'metadata' => $this->getFileMetadata($file),
             ];
@@ -101,7 +139,8 @@ class AttachmentController extends Controller
                 'attachments' => $message->attachments->map(fn ($a) => [
                     'id' => $a->id,
                     'name' => $a->original_name,
-                    'url' => Storage::url($a->path),
+                    // SÉCURITÉ: URL de téléchargement authentifiée au lieu d'accès direct
+                    'url' => route('messaging.attachments.download', $a),
                     'type' => $a->mime_type,
                     'size' => $a->human_size,
                     'is_image' => $a->isImage(),
@@ -113,9 +152,31 @@ class AttachmentController extends Controller
     }
 
     /**
-     * Download an attachment
+     * Download an attachment (stockage privé sécurisé)
      */
     public function download(Attachment $attachment)
+    {
+        $user = auth()->user();
+        $conversation = $attachment->message->conversation;
+
+        // SÉCURITÉ: Vérifier que l'utilisateur a accès à cette conversation
+        if (!$conversation->hasParticipant($user->id)) {
+            abort(403, 'Accès non autorisé à ce fichier.');
+        }
+
+        // SÉCURITÉ: Vérifier que le fichier existe
+        if (!Storage::disk('local')->exists($attachment->path)) {
+            abort(404, 'Fichier introuvable.');
+        }
+
+        // Servir le fichier depuis le stockage privé
+        return Storage::disk('local')->download($attachment->path, $attachment->original_name);
+    }
+    
+    /**
+     * Afficher une image (pour les previews)
+     */
+    public function show(Attachment $attachment)
     {
         $user = auth()->user();
         $conversation = $attachment->message->conversation;
@@ -124,7 +185,11 @@ class AttachmentController extends Controller
             abort(403);
         }
 
-        return Storage::download($attachment->path, $attachment->original_name);
+        if (!$attachment->isImage()) {
+            abort(404);
+        }
+
+        return Storage::disk('local')->response($attachment->path);
     }
 
     /**

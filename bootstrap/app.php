@@ -12,10 +12,26 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        // Alias pour le middleware de rôle
         $middleware->alias([
             'role' => \App\Http\Middleware\RoleMiddleware::class,
         ]);
-        $middleware->trustProxies(at: '*');
+
+        // Ajouter les en-têtes de sécurité à toutes les requêtes web
+        $middleware->appendToGroup('web', [
+            \App\Http\Middleware\SecurityHeaders::class,
+        ]);
+
+        // SÉCURITÉ: Configuration des proxies de confiance
+        // En production, remplacer '*' par les IPs de vos proxies/load balancers
+        // Exemple: TRUSTED_PROXIES=192.168.1.1,10.0.0.0/8
+        $trustedProxies = env('TRUSTED_PROXIES');
+        if ($trustedProxies) {
+            $middleware->trustProxies(at: explode(',', $trustedProxies));
+        } elseif (env('APP_ENV') === 'local') {
+            $middleware->trustProxies(at: '*');
+        }
+        // Note: En production sans TRUSTED_PROXIES défini, aucun proxy n'est approuvé
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

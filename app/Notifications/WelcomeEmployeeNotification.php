@@ -5,21 +5,25 @@ namespace App\Notifications;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\Password;
 
 class WelcomeEmployeeNotification extends Notification
 {
     use Queueable;
 
-    public string $password;
     public string $employeeName;
+    protected ?string $resetToken = null;
 
     /**
      * Create a new notification instance.
+     * 
+     * @param string $employeeName Le nom de l'employé
+     * @param string|null $resetToken Token de réinitialisation (optionnel, généré automatiquement si null)
      */
-    public function __construct(string $password, string $employeeName)
+    public function __construct(string $employeeName, ?string $resetToken = null)
     {
-        $this->password = $password;
         $this->employeeName = $employeeName;
+        $this->resetToken = $resetToken;
     }
 
     /**
@@ -37,18 +41,26 @@ class WelcomeEmployeeNotification extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
-        $appUrl = config('app.url');
         $appName = config('app.name');
+        
+        // Générer le token de réinitialisation si non fourni
+        $token = $this->resetToken ?? Password::broker()->createToken($notifiable);
+        
+        // URL sécurisée pour définir le mot de passe
+        $resetUrl = url(route('password.reset', [
+            'token' => $token,
+            'email' => $notifiable->email,
+        ], false));
 
         return (new MailMessage)
-            ->subject("Bienvenue sur {$appName} - Vos identifiants de connexion")
+            ->subject("Bienvenue sur {$appName} - Activez votre compte")
             ->greeting("Bonjour {$this->employeeName},")
             ->line("Votre compte employé a été créé avec succès sur la plateforme {$appName}.")
-            ->line('Voici vos identifiants de connexion :')
-            ->line("**Email :** {$notifiable->email}")
-            ->line("**Mot de passe :** {$this->password}")
-            ->action('Se connecter', url('/login'))
-            ->line('Pour des raisons de sécurité, nous vous recommandons de changer votre mot de passe après votre première connexion.')
+            ->line('Pour activer votre compte, veuillez définir votre mot de passe en cliquant sur le bouton ci-dessous :')
+            ->line("**Votre email de connexion :** {$notifiable->email}")
+            ->action('Définir mon mot de passe', $resetUrl)
+            ->line('Ce lien expirera dans 60 minutes.')
+            ->line('Si vous n\'avez pas demandé la création de ce compte, aucune action n\'est requise.')
             ->line('Si vous avez des questions, n\'hésitez pas à contacter votre responsable RH.')
             ->salutation("Cordialement,\nL'équipe {$appName}");
     }
@@ -63,7 +75,7 @@ class WelcomeEmployeeNotification extends Notification
         return [
             'type' => 'welcome',
             'title' => 'Bienvenue !',
-            'message' => 'Votre compte a été créé. Vérifiez votre email pour vos identifiants de connexion.',
+            'message' => 'Votre compte a été créé. Vérifiez votre email pour activer votre compte.',
             'icon' => 'user-plus',
             'color' => 'green',
         ];
