@@ -60,7 +60,7 @@ class ConversationController extends Controller
                     'id' => $conv->id,
                     'type' => $conv->type,
                     'name' => $conv->name ?? $otherUser?->name ?? 'Conversation',
-                    'other_user' => $otherUser ? ['name' => $otherUser->name, 'avatar' => $otherUser->avatar] : null,
+                    'other_user' => $otherUser ? ['name' => $otherUser->name, 'avatar' => $otherUser->avatar ? avatar_url($otherUser->avatar) : null] : null,
                     'last_message' => $conv->latestMessage?->content,
                     'last_message_at' => $conv->latestMessage?->created_at,
                     'unread_count' => $conv->unread_count ?? 0,
@@ -122,7 +122,7 @@ class ConversationController extends Controller
                     'other_user' => $otherUser ? [
                         'id' => $otherUser->id,
                         'name' => $otherUser->name,
-                        'avatar' => $otherUser->avatar ?? null,
+                        'avatar' => $otherUser->avatar ? avatar_url($otherUser->avatar) : null,
                     ] : null,
                     'participants' => $conversation->activeParticipants->map(fn($p) => [
                         'id' => $p->user_id,
@@ -171,7 +171,7 @@ class ConversationController extends Controller
             'participants' => $participants->map(fn ($p) => [
                 'id' => $p->user->id,
                 'name' => $p->user->name,
-                'avatar' => $p->user->avatar,
+                'avatar' => $p->user->avatar ? avatar_url($p->user->avatar) : null,
                 'role' => $p->role,
             ]),
         ]);
@@ -341,19 +341,20 @@ class ConversationController extends Controller
     }
 
     /**
-     * Get conversation avatar for a user
+     * Get conversation avatar for a user (returns full URL)
      */
     private function getConversationAvatar(Conversation $conversation, User $user): ?string
     {
         if ($conversation->avatar) {
-            return $conversation->avatar;
+            return avatar_url($conversation->avatar);
         }
 
         if ($conversation->type === 'direct') {
             $otherParticipant = $conversation->activeParticipants
                 ->where('user_id', '!=', $user->id)
                 ->first();
-            return $otherParticipant?->user?->avatar;
+            $avatarPath = $otherParticipant?->user?->avatar;
+            return $avatarPath ? avatar_url($avatarPath) : null;
         }
 
         return null;

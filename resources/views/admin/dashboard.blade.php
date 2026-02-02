@@ -416,14 +416,24 @@
             }
         });
 
-        // Auto-refresh stats
+        // Auto-refresh stats (only when page is visible)
+        let isPageVisible = true;
+        document.addEventListener('visibilitychange', () => {
+            isPageVisible = !document.hidden;
+        });
+
         setInterval(async () => {
+            if (!isPageVisible) return; // Skip if tab is hidden
             try {
                 const response = await fetch('{{ route("admin.stats") }}');
+                if (!response.ok) return;
                 const data = await response.json();
-                console.log('Stats updated:', data);
+                // Update stats silently (no console log in production)
+                if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                    console.log('Stats updated:', data);
+                }
             } catch (error) {
-                console.error('Error fetching stats:', error);
+                // Silently ignore network errors (tab hidden, network suspended, etc.)
             }
         }, 60000);
     </script>

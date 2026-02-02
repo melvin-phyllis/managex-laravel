@@ -271,7 +271,7 @@
                                     <div class="flex items-center justify-between mt-3">
                                         <div class="flex items-center gap-2">
                                             @if($task->user->avatar)
-                                                <img class="w-6 h-6 rounded-full object-cover ring-2 ring-white" src="{{ Storage::url($task->user->avatar) }}" alt="{{ $task->user->name }}">
+                                                <img class="w-6 h-6 rounded-full object-cover ring-2 ring-white" src="{{ avatar_url($task->user->avatar) }}" alt="{{ $task->user->name }}">
                                             @else
                                                 <div class="w-6 h-6 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center ring-2 ring-white">
                                                     <span class="text-white font-bold text-[10px]">{{ strtoupper(substr($task->user->name, 0, 2)) }}</span>
@@ -346,7 +346,7 @@
                             <div class="flex items-center gap-3">
                                 <div class="flex-shrink-0 h-8 w-8">
                                     @if($task->user->avatar)
-                                        <img class="h-8 w-8 rounded-full object-cover ring-2 ring-white shadow-sm" src="{{ Storage::url($task->user->avatar) }}" alt="{{ $task->user->name }}">
+                                        <img class="h-8 w-8 rounded-full object-cover ring-2 ring-white shadow-sm" src="{{ avatar_url($task->user->avatar) }}" alt="{{ $task->user->name }}">
                                     @else
                                         <div class="h-8 w-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center ring-2 ring-white shadow-sm">
                                             <span class="text-white font-bold text-xs">{{ strtoupper(substr($task->user->name, 0, 2)) }}</span>

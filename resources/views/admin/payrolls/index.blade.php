@@ -85,7 +85,7 @@
                                     <div class="flex items-center">
                                         <div class="flex-shrink-0 h-8 w-8">
                                             @if($payroll->user->avatar)
-                                                <img class="h-8 w-8 rounded-full object-cover" src="{{ Storage::url($payroll->user->avatar) }}" alt="{{ $payroll->user->name }}">
+                                                <img class="h-8 w-8 rounded-full object-cover" src="{{ avatar_url($payroll->user->avatar) }}" alt="{{ $payroll->user->name }}">
                                             @else
                                                 <div class="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center">
                                                     <span class="text-blue-600 font-medium text-xs">{{ strtoupper(substr($payroll->user->name, 0, 2)) }}</span>

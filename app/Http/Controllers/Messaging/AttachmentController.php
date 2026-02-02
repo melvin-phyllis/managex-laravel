@@ -132,7 +132,7 @@ class AttachmentController extends Controller
                 'sender' => [
                     'id' => $message->sender->id,
                     'name' => $message->sender->name,
-                    'avatar' => $message->sender->avatar,
+                    'avatar' => $message->sender->avatar ? avatar_url($message->sender->avatar) : null,
                 ],
                 'type' => $message->type,
                 'content' => $message->content,

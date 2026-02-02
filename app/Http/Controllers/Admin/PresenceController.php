@@ -96,7 +96,7 @@ class PresenceController extends Controller
             'employees' => $employees->map(fn($e) => [
                 'id' => $e->id,
                 'name' => $e->name,
-                'avatar' => $e->avatar,
+                'avatar' => $e->avatar ? avatar_url($e->avatar) : null,
                 'department' => $e->department?->name,
                 'department_color' => $e->department?->color,
                 'position' => $e->position?->name,
@@ -213,7 +213,7 @@ class PresenceController extends Controller
             'employees' => $employees->map(fn($e) => [
                 'id' => $e->id,
                 'name' => $e->name,
-                'avatar' => $e->avatar,
+                'avatar' => $e->avatar ? avatar_url($e->avatar) : null,
                 'department' => $e->department?->name,
                 'department_color' => $e->department?->color,
                 'position' => $e->position?->name,

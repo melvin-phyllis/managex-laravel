@@ -1,35 +1,81 @@
-# Docker
-.docker/
-docker-compose*.yml
-Dockerfile*
+# =============================================================================
+# ManageX - Docker Ignore
+# Fichiers et répertoires exclus du contexte de build Docker
+# =============================================================================
 
-# Development
+# Git
+.git
+.gitignore
+.gitattributes
+
+# IDE & Éditeurs
+.idea
+.vscode
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Node modules (sera installé dans le container)
+node_modules
+
+# Vendor (sera installé dans le container)
+vendor
+
+# Environnement local
 .env
 .env.local
 .env.*.local
-node_modules/
-vendor/
+.env.backup
+.env.production.example
+.env.namecheap.example
 
-# IDE
-.idea/
-.vscode/
-*.sublime-*
-
-# Logs
+# Cache et logs Laravel
 storage/logs/*
-!storage/logs/.gitkeep
-
-# Cache
-bootstrap/cache/*
-!bootstrap/cache/.gitkeep
 storage/framework/cache/*
 storage/framework/sessions/*
 storage/framework/views/*
+storage/framework/testing/*
+bootstrap/cache/*.php
 
-# Testing
+# Tests
+tests
+phpunit.xml
 .phpunit.result.cache
-coverage/
+.phpunit.cache
+coverage
 
-# OS
-.DS_Store
-Thumbs.db
+# Documentation (optionnel)
+docs
+*.md
+!README.md
+
+# Docker files (ne pas inclure dans le build)
+docker-compose*.yml
+.dockerignore
+
+# CI/CD
+.github
+.gitlab-ci.yml
+.travis.yml
+Jenkinsfile
+
+# Fichiers de développement
+*.log
+*.sql
+*.sqlite
+*.bak
+*.backup
+npm-debug.log
+yarn-error.log
+
+# Build artifacts (sera généré dans le container)
+public/build
+public/hot
+public/storage
+
+# Fichiers temporaires
+*.tmp
+*.temp
+*.cache

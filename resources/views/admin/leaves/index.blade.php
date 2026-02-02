@@ -192,7 +192,7 @@
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="flex items-center gap-3">
                                         @if($leave->user->avatar)
-                                            <img class="h-10 w-10 rounded-xl object-cover ring-2 ring-white shadow-md" src="{{ Storage::url($leave->user->avatar) }}" alt="{{ $leave->user->name }}">
+                                            <img class="h-10 w-10 rounded-xl object-cover ring-2 ring-white shadow-md" src="{{ avatar_url($leave->user->avatar) }}" alt="{{ $leave->user->name }}">
                                         @else
                                             <div class="h-10 w-10 rounded-xl bg-gradient-to-br from-teal-500 to-cyan-600 flex items-center justify-center ring-2 ring-white shadow-md">
                                                 <span class="text-white font-bold text-xs">{{ strtoupper(substr($leave->user->name, 0, 2)) }}</span>

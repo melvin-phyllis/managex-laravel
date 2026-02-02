@@ -43,7 +43,7 @@
                         <!-- Avatar avec preview -->
                         <div class="lg:col-span-3 flex items-center space-x-6 pb-4 border-b border-gray-100">
                             @if($employee->avatar)
-                                <img src="{{ Storage::url($employee->avatar) }}" alt="{{ $employee->name }}" class="w-20 h-20 rounded-full object-cover border-4 border-white shadow-lg">
+                                <img src="{{ avatar_url($employee->avatar) }}" alt="{{ $employee->name }}" class="w-20 h-20 rounded-full object-cover border-4 border-white shadow-lg">
                             @else
                                 <div class="w-20 h-20 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center shadow-lg">
                                     <span class="text-white font-bold text-2xl">{{ strtoupper(substr($employee->name, 0, 2)) }}</span>

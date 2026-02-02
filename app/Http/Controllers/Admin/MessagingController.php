@@ -71,14 +71,14 @@ class MessagingController extends Controller
                 'type' => $conv->type,
                 'name' => $conv->name,
                 'description' => $conv->description,
-                'avatar' => $conv->avatar,
+                'avatar' => $conv->avatar ? avatar_url($conv->avatar) : null,
                 'unread_count' => $conv->unreadCountFor($user->id),
                 'last_message' => $conv->latestMessage?->content,
                 'last_message_at' => $conv->latestMessage?->created_at?->toIso8601String(),
                 'other_user' => $otherUser ? [
                     'id' => $otherUser->id,
                     'name' => $otherUser->name,
-                    'avatar' => $otherUser->avatar ?? null,
+                    'avatar' => $otherUser->avatar ? avatar_url($otherUser->avatar) : null,
                 ] : null,
                 'participants' => $conv->activeParticipants->map(fn($p) => [
                     'id' => $p->user_id,
@@ -261,12 +261,12 @@ class MessagingController extends Controller
                     'sender' => $m->sender ? [
                         'id' => $m->sender->id,
                         'name' => $m->sender->name,
-                        'avatar' => $m->sender->avatar ?? null,
+                        'avatar' => $m->sender->avatar ? avatar_url($m->sender->avatar) : null,
                     ] : null,
                     'user' => $m->sender ? [
                         'id' => $m->sender->id,
                         'name' => $m->sender->name,
-                        'avatar' => $m->sender->avatar ?? null,
+                        'avatar' => $m->sender->avatar ? avatar_url($m->sender->avatar) : null,
                     ] : null,
                     'content' => $m->content,
                     'attachments' => $m->attachments,
@@ -286,12 +286,12 @@ class MessagingController extends Controller
             'sender' => $m->sender ? [
                 'id' => $m->sender->id,
                 'name' => $m->sender->name,
-                'avatar' => $m->sender->avatar ?? null,
+                'avatar' => $m->sender->avatar ? avatar_url($m->sender->avatar) : null,
             ] : null,
             'user' => $m->sender ? [
                 'id' => $m->sender->id,
                 'name' => $m->sender->name,
-                'avatar' => $m->sender->avatar ?? null,
+                'avatar' => $m->sender->avatar ? avatar_url($m->sender->avatar) : null,
             ] : null,
             'content' => $m->content,
             'attachments' => $m->attachments,
@@ -332,12 +332,12 @@ class MessagingController extends Controller
             'sender' => $message->sender ? [
                 'id' => $message->sender->id,
                 'name' => $message->sender->name,
-                'avatar' => $message->sender->avatar ?? null,
+                'avatar' => $message->sender->avatar ? avatar_url($message->sender->avatar) : null,
             ] : null,
             'user' => $message->sender ? [
                 'id' => $message->sender->id,
                 'name' => $message->sender->name,
-                'avatar' => $message->sender->avatar ?? null,
+                'avatar' => $message->sender->avatar ? avatar_url($message->sender->avatar) : null,
             ] : null,
             'content' => $message->content,
             'created_at' => $message->created_at->toIso8601String(),

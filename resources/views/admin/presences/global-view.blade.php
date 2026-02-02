@@ -161,7 +161,7 @@
                             <td class="py-4 px-5">
                                 <div class="flex items-center gap-3">
                                     @if($employee->avatar)
-                                        <img src="{{ Storage::url($employee->avatar) }}" class="w-10 h-10 rounded-full object-cover">
+                                        <img src="{{ avatar_url($employee->avatar) }}" class="w-10 h-10 rounded-full object-cover">
                                     @else
                                         <div class="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-sm">
                                             {{ strtoupper(substr($employee->name, 0, 2)) }}

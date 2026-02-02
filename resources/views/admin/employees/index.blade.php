@@ -277,7 +277,7 @@
                             <div class="flex items-center gap-3">
                                 <div class="flex-shrink-0 h-10 w-10 relative">
                                     @if($employee->avatar)
-                                        <img class="h-10 w-10 rounded-full object-cover ring-2 ring-white shadow-sm" src="{{ Storage::url($employee->avatar) }}" alt="{{ $employee->name }}">
+                                        <img class="h-10 w-10 rounded-full object-cover ring-2 ring-white shadow-sm" src="{{ avatar_url($employee->avatar) }}" alt="{{ $employee->name }}">
                                     @else
                                         <div class="h-10 w-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center ring-2 ring-white shadow-sm">
                                             <span class="text-white font-bold text-xs">{{ strtoupper(substr($employee->name, 0, 2)) }}</span>

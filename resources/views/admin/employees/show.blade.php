@@ -38,7 +38,7 @@
                     <div class="flex items-center gap-5">
                         <div class="relative">
                             @if($employee->avatar)
-                                <img src="{{ Storage::url($employee->avatar) }}" alt="{{ $employee->name }}" 
+                                <img src="{{ avatar_url($employee->avatar) }}" alt="{{ $employee->name }}" 
                                      class="w-20 h-20 md:w-24 md:h-24 rounded-2xl object-cover border-4 border-white/30 shadow-2xl">
                             @else
                                 <div class="w-20 h-20 md:w-24 md:h-24 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center border-4 border-white/30 shadow-2xl">

@@ -1,5 +1,12 @@
 {{-- Composant de notifications temps réel avec toasts --}}
-<div x-data="realtimeToasts()" class="fixed top-20 right-4 z-50 space-y-2 pointer-events-none" style="z-index: 99999;">
+@php
+    // Déterminer l'URL de polling basée sur le rôle de l'utilisateur
+    $notificationCountUrl = auth()->user()?->role === 'admin' 
+        ? route('admin.notifications.unread-count') 
+        : route('employee.notifications.unread-count');
+@endphp
+
+<div x-data="realtimeToasts('{{ $notificationCountUrl }}')" class="fixed top-20 right-4 z-50 space-y-2 pointer-events-none" style="z-index: 99999;">
     <template x-for="(toast, index) in toasts" :key="toast.id">
         <div x-show="true"
              x-transition:enter="transition ease-out duration-300"
@@ -29,10 +36,11 @@
 </div>
 
 <script>
-function realtimeToasts() {
+function realtimeToasts(notificationCountUrl) {
     return {
         toasts: [],
         toastId: 0,
+        notificationCountUrl: notificationCountUrl,
         
         lastNotificationId: null,
         pollingInterval: null,
@@ -52,17 +60,28 @@ function realtimeToasts() {
         },
 
         startPolling() {
-            if (!window.userId) return;
+            if (!window.userId || !this.notificationCountUrl) return;
             
-            // Polling toutes les 30 secondes
+            // Track page visibility
+            document.addEventListener('visibilitychange', () => {
+                if (!document.hidden) {
+                    this.checkNewNotifications(); // Refresh when tab becomes visible
+                }
+            });
+            
+            // Polling toutes les 30 secondes (only when page is visible)
             this.pollingInterval = setInterval(() => {
-                this.checkNewNotifications();
+                if (!document.hidden) {
+                    this.checkNewNotifications();
+                }
             }, 30000);
         },
 
         async checkNewNotifications() {
+            if (document.hidden) return; // Skip if tab is hidden
+            
             try {
-                const response = await fetch('/notifications/unread-count');
+                const response = await fetch(this.notificationCountUrl);
                 if (response.ok) {
                     const data = await response.json();
                     // Mettre à jour le compteur dans la navbar si différent
@@ -71,7 +90,7 @@ function realtimeToasts() {
                     }));
                 }
             } catch (error) {
-                console.debug('Polling notifications failed:', error);
+                // Silently ignore - network errors are expected when tab is hidden
             }
         },
 

@@ -1,27 +1,49 @@
-# Stage 1: Build assets
+# =============================================================================
+# ManageX - Dockerfile de Production
+# Application Laravel de gestion RH
+# Auteur: Akou Melvin
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Stage 1: Build des assets frontend (Vite + Tailwind)
+# -----------------------------------------------------------------------------
 FROM node:22-alpine AS node-builder
 
 WORKDIR /app
 
-# Copy package files
+# Copy package files pour le cache des dépendances
 COPY package*.json ./
 
-# Install dependencies
-RUN npm ci
+# Installation des dépendances (ci = clean install, plus rapide et reproductible)
+RUN npm ci --silent
 
-# Copy source files for build
+# Copy des fichiers source pour le build
 COPY resources ./resources
 COPY vite.config.js ./
 COPY postcss.config.js ./
 COPY tailwind.config.js ./
 
-# Build assets
+# Build des assets de production
 RUN npm run build
 
-# Stage 2: PHP Application
-FROM php:8.2-fpm-alpine
+# -----------------------------------------------------------------------------
+# Stage 2: Application PHP Laravel
+# -----------------------------------------------------------------------------
+FROM php:8.3-fpm-alpine AS production
 
-# Install system dependencies
+# Labels pour la documentation de l'image
+LABEL maintainer="Akou Melvin"
+LABEL description="ManageX - Système de gestion RH"
+LABEL version="1.0"
+
+# Variables d'environnement pour PHP
+ENV PHP_OPCACHE_ENABLE=1
+ENV PHP_OPCACHE_VALIDATE_TIMESTAMPS=0
+ENV PHP_OPCACHE_MAX_ACCELERATED_FILES=10000
+ENV PHP_OPCACHE_MEMORY_CONSUMPTION=192
+ENV PHP_OPCACHE_MAX_WASTED_PERCENTAGE=10
+
+# Installation des dépendances système
 RUN apk add --no-cache \
     git \
     curl \
@@ -35,9 +57,12 @@ RUN apk add --no-cache \
     libxml2-dev \
     icu-dev \
     supervisor \
-    nginx
+    nginx \
+    shadow \
+    # Pour les health checks
+    fcgi
 
-# Install PHP extensions
+# Installation des extensions PHP
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) \
         pdo \
@@ -52,46 +77,84 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
         opcache \
         xml
 
-# Install Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+# Configuration OPcache pour la production
+RUN echo "opcache.enable=${PHP_OPCACHE_ENABLE}" >> /usr/local/etc/php/conf.d/opcache.ini \
+    && echo "opcache.validate_timestamps=${PHP_OPCACHE_VALIDATE_TIMESTAMPS}" >> /usr/local/etc/php/conf.d/opcache.ini \
+    && echo "opcache.max_accelerated_files=${PHP_OPCACHE_MAX_ACCELERATED_FILES}" >> /usr/local/etc/php/conf.d/opcache.ini \
+    && echo "opcache.memory_consumption=${PHP_OPCACHE_MEMORY_CONSUMPTION}" >> /usr/local/etc/php/conf.d/opcache.ini \
+    && echo "opcache.max_wasted_percentage=${PHP_OPCACHE_MAX_WASTED_PERCENTAGE}" >> /usr/local/etc/php/conf.d/opcache.ini \
+    && echo "opcache.interned_strings_buffer=16" >> /usr/local/etc/php/conf.d/opcache.ini \
+    && echo "opcache.fast_shutdown=1" >> /usr/local/etc/php/conf.d/opcache.ini
 
-# Set working directory
+# Configuration PHP pour la production
+RUN echo "upload_max_filesize=64M" >> /usr/local/etc/php/conf.d/uploads.ini \
+    && echo "post_max_size=64M" >> /usr/local/etc/php/conf.d/uploads.ini \
+    && echo "memory_limit=256M" >> /usr/local/etc/php/conf.d/uploads.ini \
+    && echo "max_execution_time=600" >> /usr/local/etc/php/conf.d/uploads.ini \
+    && echo "max_input_vars=3000" >> /usr/local/etc/php/conf.d/uploads.ini
+
+# Installation de Composer depuis l'image officielle
+COPY --from=composer:2.7 /usr/bin/composer /usr/bin/composer
+
+# Définition du répertoire de travail
 WORKDIR /var/www/html
 
-# Copy composer files first for better caching
+# Copy des fichiers composer pour le cache des dépendances
 COPY composer.json composer.lock ./
 
-# Install PHP dependencies
-RUN composer install --no-dev --no-scripts --no-autoloader --prefer-dist
+# Installation des dépendances PHP (sans dev, optimisé)
+RUN composer install \
+    --no-dev \
+    --no-scripts \
+    --no-autoloader \
+    --prefer-dist \
+    --no-interaction \
+    --optimize-autoloader
 
-# Copy application files
+# Copy de tous les fichiers de l'application
 COPY . .
 
-# Copy built assets from node stage
+# Copy des assets buildés depuis le stage node
 COPY --from=node-builder /app/public/build ./public/build
 
-# Generate optimized autoload
-RUN composer dump-autoload --optimize
+# Génération de l'autoloader optimisé et exécution des scripts post-install
+RUN composer dump-autoload --optimize --classmap-authoritative \
+    && php artisan package:discover --ansi
 
-# Set permissions
+# Création des répertoires de stockage Laravel
+RUN mkdir -p \
+    storage/framework/sessions \
+    storage/framework/views \
+    storage/framework/cache/data \
+    storage/logs \
+    storage/app/public \
+    bootstrap/cache
+
+# Configuration des permissions
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html/storage \
     && chmod -R 755 /var/www/html/bootstrap/cache
 
-# Create storage directories
-RUN mkdir -p storage/framework/{sessions,views,cache} storage/logs bootstrap/cache
+# Création du lien symbolique storage (sera recréé au démarrage si nécessaire)
+RUN php artisan storage:link || true
 
-# Copy nginx configuration
+# Copy des configurations Docker
 COPY docker/nginx.conf /etc/nginx/http.d/default.conf
-
-# Copy supervisor configuration
 COPY docker/supervisord.conf /etc/supervisord.conf
-
-# Expose port
-EXPOSE 8080
-
-# Start script
 COPY docker/start.sh /start.sh
+
+# Permissions du script de démarrage
 RUN chmod +x /start.sh
 
+# Création du répertoire pour les logs supervisor
+RUN mkdir -p /var/log/supervisor
+
+# Configuration du healthcheck
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD curl -f http://localhost:${PORT:-8080}/health || exit 1
+
+# Port exposé (sera remplacé par la variable PORT en runtime)
+EXPOSE 8080
+
+# Point d'entrée
 CMD ["/start.sh"]

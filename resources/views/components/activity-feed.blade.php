@@ -153,6 +153,7 @@ function activityFeed(initialActivities, apiUrl, pollInterval) {
         lastUpdate: new Date(),
         showAll: false,
         pollTimer: null,
+        isPageVisible: true,
 
         get lastUpdateText() {
             const seconds = Math.floor((new Date() - this.lastUpdate) / 1000);
@@ -162,6 +163,14 @@ function activityFeed(initialActivities, apiUrl, pollInterval) {
         },
 
         init() {
+            // Track page visibility to avoid polling when tab is hidden
+            document.addEventListener('visibilitychange', () => {
+                this.isPageVisible = !document.hidden;
+                if (this.isPageVisible && apiUrl) {
+                    this.refresh(); // Refresh when tab becomes visible
+                }
+            });
+
             if (apiUrl) {
                 this.startPolling();
             }
@@ -170,15 +179,23 @@ function activityFeed(initialActivities, apiUrl, pollInterval) {
         },
 
         startPolling() {
-            this.pollTimer = setInterval(() => this.refresh(), pollInterval);
+            this.pollTimer = setInterval(() => {
+                // Only poll if page is visible
+                if (this.isPageVisible) {
+                    this.refresh();
+                }
+            }, pollInterval);
         },
 
         async refresh() {
-            if (!apiUrl || this.loading) return;
+            if (!apiUrl || this.loading || !this.isPageVisible) return;
 
             this.loading = true;
             try {
                 const response = await fetch(apiUrl);
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
                 const data = await response.json();
 
                 // Mark new activities
@@ -195,7 +212,10 @@ function activityFeed(initialActivities, apiUrl, pollInterval) {
                     this.$refs.feedContainer?.scrollTo({ top: 0, behavior: 'smooth' });
                 }
             } catch (error) {
-                console.error('Error fetching activities:', error);
+                // Silently ignore network errors when page is hidden or network suspended
+                if (error.name !== 'TypeError' && !error.message?.includes('Failed to fetch')) {
+                    console.debug('Activity feed refresh skipped:', error.message);
+                }
             } finally {
                 this.loading = false;
             }

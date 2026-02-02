@@ -95,7 +95,7 @@
                     <h3 class="text-sm font-medium text-gray-500 uppercase tracking-wider mb-4">Employé</h3>
                     <div class="flex items-center">
                         @if($task->user->avatar)
-                            <img src="{{ Storage::url($task->user->avatar) }}" alt="{{ $task->user->name }}" class="w-12 h-12 rounded-full object-cover">
+                            <img src="{{ avatar_url($task->user->avatar) }}" alt="{{ $task->user->name }}" class="w-12 h-12 rounded-full object-cover">
                         @else
                             <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
                                 <span class="text-blue-600 font-medium">{{ strtoupper(substr($task->user->name, 0, 2)) }}</span>

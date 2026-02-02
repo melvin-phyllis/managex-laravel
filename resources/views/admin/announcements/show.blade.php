@@ -100,7 +100,7 @@
                                 <div class="flex items-center gap-3">
                                     <div class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center overflow-hidden">
                                         @if($read->user?->avatar)
-                                            <img src="{{ Storage::url($read->user->avatar) }}" class="w-full h-full object-cover">
+                                            <img src="{{ avatar_url($read->user->avatar) }}" class="w-full h-full object-cover">
                                         @else
                                             <span class="text-gray-500 font-medium">{{ substr($read->user?->name ?? '?', 0, 1) }}</span>
                                         @endif
@@ -137,7 +137,7 @@
                                 <div class="flex items-center gap-3">
                                     <div class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center overflow-hidden">
                                         @if($user->avatar)
-                                            <img src="{{ Storage::url($user->avatar) }}" class="w-full h-full object-cover">
+                                            <img src="{{ avatar_url($user->avatar) }}" class="w-full h-full object-cover">
                                         @else
                                             <span class="text-gray-500 font-medium">{{ substr($user->name, 0, 1) }}</span>
                                         @endif

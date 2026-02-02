@@ -1,0 +1,101 @@
+# =============================================================================
+# ManageX - Docker Compose pour développement local
+# =============================================================================
+# Usage:
+#   docker-compose up -d        # Démarrer tous les services
+#   docker-compose down         # Arrêter tous les services
+#   docker-compose logs -f app  # Voir les logs de l'application
+# =============================================================================
+
+version: '3.8'
+
+services:
+  # Application Laravel
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: managex-app
+    restart: unless-stopped
+    ports:
+      - "${APP_PORT:-8080}:8080"
+    environment:
+      - APP_ENV=${APP_ENV:-local}
+      - APP_DEBUG=${APP_DEBUG:-true}
+      - APP_KEY=${APP_KEY:-}
+      - APP_URL=${APP_URL:-http://localhost:8080}
+      - DB_CONNECTION=mysql
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_DATABASE=${DB_DATABASE:-managex}
+      - DB_USERNAME=${DB_USERNAME:-managex}
+      - DB_PASSWORD=${DB_PASSWORD:-secret}
+      - CACHE_STORE=file
+      - SESSION_DRIVER=file
+      - QUEUE_CONNECTION=sync
+      - RUN_MIGRATIONS=true
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - storage-data:/var/www/html/storage/app
+    networks:
+      - managex-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # Base de données MySQL
+  db:
+    image: mysql:8.0
+    container_name: managex-db
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD:-rootsecret}
+      - MYSQL_DATABASE=${DB_DATABASE:-managex}
+      - MYSQL_USER=${DB_USERNAME:-managex}
+      - MYSQL_PASSWORD=${DB_PASSWORD:-secret}
+    ports:
+      - "${DB_PORT:-3306}:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+    networks:
+      - managex-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD:-rootsecret}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    command: --default-authentication-plugin=mysql_native_password
+
+  # phpMyAdmin (optionnel, pour gestion de la BDD)
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: managex-phpmyadmin
+    restart: unless-stopped
+    ports:
+      - "${PHPMYADMIN_PORT:-8081}:80"
+    environment:
+      - PMA_HOST=db
+      - PMA_USER=${DB_USERNAME:-managex}
+      - PMA_PASSWORD=${DB_PASSWORD:-secret}
+    depends_on:
+      - db
+    networks:
+      - managex-network
+    profiles:
+      - tools
+
+volumes:
+  db-data:
+    driver: local
+  storage-data:
+    driver: local
+
+networks:
+  managex-network:
+    driver: bridge

@@ -8,7 +8,7 @@
                     <div class="relative">
                         <div class="w-24 h-24 rounded-full bg-white/20 flex items-center justify-center overflow-hidden border-4 border-white/30">
                             @if($user->avatar)
-                                <img src="{{ Storage::url($user->avatar) }}" alt="{{ $user->name }}" class="w-full h-full object-cover">
+                                <img src="{{ avatar_url($user->avatar) }}" alt="{{ $user->name }}" class="w-full h-full object-cover">
                             @else
                                 <span class="text-3xl font-bold text-white">{{ strtoupper(substr($user->name, 0, 2)) }}</span>
                             @endif
@@ -359,7 +359,7 @@
                     <div class="flex justify-center">
                         <div class="w-32 h-32 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden" id="avatarPreview">
                             @if($user->avatar)
-                                <img src="{{ Storage::url($user->avatar) }}" alt="Preview" class="w-full h-full object-cover">
+                                <img src="{{ avatar_url($user->avatar) }}" alt="Preview" class="w-full h-full object-cover">
                             @else
                                 <span class="text-4xl font-bold text-gray-400">{{ strtoupper(substr($user->name, 0, 2)) }}</span>
                             @endif

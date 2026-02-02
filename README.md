@@ -610,6 +610,73 @@ Consultez **`docs/SECURITY-AUDIT.md`** pour plus de détails.
 
 ---
 
+## 🐳 Déploiement Docker
+
+### Build et exécution rapide
+
+```bash
+# Build de l'image
+docker build -t managex:latest .
+
+# Exécution avec variables d'environnement
+docker run -d \
+  --name managex \
+  -p 8080:8080 \
+  -e APP_KEY=base64:votre_cle_ici \
+  -e APP_ENV=production \
+  -e DB_HOST=votre_host_mysql \
+  -e DB_DATABASE=managex \
+  -e DB_USERNAME=utilisateur \
+  -e DB_PASSWORD=motdepasse \
+  -e RUN_MIGRATIONS=true \
+  managex:latest
+```
+
+### Docker Compose (développement local)
+
+```bash
+# Démarrer tous les services (app + MySQL)
+docker-compose up -d
+
+# Voir les logs
+docker-compose logs -f app
+
+# Arrêter les services
+docker-compose down
+
+# Avec phpMyAdmin (interface de gestion BDD)
+docker-compose --profile tools up -d
+```
+
+### Variables d'environnement Docker
+
+| Variable | Description | Défaut |
+|----------|-------------|--------|
+| `APP_ENV` | Environnement (production/local) | `production` |
+| `APP_KEY` | Clé d'encryption Laravel | Auto-générée |
+| `APP_URL` | URL de l'application | `http://localhost:8080` |
+| `DB_HOST` | Hôte MySQL | `localhost` |
+| `DB_DATABASE` | Nom de la base de données | `managex` |
+| `DB_USERNAME` | Utilisateur MySQL | `root` |
+| `DB_PASSWORD` | Mot de passe MySQL | - |
+| `RUN_MIGRATIONS` | Exécuter les migrations au démarrage | `false` |
+| `QUEUE_WORKER` | Activer le worker de queue | `false` |
+| `PORT` | Port d'écoute (Railway/Render) | `8080` |
+
+### Déploiement sur Railway/Render
+
+1. Connecter votre repo GitHub
+2. Définir les variables d'environnement (voir ci-dessus)
+3. Ajouter une base de données MySQL
+4. Déployer automatiquement
+
+Le Dockerfile est optimisé pour ces plateformes avec :
+- Health check automatique
+- Port dynamique via `$PORT`
+- Optimisation OPcache pour la production
+
+---
+
 ## 📝 Licence
 
 Ce projet est sous licence MIT.

@@ -248,7 +248,7 @@ class DashboardController extends Controller
                 'id' => 'presence_' . $presence->id . ($isCheckOut ? '_out' : '_in'),
                 'type' => $isCheckOut ? 'check_out' : 'check_in',
                 'user' => $presence->user->name,
-                'avatar' => $presence->user->avatar ?? null,
+                'avatar' => $presence->user->avatar ? avatar_url($presence->user->avatar) : null,
                 'message' => $isCheckOut ? 'a quitté le bureau' : 'est arrivé(e) au bureau',
                 'time' => $isCheckOut
                     ? $presence->check_out->diffForHumans()
@@ -271,7 +271,7 @@ class DashboardController extends Controller
                 'id' => 'task_' . $task->id,
                 'type' => 'task_completed',
                 'user' => $task->user->name,
-                'avatar' => $task->user->avatar ?? null,
+                'avatar' => $task->user->avatar ? avatar_url($task->user->avatar) : null,
                 'message' => 'a terminé la tâche "' . \Str::limit($task->titre, 30) . '"',
                 'time' => $task->updated_at->diffForHumans(),
                 'timestamp' => $task->updated_at->timestamp,
@@ -291,7 +291,7 @@ class DashboardController extends Controller
                 'id' => 'leave_' . $leave->id,
                 'type' => 'leave_requested',
                 'user' => $leave->user->name,
-                'avatar' => $leave->user->avatar ?? null,
+                'avatar' => $leave->user->avatar ? avatar_url($leave->user->avatar) : null,
                 'message' => 'a demandé un congé du ' . $leave->date_debut->format('d/m') . ' au ' . $leave->date_fin->format('d/m'),
                 'time' => $leave->created_at->diffForHumans(),
                 'timestamp' => $leave->created_at->timestamp,

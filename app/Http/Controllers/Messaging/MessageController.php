@@ -382,12 +382,12 @@ class MessageController extends Controller
             'sender' => $message->sender ? [
                 'id' => $message->sender->id,
                 'name' => $message->sender->name,
-                'avatar' => $message->sender->avatar,
+                'avatar' => $message->sender->avatar ? avatar_url($message->sender->avatar) : null,
             ] : null,
             'user' => $message->sender ? [
                 'id' => $message->sender->id,
                 'name' => $message->sender->name,
-                'avatar' => $message->sender->avatar,
+                'avatar' => $message->sender->avatar ? avatar_url($message->sender->avatar) : null,
             ] : null, // Alias pour compatibilité
             'type' => $message->type,
             'content' => $message->content,

@@ -412,7 +412,7 @@ class AnalyticsController extends Controller
             return [
                 'type' => 'presence',
                 'user' => $p->user->name,
-                'avatar' => $p->user->avatar,
+                'avatar' => $p->user->avatar ? avatar_url($p->user->avatar) : null,
                 'description' => 'a pointé son arrivée à ' . $p->check_in_formatted,
                 'time' => $p->created_at->diffForHumans()
             ];
@@ -423,7 +423,7 @@ class AnalyticsController extends Controller
             return [
                 'type' => 'leave',
                 'user' => $l->user->name,
-                'avatar' => $l->user->avatar,
+                'avatar' => $l->user->avatar ? avatar_url($l->user->avatar) : null,
                 'description' => 'a demandé un congé (' . $l->type_label . ')',
                 'time' => $l->created_at->diffForHumans()
             ];
@@ -435,7 +435,7 @@ class AnalyticsController extends Controller
             return [
                 'type' => 'task',
                 'user' => $user ? $user->name : 'Système',
-                'avatar' => $user ? $user->avatar : null,
+                'avatar' => $user && $user->avatar ? avatar_url($user->avatar) : null,
                 'description' => 'a terminé la tâche "' . $t->titre . '"',
                 'time' => $t->updated_at->diffForHumans()
             ];
@@ -521,7 +521,7 @@ class AnalyticsController extends Controller
             ->map(fn($eval, $index) => [
                 'rank' => $index + 1,
                 'name' => $eval->user->name ?? '-',
-                'avatar' => $eval->user->avatar ?? null,
+                'avatar' => $eval->user->avatar ? avatar_url($eval->user->avatar) : null,
                 'department' => $eval->user->department->name ?? '-',
                 'score' => $eval->total_score,
                 'max_score' => EmployeeEvaluation::MAX_SCORE,
@@ -551,7 +551,7 @@ class AnalyticsController extends Controller
             return [
                 'rank' => $index + 1,
                 'name' => $intern->name ?? '-',
-                'avatar' => $intern->avatar ?? null,
+                'avatar' => $intern && $intern->avatar ? avatar_url($intern->avatar) : null,
                 'department' => $intern->department->name ?? '-',
                 'score' => round($eval->avg_score ?? 0, 1),
                 'max_score' => 10,
@@ -616,7 +616,7 @@ class AnalyticsController extends Controller
             return [
                 'rank' => $index + 1,
                 'name' => $user->name ?? '-',
-                'avatar' => $user->avatar ?? null,
+                'avatar' => $user && $user->avatar ? avatar_url($user->avatar) : null,
                 'department' => $user->department->name ?? '-',
                 'presence_count' => (int) $p->presence_count,
                 'on_time_count' => (int) $p->on_time_count,

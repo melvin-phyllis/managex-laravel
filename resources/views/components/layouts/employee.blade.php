@@ -155,8 +155,8 @@
                                     class="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 transition-colors">
                                 <!-- Avatar -->
                                 <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white text-sm font-semibold overflow-hidden">
-                                    @if(auth()->user()->avatar)
-                                        <img src="{{ Storage::url(auth()->user()->avatar) }}" alt="{{ auth()->user()->name }}" class="w-full h-full object-cover">
+                                    @if(auth()->user()->avatar && avatar_url(auth()->user()->avatar))
+                                        <img src="{{ avatar_url(auth()->user()->avatar) }}" alt="{{ auth()->user()->name }}" class="w-full h-full object-cover" onerror="this.style.display='none'; this.parentElement.innerHTML='{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}';">
                                     @else
                                         {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
                                     @endif
