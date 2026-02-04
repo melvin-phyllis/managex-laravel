@@ -123,7 +123,7 @@ class PresenceController extends Controller
         $totalUnrecoveredMinutes = $user->presences()
             ->where('is_late', true)
             ->where('is_late_expired', false)
-            ->selectRaw('SUM(GREATEST(0, CAST(late_minutes AS SIGNED) - CAST(recovery_minutes AS SIGNED))) as total')
+            ->selectRaw('SUM(CASE WHEN CAST(late_minutes AS SIGNED) > CAST(recovery_minutes AS SIGNED) THEN CAST(late_minutes AS SIGNED) - CAST(recovery_minutes AS SIGNED) ELSE 0 END) as total')
             ->value('total') ?? 0;
 
         // Retards expirés (pour historique) - limiter à 5
@@ -368,7 +368,7 @@ class PresenceController extends Controller
         $totalUnrecoveredMinutes = $user->presences()
             ->where('is_late', true)
             ->where('is_late_expired', false)
-            ->selectRaw('SUM(GREATEST(0, CAST(late_minutes AS SIGNED) - CAST(recovery_minutes AS SIGNED))) as total')
+            ->selectRaw('SUM(CASE WHEN CAST(late_minutes AS SIGNED) > CAST(recovery_minutes AS SIGNED) THEN CAST(late_minutes AS SIGNED) - CAST(recovery_minutes AS SIGNED) ELSE 0 END) as total')
             ->value('total') ?? 0;
 
         if ($totalUnrecoveredMinutes <= 0) {

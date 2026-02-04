@@ -58,7 +58,7 @@ class PayrollController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validatedData = $request->validate([
             'user_id' => ['required', 'exists:users,id'],
             'mois' => ['required', 'integer', 'min:1', 'max:12'],
             'annee' => ['required', 'integer', 'min:2020', 'max:2100'],
@@ -71,9 +71,7 @@ class PayrollController extends Controller
         ]);
 
         try {
-            $user = User::findOrFail($request->user_id);
-            // SECURITE: utiliser validated() au lieu de all() pour ne passer que les données validées
-            $validatedData = $request->validated();
+            $user = User::findOrFail($validatedData['user_id']);
             $payroll = $this->payrollService->calculatePayroll(
                 $user,
                 $validatedData['mois'],
@@ -82,7 +80,7 @@ class PayrollController extends Controller
             );
 
             // Mettre à jour les notes
-            $payroll->update(['notes' => $request->notes]);
+            $payroll->update(['notes' => $validatedData['notes'] ?? null]);
 
             // Générer le PDF
             $this->generatePdf($payroll);

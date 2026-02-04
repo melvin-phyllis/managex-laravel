@@ -2,6 +2,8 @@
 
 namespace Tests\Feature;
 
+use App\Models\EmployeeWorkDay;
+use App\Models\GeolocationZone;
 use App\Models\Presence;
 use App\Models\User;
 use Carbon\Carbon;
@@ -39,13 +41,29 @@ class PresenceTest extends TestCase
     {
         Carbon::setTestNow(Carbon::create(2026, 2, 3, 9, 0, 0)); // Monday 9:00 AM
 
-        $response = $this->actingAs($this->employee)->post(route('employee.presences.checkin'));
+        // Setup work days (Monday=1 through Friday=5)
+        foreach (range(1, 5) as $day) {
+            EmployeeWorkDay::create(['user_id' => $this->employee->id, 'day_of_week' => $day]);
+        }
+
+        // Setup geolocation zone
+        $zone = GeolocationZone::create([
+            'name' => 'Bureau',
+            'latitude' => 5.3600,
+            'longitude' => -4.0083,
+            'radius' => 500,
+            'is_active' => true,
+        ]);
+
+        $response = $this->actingAs($this->employee)->post(route('employee.presences.check-in'), [
+            'latitude' => 5.3600,
+            'longitude' => -4.0083,
+        ]);
 
         $response->assertRedirect();
-        $this->assertDatabaseHas('presences', [
-            'user_id' => $this->employee->id,
-            'date' => now()->toDateString(),
-        ]);
+        $this->assertEquals(1, Presence::where('user_id', $this->employee->id)
+            ->whereDate('date', now()->toDateString())
+            ->count());
     }
 
     /** @test */
@@ -61,7 +79,7 @@ class PresenceTest extends TestCase
 
         Carbon::setTestNow(Carbon::create(2026, 2, 3, 18, 0, 0)); // 6:00 PM
 
-        $response = $this->actingAs($this->employee)->post(route('employee.presences.checkout'));
+        $response = $this->actingAs($this->employee)->post(route('employee.presences.check-out'));
 
         $response->assertRedirect();
         $presence->refresh();
@@ -79,7 +97,7 @@ class PresenceTest extends TestCase
             'date' => now()->toDateString(),
         ]);
 
-        $response = $this->actingAs($this->employee)->post(route('employee.presences.checkin'));
+        $response = $this->actingAs($this->employee)->post(route('employee.presences.check-in'));
 
         // Should fail or show error
         $response->assertRedirect();
@@ -115,7 +133,7 @@ class PresenceTest extends TestCase
             'date' => now()->toDateString(),
         ]);
 
-        $response = $this->actingAs($this->admin)->get(route('admin.presences.employee', $this->employee));
+        $response = $this->actingAs($this->admin)->get(route('admin.presences.employee-details', $this->employee->id));
 
         $response->assertStatus(200);
     }
@@ -126,7 +144,24 @@ class PresenceTest extends TestCase
         // Simulate check-in at 9:30 when work starts at 8:30
         Carbon::setTestNow(Carbon::create(2026, 2, 3, 9, 30, 0));
 
-        $response = $this->actingAs($this->employee)->post(route('employee.presences.checkin'));
+        // Setup work days (Monday=1 through Friday=5)
+        foreach (range(1, 5) as $day) {
+            EmployeeWorkDay::create(['user_id' => $this->employee->id, 'day_of_week' => $day]);
+        }
+
+        // Setup geolocation zone
+        GeolocationZone::create([
+            'name' => 'Bureau',
+            'latitude' => 5.3600,
+            'longitude' => -4.0083,
+            'radius' => 500,
+            'is_active' => true,
+        ]);
+
+        $response = $this->actingAs($this->employee)->post(route('employee.presences.check-in'), [
+            'latitude' => 5.3600,
+            'longitude' => -4.0083,
+        ]);
 
         $response->assertRedirect();
 
@@ -167,7 +202,7 @@ class PresenceTest extends TestCase
         ]);
 
         // 9 hours worked
-        $this->assertEquals(9, $presence->worked_hours);
+        $this->assertEquals(9, $presence->hours_worked);
     }
 
     /** @test */
@@ -180,9 +215,7 @@ class PresenceTest extends TestCase
             'date' => now()->toDateString(),
         ]);
 
-        $response = $this->actingAs($this->admin)->get(route('admin.presences.export', [
-            'format' => 'csv',
-        ]));
+        $response = $this->actingAs($this->admin)->get(route('admin.presences.export.csv'));
 
         $response->assertStatus(200);
     }

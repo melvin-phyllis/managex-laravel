@@ -28,7 +28,7 @@ class LeaveTest extends TestCase
     {
         Leave::create([
             'user_id' => $this->employee->id,
-            'type' => 'conge_paye',
+            'type' => 'conge',
             'date_debut' => now()->addDays(5),
             'date_fin' => now()->addDays(10),
             'motif' => 'Vacances',
@@ -45,7 +45,7 @@ class LeaveTest extends TestCase
     public function employee_can_create_leave_request(): void
     {
         $response = $this->actingAs($this->employee)->post(route('employee.leaves.store'), [
-            'type' => 'conge_paye',
+            'type' => 'conge',
             'date_debut' => now()->addDays(10)->format('Y-m-d'),
             'date_fin' => now()->addDays(15)->format('Y-m-d'),
             'motif' => 'Vacances familiales',
@@ -54,7 +54,7 @@ class LeaveTest extends TestCase
         $response->assertRedirect();
         $this->assertDatabaseHas('leaves', [
             'user_id' => $this->employee->id,
-            'type' => 'conge_paye',
+            'type' => 'conge',
             'motif' => 'Vacances familiales',
             'statut' => 'pending',
         ]);
@@ -65,7 +65,7 @@ class LeaveTest extends TestCase
     {
         Leave::create([
             'user_id' => $this->employee->id,
-            'type' => 'conge_paye',
+            'type' => 'conge',
             'date_debut' => now()->addDays(5),
             'date_fin' => now()->addDays(10),
             'statut' => 'pending',
@@ -81,14 +81,13 @@ class LeaveTest extends TestCase
     {
         $leave = Leave::create([
             'user_id' => $this->employee->id,
-            'type' => 'conge_paye',
+            'type' => 'conge',
             'date_debut' => now()->addDays(5),
             'date_fin' => now()->addDays(10),
             'statut' => 'pending',
         ]);
 
-        $response = $this->actingAs($this->admin)->patch(route('admin.leaves.status', $leave), [
-            'statut' => 'approved',
+        $response = $this->actingAs($this->admin)->post(route('admin.leaves.approve', $leave), [
             'commentaire_admin' => 'Approuvé, bonnes vacances !',
         ]);
 
@@ -104,14 +103,13 @@ class LeaveTest extends TestCase
     {
         $leave = Leave::create([
             'user_id' => $this->employee->id,
-            'type' => 'conge_paye',
+            'type' => 'conge',
             'date_debut' => now()->addDays(5),
             'date_fin' => now()->addDays(10),
             'statut' => 'pending',
         ]);
 
-        $response = $this->actingAs($this->admin)->patch(route('admin.leaves.status', $leave), [
-            'statut' => 'rejected',
+        $response = $this->actingAs($this->admin)->post(route('admin.leaves.reject', $leave), [
             'commentaire_admin' => 'Période trop chargée',
         ]);
 
@@ -128,7 +126,7 @@ class LeaveTest extends TestCase
     {
         $leave = Leave::create([
             'user_id' => $this->employee->id,
-            'type' => 'conge_paye',
+            'type' => 'conge',
             'date_debut' => now()->addDays(5),
             'date_fin' => now()->addDays(10),
             'statut' => 'approved',
@@ -145,7 +143,7 @@ class LeaveTest extends TestCase
     {
         $leave = Leave::create([
             'user_id' => $this->employee->id,
-            'type' => 'conge_paye',
+            'type' => 'conge',
             'date_debut' => now()->addDays(5),
             'date_fin' => now()->addDays(10),
             'statut' => 'pending',
@@ -161,7 +159,7 @@ class LeaveTest extends TestCase
     public function leave_request_requires_valid_dates(): void
     {
         $response = $this->actingAs($this->employee)->post(route('employee.leaves.store'), [
-            'type' => 'conge_paye',
+            'type' => 'conge',
             'date_debut' => now()->addDays(15)->format('Y-m-d'),
             'date_fin' => now()->addDays(10)->format('Y-m-d'), // End before start
             'motif' => 'Test',
@@ -174,7 +172,7 @@ class LeaveTest extends TestCase
     public function leave_request_cannot_be_in_the_past(): void
     {
         $response = $this->actingAs($this->employee)->post(route('employee.leaves.store'), [
-            'type' => 'conge_paye',
+            'type' => 'conge',
             'date_debut' => now()->subDays(5)->format('Y-m-d'),
             'date_fin' => now()->subDays(1)->format('Y-m-d'),
             'motif' => 'Test',
@@ -189,7 +187,7 @@ class LeaveTest extends TestCase
         $otherEmployee = User::factory()->create();
         $leave = Leave::create([
             'user_id' => $otherEmployee->id,
-            'type' => 'conge_paye',
+            'type' => 'conge',
             'date_debut' => now()->addDays(5),
             'date_fin' => now()->addDays(10),
             'statut' => 'pending',
