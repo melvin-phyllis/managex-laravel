@@ -6,6 +6,11 @@
 *.md diff=markdown
 *.php diff=php
 
+# Force LF for shell scripts and Docker files (critical for Linux containers)
+*.sh text eol=lf
+Dockerfile text eol=lf
+docker/* text eol=lf
+
 /.github export-ignore
 CHANGELOG.md export-ignore
 .styleci.yml export-ignore
