@@ -34,6 +34,10 @@ php artisan storage:link --force 2>/dev/null || true
 if [ "$RUN_MIGRATIONS" = "true" ] || [ "$RUN_MIGRATIONS" = "1" ]; then
     echo "[5/8] Exécution des migrations..."
     php artisan migrate --force
+    
+    # Créer le compte admin si nécessaire
+    echo "[5.5/8] Vérification du compte admin..."
+    php artisan db:seed --class=AdminSeeder --force 2>/dev/null || true
 else
     echo "[5/8] Migrations ignorées (RUN_MIGRATIONS non défini)"
 fi
