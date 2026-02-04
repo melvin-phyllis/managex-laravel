@@ -230,10 +230,21 @@ class EmployeeController extends Controller
 
         // Envoyer l'email de bienvenue avec lien de réinitialisation sécurisé
         // Le mot de passe n'est plus envoyé en clair pour des raisons de sécurité
-        $employee->notify(new WelcomeEmployeeNotification($employee->name));
+        // Note: Enveloppé dans try-catch car certains hébergeurs (Railway) bloquent SMTP
+        $emailSent = true;
+        try {
+            $employee->notify(new WelcomeEmployeeNotification($employee->name));
+        } catch (\Exception $e) {
+            $emailSent = false;
+            \Log::warning("Impossible d'envoyer l'email de bienvenue à {$employee->email}: ".$e->getMessage());
+        }
+
+        $message = $emailSent
+            ? 'Employé créé avec succès. Un email avec un lien d\'activation a été envoyé.'
+            : 'Employé créé avec succès. ⚠️ L\'email de bienvenue n\'a pas pu être envoyé (vérifiez la configuration SMTP).';
 
         return redirect()->route('admin.employees.index')
-            ->with('success', 'Employé créé avec succès. Un email avec un lien d\'activation a été envoyé.');
+            ->with($emailSent ? 'success' : 'warning', $message);
     }
 
     /**
