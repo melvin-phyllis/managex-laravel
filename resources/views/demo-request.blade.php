@@ -5,565 +5,495 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Demandez une démonstration gratuite de ManageX — La plateforme RH intelligente.">
     <title>Demander une démo — ManageX</title>
-    <script>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <script nonce="{{ $cspNonce ?? '' }}">
+        // Theme initialization
         (function() {
             var saved = localStorage.getItem('managex-theme');
             var theme = saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
             document.documentElement.setAttribute('data-theme', theme);
         })();
     </script>
-    <style>
+
+    <style nonce="{{ $cspNonce ?? '' }}">
         :root {
-            --white: #ffffff;
-            --off-white: #f8f9fc;
-            --light: #f0f1f6;
-            --light-surface: #e8e9f0;
-            --black: #0f1023;
-            --dark-text: #1a1b2e;
-            --gray-300: #5a5b72;
-            --gray-500: #8b8ca2;
-            --gray-600: #b0b1c4;
-            --accent: #6c4cec;
-            --accent-light: #7c5cfc;
-            --accent-glow: rgba(108, 76, 236, 0.18);
-            --border: rgba(0, 0, 0, 0.07);
-            --shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
-            --shadow-md: 0 8px 30px rgba(0,0,0,0.06);
-            --shadow-lg: 0 20px 60px rgba(0,0,0,0.08);
-            --font-sans: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            --transition: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            /* Palette Premium Modern */
+            --primary: #4F46E5; /* Indigo 600 */
+            --primary-hover: #4338CA; /* Indigo 700 */
+            --primary-light: #818CF8;
+            --secondary: #10B981; /* Emerald 500 */
+            --dark-bg: #0F172A; /* Slate 900 */
+            --dark-surface: #1E293B; /* Slate 800 */
+            --light-bg: #F8FAFC; /* Slate 50 */
+            --light-surface: #FFFFFF;
+            --text-main: #1E293B;
+            --text-muted: #64748B;
+            --border-light: #E2E8F0;
+            --border-dark: #334155;
+            
+            /* Gradients */
+            --gradient-primary: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
+            --gradient-glow: radial-gradient(circle at center, rgba(79, 70, 229, 0.15) 0%, transparent 70%);
+            
+            /* Shadows & Blur */
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.5);
+            --glass-blur: blur(12px);
         }
 
         [data-theme="dark"] {
-            --white: #13141f;
-            --off-white: #181926;
-            --light: #1e1f30;
-            --light-surface: #252640;
-            --black: #f0f1f6;
-            --dark-text: #e8e9f0;
-            --gray-300: #b0b1c4;
-            --gray-500: #8b8ca2;
-            --gray-600: #5a5b72;
-            --border: rgba(255, 255, 255, 0.08);
-            --shadow-sm: 0 1px 3px rgba(0,0,0,0.2);
-            --shadow-md: 0 8px 30px rgba(0,0,0,0.3);
-            --shadow-lg: 0 20px 60px rgba(0,0,0,0.4);
+            --bg-body: var(--dark-bg);
+            --bg-surface: var(--dark-surface);
+            --text-main: #F1F5F9;
+            --text-muted: #94A3B8;
+            --border: var(--border-dark);
+            --glass-bg: rgba(30, 41, 59, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        [data-theme="light"] {
+            --bg-body: var(--light-bg);
+            --bg-surface: var(--light-surface);
+            --text-main: #0F172A;
+            --text-muted: #64748B;
+            --border: var(--border-light);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: var(--font-sans);
-            background: var(--off-white);
-            color: var(--dark-text);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.5;
+            overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
+        /* Background Graphics */
+        .bg-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: -1;
+            opacity: 0.4;
+        }
+        .bg-orb-1 { top: -10%; right: -5%; width: 600px; height: 600px; background: radial-gradient(circle, #818CF8 0%, rgba(129, 140, 248, 0) 70%); }
+        .bg-orb-2 { bottom: -10%; left: -10%; width: 500px; height: 500px; background: radial-gradient(circle, #34D399 0%, rgba(52, 211, 153, 0) 70%); }
+
+        /* Navigation */
         .nav {
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 100;
-            background: var(--white);
-            border-bottom: 1px solid var(--border);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-        }
-
-        .nav .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 24px;
-            height: 64px;
+            top: 0; left: 0; right: 0;
+            height: 80px;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            padding: 0 5%;
+            z-index: 50;
+            background: rgba(255, 255, 255, 0.01);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
         }
+        [data-theme="light"] .nav { background: rgba(255, 255, 255, 0.8); border-bottom: 1px solid var(--border-light); }
 
-        .nav-logo {
+        .logo {
+            font-weight: 800;
+            font-size: 1.5rem;
+            color: var(--text-main);
+            text-decoration: none;
             display: flex;
             align-items: center;
-            gap: 10px;
-            text-decoration: none;
-            color: var(--dark-text);
-            font-weight: 700;
+            gap: 0.5rem;
+        }
+        .logo-mark {
+            width: 40px; height: 40px;
+            background: var(--gradient-primary);
+            border-radius: 12px;
+            color: white;
+            display: flex; align-items: center; justify-content: center;
             font-size: 1.25rem;
         }
 
-        .logo-icon {
-            width: 36px;
-            height: 36px;
-            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+        .cta-button {
+            padding: 0.75rem 1.5rem;
+            background: var(--gradient-primary);
             color: white;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
-            font-size: 1.1rem;
-        }
-
-        .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            list-style: none;
-        }
-
-        .nav-links a {
+            border-radius: 9999px;
+            font-weight: 600;
             text-decoration: none;
-            color: var(--gray-300);
-            font-size: 0.9rem;
-            font-weight: 500;
-            padding: 8px 16px;
-            border-radius: 8px;
-            transition: all 0.2s;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        }
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(79, 70, 229, 0.4);
         }
 
-        .nav-links a:hover {
-            color: var(--accent);
-            background: var(--accent-glow);
-        }
-
-        .nav-cta {
-            background: var(--accent) !important;
-            color: white !important;
-            padding: 8px 20px !important;
-            border-radius: 8px !important;
-        }
-
-        .nav-cta:hover {
-            background: var(--accent-light) !important;
-        }
-
-        .theme-toggle {
-            background: var(--light);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            width: 38px;
-            height: 38px;
+        /* Layout */
+        .page-wrapper {
+            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
-            color: var(--gray-300);
-            transition: all 0.2s;
-        }
-
-        .theme-toggle:hover {
-            color: var(--accent);
-            border-color: var(--accent);
-        }
-
-        [data-theme="light"] .icon-moon { display: none; }
-        [data-theme="dark"] .icon-sun { display: none; }
-
-        .page-content {
-            flex: 1;
-            padding-top: 100px;
-            padding-bottom: 60px;
+            padding: 120px 20px 60px;
         }
 
         .container {
             max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 24px;
-        }
-
-        .demo-grid {
+            width: 100%;
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 60px;
-            align-items: start;
+            gap: 4rem;
+            align-items: center;
         }
 
-        .demo-info h1 {
-            font-size: 2.5rem;
+        /* Left Content */
+        .content h1 {
+            font-size: 3.5rem;
+            line-height: 1.1;
             font-weight: 800;
-            line-height: 1.15;
-            margin-bottom: 16px;
-            color: var(--dark-text);
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
+        }
+        .content h1 span {
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .lead-text {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            margin-bottom: 2.5rem;
+            max-width: 90%;
         }
 
-        .text-accent { color: var(--accent); }
-
-        .demo-info > p {
-            font-size: 1.1rem;
-            color: var(--gray-300);
-            line-height: 1.7;
-            margin-bottom: 32px;
-        }
-
-        .demo-benefits {
+        .benefits-list {
             list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
+            display: grid;
+            gap: 1.5rem;
         }
-
-        .demo-benefits li {
+        .benefit-item {
             display: flex;
             align-items: flex-start;
-            gap: 12px;
-            font-size: 0.95rem;
-            color: var(--gray-300);
-            line-height: 1.5;
+            gap: 1rem;
         }
-
-        .benefit-icon {
-            width: 28px;
-            height: 28px;
-            min-width: 28px;
-            background: var(--accent-glow);
-            color: var(--accent);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.85rem;
-            margin-top: 1px;
+        .check-icon {
+            flex-shrink: 0;
+            width: 24px; height: 24px;
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--secondary);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
         }
-
-        .demo-form-card {
-            background: var(--white);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 36px;
-            box-shadow: var(--shadow-lg);
-        }
-
-        .demo-form-card h2 {
-            font-size: 1.35rem;
+        .benefit-content h3 {
+            font-size: 1.1rem;
             font-weight: 700;
-            margin-bottom: 8px;
-            color: var(--dark-text);
+            margin-bottom: 0.25rem;
+        }
+        .benefit-content p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
         }
 
-        .demo-form-card > p {
-            color: var(--gray-500);
-            font-size: 0.9rem;
-            margin-bottom: 24px;
-        }
-
-        .form-group {
-            margin-bottom: 18px;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--dark-text);
-            margin-bottom: 6px;
-        }
-
-        .form-group label .required {
-            color: #ef4444;
-        }
-
-        .form-input,
-        .form-select,
-        .form-textarea {
-            width: 100%;
-            padding: 10px 14px;
-            font-size: 0.9rem;
-            font-family: inherit;
-            color: var(--dark-text);
-            background: var(--off-white);
+        /* Right Form */
+        .form-card {
+            background: var(--bg-surface);
+            padding: 2.5rem;
+            border-radius: 24px;
             border: 1px solid var(--border);
-            border-radius: 10px;
-            outline: none;
+            box-shadow: var(--shadow-xl);
+            position: relative;
+            overflow: hidden;
+        }
+        /* Top accent border */
+        .form-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 6px;
+            background: var(--gradient-primary);
+        }
+
+        .form-group { margin-bottom: 1.5rem; position: relative; }
+        
+        .form-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            background: var(--bg-body);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text-main);
+            font-size: 1rem;
+            font-family: inherit;
             transition: all 0.2s;
         }
-
-        .form-input:focus,
-        .form-select:focus,
-        .form-textarea:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px var(--accent-glow);
-        }
-
-        .form-input::placeholder,
-        .form-textarea::placeholder {
-            color: var(--gray-500);
-        }
-
-        .form-select {
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%238b8ca2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' viewBox='0 0 24 24'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 14px center;
-            padding-right: 36px;
-        }
-
-        .form-textarea {
-            resize: vertical;
-            min-height: 80px;
+        
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: #4F46E5;
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
         }
 
         .form-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 16px;
+            gap: 1rem;
         }
 
-        .btn-submit {
+        .submit-btn {
             width: 100%;
-            padding: 13px 24px;
-            font-size: 1rem;
-            font-weight: 600;
-            font-family: inherit;
-            color: white;
-            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            padding: 1rem;
             border: none;
-            border-radius: 10px;
+            border-radius: 12px;
+            background: var(--gradient-primary);
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s var(--transition);
-            margin-top: 6px;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
         }
-
-        .btn-submit:hover {
+        
+        .submit-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px var(--accent-glow);
+            box-shadow: 0 10px 25px rgba(79, 70, 229, 0.4);
         }
-
-        .btn-submit:active {
-            transform: translateY(0);
+        
+        .submit-btn::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(rgba(255,255,255,0.2), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
         }
+        .submit-btn:hover::after { opacity: 1; }
 
-        .alert-success {
-            background: #ecfdf5;
-            border: 1px solid #a7f3d0;
-            color: #065f46;
-            padding: 14px 18px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        [data-theme="dark"] .alert-success {
-            background: rgba(16, 185, 129, 0.1);
-            border-color: rgba(16, 185, 129, 0.2);
-            color: #6ee7b7;
-        }
-
-        .alert-error {
-            background: #fef2f2;
-            border: 1px solid #fecaca;
-            color: #991b1b;
-            padding: 12px 18px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            font-size: 0.85rem;
-        }
-
-        [data-theme="dark"] .alert-error {
-            background: rgba(239, 68, 68, 0.1);
-            border-color: rgba(239, 68, 68, 0.2);
-            color: #fca5a5;
-        }
-
-        .alert-error ul {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-        }
-
-        .footer {
-            background: var(--white);
+        /* Trust Badges */
+        .trust-section {
+            margin-top: 2rem;
+            padding-top: 2rem;
             border-top: 1px solid var(--border);
-            padding: 24px 0;
             text-align: center;
         }
-
-        .footer-copy {
-            color: var(--gray-500);
-            font-size: 0.85rem;
+        .trust-text {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .trust-logos {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            opacity: 0.6;
+            filter: grayscale(100%);
         }
 
-        @media (max-width: 768px) {
-            .demo-grid {
-                grid-template-columns: 1fr;
-                gap: 40px;
-            }
+        /* Success Message */
+        .success-overlay {
+            position: absolute;
+            inset: 0;
+            background: var(--bg-surface);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            z-index: 10;
+            animation: fadeIn 0.5s ease;
+        }
+        .success-icon {
+            width: 80px; height: 80px;
+            background: #D1FAE5;
+            color: #10B981;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+        .success-icon svg { width: 40px; height: 40px; }
 
-            .demo-info h1 {
-                font-size: 1.8rem;
-            }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-
-            .nav-links {
-                display: none;
-            }
-
-            .demo-form-card {
-                padding: 24px;
-            }
+        /* Responsive */
+        @media (max-width: 968px) {
+            .container { grid-template-columns: 1fr; gap: 3rem; }
+            .content { text-align: center; }
+            .lead-text { margin: 0 auto 2.5rem; }
+            .benefits-list { text-align: left; max-width: 500px; margin: 0 auto; }
+            .content h1 { font-size: 2.5rem; }
+        }
+        @media (max-width: 640px) {
+            .form-row { grid-template-columns: 1fr; }
+            .nav { padding: 0 1.5rem; } 
         }
     </style>
 </head>
 <body>
+
+    <!-- Background Decoration -->
+    <div class="bg-orb bg-orb-1"></div>
+    <div class="bg-orb bg-orb-2"></div>
+
     <nav class="nav">
-        <div class="container">
-            <a href="{{ url('/') }}" class="nav-logo">
-                <div class="logo-icon">M</div>
-                ManageX
-            </a>
-            <ul class="nav-links">
-                <li><a href="{{ url('/') }}">Accueil</a></li>
-                <li><a href="{{ url('/#features') }}">Fonctionnalités</a></li>
-                <li><a href="{{ route('login') }}" class="nav-cta">Se connecter</a></li>
-            </ul>
-            <button class="theme-toggle" id="themeToggle" aria-label="Changer le thème">
-                <svg class="icon-sun" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
-                <svg class="icon-moon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
-            </button>
+        <a href="{{ url('/') }}" class="logo">
+            <div class="logo-mark">M</div>
+            <span>ManageX</span>
+        </a>
+        <div style="display: flex; align-items: center; gap: 1rem;">
+            <a href="{{ url('/') }}" style="color: var(--text-muted); text-decoration: none; font-weight: 500; display: none; @media(min-width:768px){display:block;}">Retour</a>
+            <a href="{{ route('login') }}" class="cta-button">Connexion</a>
         </div>
     </nav>
 
-    <main class="page-content">
+    <div class="page-wrapper">
         <div class="container">
-            <div class="demo-grid">
-                <div class="demo-info">
-                    <h1>Découvrez ManageX <span class="text-accent">en action</span></h1>
-                    <p>Planifiez une démonstration personnalisée avec notre équipe. Nous vous montrerons comment ManageX peut transformer la gestion RH de votre entreprise.</p>
+            <!-- Left Side: Engaging Content -->
+            <div class="content">
+                <h1>Transformez votre <br><span>Gestion RH</span></h1>
+                <p class="lead-text">
+                    Rejoignez les leaders qui simplifient la paie, les congés et la performance avec ManageX. Une plateforme unique pour une efficacité maximale.
+                </p>
 
-                    <ul class="demo-benefits">
-                        <li>
-                            <div class="benefit-icon">
-                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-                            </div>
-                            <span><strong>Démo personnalisée</strong> — Adaptée aux besoins spécifiques de votre entreprise et votre secteur d'activité.</span>
-                        </li>
-                        <li>
-                            <div class="benefit-icon">
-                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-                            </div>
-                            <span><strong>Sans engagement</strong> — Découvrez la plateforme librement, posez toutes vos questions.</span>
-                        </li>
-                        <li>
-                            <div class="benefit-icon">
-                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-                            </div>
-                            <span><strong>Présences, congés, paie, tâches</strong> — Voyez en direct comment tout se gère depuis une seule plateforme.</span>
-                        </li>
-                        <li>
-                            <div class="benefit-icon">
-                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-                            </div>
-                            <span><strong>Intelligence IA intégrée</strong> — Chatbot RH, analytics prédictifs et recommandations automatiques.</span>
-                        </li>
-                        <li>
-                            <div class="benefit-icon">
-                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-                            </div>
-                            <span><strong>Réponse sous 24h</strong> — Notre équipe vous recontacte rapidement pour planifier votre créneau.</span>
-                        </li>
-                    </ul>
+                <ul class="benefits-list">
+                    <li class="benefit-item">
+                        <div class="check-icon">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
+                        </div>
+                        <div class="benefit-content">
+                            <h3>Tout-en-un intuitif</h3>
+                            <p>Paie, congés, présences et évaluations dans une interface fluide.</p>
+                        </div>
+                    </li>
+                    <li class="benefit-item">
+                        <div class="check-icon">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
+                        </div>
+                        <div class="benefit-content">
+                            <h3>Automatisation IA</h3>
+                            <p>Gagnez 40% de temps administratif grâce à nos assistants intelligents.</p>
+                        </div>
+                    </li>
+                    <li class="benefit-item">
+                        <div class="check-icon">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
+                        </div>
+                        <div class="benefit-content">
+                            <h3>Support Premium 24/7</h3>
+                            <p>Une équipe dédiée pour vous accompagner à chaque étape.</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Right Side: Contact Form -->
+            <div class="form-card" x-data="{ submitting: false }">
+                
+                @if(session('success'))
+                <div class="success-overlay">
+                    <div class="success-icon">
+                        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
+                    </div>
+                    <h2 style="font-size: 1.5rem; margin-bottom: 0.5rem;">Message Reçu !</h2>
+                    <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Notre équipe d'experts vous contactera sous 24h ouvrées.</p>
+                    <a href="{{ url('/') }}" class="cta-button" style="display: inline-block;">Retour à l'accueil</a>
                 </div>
+                @endif
 
-                <div class="demo-form-card">
-                    <h2>Demander une démo gratuite</h2>
-                    <p>Remplissez le formulaire et notre équipe vous contactera.</p>
+                <h2 style="font-size: 1.75rem; margin-bottom: 0.5rem; font-weight: 700;">Réserver une démo</h2>
+                <p style="color: var(--text-muted); margin-bottom: 2rem;">Remplissez ce formulaire pour une présentation sur mesure.</p>
 
-                    @if(session('success'))
-                        <div class="alert-success">
-                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                            {{ session('success') }}
-                        </div>
-                    @endif
-
+                <form action="{{ route('demo-request.store') }}" method="POST" @submit="submitting = true">
+                    @csrf
+                    
                     @if($errors->any())
-                        <div class="alert-error">
-                            <ul>
-                                @foreach($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
+                    <div style="background: #FEF2F2; color: #991B1B; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; font-size: 0.9rem;">
+                        <ul style="padding-left: 1rem;">
+                            @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
                     @endif
 
-                    <form action="{{ route('demo-request.store') }}" method="POST">
-                        @csrf
-
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label>Nom complet <span class="required">*</span></label>
-                                <input type="text" name="contact_name" class="form-input" placeholder="Jean Dupont" value="{{ old('contact_name') }}" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Email professionnel <span class="required">*</span></label>
-                                <input type="email" name="email" class="form-input" placeholder="jean@entreprise.com" value="{{ old('email') }}" required>
-                            </div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label>Nom de l'entreprise <span class="required">*</span></label>
-                                <input type="text" name="company_name" class="form-input" placeholder="Votre entreprise" value="{{ old('company_name') }}" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Téléphone</label>
-                                <input type="tel" name="phone" class="form-input" placeholder="+225 07 00 00 00" value="{{ old('phone') }}">
-                            </div>
-                        </div>
-
+                    <div class="form-row">
                         <div class="form-group">
-                            <label>Taille de l'entreprise <span class="required">*</span></label>
+                            <label class="form-label">Votre Nom</label>
+                            <input type="text" name="contact_name" class="form-input" placeholder="Jean Dupont" required value="{{ old('contact_name') }}">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Email Pro</label>
+                            <input type="email" name="email" class="form-input" placeholder="jean@entreprise.com" required value="{{ old('email') }}">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Entreprise</label>
+                            <input type="text" name="company_name" class="form-input" placeholder="Tech Solutions" required value="{{ old('company_name') }}">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Taille</label>
                             <select name="company_size" class="form-select" required>
-                                <option value="" disabled {{ old('company_size') ? '' : 'selected' }}>Sélectionner...</option>
-                                <option value="1-10" {{ old('company_size') === '1-10' ? 'selected' : '' }}>1 - 10 employés</option>
-                                <option value="11-50" {{ old('company_size') === '11-50' ? 'selected' : '' }}>11 - 50 employés</option>
-                                <option value="51-200" {{ old('company_size') === '51-200' ? 'selected' : '' }}>51 - 200 employés</option>
-                                <option value="200+" {{ old('company_size') === '200+' ? 'selected' : '' }}>200+ employés</option>
+                                <option value="" disabled selected>Sélectionner...</option>
+                                <option value="1-10">1-10 employés</option>
+                                <option value="11-50">11-50 employés</option>
+                                <option value="51-200">51-200 employés</option>
+                                <option value="200+">200+ employés</option>
                             </select>
                         </div>
+                    </div>
 
-                        <div class="form-group">
-                            <label>Message (optionnel)</label>
-                            <textarea name="message" class="form-textarea" placeholder="Décrivez vos besoins ou posez vos questions...">{{ old('message') }}</textarea>
-                        </div>
+                    <div class="form-group">
+                        <label class="form-label">Téléphone</label>
+                        <input type="tel" name="phone" class="form-input" placeholder="+225 07 00 00 00" value="{{ old('phone') }}">
+                    </div>
 
-                        <button type="submit" class="btn-submit">Demander ma démo gratuite</button>
-                    </form>
-                </div>
+                    <div class="form-group">
+                        <label class="form-label">Message (Optionnel)</label>
+                        <textarea name="message" class="form-textarea" rows="3" placeholder="Vos besoins spécifiques...">{{ old('message') }}</textarea>
+                    </div>
+
+                    <button type="submit" class="submit-btn" :disabled="submitting">
+                        <span x-show="!submitting">Obtenir ma démo gratuite</span>
+                        <span x-show="submitting" style="display: none;">Envoi en cours...</span>
+                    </button>
+                    
+                    <p style="text-align: center; color: var(--text-muted); font-size: 0.8rem; margin-top: 1rem;">
+                        Aucune carte bancaire requise. Sans engagement.
+                    </p>
+                </form>
             </div>
         </div>
-    </main>
+    </div>
 
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-copy">&copy; {{ date('Y') }} ManageX. Tous droits réservés.</div>
-        </div>
-    </footer>
-
-    <script>
-        (function() {
-            const html = document.documentElement;
-            const themeToggle = document.getElementById('themeToggle');
-            const STORAGE_KEY = 'managex-theme';
-
-            function setTheme(theme) {
-                html.setAttribute('data-theme', theme);
-                localStorage.setItem(STORAGE_KEY, theme);
-            }
-
-            if (themeToggle) {
-                themeToggle.addEventListener('click', function() {
-                    const current = html.getAttribute('data-theme');
-                    setTheme(current === 'dark' ? 'light' : 'dark');
-                });
-            }
-        })();
-    </script>
 </body>
 </html>
