@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Hash;
 
 /**
  * Seeder pour créer le compte administrateur initial
- * 
+ *
  * Usage: php artisan db:seed --class=AdminSeeder
  */
 class AdminSeeder extends Seeder
@@ -21,6 +21,7 @@ class AdminSeeder extends Seeder
         // Vérifier si un admin existe déjà
         if (User::where('role', 'admin')->exists()) {
             $this->command->info('Un compte admin existe déjà. Aucune action nécessaire.');
+
             return;
         }
 
