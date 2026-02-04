@@ -115,8 +115,8 @@ class SecurityHeaders
         // Fonts: Google Fonts, Bunny Fonts
         $fontSrc = "'self' data: https://fonts.gstatic.com https://fonts.bunny.net";
 
-        // Connexions: self, WebSockets, CDNs pour source maps
-        $connectSrc = "'self' wss: ws: https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://unpkg.com";
+        // Connexions: self, WebSockets, CDNs pour source maps, et OpenStreetMap pour géolocalisation
+        $connectSrc = "'self' wss: ws: https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://unpkg.com https://nominatim.openstreetmap.org";
 
         // Frame ancestors: self (clickjacking protection)
         $frameAncestors = "'self'";
