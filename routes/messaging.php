@@ -65,19 +65,8 @@ Route::middleware(['auth'])->prefix('messaging')->name('messaging.')->group(func
         Route::post('/status/batch', [App\Http\Controllers\Messaging\StatusController::class, 'batch'])->name('status.batch');
 
         // Users search (for mentions and new conversations)
-        // SECURITE: Validation d'entrée + rate limiting pour éviter l'énumération
-        Route::get('/users/search', function (\Illuminate\Http\Request $request) {
-            $request->validate([
-                'q' => 'required|string|max:100',
-            ]);
-
-            $query = $request->get('q', '');
-            $users = \App\Models\User::where('id', '!=', auth()->id())
-                ->where('name', 'like', "%{$query}%")
-                ->limit(10)
-                ->get(['id', 'name', 'email']);
-
-            return response()->json($users);
-        })->middleware('throttle:30,1')->name('users.search');
+        Route::get('/users/search', [ConversationController::class, 'searchUsers'])
+            ->middleware('throttle:30,1')
+            ->name('users.search');
     });
 });

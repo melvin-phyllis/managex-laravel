@@ -26,6 +26,7 @@ use App\Http\Controllers\Employee\PayrollController as EmployeePayrollController
 use App\Http\Controllers\Employee\PresenceController as EmployeePresenceController;
 use App\Http\Controllers\Employee\SurveyController as EmployeeSurveyController;
 use App\Http\Controllers\Employee\TaskController as EmployeeTaskController;
+use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Tutor\InternEvaluationController as TutorInternEvaluationController;
 use Illuminate\Support\Facades\Route;
@@ -149,22 +150,12 @@ if (app()->environment('local')) {
 }
 // ============================================================================
 
-Route::get('/', function () {
-    if (auth()->check()) {
-        return redirect()->route('dashboard');
-    }
-
-    return view('landing');
-})->name('home');
+Route::get('/', [PageController::class, 'home'])->name('home');
+Route::get('/demo', [PageController::class, 'demoRequest'])->name('demo-request');
+Route::post('/demo', [PageController::class, 'storeDemoRequest'])->name('demo-request.store');
 
 // Redirection après login selon le rôle
-Route::get('/dashboard', function () {
-    if (auth()->user()->isAdmin()) {
-        return redirect()->route('admin.dashboard');
-    }
-
-    return redirect()->route('employee.dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [PageController::class, 'dashboard'])->middleware(['auth', 'verified'])->name('dashboard');
 
 // Routes Admin
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {

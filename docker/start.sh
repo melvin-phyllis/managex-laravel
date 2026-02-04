@@ -45,9 +45,9 @@ fi
 # Optimisation du cache (production)
 if [ "$APP_ENV" = "production" ]; then
     echo "[6/8] Optimisation pour la production..."
-    php artisan config:cache
-    php artisan route:cache
-    php artisan view:cache
+    php artisan config:cache || echo "WARN: config:cache failed, continuing..."
+    php artisan route:cache || echo "WARN: route:cache failed, continuing..."
+    php artisan view:cache || echo "WARN: view:cache failed, continuing..."
     php artisan event:cache 2>/dev/null || true
 else
     echo "[6/8] Mode développement - pas de cache"

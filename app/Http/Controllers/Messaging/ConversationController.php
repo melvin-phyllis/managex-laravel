@@ -377,4 +377,19 @@ class ConversationController extends Controller
             })
             ->first();
     }
+
+    public function searchUsers(Request $request)
+    {
+        $request->validate([
+            'q' => 'required|string|max:100',
+        ]);
+
+        $query = $request->get('q', '');
+        $users = User::where('id', '!=', auth()->id())
+            ->where('name', 'like', "%{$query}%")
+            ->limit(10)
+            ->get(['id', 'name', 'email']);
+
+        return response()->json($users);
+    }
 }

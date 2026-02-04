@@ -1539,8 +1539,8 @@
             </p>
 
             <div class="hero-ctas reveal reveal-delay-3">
-                <a href="{{ route('login') }}" class="btn-primary">
-                    <span>Commencer</span>
+                <a href="{{ route('demo-request') }}" class="btn-primary">
+                    <span>Demander une démo</span>
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" style="position:relative;z-index:1"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                 </a>
                 <a href="#features" class="btn-secondary">
@@ -1819,12 +1819,9 @@
                 <h2 class="reveal reveal-delay-1">Modernisez votre gestion RH <span class="text-accent">dès aujourd'hui</span></h2>
                 <p class="reveal reveal-delay-2">Rejoignez les entreprises qui ont choisi ManageX pour simplifier, automatiser et piloter leur capital humain avec intelligence.</p>
 
-                <form class="cta-form reveal reveal-delay-3" id="ctaForm">
-                    <input type="email" placeholder="Votre email professionnel" required>
-                    <button type="submit" class="btn-primary"><span>Demander une démo</span></button>
-                </form>
-                <div class="cta-success" id="ctaSuccess">
-                    &#10003; &nbsp;Merci ! Notre équipe vous contactera sous 24h pour planifier votre démonstration.
+                <div class="reveal reveal-delay-3" style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+                    <a href="{{ route('demo-request') }}" class="btn-primary"><span>Demander une démo</span></a>
+                    <a href="{{ route('login') }}" class="btn-secondary">Se connecter</a>
                 </div>
             </div>
         </div>
