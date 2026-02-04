@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -38,6 +38,81 @@
             --font-sans: 'Segoe UI', system-ui, -apple-system, sans-serif;
             --transition: cubic-bezier(0.25, 0.46, 0.45, 0.94);
             --transition-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        /* ========================================
+           DARK THEME OVERRIDES
+        ======================================== */
+        [data-theme="dark"] {
+            --white: #0a0a0f;
+            --off-white: #0f1018;
+            --light: #141420;
+            --light-surface: #1a1a2e;
+            --light-card: #12121c;
+            --black: #ffffff;
+            --dark-text: #f5f5f7;
+            --gray-100: #d1d1e0;
+            --gray-300: #a8a8be;
+            --gray-500: #6c6c88;
+            --gray-600: #4a4a64;
+            --gold: #d4a830;
+            --gold-light: #e8bc40;
+            --accent: #8b6cf5;
+            --accent-light: #9b7cff;
+            --accent-glow: rgba(139, 108, 245, 0.25);
+            --border: rgba(255, 255, 255, 0.08);
+            --border-hover: rgba(139, 108, 245, 0.3);
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+            --shadow-md: 0 8px 30px rgba(0,0,0,0.3);
+            --shadow-lg: 0 20px 60px rgba(0,0,0,0.4);
+        }
+
+        [data-theme="dark"] body::after {
+            opacity: 0.03;
+        }
+
+        /* Theme toggle button */
+        .theme-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: rgba(108, 76, 236, 0.08);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.3s var(--transition);
+            color: var(--gray-300);
+        }
+
+        .theme-toggle:hover {
+            background: rgba(108, 76, 236, 0.15);
+            border-color: var(--border-hover);
+            color: var(--accent);
+        }
+
+        .theme-toggle svg {
+            width: 18px;
+            height: 18px;
+            transition: transform 0.3s var(--transition);
+        }
+
+        .theme-toggle:hover svg {
+            transform: rotate(15deg);
+        }
+
+        .theme-toggle .icon-sun,
+        .theme-toggle .icon-moon {
+            display: none;
+        }
+
+        [data-theme="light"] .theme-toggle .icon-moon {
+            display: block;
+        }
+
+        [data-theme="dark"] .theme-toggle .icon-sun {
+            display: block;
         }
 
         *, *::before, *::after {
@@ -157,6 +232,10 @@
             border-bottom: 1px solid var(--border);
             padding: 0.75rem 0;
             box-shadow: var(--shadow-sm);
+        }
+
+        [data-theme="dark"] .nav.scrolled {
+            background: rgba(10, 10, 15, 0.85);
         }
 
         .nav .container {
@@ -1321,6 +1400,10 @@
                 box-shadow: var(--shadow-md);
             }
 
+            [data-theme="dark"] .nav-links.open {
+                background: rgba(10, 10, 15, 0.95);
+            }
+
             .features-grid,
             .testimonials-grid {
                 grid-template-columns: 1fr;
@@ -1371,6 +1454,15 @@
                 <div class="logo-icon">M</div>
                 ManageX
             </a>
+            <!-- Theme Toggle Button -->
+            <button class="theme-toggle" id="themeToggle" aria-label="Changer de thème">
+                <svg class="icon-sun" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+                </svg>
+                <svg class="icon-moon" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
+                </svg>
+            </button>
             <ul class="nav-links" id="navLinks">
                 <li><a href="#about">Plateforme</a></li>
                 <li><a href="#features">Fonctionnalités</a></li>
@@ -1760,6 +1852,52 @@
 
     <!-- ==================== JAVASCRIPT ==================== -->
     <script>
+        // ========================================
+        // THEME MANAGEMENT (Dark/Light Mode)
+        // ========================================
+        (function() {
+            const html = document.documentElement;
+            const themeToggle = document.getElementById('themeToggle');
+            const STORAGE_KEY = 'managex-theme';
+            
+            // Get saved theme or detect system preference
+            function getPreferredTheme() {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if (saved) return saved;
+                
+                // Detect system preference
+                if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    return 'dark';
+                }
+                return 'light';
+            }
+            
+            // Apply theme
+            function setTheme(theme) {
+                html.setAttribute('data-theme', theme);
+                localStorage.setItem(STORAGE_KEY, theme);
+            }
+            
+            // Initialize theme on page load
+            const initialTheme = getPreferredTheme();
+            setTheme(initialTheme);
+            
+            // Toggle theme on button click
+            themeToggle.addEventListener('click', () => {
+                const currentTheme = html.getAttribute('data-theme');
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                setTheme(newTheme);
+            });
+            
+            // Listen for system preference changes
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+                // Only auto-switch if user hasn't manually set a preference
+                if (!localStorage.getItem(STORAGE_KEY)) {
+                    setTheme(e.matches ? 'dark' : 'light');
+                }
+            });
+        })();
+
         const revealObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
