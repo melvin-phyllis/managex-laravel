@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\Models\User;
 use App\Models\InternEvaluation;
+use App\Models\User;
 use App\Notifications\MissingEvaluationAlert;
 use Illuminate\Console\Command;
 
@@ -18,7 +18,7 @@ class SendMissingEvaluationAlerts extends Command
         $this->info('Checking for missing evaluations from last week...');
 
         $lastWeekStart = now()->subWeek()->startOfWeek();
-        $weekLabel = 'Semaine du ' . $lastWeekStart->format('d/m/Y');
+        $weekLabel = 'Semaine du '.$lastWeekStart->format('d/m/Y');
 
         $this->line("Checking: {$weekLabel}");
         $this->newLine();
@@ -40,7 +40,7 @@ class SendMissingEvaluationAlerts extends Command
 
             // Find interns without submitted evaluation for last week
             $missingInterns = $interns->filter(function ($intern) use ($lastWeekStart) {
-                return !InternEvaluation::where('intern_id', $intern->id)
+                return ! InternEvaluation::where('intern_id', $intern->id)
                     ->where('week_start', $lastWeekStart)
                     ->where('status', 'submitted')
                     ->exists();

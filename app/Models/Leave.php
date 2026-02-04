@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Carbon\Carbon;
 
 class Leave extends Model
 {
@@ -63,7 +62,7 @@ class Leave extends Model
      */
     public function getTypeLabelAttribute(): string
     {
-        return match($this->type) {
+        return match ($this->type) {
             'conge' => 'Congé annuel',
             'maladie' => 'Congé maladie',
             'autre' => 'Autre',
@@ -76,7 +75,7 @@ class Leave extends Model
      */
     public function getStatutLabelAttribute(): string
     {
-        return match($this->statut) {
+        return match ($this->statut) {
             'pending' => 'En attente',
             'approved' => 'Approuvé',
             'rejected' => 'Refusé',
@@ -89,7 +88,7 @@ class Leave extends Model
      */
     public function getStatutColorAttribute(): string
     {
-        return match($this->statut) {
+        return match ($this->statut) {
             'pending' => 'yellow',
             'approved' => 'green',
             'rejected' => 'red',
@@ -103,7 +102,7 @@ class Leave extends Model
     public function scopeCurrentlyActive($query)
     {
         return $query->where('statut', 'approved')
-                     ->where('date_debut', '<=', now())
-                     ->where('date_fin', '>=', now());
+            ->where('date_debut', '<=', now())
+            ->where('date_fin', '>=', now());
     }
 }

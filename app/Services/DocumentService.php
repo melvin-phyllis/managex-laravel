@@ -23,9 +23,9 @@ class DocumentService
     ): Document {
         // Validate extension
         $extension = strtolower($file->getClientOriginalExtension());
-        if (!$type->isExtensionAllowed($extension)) {
+        if (! $type->isExtensionAllowed($extension)) {
             throw new \InvalidArgumentException(
-                "Extension .{$extension} non autorisée. Formats acceptés : " . $type->getAllowedExtensionsString()
+                "Extension .{$extension} non autorisée. Formats acceptés : ".$type->getAllowedExtensionsString()
             );
         }
 
@@ -52,7 +52,7 @@ class DocumentService
 
         // Generate unique filename
         $filename = $this->generateFilename($file, $user, $type);
-        
+
         // Store file
         $path = $file->storeAs(
             $this->getStoragePath($user, $type),
@@ -78,8 +78,8 @@ class DocumentService
             'status' => $status,
             'requires_acknowledgment' => $type->slug === 'internal_rules',
             'uploaded_by' => $uploader->id,
-            'validated_by' => !$type->requires_validation ? $uploader->id : null,
-            'validated_at' => !$type->requires_validation ? now() : null,
+            'validated_by' => ! $type->requires_validation ? $uploader->id : null,
+            'validated_at' => ! $type->requires_validation ? now() : null,
         ]);
     }
 
@@ -91,7 +91,7 @@ class DocumentService
         $extension = $file->getClientOriginalExtension();
         $timestamp = now()->format('Ymd_His');
         $random = Str::random(8);
-        
+
         return "{$type->slug}_{$timestamp}_{$random}.{$extension}";
     }
 
@@ -117,25 +117,26 @@ class DocumentService
 
         foreach ($requiredTypes as $type) {
             // Skip if employee can't upload (company documents)
-            if (!$type->employee_can_upload) {
+            if (! $type->employee_can_upload) {
                 // Check if company has uploaded
                 $hasDocument = Document::where('user_id', $user->id)
                     ->where('document_type_id', $type->id)
                     ->where('status', 'approved')
                     ->exists();
-                
-                if (!$hasDocument) {
+
+                if (! $hasDocument) {
                     $missing[] = [
                         'type' => $type,
                         'can_upload' => false,
                         'message' => 'En attente (RH)',
                     ];
                 }
+
                 continue;
             }
 
             // Check if user has a valid document
-            if (!$type->hasValidDocument($user)) {
+            if (! $type->hasValidDocument($user)) {
                 $missing[] = [
                     'type' => $type,
                     'can_upload' => true,
@@ -179,7 +180,7 @@ class DocumentService
             ->whereIn('status', ['pending', 'approved'])
             ->with(['type.category'])
             ->get()
-            ->groupBy(fn($doc) => $doc->type->category->slug);
+            ->groupBy(fn ($doc) => $doc->type->category->slug);
 
         return $documents->toArray();
     }

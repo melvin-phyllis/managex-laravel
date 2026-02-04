@@ -103,8 +103,8 @@ class Conversation extends Model
     public function unreadCountFor(int $userId): int
     {
         $participant = $this->participants()->where('user_id', $userId)->first();
-        
-        if (!$participant || !$participant->last_read_at) {
+
+        if (! $participant || ! $participant->last_read_at) {
             return $this->messages()->count();
         }
 

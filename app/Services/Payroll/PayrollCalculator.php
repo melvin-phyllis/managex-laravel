@@ -2,15 +2,15 @@
 
 namespace App\Services\Payroll;
 
-use App\Models\User;
-use App\Models\Payroll;
 use App\Models\PayrollCountry;
-use App\Models\PayrollCountryRule;
+use App\Models\User;
 
 class PayrollCalculator
 {
     protected PayrollCountry $country;
+
     protected array $rules = [];
+
     protected float $fiscalParts = 1;
 
     /**
@@ -20,6 +20,7 @@ class PayrollCalculator
     {
         $this->country = $country;
         $this->rules = $country->rules()->orderBy('display_order')->get()->keyBy('code')->toArray();
+
         return $this;
     }
 
@@ -29,6 +30,7 @@ class PayrollCalculator
     public function withParts(float $parts): self
     {
         $this->fiscalParts = max(1, $parts);
+
         return $this;
     }
 
@@ -44,6 +46,7 @@ class PayrollCalculator
             $childrenParts = ($user->children_count ?? 0) * 0.5;
             $this->fiscalParts = min($parts + $childrenParts, 5.0);
         }
+
         return $this;
     }
 
@@ -149,10 +152,12 @@ class PayrollCalculator
      */
     protected function calculateIGR(float $base, float $parts): float
     {
-        if ($parts <= 0) $parts = 1;
+        if ($parts <= 0) {
+            $parts = 1;
+        }
 
         $rule = $this->rules['IGR'] ?? null;
-        if (!$rule || !isset($rule['brackets'])) {
+        if (! $rule || ! isset($rule['brackets'])) {
             return 0;
         }
 
@@ -192,7 +197,7 @@ class PayrollCalculator
     protected function applyRule(string $code, float $base): float
     {
         $rule = $this->rules[$code] ?? null;
-        if (!$rule) {
+        if (! $rule) {
             return 0;
         }
 

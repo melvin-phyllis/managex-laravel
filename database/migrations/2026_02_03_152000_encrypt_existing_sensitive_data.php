@@ -2,13 +2,13 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * SECURITY AUDIT FIX: Prépare les colonnes pour le chiffrement
- * 
+ *
  * Les données chiffrées par Laravel sont beaucoup plus longues que les données originales
  * (base64 JSON avec iv, value, mac, tag). Cette migration :
  * 1. Change les colonnes en TEXT pour accommoder les données chiffrées
@@ -40,19 +40,19 @@ return new class extends Migration
         foreach ($users as $user) {
             $updates = [];
 
-            if ($user->social_security_number && !$this->isEncrypted($user->social_security_number)) {
+            if ($user->social_security_number && ! $this->isEncrypted($user->social_security_number)) {
                 $updates['social_security_number'] = Crypt::encryptString($user->social_security_number);
             }
 
-            if ($user->bank_iban && !$this->isEncrypted($user->bank_iban)) {
+            if ($user->bank_iban && ! $this->isEncrypted($user->bank_iban)) {
                 $updates['bank_iban'] = Crypt::encryptString($user->bank_iban);
             }
 
-            if ($user->bank_bic && !$this->isEncrypted($user->bank_bic)) {
+            if ($user->bank_bic && ! $this->isEncrypted($user->bank_bic)) {
                 $updates['bank_bic'] = Crypt::encryptString($user->bank_bic);
             }
 
-            if (!empty($updates)) {
+            if (! empty($updates)) {
                 DB::table('users')->where('id', $user->id)->update($updates);
             }
         }
@@ -75,6 +75,7 @@ return new class extends Migration
 
         try {
             Crypt::decryptString($value);
+
             return true;
         } catch (\Exception $e) {
             return false;

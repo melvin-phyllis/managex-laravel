@@ -34,6 +34,7 @@ class GlobalDocumentController extends Controller
     {
         $types = GlobalDocument::getTypes();
         $positions = Position::with('department')->orderBy('name')->get();
+
         return view('admin.global-documents.create', compact('types', 'positions'));
     }
 
@@ -44,7 +45,7 @@ class GlobalDocumentController extends Controller
     {
         $request->validate([
             'title' => 'required|string|max:255',
-            'type' => 'required|string|in:' . implode(',', array_keys(GlobalDocument::getTypes())),
+            'type' => 'required|string|in:'.implode(',', array_keys(GlobalDocument::getTypes())),
             'position_id' => 'nullable|exists:positions,id',
             'description' => 'nullable|string|max:1000',
             'file' => 'required|file|mimes:pdf,doc,docx|max:10240',
@@ -52,11 +53,11 @@ class GlobalDocumentController extends Controller
         ]);
 
         $file = $request->file('file');
-        $filename = Str::uuid() . '.' . $file->getClientOriginalExtension();
-        $path = 'global/' . $request->type . '/' . $filename;
+        $filename = Str::uuid().'.'.$file->getClientOriginalExtension();
+        $path = 'global/'.$request->type.'/'.$filename;
 
         Storage::disk('documents')->putFileAs(
-            'global/' . $request->type,
+            'global/'.$request->type,
             $file,
             $filename
         );
@@ -75,7 +76,7 @@ class GlobalDocumentController extends Controller
         ]);
 
         return redirect()->route('admin.global-documents.index')
-            ->with('success', 'Document "' . $request->title . '" ajouté avec succès.');
+            ->with('success', 'Document "'.$request->title.'" ajouté avec succès.');
     }
 
     /**
@@ -85,7 +86,7 @@ class GlobalDocumentController extends Controller
     {
         $globalDocument->load(['uploader', 'acknowledgedBy']);
         $usersNotAcknowledged = $globalDocument->usersNotAcknowledged();
-        
+
         // Comptage des employés pour le calcul du pourcentage d'accusés de réception
         $totalEmployees = \App\Models\User::where('role', 'employee')->count();
 
@@ -99,6 +100,7 @@ class GlobalDocumentController extends Controller
     {
         $types = GlobalDocument::getTypes();
         $positions = Position::with('department')->orderBy('name')->get();
+
         return view('admin.global-documents.edit', compact('globalDocument', 'types', 'positions'));
     }
 
@@ -126,11 +128,11 @@ class GlobalDocumentController extends Controller
             $globalDocument->deleteFile();
 
             $file = $request->file('file');
-            $filename = Str::uuid() . '.' . $file->getClientOriginalExtension();
-            $path = 'global/' . $globalDocument->type . '/' . $filename;
+            $filename = Str::uuid().'.'.$file->getClientOriginalExtension();
+            $path = 'global/'.$globalDocument->type.'/'.$filename;
 
             Storage::disk('documents')->putFileAs(
-                'global/' . $globalDocument->type,
+                'global/'.$globalDocument->type,
                 $file,
                 $filename
             );
@@ -152,7 +154,7 @@ class GlobalDocumentController extends Controller
      */
     public function download(GlobalDocument $globalDocument)
     {
-        if (!$globalDocument->fileExists()) {
+        if (! $globalDocument->fileExists()) {
             abort(404, 'Fichier introuvable');
         }
 
@@ -171,6 +173,6 @@ class GlobalDocumentController extends Controller
         $globalDocument->delete();
 
         return redirect()->route('admin.global-documents.index')
-            ->with('success', 'Document "' . $title . '" supprimé.');
+            ->with('success', 'Document "'.$title.'" supprimé.');
     }
 }

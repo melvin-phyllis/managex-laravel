@@ -30,7 +30,7 @@ class InternEvaluationController extends Controller
                     ->first();
 
                 $intern->current_week_evaluation = $evaluation;
-                $intern->needs_evaluation = !$evaluation || $evaluation->status === 'draft';
+                $intern->needs_evaluation = ! $evaluation || $evaluation->status === 'draft';
 
                 return $intern;
             });
@@ -38,8 +38,8 @@ class InternEvaluationController extends Controller
         // Stats
         $stats = [
             'total_interns' => $interns->count(),
-            'evaluated_this_week' => $interns->filter(fn($i) => $i->current_week_evaluation?->status === 'submitted')->count(),
-            'pending' => $interns->filter(fn($i) => $i->needs_evaluation)->count(),
+            'evaluated_this_week' => $interns->filter(fn ($i) => $i->current_week_evaluation?->status === 'submitted')->count(),
+            'pending' => $interns->filter(fn ($i) => $i->needs_evaluation)->count(),
         ];
 
         return view('tutor.evaluations.index', compact('interns', 'stats'));
@@ -155,7 +155,7 @@ class InternEvaluationController extends Controller
             abort(403, 'Vous n\'êtes pas l\'auteur de cette évaluation.');
         }
 
-        if (!$evaluation->canBeEdited()) {
+        if (! $evaluation->canBeEdited()) {
             abort(403, 'Cette évaluation a déjà été soumise et ne peut plus être modifiée.');
         }
 
@@ -189,7 +189,7 @@ class InternEvaluationController extends Controller
             abort(403, 'Vous n\'êtes pas l\'auteur de cette évaluation.');
         }
 
-        if (!$evaluation->canBeEdited()) {
+        if (! $evaluation->canBeEdited()) {
             abort(403, 'Cette évaluation a déjà été soumise et ne peut plus être modifiée.');
         }
 
@@ -260,7 +260,7 @@ class InternEvaluationController extends Controller
         ];
 
         // Progression data
-        $progressionData = $evaluations->reverse()->map(fn($e) => [
+        $progressionData = $evaluations->reverse()->map(fn ($e) => [
             'week' => $e->week_start->format('d/m'),
             'score' => $e->total_score,
         ])->values();

@@ -8,10 +8,15 @@ use Illuminate\Support\Facades\Log;
 class MistralService
 {
     protected string $apiKey;
+
     protected string $baseUrl;
+
     protected string $model;
+
     protected int $maxTokens;
+
     protected float $temperature;
+
     protected int $timeout;
 
     public function __construct()
@@ -29,20 +34,21 @@ class MistralService
      */
     public function isAvailable(): bool
     {
-        return !empty($this->apiKey);
+        return ! empty($this->apiKey);
     }
 
     /**
      * Envoyer une requête de chat à l'API Mistral.
      *
-     * @param string $system  Prompt système
-     * @param array  $messages Historique [{role: 'user'|'assistant', content: '...'}]
+     * @param  string  $system  Prompt système
+     * @param  array  $messages  Historique [{role: 'user'|'assistant', content: '...'}]
      * @return string|null Réponse de l'IA ou null en cas d'erreur
      */
     public function chat(string $system, array $messages): ?string
     {
-        if (!$this->isAvailable()) {
+        if (! $this->isAvailable()) {
             Log::warning('MistralService: clé API non configurée');
+
             return null;
         }
 
@@ -60,11 +66,11 @@ class MistralService
 
         try {
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->apiKey,
+                'Authorization' => 'Bearer '.$this->apiKey,
                 'Content-Type' => 'application/json',
             ])
                 ->timeout($this->timeout)
-                ->post($this->baseUrl . '/chat/completions', $payload);
+                ->post($this->baseUrl.'/chat/completions', $payload);
 
             $duration = round((microtime(true) - $startTime) * 1000);
 
@@ -98,11 +104,13 @@ class MistralService
                 'message' => $e->getMessage(),
                 'duration_ms' => round((microtime(true) - $startTime) * 1000),
             ]);
+
             return null;
         } catch (\Exception $e) {
             Log::error('MistralService: erreur inattendue', [
                 'message' => $e->getMessage(),
             ]);
+
             return null;
         }
     }

@@ -68,7 +68,7 @@ class ConversationPolicy
     public function sendMessage(User $user, Conversation $conversation): bool
     {
         // Must be a participant
-        if (!$conversation->hasParticipant($user->id)) {
+        if (! $conversation->hasParticipant($user->id)) {
             return false;
         }
 

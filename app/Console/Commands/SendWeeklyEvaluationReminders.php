@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\Models\User;
 use App\Models\InternEvaluation;
+use App\Models\User;
 use App\Notifications\WeeklyEvaluationReminder;
 use Illuminate\Console\Command;
 
@@ -32,7 +32,7 @@ class SendWeeklyEvaluationReminders extends Command
 
             // Filter interns who don't have an evaluation for this week yet
             $internsToEvaluate = $interns->filter(function ($intern) use ($currentWeekStart) {
-                return !InternEvaluation::where('intern_id', $intern->id)
+                return ! InternEvaluation::where('intern_id', $intern->id)
                     ->where('week_start', $currentWeekStart)
                     ->where('status', 'submitted')
                     ->exists();

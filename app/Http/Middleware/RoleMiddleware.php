@@ -15,7 +15,7 @@ class RoleMiddleware
      */
     public function handle(Request $request, Closure $next, string $role): Response
     {
-        if (!$request->user()) {
+        if (! $request->user()) {
             return redirect()->route('login');
         }
 
@@ -23,6 +23,7 @@ class RoleMiddleware
             if ($request->user()->isAdmin()) {
                 return redirect()->route('admin.dashboard');
             }
+
             return redirect()->route('employee.dashboard');
         }
 

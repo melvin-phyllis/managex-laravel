@@ -3,15 +3,15 @@
 namespace App\Exports;
 
 use App\Models\Presence;
+use Illuminate\Database\Eloquent\Builder;
 use Maatwebsite\Excel\Concerns\FromQuery;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithStyles;
-use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
-use Illuminate\Database\Eloquent\Builder;
 
-class PresencesExport implements FromQuery, WithHeadings, WithMapping, WithStyles, ShouldAutoSize
+class PresencesExport implements FromQuery, ShouldAutoSize, WithHeadings, WithMapping, WithStyles
 {
     protected array $filters;
 
@@ -20,31 +20,25 @@ class PresencesExport implements FromQuery, WithHeadings, WithMapping, WithStyle
         $this->filters = $filters;
     }
 
-    /**
-     * @return Builder
-     */
     public function query(): Builder
     {
         $query = Presence::query()->with('user');
 
-        if (!empty($this->filters['user_id'])) {
+        if (! empty($this->filters['user_id'])) {
             $query->where('user_id', $this->filters['user_id']);
         }
 
-        if (!empty($this->filters['date_debut'])) {
+        if (! empty($this->filters['date_debut'])) {
             $query->where('date', '>=', $this->filters['date_debut']);
         }
 
-        if (!empty($this->filters['date_fin'])) {
+        if (! empty($this->filters['date_fin'])) {
             $query->where('date', '<=', $this->filters['date_fin']);
         }
 
         return $query->orderBy('date', 'desc')->orderBy('user_id');
     }
 
-    /**
-     * @return array
-     */
     public function headings(): array
     {
         return [
@@ -61,8 +55,7 @@ class PresencesExport implements FromQuery, WithHeadings, WithMapping, WithStyle
     }
 
     /**
-     * @param Presence $presence
-     * @return array
+     * @param  Presence  $presence
      */
     public function map($presence): array
     {
@@ -79,10 +72,6 @@ class PresencesExport implements FromQuery, WithHeadings, WithMapping, WithStyle
         ];
     }
 
-    /**
-     * @param Worksheet $sheet
-     * @return array
-     */
     public function styles(Worksheet $sheet): array
     {
         return [

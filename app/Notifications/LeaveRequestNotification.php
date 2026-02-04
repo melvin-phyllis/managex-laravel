@@ -5,8 +5,8 @@ namespace App\Notifications;
 use App\Models\Leave;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\BroadcastMessage;
+use Illuminate\Notifications\Notification;
 
 class LeaveRequestNotification extends Notification implements ShouldQueue
 {
@@ -31,7 +31,7 @@ class LeaveRequestNotification extends Notification implements ShouldQueue
             'start_date' => $this->leave->date_debut->format('d/m/Y'),
             'end_date' => $this->leave->date_fin->format('d/m/Y'),
             'days' => $this->leave->duree,
-            'message' => "Nouvelle demande de congé de " . ($this->leave->user?->name ?? 'un employé'),
+            'message' => 'Nouvelle demande de congé de '.($this->leave->user?->name ?? 'un employé'),
             'url' => route('admin.leaves.show', $this->leave),
         ];
     }
@@ -46,4 +46,3 @@ class LeaveRequestNotification extends Notification implements ShouldQueue
         return $this->toDatabase($notifiable);
     }
 }
-

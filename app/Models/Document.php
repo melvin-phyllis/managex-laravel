@@ -4,8 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Storage;
 
 class Document extends Model
@@ -139,16 +139,18 @@ class Document extends Model
     {
         $bytes = $this->file_size;
         if ($bytes >= 1048576) {
-            return round($bytes / 1048576, 2) . ' MB';
+            return round($bytes / 1048576, 2).' MB';
         } elseif ($bytes >= 1024) {
-            return round($bytes / 1024, 2) . ' KB';
+            return round($bytes / 1024, 2).' KB';
         }
-        return $bytes . ' B';
+
+        return $bytes.' B';
     }
 
     public function getFileIconAttribute(): string
     {
         $extension = strtolower(pathinfo($this->original_filename, PATHINFO_EXTENSION));
+
         return match ($extension) {
             'pdf' => '📄',
             'jpg', 'jpeg', 'png', 'gif' => '🖼️',
@@ -165,16 +167,23 @@ class Document extends Model
 
     public function getIsExpiringSoonAttribute(): bool
     {
-        return $this->expiry_date && 
-               $this->expiry_date->isFuture() && 
+        return $this->expiry_date &&
+               $this->expiry_date->isFuture() &&
                $this->expiry_date->diffInDays(today()) <= 30;
     }
 
     public function getExpiryStatusAttribute(): ?string
     {
-        if (!$this->expiry_date) return null;
-        if ($this->is_expired) return 'expired';
-        if ($this->is_expiring_soon) return 'expiring';
+        if (! $this->expiry_date) {
+            return null;
+        }
+        if ($this->is_expired) {
+            return 'expired';
+        }
+        if ($this->is_expiring_soon) {
+            return 'expiring';
+        }
+
         return 'valid';
     }
 
@@ -230,6 +239,7 @@ class Document extends Model
         if ($this->fileExists()) {
             return Storage::disk('documents')->delete($this->file_path);
         }
+
         return true;
     }
 

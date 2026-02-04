@@ -69,7 +69,7 @@ class AppServiceProvider extends ServiceProvider
 
         // Limite stricte pour le login: 5 tentatives par minute
         RateLimiter::for('login', function (Request $request) {
-            return Limit::perMinute(5)->by($request->input('email') . '|' . $request->ip());
+            return Limit::perMinute(5)->by($request->input('email').'|'.$request->ip());
         });
 
         // Limite pour les actions sensibles (suppression, etc.): 20 par minute

@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Department;
 use App\Models\InternEvaluation;
 use App\Models\User;
-use App\Models\Department;
-use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\Request;
 
 class InternEvaluationController extends Controller
 {
@@ -26,7 +26,7 @@ class InternEvaluationController extends Controller
         // Statistics
         $stats = [
             'total_interns' => $interns->count(),
-            'interns_with_supervisor' => $interns->filter(fn($i) => $i->supervisor_id)->count(),
+            'interns_with_supervisor' => $interns->filter(fn ($i) => $i->supervisor_id)->count(),
             'evaluations_this_week' => InternEvaluation::currentWeek()->submitted()->count(),
             'evaluations_total' => InternEvaluation::submitted()->count(),
             'average_score' => round(InternEvaluation::submitted()->get()->avg('total_score'), 1),
@@ -42,11 +42,11 @@ class InternEvaluationController extends Controller
 
         // Score distribution for chart
         $scoreDistribution = [
-            'A' => InternEvaluation::submitted()->get()->filter(fn($e) => $e->grade_letter === 'A')->count(),
-            'B' => InternEvaluation::submitted()->get()->filter(fn($e) => $e->grade_letter === 'B')->count(),
-            'C' => InternEvaluation::submitted()->get()->filter(fn($e) => $e->grade_letter === 'C')->count(),
-            'D' => InternEvaluation::submitted()->get()->filter(fn($e) => $e->grade_letter === 'D')->count(),
-            'E' => InternEvaluation::submitted()->get()->filter(fn($e) => $e->grade_letter === 'E')->count(),
+            'A' => InternEvaluation::submitted()->get()->filter(fn ($e) => $e->grade_letter === 'A')->count(),
+            'B' => InternEvaluation::submitted()->get()->filter(fn ($e) => $e->grade_letter === 'B')->count(),
+            'C' => InternEvaluation::submitted()->get()->filter(fn ($e) => $e->grade_letter === 'C')->count(),
+            'D' => InternEvaluation::submitted()->get()->filter(fn ($e) => $e->grade_letter === 'D')->count(),
+            'E' => InternEvaluation::submitted()->get()->filter(fn ($e) => $e->grade_letter === 'E')->count(),
         ];
 
         // Departments for filter
@@ -66,7 +66,7 @@ class InternEvaluationController extends Controller
      */
     public function show(User $intern)
     {
-        if (!$intern->isIntern()) {
+        if (! $intern->isIntern()) {
             abort(404, 'Cet utilisateur n\'est pas un stagiaire.');
         }
 
@@ -88,7 +88,7 @@ class InternEvaluationController extends Controller
         ];
 
         // Progression data for chart
-        $progressionData = $evaluations->reverse()->map(fn($e) => [
+        $progressionData = $evaluations->reverse()->map(fn ($e) => [
             'week' => $e->week_start->format('d/m'),
             'score' => $e->total_score,
         ])->values();
@@ -97,13 +97,13 @@ class InternEvaluationController extends Controller
         $tutors = User::where('status', 'active')
             ->where(function ($q) {
                 $q->where('role', 'admin')
-                  ->orWhere(function ($q2) {
-                      $q2->where('role', 'employee')
-                         ->where(function ($q3) {
-                             $q3->whereNull('contract_type')
-                                ->orWhere('contract_type', '!=', 'stage');
-                         });
-                  });
+                    ->orWhere(function ($q2) {
+                        $q2->where('role', 'employee')
+                            ->where(function ($q3) {
+                                $q3->whereNull('contract_type')
+                                    ->orWhere('contract_type', '!=', 'stage');
+                            });
+                    });
             })
             ->orderBy('name')
             ->get();
@@ -145,7 +145,7 @@ class InternEvaluationController extends Controller
         }
 
         if ($request->filled('grade')) {
-            $query->get()->filter(fn($e) => $e->grade_letter === $request->grade);
+            $query->get()->filter(fn ($e) => $e->grade_letter === $request->grade);
         }
 
         $evaluations = $query->orderBy('week_start', 'desc')->paginate(25);
@@ -203,7 +203,7 @@ class InternEvaluationController extends Controller
             'dateTo' => $request->date_to,
         ]);
 
-        $filename = 'rapport-stagiaire-' . str_replace(' ', '-', strtolower($intern->name)) . '-' . now()->format('Y-m-d') . '.pdf';
+        $filename = 'rapport-stagiaire-'.str_replace(' ', '-', strtolower($intern->name)).'-'.now()->format('Y-m-d').'.pdf';
 
         return $pdf->download($filename);
     }
@@ -221,7 +221,7 @@ class InternEvaluationController extends Controller
             ->with(['supervisor', 'department'])
             ->get()
             ->filter(function ($intern) use ($lastWeekStart) {
-                return !InternEvaluation::where('intern_id', $intern->id)
+                return ! InternEvaluation::where('intern_id', $intern->id)
                     ->forWeek($lastWeekStart)
                     ->submitted()
                     ->exists();
@@ -242,7 +242,7 @@ class InternEvaluationController extends Controller
      */
     public function assignSupervisor(Request $request, User $intern)
     {
-        if (!$intern->isIntern()) {
+        if (! $intern->isIntern()) {
             abort(404, 'Cet utilisateur n\'est pas un stagiaire.');
         }
 
@@ -262,7 +262,7 @@ class InternEvaluationController extends Controller
      */
     public function removeSupervisor(User $intern)
     {
-        if (!$intern->isIntern()) {
+        if (! $intern->isIntern()) {
             abort(404, 'Cet utilisateur n\'est pas un stagiaire.');
         }
 

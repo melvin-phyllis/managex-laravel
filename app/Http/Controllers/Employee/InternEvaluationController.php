@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Employee;
 
 use App\Http\Controllers\Controller;
 use App\Models\InternEvaluation;
-use Illuminate\Http\Request;
 
 class InternEvaluationController extends Controller
 {
@@ -16,7 +15,7 @@ class InternEvaluationController extends Controller
         $user = auth()->user();
 
         // Check if user is an intern
-        if (!$user->isIntern()) {
+        if (! $user->isIntern()) {
             abort(403, 'Cette page est réservée aux stagiaires.');
         }
 
@@ -39,7 +38,7 @@ class InternEvaluationController extends Controller
         }
 
         // Progression data for chart
-        $progressionData = $evaluations->reverse()->map(fn($e) => [
+        $progressionData = $evaluations->reverse()->map(fn ($e) => [
             'week' => $e->week_start->format('d/m'),
             'score' => $e->total_score,
             'discipline' => (float) $e->discipline_score,

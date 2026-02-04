@@ -64,7 +64,7 @@ class Task extends Model
      */
     public function getStatutColorAttribute(): string
     {
-        return match($this->statut) {
+        return match ($this->statut) {
             'pending' => 'yellow',
             'approved' => 'blue',
             'rejected' => 'red',
@@ -78,7 +78,7 @@ class Task extends Model
      */
     public function getPrioriteColorAttribute(): string
     {
-        return match($this->priorite) {
+        return match ($this->priorite) {
             'low' => 'green',
             'medium' => 'yellow',
             'high' => 'red',
@@ -91,7 +91,7 @@ class Task extends Model
      */
     public function getStatutLabelAttribute(): string
     {
-        return match($this->statut) {
+        return match ($this->statut) {
             'pending' => 'En attente',
             'approved' => 'Approuvée',
             'rejected' => 'Rejetée',
@@ -105,7 +105,7 @@ class Task extends Model
      */
     public function getPrioriteLabelAttribute(): string
     {
-        return match($this->priorite) {
+        return match ($this->priorite) {
             'low' => 'Basse',
             'medium' => 'Moyenne',
             'high' => 'Haute',

@@ -11,16 +11,16 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware(['auth'])->prefix('messaging')->name('messaging.')->group(function () {
-    
+
     // Main messaging interface
     Route::get('/', [ConversationController::class, 'index'])->name('index');
-    
+
     // Admin chat (uses admin layout)
     Route::get('/admin-chat', [ConversationController::class, 'adminChat'])->name('admin.chat')->middleware('role:admin');
 
     // API Routes
     Route::prefix('api')->name('api.')->group(function () {
-        
+
         // Conversations
         Route::get('/conversations', [ConversationController::class, 'list'])->name('conversations.list');
         Route::post('/conversations', [ConversationController::class, 'store'])->name('conversations.store');
@@ -66,16 +66,17 @@ Route::middleware(['auth'])->prefix('messaging')->name('messaging.')->group(func
 
         // Users search (for mentions and new conversations)
         // SECURITE: Validation d'entrée + rate limiting pour éviter l'énumération
-        Route::get('/users/search', function(\Illuminate\Http\Request $request) {
+        Route::get('/users/search', function (\Illuminate\Http\Request $request) {
             $request->validate([
-                'q' => 'required|string|max:100'
+                'q' => 'required|string|max:100',
             ]);
-            
+
             $query = $request->get('q', '');
             $users = \App\Models\User::where('id', '!=', auth()->id())
                 ->where('name', 'like', "%{$query}%")
                 ->limit(10)
                 ->get(['id', 'name', 'email']);
+
             return response()->json($users);
         })->middleware('throttle:30,1')->name('users.search');
     });

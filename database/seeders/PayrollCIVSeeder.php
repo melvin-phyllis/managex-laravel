@@ -3,8 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\PayrollCountry;
-use App\Models\PayrollCountryRule;
 use App\Models\PayrollCountryField;
+use App\Models\PayrollCountryRule;
 use App\Models\PayrollTemplate;
 use Illuminate\Database\Seeder;
 

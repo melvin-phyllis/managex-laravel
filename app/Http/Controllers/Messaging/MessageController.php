@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Messaging;
 
+use App\Events\NewMessage;
 use App\Http\Controllers\Controller;
 use App\Models\Messaging\Conversation;
+use App\Models\Messaging\Mention;
 use App\Models\Messaging\Message;
 use App\Models\Messaging\MessageRead;
-use App\Models\Messaging\Mention;
-use App\Events\NewMessage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -20,7 +20,7 @@ class MessageController extends Controller
     {
         $user = auth()->user();
 
-        if (!$conversation->hasParticipant($user->id)) {
+        if (! $conversation->hasParticipant($user->id)) {
             abort(403);
         }
 
@@ -30,10 +30,10 @@ class MessageController extends Controller
         // Polling: get messages after a specific ID
         if ($request->filled('after')) {
             $query->where('id', '>', $request->after)
-                  ->orderBy('created_at', 'asc');
-            
+                ->orderBy('created_at', 'asc');
+
             $messages = $query->limit(50)->get();
-            
+
             return response()->json([
                 'messages' => $messages->map(fn ($m) => $this->formatMessage($m)),
                 'has_more' => false,
@@ -44,7 +44,7 @@ class MessageController extends Controller
         if ($request->filled('before')) {
             $query->where('id', '<', $request->before);
         }
-        
+
         $query->orderBy('created_at', 'desc');
         $messages = $query->limit(50)->get()->reverse()->values();
 
@@ -61,7 +61,7 @@ class MessageController extends Controller
     {
         $user = auth()->user();
 
-        if (!$conversation->hasParticipant($user->id)) {
+        if (! $conversation->hasParticipant($user->id)) {
             abort(403);
         }
 
@@ -102,7 +102,7 @@ class MessageController extends Controller
             try {
                 broadcast(new NewMessage($message))->toOthers();
             } catch (\Exception $e) {
-                \Log::debug('Broadcasting disabled or failed: ' . $e->getMessage());
+                \Log::debug('Broadcasting disabled or failed: '.$e->getMessage());
             }
 
             // Send notifications to other participants
@@ -119,12 +119,14 @@ class MessageController extends Controller
                         $isMentioned = $message->mentions()
                             ->where(function ($q) use ($participant) {
                                 $q->where('user_id', $participant->user_id)
-                                  ->orWhere('type', 'all');
+                                    ->orWhere('type', 'all');
                             })->exists();
-                        
-                        if (!$isMentioned) continue;
+
+                        if (! $isMentioned) {
+                            continue;
+                        }
                     }
-                    
+
                     $participant->user->notify(new \App\Notifications\NewMessageNotification($message));
                 }
             }
@@ -181,11 +183,11 @@ class MessageController extends Controller
         $conversation = $message->conversation;
 
         // Can delete own messages or if admin of conversation
-        $canDelete = $message->sender_id === $user->id 
-            || $conversation->isAdmin($user->id) 
+        $canDelete = $message->sender_id === $user->id
+            || $conversation->isAdmin($user->id)
             || $user->isAdmin();
 
-        if (!$canDelete) {
+        if (! $canDelete) {
             abort(403);
         }
 
@@ -201,7 +203,7 @@ class MessageController extends Controller
     {
         $user = auth()->user();
 
-        if (!$message->conversation->hasParticipant($user->id)) {
+        if (! $message->conversation->hasParticipant($user->id)) {
             abort(403);
         }
 
@@ -247,7 +249,7 @@ class MessageController extends Controller
     {
         $user = auth()->user();
 
-        if (!$conversation->hasParticipant($user->id)) {
+        if (! $conversation->hasParticipant($user->id)) {
             abort(403);
         }
 
@@ -280,16 +282,18 @@ class MessageController extends Controller
      */
     private function parseContent(?string $content): ?string
     {
-        if (!$content) return null;
+        if (! $content) {
+            return null;
+        }
 
         $html = e($content);
 
         // Bold **text**
         $html = preg_replace('/\*\*(.+?)\*\*/', '<strong>$1</strong>', $html);
-        
+
         // Italic *text*
         $html = preg_replace('/\*(.+?)\*/', '<em>$1</em>', $html);
-        
+
         // Links
         $html = preg_replace(
             '/(https?:\/\/[^\s<]+)/',
@@ -309,7 +313,9 @@ class MessageController extends Controller
      */
     private function createMentions(Message $message, ?string $content): void
     {
-        if (!$content) return;
+        if (! $content) {
+            return;
+        }
 
         // @all mention
         if (str_contains($content, '@tous') || str_contains($content, '@all')) {
@@ -321,14 +327,16 @@ class MessageController extends Controller
 
         // @user mentions - extract usernames
         preg_match_all('/@(\w+)/', $content, $matches);
-        
-        if (!empty($matches[1])) {
+
+        if (! empty($matches[1])) {
             // Filtrer les mentions @tous/@all
-            $usernames = array_filter($matches[1], function($username) {
-                return !in_array(strtolower($username), ['tous', 'all']);
+            $usernames = array_filter($matches[1], function ($username) {
+                return ! in_array(strtolower($username), ['tous', 'all']);
             });
 
-            if (empty($usernames)) return;
+            if (empty($usernames)) {
+                return;
+            }
 
             // Charger tous les utilisateurs potentiels en UNE seule requête
             $query = \App\Models\User::query();
@@ -339,7 +347,7 @@ class MessageController extends Controller
                     $query->orWhere('name', 'like', "%{$username}%");
                 }
             }
-            $matchedUsers = $query->get()->keyBy(function($user) {
+            $matchedUsers = $query->get()->keyBy(function ($user) {
                 return strtolower($user->name);
             });
 
@@ -347,10 +355,10 @@ class MessageController extends Controller
             $mentionsToCreate = [];
             foreach ($usernames as $username) {
                 // Chercher l'utilisateur dans la collection en mémoire
-                $user = $matchedUsers->first(function($u) use ($username) {
+                $user = $matchedUsers->first(function ($u) use ($username) {
                     return stripos($u->name, $username) !== false;
                 });
-                
+
                 if ($user) {
                     $mentionsToCreate[] = [
                         'message_id' => $message->id,
@@ -363,7 +371,7 @@ class MessageController extends Controller
             }
 
             // Insertion en batch si des mentions existent
-            if (!empty($mentionsToCreate)) {
+            if (! empty($mentionsToCreate)) {
                 Mention::insert($mentionsToCreate);
             }
         }

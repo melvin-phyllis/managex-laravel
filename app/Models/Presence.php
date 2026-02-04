@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Carbon\Carbon;
 
 class Presence extends Model
 {
@@ -98,8 +98,9 @@ class Presence extends Model
     public function scopeForDepartment($query, ?int $departmentId)
     {
         if ($departmentId) {
-            return $query->whereHas('user', fn($q) => $q->where('department_id', $departmentId));
+            return $query->whereHas('user', fn ($q) => $q->where('department_id', $departmentId));
         }
+
         return $query;
     }
 
@@ -108,9 +109,10 @@ class Presence extends Model
      */
     public function getHoursWorkedAttribute(): ?float
     {
-        if (!$this->check_out) {
+        if (! $this->check_out) {
             return null;
         }
+
         return $this->check_in->diffInMinutes($this->check_out) / 60;
     }
 
@@ -135,12 +137,14 @@ class Presence extends Model
      */
     public function calculateOvertimeMinutes(): int
     {
-        if (!$this->check_out || !$this->scheduled_end) return 0;
-        
+        if (! $this->check_out || ! $this->scheduled_end) {
+            return 0;
+        }
+
         // Ensure scheduled_end is full datetime for comparison
-        $scheduledEnd = Carbon::parse($this->date->format('Y-m-d') . ' ' . $this->scheduled_end);
+        $scheduledEnd = Carbon::parse($this->date->format('Y-m-d').' '.$this->scheduled_end);
         $actualEnd = Carbon::parse($this->check_out);
-        
+
         return max(0, $actualEnd->diffInMinutes($scheduledEnd, false));
     }
 
@@ -162,8 +166,8 @@ class Presence extends Model
 
     /**
      * Apply automatic recovery based on overtime and user's late balance
-     * 
-     * @param int $userLateBalance Current balance of late minutes to recover
+     *
+     * @param  int  $userLateBalance  Current balance of late minutes to recover
      * @return int Minutes applied as recovery
      */
     public function applyAutomaticRecovery(int $userLateBalance): int
@@ -174,7 +178,7 @@ class Presence extends Model
 
         // Apply recovery up to the overtime worked or remaining balance
         $recoveryToApply = min($this->overtime_minutes, $userLateBalance);
-        
+
         $this->recovery_minutes = $recoveryToApply;
         $this->save();
 
@@ -189,8 +193,10 @@ class Presence extends Model
         if ($this->recovery_minutes > 0) {
             $hours = floor($this->recovery_minutes / 60);
             $mins = $this->recovery_minutes % 60;
+
             return $hours > 0 ? "{$hours}h{$mins}" : "{$mins} min";
         }
+
         return null;
     }
 
@@ -202,8 +208,10 @@ class Presence extends Model
         if ($this->overtime_minutes > 0) {
             $hours = floor($this->overtime_minutes / 60);
             $mins = $this->overtime_minutes % 60;
+
             return $hours > 0 ? "{$hours}h{$mins}" : "{$mins} min";
         }
+
         return null;
     }
 
@@ -215,8 +223,10 @@ class Presence extends Model
         if ($this->late_minutes > 0) {
             $hours = floor($this->late_minutes / 60);
             $mins = $this->late_minutes % 60;
+
             return $hours > 0 ? "{$hours}h{$mins}" : "{$mins} min";
         }
+
         return null;
     }
 
@@ -234,7 +244,7 @@ class Presence extends Model
     public function scopeExpiringLate($query, int $daysBeforeExpiration = 2)
     {
         $warningDate = Carbon::today()->addDays($daysBeforeExpiration);
-        
+
         return $query->where('is_late', true)
             ->where('is_late_expired', false)
             ->whereNotNull('late_recovery_deadline')
@@ -255,11 +265,11 @@ class Presence extends Model
      */
     public function isRecoverable(): bool
     {
-        if (!$this->is_late || $this->is_late_expired) {
+        if (! $this->is_late || $this->is_late_expired) {
             return false;
         }
 
-        if (!$this->late_recovery_deadline) {
+        if (! $this->late_recovery_deadline) {
             return true; // No deadline set
         }
 
@@ -271,11 +281,12 @@ class Presence extends Model
      */
     public function getDaysToRecoverAttribute(): ?int
     {
-        if (!$this->late_recovery_deadline || $this->is_late_expired) {
+        if (! $this->late_recovery_deadline || $this->is_late_expired) {
             return null;
         }
 
         $days = Carbon::today()->diffInDays($this->late_recovery_deadline, false);
+
         return max(0, $days);
     }
 
@@ -284,7 +295,7 @@ class Presence extends Model
      */
     public function getRecoveryStatusAttribute(): string
     {
-        if (!$this->is_late) {
+        if (! $this->is_late) {
             return 'not_applicable';
         }
 

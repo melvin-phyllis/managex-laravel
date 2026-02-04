@@ -13,12 +13,13 @@ class PresenceTest extends TestCase
     use RefreshDatabase;
 
     protected User $admin;
+
     protected User $employee;
 
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         $this->admin = User::factory()->admin()->create();
         $this->employee = User::factory()->create([
             'status' => 'active',
@@ -51,7 +52,7 @@ class PresenceTest extends TestCase
     public function employee_can_check_out(): void
     {
         Carbon::setTestNow(Carbon::create(2026, 2, 3, 9, 0, 0));
-        
+
         $presence = Presence::create([
             'user_id' => $this->employee->id,
             'check_in' => now(),
@@ -71,7 +72,7 @@ class PresenceTest extends TestCase
     public function employee_cannot_check_in_twice_same_day(): void
     {
         Carbon::setTestNow(Carbon::create(2026, 2, 3, 9, 0, 0));
-        
+
         Presence::create([
             'user_id' => $this->employee->id,
             'check_in' => now(),
@@ -82,7 +83,7 @@ class PresenceTest extends TestCase
 
         // Should fail or show error
         $response->assertRedirect();
-        
+
         // Should still have only one presence for today
         $this->assertEquals(1, Presence::where('user_id', $this->employee->id)
             ->whereDate('date', now()->toDateString())
@@ -124,15 +125,15 @@ class PresenceTest extends TestCase
     {
         // Simulate check-in at 9:30 when work starts at 8:30
         Carbon::setTestNow(Carbon::create(2026, 2, 3, 9, 30, 0));
-        
+
         $response = $this->actingAs($this->employee)->post(route('employee.presences.checkin'));
 
         $response->assertRedirect();
-        
+
         $presence = Presence::where('user_id', $this->employee->id)
             ->whereDate('date', now()->toDateString())
             ->first();
-        
+
         // The presence should exist (late detection depends on settings)
         $this->assertNotNull($presence);
     }

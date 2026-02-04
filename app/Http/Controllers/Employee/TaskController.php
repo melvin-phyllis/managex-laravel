@@ -66,6 +66,7 @@ class TaskController extends Controller
     public function show(Task $task)
     {
         $this->authorize('view', $task);
+
         return view('employee.tasks.show', compact('task'));
     }
 
@@ -107,7 +108,7 @@ class TaskController extends Controller
     {
         $this->authorize('update', $task);
 
-        if (!in_array($task->statut, ['approved', 'completed'])) {
+        if (! in_array($task->statut, ['approved', 'completed'])) {
             return response()->json(['error' => 'Action non autorisée'], 403);
         }
 

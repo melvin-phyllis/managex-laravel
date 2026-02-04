@@ -64,7 +64,7 @@ class Contract extends Model
     {
         return $query->where(function ($q) {
             $q->whereNull('end_date')
-              ->orWhere('end_date', '>=', now());
+                ->orWhere('end_date', '>=', now());
         });
     }
 
@@ -73,6 +73,6 @@ class Contract extends Model
      */
     public function getFormattedSalaryAttribute(): string
     {
-        return number_format($this->base_salary, 0, ',', ' ') . ' FCFA';
+        return number_format($this->base_salary, 0, ',', ' ').' FCFA';
     }
 }

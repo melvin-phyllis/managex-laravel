@@ -43,16 +43,16 @@ class NewEvaluationNotification extends Notification implements ShouldQueue
 
         return (new MailMessage)
             ->subject('Nouvelle évaluation hebdomadaire disponible - ManageX')
-            ->greeting('Bonjour ' . $notifiable->name . ',')
-            ->line('Votre tuteur **' . $this->evaluation->tutor->name . '** a soumis votre évaluation hebdomadaire.')
-            ->line('**' . $this->evaluation->week_label . '**')
+            ->greeting('Bonjour '.$notifiable->name.',')
+            ->line('Votre tuteur **'.$this->evaluation->tutor->name.'** a soumis votre évaluation hebdomadaire.')
+            ->line('**'.$this->evaluation->week_label.'**')
             ->line('')
             ->line('📊 **Résumé de votre évaluation :**')
-            ->line('- Note globale : **' . $score . '/10** (Grade ' . $grade . ' - ' . $gradeInfo['label'] . ')')
-            ->line('- Discipline : ' . $this->evaluation->discipline_score . '/2.5')
-            ->line('- Comportement : ' . $this->evaluation->behavior_score . '/2.5')
-            ->line('- Compétences : ' . $this->evaluation->skills_score . '/2.5')
-            ->line('- Communication : ' . $this->evaluation->communication_score . '/2.5')
+            ->line('- Note globale : **'.$score.'/10** (Grade '.$grade.' - '.$gradeInfo['label'].')')
+            ->line('- Discipline : '.$this->evaluation->discipline_score.'/2.5')
+            ->line('- Comportement : '.$this->evaluation->behavior_score.'/2.5')
+            ->line('- Compétences : '.$this->evaluation->skills_score.'/2.5')
+            ->line('- Communication : '.$this->evaluation->communication_score.'/2.5')
             ->line('')
             ->action('Voir le détail de mon évaluation', route('employee.evaluations.show', $this->evaluation->id))
             ->line('Continuez vos efforts et n\'hésitez pas à discuter avec votre tuteur si vous avez des questions.')
@@ -75,9 +75,8 @@ class NewEvaluationNotification extends Notification implements ShouldQueue
             'week_label' => $this->evaluation->week_label,
             'total_score' => $this->evaluation->total_score,
             'grade' => $this->evaluation->grade_letter,
-            'message' => 'Nouvelle évaluation : ' . $this->evaluation->total_score . '/10 (' . $this->evaluation->week_label . ')',
+            'message' => 'Nouvelle évaluation : '.$this->evaluation->total_score.'/10 ('.$this->evaluation->week_label.')',
             'url' => route('employee.evaluations.show', $this->evaluation->id),
         ];
     }
 }
-

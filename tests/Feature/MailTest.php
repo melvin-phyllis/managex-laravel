@@ -2,10 +2,9 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Notification;
-use App\Notifications\WelcomeEmployeeNotification;
 use App\Models\User;
+use App\Notifications\WelcomeEmployeeNotification;
+use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
 
 class MailTest extends TestCase
@@ -24,7 +23,7 @@ class MailTest extends TestCase
         $user->notify(new WelcomeEmployeeNotification($user->name));
 
         Mail::assertSent(function (\Illuminate\Mail\Mailable $mail) use ($user) {
-            return in_array($user->email, array_map(fn($to) => $to['address'], $mail->to ?? []));
+            return in_array($user->email, array_map(fn ($to) => $to['address'], $mail->to ?? []));
         });
     }
 }

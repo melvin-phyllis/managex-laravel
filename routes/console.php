@@ -37,4 +37,3 @@ Schedule::command('presence:check-expired-late')
     ->withoutOverlapping()
     ->onOneServer()
     ->appendOutputTo(storage_path('logs/late-hours-check.log'));
-

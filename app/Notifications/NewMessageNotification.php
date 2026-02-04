@@ -5,7 +5,6 @@ namespace App\Notifications;
 use App\Models\Messaging\Message;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\DatabaseMessage;
 use Illuminate\Notifications\Notification;
 
 class NewMessageNotification extends Notification implements ShouldQueue
@@ -25,7 +24,7 @@ class NewMessageNotification extends Notification implements ShouldQueue
     {
         $conversation = $this->message->conversation;
         $sender = $this->message->sender;
-        
+
         // Get conversation name for display
         if ($conversation->type === 'direct') {
             $title = $sender?->name ?? 'Utilisateur';
@@ -58,4 +57,3 @@ class NewMessageNotification extends Notification implements ShouldQueue
         return $this->toDatabase($notifiable);
     }
 }
-

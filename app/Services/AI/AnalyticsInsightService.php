@@ -17,17 +17,17 @@ class AnalyticsInsightService
     /**
      * Générer des insights IA à partir des KPIs et graphiques.
      *
-     * @param array  $kpis    Données KPI (effectif, présences, turnover, etc.)
-     * @param array  $filters Filtres appliqués (period, department_id, etc.)
+     * @param  array  $kpis  Données KPI (effectif, présences, turnover, etc.)
+     * @param  array  $filters  Filtres appliqués (period, department_id, etc.)
      * @return string|null Insights en markdown ou null si indisponible
      */
     public function generateInsights(array $kpis, array $filters = []): ?string
     {
-        if (!$this->mistral->isAvailable()) {
+        if (! $this->mistral->isAvailable()) {
             return null;
         }
 
-        $cacheKey = 'ai.analytics_insights.' . md5(json_encode($kpis) . json_encode($filters));
+        $cacheKey = 'ai.analytics_insights.'.md5(json_encode($kpis).json_encode($filters));
         $cacheTtl = config('ai.cache_ttl', 900);
 
         return Cache::remember($cacheKey, $cacheTtl, function () use ($kpis) {
@@ -52,7 +52,7 @@ class AnalyticsInsightService
     {
         $dataForPrompt = $this->formatKpisForPrompt($kpis);
 
-        $system = <<<PROMPT
+        $system = <<<'PROMPT'
 Tu es un analyste RH senior. On te fournit les KPIs d'une entreprise pour une période donnée.
 
 INSTRUCTIONS:
@@ -94,8 +94,8 @@ PROMPT;
 
         if (isset($kpis['en_conge'])) {
             $types = $kpis['en_conge']['types'] ?? [];
-            $detail = collect($types)->map(fn($v, $k) => "{$k}: {$v}")->implode(', ');
-            $lines[] = "En congé: {$kpis['en_conge']['value']}" . ($detail ? " ({$detail})" : '');
+            $detail = collect($types)->map(fn ($v, $k) => "{$k}: {$v}")->implode(', ');
+            $lines[] = "En congé: {$kpis['en_conge']['value']}".($detail ? " ({$detail})" : '');
         }
 
         if (isset($kpis['absents_non_justifies'])) {

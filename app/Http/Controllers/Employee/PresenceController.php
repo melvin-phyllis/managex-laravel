@@ -6,8 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\GeolocationZone;
 use App\Models\Presence;
 use App\Models\Setting;
-use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 class PresenceController extends Controller
 {
@@ -101,7 +101,7 @@ class PresenceController extends Controller
             ->orderBy('late_recovery_deadline');
 
         $lateToRecoverCount = $lateToRecoverQuery->count();
-        
+
         $lateToRecover = $lateToRecoverQuery
             ->limit(5) // Afficher seulement les 5 plus urgents
             ->get()
@@ -140,11 +140,11 @@ class PresenceController extends Controller
         for ($i = 6; $i >= 0; $i--) {
             $date = now()->subDays($i);
             $weeklyLabels[] = $date->translatedFormat('D d');
-            
+
             $presence = $user->presences()
                 ->whereDate('date', $date->toDateString())
                 ->first();
-            
+
             $weeklyData[] = $presence ? round($presence->hours_worked ?? 0, 1) : 0;
         }
 
@@ -152,50 +152,54 @@ class PresenceController extends Controller
         $calendarData = [];
         $monthStart = $currentMonth->copy()->startOfMonth();
         $monthEnd = $currentMonth->copy()->endOfMonth();
-        
+
         // Récupérer toutes les présences du mois
         $monthPresences = $user->presences()
             ->whereBetween('date', [$monthStart, $monthEnd])
             ->get()
-            ->keyBy(fn($p) => $p->date->format('Y-m-d'));
-        
+            ->keyBy(fn ($p) => $p->date->format('Y-m-d'));
+
         // Récupérer les congés du mois
         $monthLeaves = \App\Models\Leave::where('user_id', $user->id)
             ->where('statut', 'approved')
             ->where(function ($q) use ($monthStart, $monthEnd) {
                 $q->whereBetween('date_debut', [$monthStart, $monthEnd])
-                  ->orWhereBetween('date_fin', [$monthStart, $monthEnd])
-                  ->orWhere(function ($q2) use ($monthStart, $monthEnd) {
-                      $q2->where('date_debut', '<=', $monthStart)
-                         ->where('date_fin', '>=', $monthEnd);
-                  });
+                    ->orWhereBetween('date_fin', [$monthStart, $monthEnd])
+                    ->orWhere(function ($q2) use ($monthStart, $monthEnd) {
+                        $q2->where('date_debut', '<=', $monthStart)
+                            ->where('date_fin', '>=', $monthEnd);
+                    });
             })
             ->get();
-        
+
         // Créer un tableau des jours en congé
         $leaveDays = [];
         foreach ($monthLeaves as $leave) {
             $start = $leave->date_debut->copy();
             $end = $leave->date_fin->copy();
             // Limiter aux bornes du mois
-            if ($start->lt($monthStart)) $start = $monthStart->copy();
-            if ($end->gt($monthEnd)) $end = $monthEnd->copy();
+            if ($start->lt($monthStart)) {
+                $start = $monthStart->copy();
+            }
+            if ($end->gt($monthEnd)) {
+                $end = $monthEnd->copy();
+            }
             for ($d = $start->copy(); $d <= $end; $d->addDay()) {
                 $leaveDays[$d->format('Y-m-d')] = true;
             }
         }
-        
+
         // Date d'embauche de l'employé (ne pas marquer absent avant cette date)
         $hireDate = $user->hire_date ? Carbon::parse($user->hire_date)->startOfDay() : null;
-        
+
         for ($date = $monthStart->copy(); $date <= $monthEnd; $date->addDay()) {
             $dateKey = $date->format('Y-m-d');
-            $isWeekend = !in_array($date->dayOfWeekIso, $workDays);
+            $isWeekend = ! in_array($date->dayOfWeekIso, $workDays);
             $presence = $monthPresences->get($dateKey);
             $isOnLeave = isset($leaveDays[$dateKey]);
             $isFuture = $date->isFuture();
             $isBeforeHire = $hireDate && $date->lt($hireDate);
-            
+
             $status = 'none';
             if ($isFuture) {
                 $status = 'future';
@@ -218,7 +222,7 @@ class PresenceController extends Controller
             } else {
                 $status = 'absent';
             }
-            
+
             $calendarData[] = [
                 'date' => $date->format('Y-m-d'),
                 'day' => $date->day,
@@ -245,21 +249,21 @@ class PresenceController extends Controller
         // Vérifier si aujourd'hui est un jour de travail
         $isWorkingDay = $user->isWorkingDay();
         $workDayNames = $user->work_day_names;
-        
+
         // --- LOGIQUE STRICTE DE POINTAGE ---
-        
+
         // 1. Restriction Horaire (17:00 Hard Limit)
         $lastCheckInTime = Carbon::today()->setHour(17)->setMinute(0);
         $isAfterHours = now()->gt($lastCheckInTime);
-        
+
         // 2. Flags pour l'UI
         $canCheckIn = true;
         $checkInRestriction = null;
-        
-        if (!$isWorkingDay) {
+
+        if (! $isWorkingDay) {
             $canCheckIn = false;
             $checkInRestriction = 'not_working_day'; // Jour non travaillé
-        } elseif (!$geolocationEnabled) {
+        } elseif (! $geolocationEnabled) {
             $canCheckIn = false;
             $checkInRestriction = 'no_geolocation'; // Pas de zone configurée
         } elseif ($isAfterHours) {
@@ -271,8 +275,8 @@ class PresenceController extends Controller
         }
 
         // 3. Flag pour le départ
-        $canCheckOut = $todayPresence && !$todayPresence->check_out;
-        
+        $canCheckOut = $todayPresence && ! $todayPresence->check_out;
+
         // 4. Session de rattrapage (jours non travaillés)
         // Permettre le pointage de rattrapage si:
         // - Ce n'est PAS un jour de travail normal
@@ -282,8 +286,8 @@ class PresenceController extends Controller
         // - Il n'est pas après 17h
         $canStartRecoverySession = false;
         $recoverySessionInfo = null;
-        
-        if (!$isWorkingDay && $geolocationEnabled && !$isAfterHours && !$user->hasCheckedInToday()) {
+
+        if (! $isWorkingDay && $geolocationEnabled && ! $isAfterHours && ! $user->hasCheckedInToday()) {
             $hasLateToRecover = $totalUnrecoveredMinutes > 0;
             if ($hasLateToRecover) {
                 $canStartRecoverySession = true;
@@ -293,7 +297,7 @@ class PresenceController extends Controller
                 ];
             }
         }
-        
+
         // Vérifier si la présence d'aujourd'hui est une session de rattrapage
         $isRecoverySessionToday = $todayPresence && $todayPresence->is_recovery_session;
 
@@ -324,7 +328,7 @@ class PresenceController extends Controller
             'isRecoverySessionToday'
         ));
     }
-    
+
     /**
      * Format minutes as hours and minutes string
      */
@@ -332,79 +336,80 @@ class PresenceController extends Controller
     {
         $hours = floor($minutes / 60);
         $mins = $minutes % 60;
-        
+
         if ($hours > 0 && $mins > 0) {
-            return "{$hours}h" . sprintf('%02d', $mins);
+            return "{$hours}h".sprintf('%02d', $mins);
         } elseif ($hours > 0) {
             return "{$hours}h";
         } else {
             return "{$mins} min";
         }
     }
-    
+
     /**
      * Démarrer une session de rattrapage (jour non travaillé)
      */
     public function startRecoverySession(Request $request)
     {
         $user = auth()->user();
-        
+
         // Vérifier qu'il n'a pas déjà pointé aujourd'hui
         if ($user->hasCheckedInToday()) {
             return redirect()->back()->with('error', 'Vous avez déjà pointé aujourd\'hui.');
         }
-        
+
         // Restriction horaire
         $limitTime = Carbon::today()->setHour(17)->setMinute(0);
         if (now()->gt($limitTime)) {
-            return redirect()->back()->with('error', "Session de rattrapage refusée. Il est passé 17h00.");
+            return redirect()->back()->with('error', 'Session de rattrapage refusée. Il est passé 17h00.');
         }
-        
+
         // Vérifier qu'il a des heures à rattraper
         $totalUnrecoveredMinutes = $user->presences()
             ->where('is_late', true)
             ->where('is_late_expired', false)
             ->selectRaw('SUM(GREATEST(0, CAST(late_minutes AS SIGNED) - CAST(recovery_minutes AS SIGNED))) as total')
             ->value('total') ?? 0;
-            
+
         if ($totalUnrecoveredMinutes <= 0) {
             return redirect()->back()->with('error', 'Vous n\'avez pas d\'heures de retard à rattraper.');
         }
-        
+
         // Vérifier la géolocalisation
         $zones = GeolocationZone::where('is_active', true)->get();
         if ($zones->isEmpty()) {
             return redirect()->back()->with('error', "Le pointage est désactivé car aucune zone de travail n'est configurée.");
         }
-        
+
         $latitude = $request->input('latitude');
         $longitude = $request->input('longitude');
-        
-        if (!$latitude || !$longitude) {
+
+        if (! $latitude || ! $longitude) {
             return redirect()->back()->with('error', 'La géolocalisation est obligatoire. Veuillez autoriser l\'accès à votre position.');
         }
-        
+
         // Vérifier la zone
         $checkInStatus = 'unknown';
         $geolocationZoneId = null;
-        
+
         foreach ($zones as $zone) {
-            if ($zone->isWithinZone((float)$latitude, (float)$longitude)) {
+            if ($zone->isWithinZone((float) $latitude, (float) $longitude)) {
                 $checkInStatus = 'in_zone';
                 $geolocationZoneId = $zone->id;
                 break;
             }
         }
-        
+
         if ($checkInStatus !== 'in_zone') {
             $defaultZone = GeolocationZone::getDefault();
             $zoneName = $defaultZone ? $defaultZone->name : 'la zone autorisée';
+
             return redirect()->back()->with('error', "Pointage refusé : vous n'êtes pas dans $zoneName.");
         }
-        
+
         // Créer la présence en mode "session de rattrapage"
         $workEndTime = Setting::getWorkEndTime();
-        
+
         Presence::create([
             'user_id' => $user->id,
             'check_in' => now(),
@@ -419,12 +424,12 @@ class PresenceController extends Controller
             'scheduled_end' => $workEndTime,
             'is_recovery_session' => true, // Marquer comme session de rattrapage
         ]);
-        
+
         $formatted = $this->formatMinutes($totalUnrecoveredMinutes);
-        
+
         return redirect()->back()->with('success', "Session de rattrapage démarrée. Vous avez $formatted à rattraper. Tout le temps travaillé aujourd'hui sera comptabilisé comme rattrapage.");
     }
-    
+
     /**
      * Terminer une session de rattrapage
      */
@@ -432,60 +437,61 @@ class PresenceController extends Controller
     {
         $user = auth()->user();
         $presence = $user->todayPresence();
-        
-        if (!$presence) {
+
+        if (! $presence) {
             return redirect()->back()->with('error', 'Aucune session de rattrapage en cours.');
         }
-        
+
         if ($presence->check_out) {
             return redirect()->back()->with('error', 'Vous avez déjà terminé votre session de rattrapage.');
         }
-        
-        if (!$presence->is_recovery_session) {
+
+        if (! $presence->is_recovery_session) {
             // Si ce n'est pas une session de rattrapage, utiliser le checkout normal
             return $this->checkOut($request);
         }
-        
+
         // Vérifier la géolocalisation
         $zones = GeolocationZone::where('is_active', true)->get();
         $geolocationEnabled = $zones->isNotEmpty();
-        
+
         $latitude = $request->input('latitude');
         $longitude = $request->input('longitude');
         $checkOutStatus = 'unknown';
-        
+
         if ($geolocationEnabled) {
-            if (!$latitude || !$longitude) {
+            if (! $latitude || ! $longitude) {
                 return redirect()->back()->with('error', 'La géolocalisation est obligatoire.');
             }
-            
+
             foreach ($zones as $zone) {
-                if ($zone->isWithinZone((float)$latitude, (float)$longitude)) {
+                if ($zone->isWithinZone((float) $latitude, (float) $longitude)) {
                     $checkOutStatus = 'in_zone';
                     break;
                 }
             }
-            
+
             if ($checkOutStatus !== 'in_zone') {
                 $defaultZone = GeolocationZone::getDefault();
                 $zoneName = $defaultZone ? $defaultZone->name : 'la zone autorisée';
+
                 return redirect()->back()->with('error', "Pointage refusé : vous n'êtes pas dans $zoneName.");
             }
         }
-        
+
         // Calculer le temps travaillé pendant la session de rattrapage
         $now = now();
         $checkIn = $presence->check_in;
         $workedMinutes = $checkIn->diffInMinutes($now);
-        
+
         // Pour une session de rattrapage, TOUT le temps travaillé compte comme rattrapage
         // Limiter au solde d'heures à rattraper
         $lateBalance = $user->late_balance_minutes;
         $recoveryMinutes = min($workedMinutes, $lateBalance);
-        
+
         // Si le temps travaillé dépasse le solde, le surplus est des heures supplémentaires normales
         $overtimeMinutes = max(0, $workedMinutes - $lateBalance);
-        
+
         $presence->update([
             'check_out' => $now,
             'check_out_latitude' => $latitude,
@@ -495,30 +501,30 @@ class PresenceController extends Controller
             'overtime_minutes' => $overtimeMinutes,
             'recovery_minutes' => $recoveryMinutes,
         ]);
-        
+
         // Construire le message de succès
         $workedFormatted = $this->formatMinutes($workedMinutes);
         $recoveryFormatted = $this->formatMinutes($recoveryMinutes);
         $message = "Session de rattrapage terminée. Temps travaillé: $workedFormatted.";
-        
+
         if ($recoveryMinutes > 0) {
             $message .= " Rattrapage appliqué: $recoveryFormatted.";
-            
+
             // Vérifier le nouveau solde
             $newBalance = $lateBalance - $recoveryMinutes;
             if ($newBalance <= 0) {
-                $message .= " Félicitations ! Vous avez rattrapé toutes vos heures de retard.";
+                $message .= ' Félicitations ! Vous avez rattrapé toutes vos heures de retard.';
             } else {
                 $newBalanceFormatted = $this->formatMinutes($newBalance);
                 $message .= " Il vous reste $newBalanceFormatted à rattraper.";
             }
         }
-        
+
         if ($overtimeMinutes > 0) {
             $overtimeFormatted = $this->formatMinutes($overtimeMinutes);
             $message .= " Heures supplémentaires (au-delà du rattrapage): $overtimeFormatted.";
         }
-        
+
         return redirect()->back()->with('success', $message);
     }
 
@@ -527,8 +533,9 @@ class PresenceController extends Controller
         $user = auth()->user();
 
         // Vérifier si c'est un jour de travail
-        if (!$user->isWorkingDay()) {
+        if (! $user->isWorkingDay()) {
             $workDays = $user->work_day_names ?: 'Aucun jour configuré';
+
             return redirect()->back()->with('error', "Aujourd'hui n'est pas un jour de travail pour vous. Vos jours de travail : $workDays");
         }
 
@@ -545,10 +552,10 @@ class PresenceController extends Controller
         // Vérifier si la géolocalisation est activée
         $zones = GeolocationZone::where('is_active', true)->get();
         $geolocationEnabled = $zones->isNotEmpty();
-        
+
         // Pré-requis Localisation (Bloquant)
-        if (!$geolocationEnabled) {
-             return redirect()->back()->with('error', "Le pointage est désactivé car aucune zone de travail n'est configurée. Contactez l'administrateur.");
+        if (! $geolocationEnabled) {
+            return redirect()->back()->with('error', "Le pointage est désactivé car aucune zone de travail n'est configurée. Contactez l'administrateur.");
         }
 
         // Géolocalisation
@@ -559,13 +566,13 @@ class PresenceController extends Controller
 
         if ($geolocationEnabled) {
             // Si la géolocalisation est activée, les coordonnées sont obligatoires
-            if (!$latitude || !$longitude) {
+            if (! $latitude || ! $longitude) {
                 return redirect()->back()->with('error', 'La géolocalisation est obligatoire. Veuillez autoriser l\'accès à votre position.');
             }
 
             // Vérifier si l'employé est dans une zone autorisée
             foreach ($zones as $zone) {
-                if ($zone->isWithinZone((float)$latitude, (float)$longitude)) {
+                if ($zone->isWithinZone((float) $latitude, (float) $longitude)) {
                     $checkInStatus = 'in_zone';
                     $geolocationZoneId = $zone->id;
                     break;
@@ -576,6 +583,7 @@ class PresenceController extends Controller
             if ($checkInStatus !== 'in_zone') {
                 $defaultZone = GeolocationZone::getDefault();
                 $zoneName = $defaultZone ? $defaultZone->name : 'la zone autorisée';
+
                 return redirect()->back()->with('error', "Pointage refusé : vous n'êtes pas dans $zoneName. Veuillez vous rapprocher de votre lieu de travail.");
             }
         }
@@ -592,7 +600,7 @@ class PresenceController extends Controller
 
         $isLate = $now->gt($lateThreshold);
         $lateMinutes = $isLate ? (int) abs($now->diffInMinutes($scheduledStart)) : null;
-        
+
         // Calculer la date limite de rattrapage si en retard
         $lateRecoveryDeadline = null;
         if ($isLate) {
@@ -617,7 +625,7 @@ class PresenceController extends Controller
 
         $message = 'Arrivée enregistrée avec succès.';
         if ($isLate) {
-            $message .= " (Retard de $lateMinutes minutes - À rattraper avant le " . $lateRecoveryDeadline->format('d/m/Y') . ")";
+            $message .= " (Retard de $lateMinutes minutes - À rattraper avant le ".$lateRecoveryDeadline->format('d/m/Y').')';
         }
 
         return redirect()->back()->with('success', $message);
@@ -628,7 +636,7 @@ class PresenceController extends Controller
         $user = auth()->user();
         $presence = $user->todayPresence();
 
-        if (!$presence) {
+        if (! $presence) {
             return redirect()->back()->with('error', 'Vous n\'avez pas pointé votre arrivée aujourd\'hui.');
         }
 
@@ -645,7 +653,7 @@ class PresenceController extends Controller
         $isUrgency = $request->input('urgence') === '1';
         $urgencyReason = $request->input('urgency_reason');
 
-        if (!$isUrgency && $now->lt($scheduledEnd)) {
+        if (! $isUrgency && $now->lt($scheduledEnd)) {
             $remainingMinutes = $now->diffInMinutes($scheduledEnd);
             $remainingHours = floor($remainingMinutes / 60);
             $remainingMins = $remainingMinutes % 60;
@@ -665,13 +673,13 @@ class PresenceController extends Controller
 
         if ($geolocationEnabled) {
             // Si la géolocalisation est activée, les coordonnées sont obligatoires
-            if (!$latitude || !$longitude) {
+            if (! $latitude || ! $longitude) {
                 return redirect()->back()->with('error', 'La géolocalisation est obligatoire. Veuillez autoriser l\'accès à votre position.');
             }
 
             // Vérifier si l'employé est dans une zone autorisée
             foreach ($zones as $zone) {
-                if ($zone->isWithinZone((float)$latitude, (float)$longitude)) {
+                if ($zone->isWithinZone((float) $latitude, (float) $longitude)) {
                     $checkOutStatus = 'in_zone';
                     break;
                 }
@@ -681,6 +689,7 @@ class PresenceController extends Controller
             if ($checkOutStatus !== 'in_zone') {
                 $defaultZone = GeolocationZone::getDefault();
                 $zoneName = $defaultZone ? $defaultZone->name : 'la zone autorisée';
+
                 return redirect()->back()->with('error', "Pointage refusé : vous n'êtes pas dans $zoneName. Veuillez vous rapprocher de votre lieu de travail.");
             }
         }
@@ -691,19 +700,19 @@ class PresenceController extends Controller
 
         // Calculer les heures supplémentaires (si départ après l'heure prévue)
         $overtimeMinutes = 0;
-        if (!$isEarlyDeparture && $now->gt($scheduledEnd)) {
+        if (! $isEarlyDeparture && $now->gt($scheduledEnd)) {
             $overtimeMinutes = $scheduledEnd->diffInMinutes($now);
         }
 
         // Vérifier si l'employé souhaite utiliser les heures sup comme rattrapage
         $isRecoverySession = $request->input('is_recovery_session') === '1';
-        
+
         // Calculer le rattrapage automatique
         $recoveryMinutes = 0;
         if ($overtimeMinutes > 0) {
             // Récupérer le solde d'heures de retard AVANT cette présence
             $lateBalance = $user->late_balance_minutes;
-            
+
             // Si l'employé a des heures à rattraper et a travaillé en heures sup
             if ($lateBalance > 0) {
                 // Le rattrapage est automatique : on applique les heures sup au solde
@@ -733,13 +742,13 @@ class PresenceController extends Controller
         if ($overtimeMinutes > 0) {
             $hours = floor($overtimeMinutes / 60);
             $mins = $overtimeMinutes % 60;
-            $overtimeFormatted = $hours > 0 ? "{$hours}h" . ($mins > 0 ? sprintf('%02d', $mins) : '') : "{$mins} min";
+            $overtimeFormatted = $hours > 0 ? "{$hours}h".($mins > 0 ? sprintf('%02d', $mins) : '') : "{$mins} min";
             $message .= " Heures supplémentaires: $overtimeFormatted.";
         }
         if ($recoveryMinutes > 0) {
             $hours = floor($recoveryMinutes / 60);
             $mins = $recoveryMinutes % 60;
-            $recoveryFormatted = $hours > 0 ? "{$hours}h" . ($mins > 0 ? sprintf('%02d', $mins) : '') : "{$mins} min";
+            $recoveryFormatted = $hours > 0 ? "{$hours}h".($mins > 0 ? sprintf('%02d', $mins) : '') : "{$mins} min";
             $message .= " Rattrapage appliqué: $recoveryFormatted.";
         }
 

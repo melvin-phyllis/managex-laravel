@@ -21,14 +21,14 @@ class HRAssistantService
     /**
      * Poser une question au chatbot RH.
      *
-     * @param User   $user     L'employé authentifié
-     * @param string $question La question posée
-     * @param array  $history  Historique des messages [{role, content}]
+     * @param  User  $user  L'employé authentifié
+     * @param  string  $question  La question posée
+     * @param  array  $history  Historique des messages [{role, content}]
      * @return string Réponse de l'IA
      */
     public function ask(User $user, string $question, array $history = []): string
     {
-        if (!$this->mistral->isAvailable()) {
+        if (! $this->mistral->isAvailable()) {
             return "Le service d'assistance IA est temporairement indisponible. Veuillez contacter le service RH directement.";
         }
 
@@ -37,7 +37,7 @@ class HRAssistantService
 
         $messages = collect($history)
             ->take(-10) // Garder les 10 derniers messages max
-            ->map(fn(array $msg) => [
+            ->map(fn (array $msg) => [
                 'role' => $msg['role'] === 'user' ? 'user' : 'assistant',
                 'content' => mb_substr($msg['content'], 0, 500),
             ])
@@ -48,7 +48,7 @@ class HRAssistantService
         $response = $this->mistral->chat($system, $messages);
 
         if ($response === null) {
-            return "Je suis temporairement indisponible. Veuillez réessayer dans quelques instants ou contacter le service RH.";
+            return 'Je suis temporairement indisponible. Veuillez réessayer dans quelques instants ou contacter le service RH.';
         }
 
         return $response;
@@ -59,8 +59,8 @@ class HRAssistantService
      */
     public function askAsAdmin(User $admin, string $question, array $history = []): string
     {
-        if (!$this->mistral->isAvailable()) {
-            return "Le service IA est temporairement indisponible. Veuillez réessayer plus tard.";
+        if (! $this->mistral->isAvailable()) {
+            return 'Le service IA est temporairement indisponible. Veuillez réessayer plus tard.';
         }
 
         $context = $this->buildAdminContext();
@@ -68,7 +68,7 @@ class HRAssistantService
 
         $messages = collect($history)
             ->take(-10)
-            ->map(fn(array $msg) => [
+            ->map(fn (array $msg) => [
                 'role' => $msg['role'] === 'user' ? 'user' : 'assistant',
                 'content' => mb_substr($msg['content'], 0, 500),
             ])
@@ -79,7 +79,7 @@ class HRAssistantService
         $response = $this->mistral->chat($system, $messages);
 
         if ($response === null) {
-            return "Je suis temporairement indisponible. Veuillez réessayer dans quelques instants.";
+            return 'Je suis temporairement indisponible. Veuillez réessayer dans quelques instants.';
         }
 
         return $response;
@@ -126,7 +126,7 @@ class HRAssistantService
             ->count();
 
         // Tâches
-        $taskStats = Task::selectRaw("statut, COUNT(*) as total")
+        $taskStats = Task::selectRaw('statut, COUNT(*) as total')
             ->groupBy('statut')
             ->pluck('total', 'statut');
 
@@ -137,42 +137,42 @@ class HRAssistantService
 
         $lines = [
             "=== DONNÉES ENTREPRISE ({$now->format('d/m/Y H:i')}) ===",
-            "",
-            "--- Effectif ---",
+            '',
+            '--- Effectif ---',
             "Employés actifs (CDI): {$totalEmployees}",
             "Stagiaires actifs: {$totalInterns}",
             "Effectif total actif: {$totalActive}",
             "Présents aujourd'hui: {$presentsToday}/{$totalActive}",
             "En congé aujourd'hui: {$onLeaveToday}",
-            "",
-            "--- Présences (mois en cours) ---",
+            '',
+            '--- Présences (mois en cours) ---',
             "Retards ce mois: {$lateCountMonth} occurrences",
             "Heures de retard cumulées: {$totalLateHours}h",
         ];
 
         if ($latsByDept->isNotEmpty()) {
-            $lines[] = "";
-            $lines[] = "--- Retards par département (top 5) ---";
+            $lines[] = '';
+            $lines[] = '--- Retards par département (top 5) ---';
             foreach ($latsByDept as $dept => $count) {
                 $lines[] = "  {$dept}: {$count} retards";
             }
         }
 
-        $lines[] = "";
-        $lines[] = "--- Congés ---";
+        $lines[] = '';
+        $lines[] = '--- Congés ---';
         $lines[] = "Demandes en attente: {$pendingLeaves}";
         $lines[] = "En congé aujourd'hui: {$onLeaveToday}";
 
-        $lines[] = "";
-        $lines[] = "--- Tâches ---";
-        $lines[] = "En attente: " . ($taskStats['pending'] ?? 0);
-        $lines[] = "Approuvées: " . ($taskStats['approved'] ?? 0);
-        $lines[] = "Complétées: " . ($taskStats['completed'] ?? 0);
-        $lines[] = "Validées: " . ($taskStats['validated'] ?? 0);
+        $lines[] = '';
+        $lines[] = '--- Tâches ---';
+        $lines[] = 'En attente: '.($taskStats['pending'] ?? 0);
+        $lines[] = 'Approuvées: '.($taskStats['approved'] ?? 0);
+        $lines[] = 'Complétées: '.($taskStats['completed'] ?? 0);
+        $lines[] = 'Validées: '.($taskStats['validated'] ?? 0);
 
         if ($departments->isNotEmpty()) {
-            $lines[] = "";
-            $lines[] = "--- Départements ---";
+            $lines[] = '';
+            $lines[] = '--- Départements ---';
             foreach ($departments as $dept) {
                 $lines[] = "  {$dept->name}: {$dept->users_count} employés";
             }
@@ -241,7 +241,7 @@ PROMPT;
 
         // Tâches en cours
         $tasks = Task::where('user_id', $user->id)
-            ->selectRaw("statut, COUNT(*) as total")
+            ->selectRaw('statut, COUNT(*) as total')
             ->groupBy('statut')
             ->pluck('total', 'statut');
 
@@ -264,36 +264,36 @@ PROMPT;
 
         $lines = [
             "Nom: {$user->name}",
-            "Poste: " . ($user->position->name ?? 'Non défini'),
-            "Département: " . ($user->department->name ?? 'Non défini'),
-            "Date d'embauche: " . ($user->hire_date ? Carbon::parse($user->hire_date)->format('d/m/Y') : 'Non définie'),
-            "Type de contrat: " . ($user->contract_type ?? 'Non défini'),
+            'Poste: '.($user->position->name ?? 'Non défini'),
+            'Département: '.($user->department->name ?? 'Non défini'),
+            "Date d'embauche: ".($user->hire_date ? Carbon::parse($user->hire_date)->format('d/m/Y') : 'Non définie'),
+            'Type de contrat: '.($user->contract_type ?? 'Non défini'),
         ];
 
         if ($contract) {
             if ($contract->end_date) {
-                $lines[] = "Fin de contrat: " . Carbon::parse($contract->end_date)->format('d/m/Y');
+                $lines[] = 'Fin de contrat: '.Carbon::parse($contract->end_date)->format('d/m/Y');
             }
-            $lines[] = "Salaire de base: " . number_format($contract->base_salary ?? 0, 0, ',', ' ') . " FCFA";
+            $lines[] = 'Salaire de base: '.number_format($contract->base_salary ?? 0, 0, ',', ' ').' FCFA';
         }
 
-        $lines[] = "";
-        $lines[] = "--- Présences (mois en cours) ---";
+        $lines[] = '';
+        $lines[] = '--- Présences (mois en cours) ---';
         $lines[] = "Jours de présence: {$presenceDays}";
         $lines[] = "Retards: {$lateCount}";
         $lines[] = "Minutes de retard total: {$totalLateMinutes}";
 
-        $lines[] = "";
-        $lines[] = "--- Tâches ---";
-        $lines[] = "En attente: " . ($tasks['pending'] ?? 0);
-        $lines[] = "Approuvées: " . ($tasks['approved'] ?? 0);
-        $lines[] = "Complétées: " . ($tasks['completed'] ?? 0);
+        $lines[] = '';
+        $lines[] = '--- Tâches ---';
+        $lines[] = 'En attente: '.($tasks['pending'] ?? 0);
+        $lines[] = 'Approuvées: '.($tasks['approved'] ?? 0);
+        $lines[] = 'Complétées: '.($tasks['completed'] ?? 0);
 
-        $lines[] = "";
-        $lines[] = "--- Congés ---";
+        $lines[] = '';
+        $lines[] = '--- Congés ---';
         $lines[] = "Demandes en attente: {$pendingLeaves}";
         $lines[] = "Jours utilisés cette année: {$approvedLeaveDays}";
-        $lines[] = "Solde congés: " . ($user->leave_balance ?? 'Non défini');
+        $lines[] = 'Solde congés: '.($user->leave_balance ?? 'Non défini');
 
         return implode("\n", $lines);
     }

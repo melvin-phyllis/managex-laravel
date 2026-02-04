@@ -4,9 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\PayrollCountry;
-use App\Models\PayrollCountryRule;
 use App\Models\PayrollCountryField;
-use App\Models\PayrollTemplate;
+use App\Models\PayrollCountryRule;
 use Illuminate\Http\Request;
 
 class PayrollSettingsController extends Controller
@@ -82,6 +81,7 @@ class PayrollSettingsController extends Controller
     public function destroyCountry(PayrollCountry $country)
     {
         $country->delete();
+
         return redirect()->route('admin.payroll-settings.countries')
             ->with('success', 'Pays supprimé.');
     }
@@ -94,6 +94,7 @@ class PayrollSettingsController extends Controller
     public function rules(PayrollCountry $country)
     {
         $rules = $country->rules()->orderBy('display_order')->get();
+
         return view('admin.payroll-settings.rules.index', compact('country', 'rules'));
     }
 
@@ -188,6 +189,7 @@ class PayrollSettingsController extends Controller
     public function destroyRule(PayrollCountry $country, PayrollCountryRule $rule)
     {
         $rule->delete();
+
         return redirect()->route('admin.payroll-settings.rules', $country)
             ->with('success', 'Règle supprimée.');
     }
@@ -200,6 +202,7 @@ class PayrollSettingsController extends Controller
     public function fields(PayrollCountry $country)
     {
         $fields = $country->fields()->orderBy('display_order')->get();
+
         return view('admin.payroll-settings.fields.index', compact('country', 'fields'));
     }
 
@@ -239,6 +242,7 @@ class PayrollSettingsController extends Controller
     public function destroyField(PayrollCountry $country, PayrollCountryField $field)
     {
         $field->delete();
+
         return redirect()->route('admin.payroll-settings.fields', $country)
             ->with('success', 'Champ supprimé.');
     }

@@ -21,12 +21,13 @@ class SurveyController extends Controller
             ->get()
             ->map(function ($survey) use ($user) {
                 $survey->has_responded = $survey->hasUserResponded($user);
+
                 return $survey;
             });
 
         // Séparer les sondages répondus et non répondus
-        $pendingSurveys = $activeSurveys->filter(fn($s) => !$s->has_responded);
-        $completedSurveys = $activeSurveys->filter(fn($s) => $s->has_responded);
+        $pendingSurveys = $activeSurveys->filter(fn ($s) => ! $s->has_responded);
+        $completedSurveys = $activeSurveys->filter(fn ($s) => $s->has_responded);
 
         // Sélectionner les sondages selon le filtre
         $surveys = $filter === 'completed' ? $completedSurveys : $pendingSurveys;
@@ -36,7 +37,7 @@ class SurveyController extends Controller
 
     public function show(Survey $survey)
     {
-        if (!$survey->is_active) {
+        if (! $survey->is_active) {
             return redirect()->route('employee.surveys.index')
                 ->with('error', 'Ce sondage n\'est plus actif.');
         }
@@ -49,7 +50,7 @@ class SurveyController extends Controller
 
     public function respond(Request $request, Survey $survey)
     {
-        if (!$survey->is_active) {
+        if (! $survey->is_active) {
             return redirect()->route('employee.surveys.index')
                 ->with('error', 'Ce sondage n\'est plus actif.');
         }
@@ -77,7 +78,7 @@ class SurveyController extends Controller
                 $rules[$key][] = 'min:1';
                 $rules[$key][] = 'max:5';
             } elseif ($question->type === 'choice' && $question->options) {
-                $rules[$key][] = 'in:' . implode(',', $question->options);
+                $rules[$key][] = 'in:'.implode(',', $question->options);
             } elseif ($question->type === 'yesno') {
                 $rules[$key][] = 'in:oui,non';
             }

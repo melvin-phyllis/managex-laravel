@@ -20,7 +20,7 @@ class MessagingService
 
         // General channel
         $channels['general'] = $this->findOrCreateChannel('general', 'Discussions générales', 'channel');
-        
+
         // Announcements channel
         $channels['annonces'] = $this->findOrCreateChannel('annonces', 'Communications officielles RH', 'announcement');
 
@@ -42,10 +42,10 @@ class MessagingService
                 "Canal du département {$department->name}",
                 'channel'
             );
-            
+
             // Add all department members to the channel
             $this->syncDepartmentMembers($channel, $department);
-            
+
             $channels[$department->id] = $channel;
         }
 
@@ -79,7 +79,7 @@ class MessagingService
 
         // Add new members
         foreach ($departmentUserIds as $userId) {
-            if (!$currentParticipantIds->contains($userId)) {
+            if (! $currentParticipantIds->contains($userId)) {
                 $channel->participants()->create([
                     'user_id' => $userId,
                     'role' => 'member',
@@ -165,7 +165,7 @@ class MessagingService
                 $newChannel = Conversation::where('name', "dept-{$slug}")->where('type', 'channel')->first();
                 if ($newChannel) {
                     $this->addUserToChannel($user, $newChannel);
-                    
+
                     // Welcome message in new department
                     Message::create([
                         'conversation_id' => $newChannel->id,
@@ -184,7 +184,7 @@ class MessagingService
     public function sendBirthdayMessage(User $user): void
     {
         $generalChannel = Conversation::where('name', 'general')->where('type', 'channel')->first();
-        
+
         if ($generalChannel) {
             Message::create([
                 'conversation_id' => $generalChannel->id,
@@ -201,7 +201,7 @@ class MessagingService
     public function sendWorkAnniversaryMessage(User $user, int $years): void
     {
         $generalChannel = Conversation::where('name', 'general')->where('type', 'channel')->first();
-        
+
         if ($generalChannel) {
             $yearsText = $years === 1 ? '1 an' : "{$years} ans";
             Message::create([
@@ -220,7 +220,7 @@ class MessagingService
     {
         // Check if already a participant
         $existing = $channel->participants()->where('user_id', $user->id)->first();
-        
+
         if ($existing) {
             // Reactivate if left
             if ($existing->left_at) {

@@ -23,10 +23,10 @@ class AnnouncementController extends Controller
             $query->unreadBy($user);
         } elseif ($filter === 'acknowledgment') {
             $query->where('requires_acknowledgment', true)
-                  ->whereDoesntHave('reads', function ($q) use ($user) {
-                      $q->where('user_id', $user->id)
+                ->whereDoesntHave('reads', function ($q) use ($user) {
+                    $q->where('user_id', $user->id)
                         ->whereNotNull('acknowledged_at');
-                  });
+                });
         }
 
         $announcements = $query->paginate(15);
@@ -46,7 +46,7 @@ class AnnouncementController extends Controller
                 ->where('requires_acknowledgment', true)
                 ->whereDoesntHave('reads', function ($q) use ($user) {
                     $q->where('user_id', $user->id)
-                      ->whereNotNull('acknowledged_at');
+                        ->whereNotNull('acknowledged_at');
                 })->count(),
         ];
 
@@ -63,12 +63,12 @@ class AnnouncementController extends Controller
             ->where('id', $announcement->id)
             ->exists();
 
-        if (!$canView) {
+        if (! $canView) {
             abort(403, 'Vous n\'avez pas accès à cette annonce.');
         }
 
         // Marquer comme lu si pas déjà lu
-        if (!$announcement->isReadBy($user)) {
+        if (! $announcement->isReadBy($user)) {
             $announcement->markAsReadBy($user);
             $announcement->increment('view_count');
         }
@@ -93,7 +93,7 @@ class AnnouncementController extends Controller
             ->where('id', $announcement->id)
             ->exists();
 
-        if (!$canView) {
+        if (! $canView) {
             return response()->json(['error' => 'Accès refusé'], 403);
         }
 
@@ -119,11 +119,11 @@ class AnnouncementController extends Controller
             ->where('id', $announcement->id)
             ->exists();
 
-        if (!$canView) {
+        if (! $canView) {
             return response()->json(['error' => 'Accès refusé'], 403);
         }
 
-        if (!$announcement->requires_acknowledgment) {
+        if (! $announcement->requires_acknowledgment) {
             return response()->json(['error' => 'Cette annonce ne nécessite pas d\'accusé'], 400);
         }
 

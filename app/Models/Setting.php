@@ -18,7 +18,7 @@ class Setting extends Model
             return static::where('key', $key)->first();
         });
 
-        if (!$setting) {
+        if (! $setting) {
             return $default;
         }
 
@@ -136,9 +136,10 @@ class Setting extends Model
     public static function getDefaultPayrollCountry(): ?\App\Models\PayrollCountry
     {
         $countryId = static::get('payroll_country_id');
-        if (!$countryId) {
+        if (! $countryId) {
             return \App\Models\PayrollCountry::where('is_active', true)->first();
         }
+
         return \App\Models\PayrollCountry::find($countryId);
     }
 

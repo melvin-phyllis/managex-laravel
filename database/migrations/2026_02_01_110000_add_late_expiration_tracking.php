@@ -8,7 +8,7 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
-     * 
+     *
      * Ajoute le suivi de l'expiration des heures de retard.
      * - late_recovery_deadline: date limite pour rattraper (7 jours après le retard)
      * - is_late_expired: si le retard a expiré sans être rattrapé
@@ -20,13 +20,13 @@ return new class extends Migration
         Schema::table('presences', function (Blueprint $table) {
             // Date limite pour rattraper ce retard
             $table->date('late_recovery_deadline')->nullable()->after('recovery_minutes');
-            
+
             // Le retard a expiré (non rattrapé dans le délai)
             $table->boolean('is_late_expired')->default(false)->after('late_recovery_deadline');
-            
+
             // Minutes de retard qui ont expiré (late_minutes - recovery_minutes au moment de l'expiration)
             $table->unsignedInteger('expired_late_minutes')->default(0)->after('is_late_expired');
-            
+
             // Index pour les requêtes d'expiration
             $table->index(['user_id', 'is_late_expired']);
             $table->index(['late_recovery_deadline', 'is_late']);
@@ -43,7 +43,7 @@ return new class extends Migration
             $table->boolean('is_acknowledged')->default(false); // L'employé a pris connaissance
             $table->timestamp('acknowledged_at')->nullable();
             $table->timestamps();
-            
+
             $table->index(['user_id', 'absence_date']);
         });
 

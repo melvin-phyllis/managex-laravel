@@ -18,6 +18,7 @@ class DocumentPolicy
         if ($user->isAdmin()) {
             return true;
         }
+
         return null;
     }
 
@@ -30,6 +31,7 @@ class DocumentPolicy
         if ($document->user_id === $user->id) {
             return $document->type->employee_can_view;
         }
+
         return false;
     }
 
@@ -40,9 +42,10 @@ class DocumentPolicy
     {
         // User can only delete their own pending documents if type allows
         if ($document->user_id === $user->id) {
-            return $document->type->employee_can_delete && 
+            return $document->type->employee_can_delete &&
                    $document->status !== 'approved';
         }
+
         return false;
     }
 

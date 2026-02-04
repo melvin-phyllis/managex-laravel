@@ -11,10 +11,10 @@ return new class extends Migration
         Schema::table('payrolls', function (Blueprint $table) {
             // Reference to contract used for this payroll
             $table->foreignId('contract_id')
-                  ->nullable()
-                  ->after('user_id')
-                  ->constrained()
-                  ->nullOnDelete();
+                ->nullable()
+                ->after('user_id')
+                ->constrained()
+                ->nullOnDelete();
 
             // ===== REVENUES (Gains) =====
             $table->decimal('gross_salary', 12, 2)->default(0)->after('annee');
@@ -26,34 +26,34 @@ return new class extends Migration
 
             // ===== TAXABLE BASE =====
             $table->decimal('taxable_gross', 12, 2)->default(0)
-                  ->comment('Brut Imposable')
-                  ->after('bonuses');
+                ->comment('Brut Imposable')
+                ->after('bonuses');
 
             // ===== CIV TAXES (Retenues) =====
             // IS - Impot sur Salaire (1.2%)
             $table->decimal('tax_is', 12, 2)->default(0)
-                  ->comment('Impot sur Salaire - 1.2% of taxable gross')
-                  ->after('taxable_gross');
+                ->comment('Impot sur Salaire - 1.2% of taxable gross')
+                ->after('taxable_gross');
 
             // CN - Contribution Nationale (progressive 0-10%)
             $table->decimal('tax_cn', 12, 2)->default(0)
-                  ->comment('Contribution Nationale - progressive rates')
-                  ->after('tax_is');
+                ->comment('Contribution Nationale - progressive rates')
+                ->after('tax_is');
 
             // IGR - Impot General sur le Revenu (quotient familial)
             $table->decimal('tax_igr', 12, 2)->default(0)
-                  ->comment('Impot General sur le Revenu')
-                  ->after('tax_cn');
+                ->comment('Impot General sur le Revenu')
+                ->after('tax_cn');
 
             // CNPS - Caisse Nationale de Prevoyance Sociale
             $table->decimal('cnps_employee', 12, 2)->default(0)
-                  ->comment('CNPS Employee contribution - 6.3% capped')
-                  ->after('tax_igr');
+                ->comment('CNPS Employee contribution - 6.3% capped')
+                ->after('tax_igr');
 
             // Employer CNPS contribution (for reporting only, not deducted)
             $table->decimal('cnps_employer', 12, 2)->default(0)
-                  ->comment('CNPS Employer contribution for reporting')
-                  ->after('cnps_employee');
+                ->comment('CNPS Employer contribution for reporting')
+                ->after('cnps_employee');
 
             // ===== TOTALS =====
             $table->decimal('total_deductions', 12, 2)->default(0)->after('cnps_employer');

@@ -4,10 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\EmployeeEvaluation;
-use App\Models\User;
 use App\Models\Setting;
+use App\Models\User;
 use Illuminate\Http\Request;
-use Carbon\Carbon;
 
 class EmployeeEvaluationController extends Controller
 {
@@ -26,7 +25,7 @@ class EmployeeEvaluationController extends Controller
 
         // Employés CDI/CDD sans évaluation ce mois
         $evaluatedUserIds = EmployeeEvaluation::forPeriod($month, $year)->pluck('user_id');
-        
+
         $pendingEmployees = User::where('role', 'employee')
             ->where('contract_type', '!=', 'stage')
             ->whereNotIn('id', $evaluatedUserIds)
@@ -55,7 +54,7 @@ class EmployeeEvaluationController extends Controller
 
         // Récupérer les employés CDI/CDD qui n'ont pas encore été évalués ce mois
         $evaluatedUserIds = EmployeeEvaluation::forPeriod($month, $year)->pluck('user_id');
-        
+
         $employees = User::where('role', 'employee')
             ->where('contract_type', '!=', 'stage')
             ->whereNotIn('id', $evaluatedUserIds)
@@ -111,11 +110,11 @@ class EmployeeEvaluationController extends Controller
 
         $evaluation = new EmployeeEvaluation($validated);
         $evaluation->evaluated_by = auth()->id();
-        
+
         if ($request->status === 'validated') {
             $evaluation->validated_at = now();
         }
-        
+
         $evaluation->save();
 
         return redirect()->route('admin.employee-evaluations.index', [
@@ -145,7 +144,7 @@ class EmployeeEvaluationController extends Controller
      */
     public function edit(EmployeeEvaluation $employeeEvaluation)
     {
-        if (!$employeeEvaluation->canBeEdited()) {
+        if (! $employeeEvaluation->canBeEdited()) {
             return redirect()->route('admin.employee-evaluations.show', $employeeEvaluation)
                 ->with('error', 'Cette évaluation validée ne peut plus être modifiée.');
         }
@@ -166,7 +165,7 @@ class EmployeeEvaluationController extends Controller
      */
     public function update(Request $request, EmployeeEvaluation $employeeEvaluation)
     {
-        if (!$employeeEvaluation->canBeEdited()) {
+        if (! $employeeEvaluation->canBeEdited()) {
             return back()->with('error', 'Cette évaluation validée ne peut plus être modifiée.');
         }
 
@@ -180,11 +179,11 @@ class EmployeeEvaluationController extends Controller
         ]);
 
         $employeeEvaluation->fill($validated);
-        
+
         if ($request->status === 'validated' && $employeeEvaluation->status !== 'validated') {
             $employeeEvaluation->validated_at = now();
         }
-        
+
         $employeeEvaluation->save();
 
         return redirect()->route('admin.employee-evaluations.index', [
@@ -204,7 +203,7 @@ class EmployeeEvaluationController extends Controller
 
         $month = $employeeEvaluation->month;
         $year = $employeeEvaluation->year;
-        
+
         $employeeEvaluation->delete();
 
         return redirect()->route('admin.employee-evaluations.index', [
@@ -233,7 +232,7 @@ class EmployeeEvaluationController extends Controller
 
         // Employés sans évaluation ce mois
         $evaluatedUserIds = EmployeeEvaluation::forPeriod($month, $year)->pluck('user_id');
-        
+
         $employees = User::where('role', 'employee')
             ->where('contract_type', '!=', 'stage')
             ->whereNotIn('id', $evaluatedUserIds)
@@ -277,7 +276,7 @@ class EmployeeEvaluationController extends Controller
                 ->forPeriod($validated['month'], $validated['year'])
                 ->exists();
 
-            if (!$existing) {
+            if (! $existing) {
                 $evaluation = new EmployeeEvaluation([
                     'user_id' => $evalData['user_id'],
                     'month' => $validated['month'],
@@ -323,7 +322,7 @@ class EmployeeEvaluationController extends Controller
             'max_score' => EmployeeEvaluation::MAX_SCORE,
             'percentage' => round(($totalScore / EmployeeEvaluation::MAX_SCORE) * 100, 1),
             'calculated_salary' => $calculatedSalary,
-            'formatted_salary' => number_format($calculatedSalary, 0, ',', ' ') . ' FCFA',
+            'formatted_salary' => number_format($calculatedSalary, 0, ',', ' ').' FCFA',
             'smic' => $smic,
         ]);
     }

@@ -5,8 +5,8 @@ namespace App\Notifications;
 use App\Models\Task;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\BroadcastMessage;
+use Illuminate\Notifications\Notification;
 
 class TaskAssignedNotification extends Notification implements ShouldQueue
 {
@@ -45,4 +45,3 @@ class TaskAssignedNotification extends Notification implements ShouldQueue
         return $this->toDatabase($notifiable);
     }
 }
-

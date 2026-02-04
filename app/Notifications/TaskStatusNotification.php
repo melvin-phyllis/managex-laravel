@@ -13,6 +13,7 @@ class TaskStatusNotification extends Notification implements ShouldQueue
     use Queueable;
 
     protected Task $task;
+
     protected string $status;
 
     /**
@@ -39,7 +40,7 @@ class TaskStatusNotification extends Notification implements ShouldQueue
      */
     public function toMail(object $notifiable): MailMessage
     {
-        $statusLabel = match($this->status) {
+        $statusLabel = match ($this->status) {
             'approved' => 'approuvée',
             'rejected' => 'rejetée',
             'completed' => 'marquée comme terminée',
@@ -48,8 +49,8 @@ class TaskStatusNotification extends Notification implements ShouldQueue
 
         return (new MailMessage)
             ->subject('Mise à jour de votre tâche - ManageX')
-            ->greeting('Bonjour ' . $notifiable->name . ',')
-            ->line('Votre tâche "' . $this->task->titre . '" a été ' . $statusLabel . '.')
+            ->greeting('Bonjour '.$notifiable->name.',')
+            ->line('Votre tâche "'.$this->task->titre.'" a été '.$statusLabel.'.')
             ->action('Voir mes tâches', route('employee.tasks.index'))
             ->line('Merci d\'utiliser ManageX !');
     }
@@ -61,7 +62,7 @@ class TaskStatusNotification extends Notification implements ShouldQueue
      */
     public function toArray(object $notifiable): array
     {
-        $statusLabel = match($this->status) {
+        $statusLabel = match ($this->status) {
             'approved' => 'approuvée',
             'rejected' => 'rejetée',
             'completed' => 'terminée',
@@ -73,9 +74,8 @@ class TaskStatusNotification extends Notification implements ShouldQueue
             'task_id' => $this->task->id,
             'task_titre' => $this->task->titre,
             'status' => $this->status,
-            'message' => 'Votre tâche "' . $this->task->titre . '" a été ' . $statusLabel . '.',
+            'message' => 'Votre tâche "'.$this->task->titre.'" a été '.$statusLabel.'.',
             'url' => route('employee.tasks.index'),
         ];
     }
 }
-

@@ -116,7 +116,7 @@ class InternEvaluation extends Model
      */
     public function getWeekLabelAttribute(): string
     {
-        return 'Semaine du ' . $this->week_start->format('d/m/Y');
+        return 'Semaine du '.$this->week_start->format('d/m/Y');
     }
 
     /**
@@ -274,7 +274,7 @@ class InternEvaluation extends Model
      */
     public function getScorePercentage(string $criterion): float
     {
-        $score = $this->{$criterion . '_score'} ?? 0;
+        $score = $this->{$criterion.'_score'} ?? 0;
         $max = self::CRITERIA[$criterion]['max'] ?? 2.5;
 
         return round(($score / $max) * 100, 1);

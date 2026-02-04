@@ -44,6 +44,7 @@ class DocumentRequestController extends Controller
     public function show(DocumentRequest $documentRequest)
     {
         $documentRequest->load(['user.position', 'admin']);
+
         return view('admin.document-requests.show', compact('documentRequest'));
     }
 
@@ -63,11 +64,11 @@ class DocumentRequestController extends Controller
         ]);
 
         $file = $request->file('document');
-        $filename = Str::uuid() . '.' . $file->getClientOriginalExtension();
-        $path = 'document-requests/' . $documentRequest->user_id . '/' . $filename;
+        $filename = Str::uuid().'.'.$file->getClientOriginalExtension();
+        $path = 'document-requests/'.$documentRequest->user_id.'/'.$filename;
 
         Storage::disk('documents')->putFileAs(
-            'document-requests/' . $documentRequest->user_id,
+            'document-requests/'.$documentRequest->user_id,
             $file,
             $filename
         );

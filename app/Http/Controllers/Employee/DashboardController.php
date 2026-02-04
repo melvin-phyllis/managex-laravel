@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Employee;
 
 use App\Http\Controllers\Controller;
 use App\Models\Announcement;
-use Illuminate\Http\Request;
 use Carbon\Carbon;
 
 class DashboardController extends Controller
@@ -46,7 +45,7 @@ class DashboardController extends Controller
             ->forUser($user)
             ->where(function ($q) {
                 $q->where('priority', 'critical')
-                  ->orWhere('type', 'urgent');
+                    ->orWhere('type', 'urgent');
             })
             ->unreadBy($user)
             ->orderByPriority()
@@ -60,13 +59,13 @@ class DashboardController extends Controller
             ->count();
 
         // === NOUVEAUX WIDGETS ===
-        
+
         // Demandes de documents (les 3 dernières)
         $documentRequests = \App\Models\DocumentRequest::forUser($user->id)
             ->latest()
             ->take(3)
             ->get();
-        
+
         // Documents globaux non lus
         $acknowledgedIds = \DB::table('global_document_acknowledgments')
             ->where('user_id', $user->id)
@@ -75,7 +74,7 @@ class DashboardController extends Controller
         $unreadGlobalDocs = \App\Models\GlobalDocument::active()
             ->whereNotIn('id', $acknowledgedIds)
             ->get();
-        
+
         // Contrat de travail
         $contract = $user->currentContract;
         $hasContractDocument = $contract && $contract->document_path;
@@ -100,13 +99,13 @@ class DashboardController extends Controller
         ));
     }
 
-
     /**
      * API endpoint for chart data
      */
     public function getChartDataApi()
     {
         $user = auth()->user();
+
         return response()->json($this->getChartData($user));
     }
 
@@ -116,6 +115,7 @@ class DashboardController extends Controller
     public function getUpcomingEventsApi()
     {
         $user = auth()->user();
+
         return response()->json($this->getUpcomingEvents($user));
     }
 
@@ -240,7 +240,7 @@ class DashboardController extends Controller
         $presences = $user->presences()
             ->orderBy('date', 'desc')
             ->pluck('date')
-            ->map(fn($date) => Carbon::parse($date)->format('Y-m-d'))
+            ->map(fn ($date) => Carbon::parse($date)->format('Y-m-d'))
             ->unique()
             ->values();
 
@@ -258,7 +258,7 @@ class DashboardController extends Controller
         $checkDate = now()->format('Y-m-d');
 
         // Si pas de présence aujourd'hui, vérifier hier
-        if (!$presences->contains($checkDate)) {
+        if (! $presences->contains($checkDate)) {
             $checkDate = now()->subDay()->format('Y-m-d');
         }
 
@@ -269,6 +269,7 @@ class DashboardController extends Controller
             // Ignorer les weekends
             if ($carbonDate->isWeekend()) {
                 $checkDate = $carbonDate->subDay()->format('Y-m-d');
+
                 continue;
             }
 
@@ -280,7 +281,9 @@ class DashboardController extends Controller
             }
 
             // Limite de sécurité
-            if ($currentStreak > 365) break;
+            if ($currentStreak > 365) {
+                break;
+            }
         }
 
         // Calculer la meilleure série (simplifié)
@@ -295,7 +298,9 @@ class DashboardController extends Controller
 
     private function calculateBestStreak($presences): int
     {
-        if ($presences->isEmpty()) return 0;
+        if ($presences->isEmpty()) {
+            return 0;
+        }
 
         $bestStreak = 0;
         $currentStreak = 0;
@@ -312,7 +317,7 @@ class DashboardController extends Controller
                 $diff = 0;
                 $checkDate = $prevDate->copy()->addDay();
                 while ($checkDate < $currDate) {
-                    if (!$checkDate->isWeekend()) {
+                    if (! $checkDate->isWeekend()) {
                         $diff++;
                     }
                     $checkDate->addDay();
@@ -344,10 +349,10 @@ class DashboardController extends Controller
 
         foreach ($upcomingLeaves as $leave) {
             $events[] = [
-                'id' => 'leave_' . $leave->id,
+                'id' => 'leave_'.$leave->id,
                 'type' => 'leave',
-                'title' => 'Congé ' . ($leave->type_label ?? $leave->type),
-                'subtitle' => 'Du ' . $leave->date_debut->format('d/m') . ' au ' . $leave->date_fin->format('d/m'),
+                'title' => 'Congé '.($leave->type_label ?? $leave->type),
+                'subtitle' => 'Du '.$leave->date_debut->format('d/m').' au '.$leave->date_fin->format('d/m'),
                 'date' => $leave->date_debut->format('Y-m-d'),
                 'link' => route('employee.leaves.show', $leave->id),
             ];
@@ -363,10 +368,10 @@ class DashboardController extends Controller
 
         foreach ($upcomingTasks as $task) {
             $events[] = [
-                'id' => 'task_' . $task->id,
+                'id' => 'task_'.$task->id,
                 'type' => 'task',
                 'title' => $task->titre,
-                'subtitle' => 'Progression: ' . $task->progression . '%',
+                'subtitle' => 'Progression: '.$task->progression.'%',
                 'date' => $task->date_fin->format('Y-m-d'),
                 'link' => route('employee.tasks.show', $task->id),
             ];
@@ -385,17 +390,17 @@ class DashboardController extends Controller
 
         foreach ($upcomingSurveys as $survey) {
             $events[] = [
-                'id' => 'survey_' . $survey->id,
+                'id' => 'survey_'.$survey->id,
                 'type' => 'survey',
                 'title' => $survey->titre,
-                'subtitle' => $survey->questions()->count() . ' questions',
+                'subtitle' => $survey->questions()->count().' questions',
                 'date' => $survey->date_limite->format('Y-m-d'),
                 'link' => route('employee.surveys.show', $survey->id),
             ];
         }
 
         // Trier par date
-        usort($events, fn($a, $b) => strcmp($a['date'], $b['date']));
+        usort($events, fn ($a, $b) => strcmp($a['date'], $b['date']));
 
         return array_slice($events, 0, 8);
     }
@@ -467,7 +472,7 @@ class DashboardController extends Controller
         $workingDays = 0;
 
         while ($start <= $end) {
-            if (!$start->isWeekend()) {
+            if (! $start->isWeekend()) {
                 $workingDays++;
             }
             $start->addDay();
@@ -483,7 +488,7 @@ class DashboardController extends Controller
         $workingDays = 0;
 
         while ($start <= $end) {
-            if (!$start->isWeekend()) {
+            if (! $start->isWeekend()) {
                 $workingDays++;
             }
             $start->addDay();
@@ -513,7 +518,7 @@ class DashboardController extends Controller
     public function getUnreadNotificationsCount()
     {
         return response()->json([
-            'count' => auth()->user()->unreadNotifications()->count()
+            'count' => auth()->user()->unreadNotifications()->count(),
         ]);
     }
 }

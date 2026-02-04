@@ -35,8 +35,8 @@ class AnnouncementController extends Controller
 
         if ($request->filled('search')) {
             $query->where(function ($q) use ($request) {
-                $q->where('title', 'like', '%' . $request->search . '%')
-                  ->orWhere('content', 'like', '%' . $request->search . '%');
+                $q->where('title', 'like', '%'.$request->search.'%')
+                    ->orWhere('content', 'like', '%'.$request->search.'%');
             });
         }
 
@@ -102,7 +102,7 @@ class AnnouncementController extends Controller
         $announcement = Announcement::create($validated);
 
         return redirect()->route('admin.announcements.index')
-            ->with('success', 'Annonce "' . $announcement->title . '" créée avec succès.');
+            ->with('success', 'Annonce "'.$announcement->title.'" créée avec succès.');
     }
 
     public function show(Announcement $announcement)
@@ -186,7 +186,7 @@ class AnnouncementController extends Controller
         $announcement->delete();
 
         return redirect()->route('admin.announcements.index')
-            ->with('success', 'Annonce "' . $title . '" supprimée.');
+            ->with('success', 'Annonce "'.$title.'" supprimée.');
     }
 
     /**
@@ -194,7 +194,7 @@ class AnnouncementController extends Controller
      */
     public function toggle(Announcement $announcement)
     {
-        $announcement->update(['is_active' => !$announcement->is_active]);
+        $announcement->update(['is_active' => ! $announcement->is_active]);
 
         return response()->json([
             'success' => true,
@@ -208,7 +208,7 @@ class AnnouncementController extends Controller
      */
     public function pin(Announcement $announcement)
     {
-        $announcement->update(['is_pinned' => !$announcement->is_pinned]);
+        $announcement->update(['is_pinned' => ! $announcement->is_pinned]);
 
         return response()->json([
             'success' => true,

@@ -2,19 +2,19 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use App\Models\User;
-use App\Models\Department;
-use App\Models\Position;
 use App\Models\Contract;
-use App\Models\Presence;
+use App\Models\Department;
 use App\Models\Leave;
-use App\Models\Task;
 use App\Models\Payroll;
 use App\Models\PayrollCountry;
 use App\Models\PayrollCountryRule;
+use App\Models\Position;
+use App\Models\Presence;
 use App\Models\Setting;
+use App\Models\Task;
+use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
 class MassiveTestSeeder extends Seeder
@@ -38,7 +38,7 @@ class MassiveTestSeeder extends Seeder
         'Fatou', 'Aminata', 'Mamadou', 'Ibrahim', 'Oumar', 'Kadiatou', 'Mariame', 'Sekou', 'Moussa', 'Aissatou',
         'Emmanuel', 'Christelle', 'Serge', 'Patricia', 'Roger', 'Sandrine', 'Roland', 'Véronique', 'Martial', 'Clarisse',
         'Gnoan', 'Bleu', 'Zadi', 'Tape', 'Dago', 'Adon', 'Tano', 'Lou', 'Guessan', 'Assi',
-        'Olivier', 'Catherine', 'Michel', 'Joséphine', 'Bernard', 'Christine', 'Franck', 'Nicole', 'Alain', 'Monique'
+        'Olivier', 'Catherine', 'Michel', 'Joséphine', 'Bernard', 'Christine', 'Franck', 'Nicole', 'Alain', 'Monique',
     ];
 
     private $lastNames = [
@@ -46,7 +46,7 @@ class MassiveTestSeeder extends Seeder
         'Yao', 'Koffi', 'Kouassi', 'Aka', 'Ake', 'Adou', 'Aké', 'Allou', 'Assi', 'Bahi',
         'N\'Guessan', 'N\'Dri', 'N\'Goran', 'N\'Gatta', 'Gnagne', 'Gnamien', 'Goly', 'Gohi', 'Guei', 'Irie',
         'Lago', 'Loua', 'Lou', 'Mahan', 'Mian', 'Okou', 'Ouattara', 'Sery', 'Sess', 'Sie',
-        'Tia', 'Tie', 'Toure', 'Yapi', 'Yapo', 'Yeo', 'Zahui', 'Zeze', 'Zie', 'Zoukou'
+        'Tia', 'Tie', 'Toure', 'Yapi', 'Yapo', 'Yeo', 'Zahui', 'Zeze', 'Zie', 'Zoukou',
     ];
 
     public function run(): void
@@ -102,7 +102,7 @@ class MassiveTestSeeder extends Seeder
         foreach ($this->departments as $deptData) {
             $department = Department::create([
                 'name' => $deptData['name'],
-                'description' => 'Département ' . $deptData['name'],
+                'description' => 'Département '.$deptData['name'],
                 'color' => $deptData['color'],
                 'is_active' => true,
             ]);
@@ -111,7 +111,7 @@ class MassiveTestSeeder extends Seeder
                 Position::create([
                     'department_id' => $department->id,
                     'name' => $positionName,
-                    'description' => 'Poste de ' . $positionName,
+                    'description' => 'Poste de '.$positionName,
                     'is_active' => true,
                 ]);
             }
@@ -152,7 +152,7 @@ class MassiveTestSeeder extends Seeder
                     ['min' => 50000, 'max' => 130000, 'rate' => 0.015],
                     ['min' => 130000, 'max' => 200000, 'rate' => 0.05],
                     ['min' => 200000, 'max' => null, 'rate' => 0.10],
-                ]
+                ],
             ],
             'description' => 'Contribution Nationale (barème progressif)',
             'is_active' => true,
@@ -173,7 +173,7 @@ class MassiveTestSeeder extends Seeder
                     ['min' => 220333, 'max' => 389083, 'rate' => 0.35, 'deduction' => 37220],
                     ['min' => 389083, 'max' => 842166, 'rate' => 0.45, 'deduction' => 76128],
                     ['min' => 842166, 'max' => null, 'rate' => 0.60, 'deduction' => 202553],
-                ]
+                ],
             ],
             'description' => 'Impôt Général sur le Revenu',
             'is_active' => true,
@@ -221,11 +221,11 @@ class MassiveTestSeeder extends Seeder
             $position = $positions->random();
 
             // Générer un email unique
-            $baseEmail = strtolower($firstName . '.' . $lastName) . '@managex.ci';
+            $baseEmail = strtolower($firstName.'.'.$lastName).'@managex.ci';
             $email = $baseEmail;
             $counter = 1;
             while (in_array($email, $usedEmails)) {
-                $email = strtolower($firstName . '.' . $lastName . $counter) . '@managex.ci';
+                $email = strtolower($firstName.'.'.$lastName.$counter).'@managex.ci';
                 $counter++;
             }
             $usedEmails[] = $email;
@@ -234,11 +234,11 @@ class MassiveTestSeeder extends Seeder
             $hireDate = Carbon::now()->subMonths(rand(6, 60));
 
             $user = User::create([
-                'name' => $firstName . ' ' . $lastName,
+                'name' => $firstName.' '.$lastName,
                 'email' => $email,
                 'password' => Hash::make('password'),
                 'role' => 'employee',
-                'telephone' => '+225 0' . rand(1, 9) . ' ' . str_pad(rand(0, 99), 2, '0', STR_PAD_LEFT) . ' ' . str_pad(rand(0, 99), 2, '0', STR_PAD_LEFT) . ' ' . str_pad(rand(0, 99), 2, '0', STR_PAD_LEFT) . ' ' . str_pad(rand(0, 99), 2, '0', STR_PAD_LEFT),
+                'telephone' => '+225 0'.rand(1, 9).' '.str_pad(rand(0, 99), 2, '0', STR_PAD_LEFT).' '.str_pad(rand(0, 99), 2, '0', STR_PAD_LEFT).' '.str_pad(rand(0, 99), 2, '0', STR_PAD_LEFT).' '.str_pad(rand(0, 99), 2, '0', STR_PAD_LEFT),
                 'address' => 'Abidjan, Côte d\'Ivoire',
                 'gender' => $gender,
                 'date_of_birth' => Carbon::now()->subYears(rand(22, 55)),
@@ -313,7 +313,7 @@ class MassiveTestSeeder extends Seeder
             $monthStart = $currentMonth->copy()->startOfMonth();
             $monthEnd = $currentMonth->copy()->endOfMonth();
 
-            $this->command->info("  📅 Traitement de " . $currentMonth->format('F Y') . "...");
+            $this->command->info('  📅 Traitement de '.$currentMonth->format('F Y').'...');
 
             foreach ($employees as $employee) {
                 // Présences pour ce mois
@@ -336,11 +336,12 @@ class MassiveTestSeeder extends Seeder
     private function createMonthlyPresences(User $employee, Carbon $monthStart, Carbon $monthEnd): void
     {
         $current = $monthStart->copy();
-        
+
         while ($current <= $monthEnd && $current <= Carbon::now()) {
             // Skip weekends
             if ($current->isWeekend()) {
                 $current->addDay();
+
                 continue;
             }
 
@@ -348,7 +349,7 @@ class MassiveTestSeeder extends Seeder
             if (rand(1, 100) <= 95) {
                 $checkIn = $current->copy()->setTime(8, rand(0, 30), 0);
                 $checkOut = $current->copy()->setTime(17, rand(0, 45), 0);
-                
+
                 // 15% de retards
                 if (rand(1, 100) <= 15) {
                     $checkIn->addMinutes(rand(5, 60));
@@ -416,8 +417,8 @@ class MassiveTestSeeder extends Seeder
             Task::create([
                 'user_id' => $employee->id,
                 'assigned_by' => 1, // Admin
-                'title' => $taskTitles[array_rand($taskTitles)] . ' - ' . $monthStart->format('M Y'),
-                'description' => 'Tâche assignée pour ' . $monthStart->format('F Y'),
+                'title' => $taskTitles[array_rand($taskTitles)].' - '.$monthStart->format('M Y'),
+                'description' => 'Tâche assignée pour '.$monthStart->format('F Y'),
                 'priority' => ['low', 'medium', 'high'][rand(0, 2)],
                 'status' => $isCompleted ? 'completed' : ($dueDate < Carbon::now() ? 'in_progress' : 'pending'),
                 'progress' => $isCompleted ? 100 : rand(0, 90),
@@ -430,7 +431,9 @@ class MassiveTestSeeder extends Seeder
     private function createPayroll(User $employee, int $month, int $year): void
     {
         $contract = $employee->currentContract;
-        if (!$contract) return;
+        if (! $contract) {
+            return;
+        }
 
         $baseSalary = $contract->base_salary;
         $transport = rand(0, 1) ? 25000 : 0;
@@ -484,12 +487,15 @@ class MassiveTestSeeder extends Seeder
                 $tax += $base * $bracket['rate'];
             }
         }
+
         return $tax;
     }
 
     private function calculateIGR(float $base, float $parts): float
     {
-        if ($parts <= 0) $parts = 1;
+        if ($parts <= 0) {
+            $parts = 1;
+        }
         $Q = $base / $parts;
 
         $table = [
@@ -508,6 +514,7 @@ class MassiveTestSeeder extends Seeder
                 return max(0, ($Q * $bracket['rate'] - $bracket['ded']) * $parts);
             }
         }
+
         return 0;
     }
 }

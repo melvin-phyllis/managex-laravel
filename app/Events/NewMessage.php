@@ -35,7 +35,7 @@ class NewMessage implements ShouldBroadcast
         // Broadcast to all participants except the sender
         foreach ($this->message->conversation->activeParticipants as $participant) {
             if ($participant->user_id !== $this->message->sender_id) {
-                $channels[] = new PrivateChannel('user.' . $participant->user_id);
+                $channels[] = new PrivateChannel('user.'.$participant->user_id);
             }
         }
 

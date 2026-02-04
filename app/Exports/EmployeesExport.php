@@ -3,18 +3,20 @@
 namespace App\Exports;
 
 use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
 use Maatwebsite\Excel\Concerns\FromQuery;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithStyles;
-use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
-use Illuminate\Database\Eloquent\Builder;
 
-class EmployeesExport implements FromQuery, WithHeadings, WithMapping, WithStyles, ShouldAutoSize
+class EmployeesExport implements FromQuery, ShouldAutoSize, WithHeadings, WithMapping, WithStyles
 {
     protected ?string $departmentId = null;
+
     protected ?string $status = null;
+
     protected ?string $contractType = null;
 
     public function __construct(?string $departmentId = null, ?string $status = null, ?string $contractType = null)

@@ -51,7 +51,8 @@ class LatePenaltyAbsence extends Model
     {
         $hours = floor($this->total_expired_minutes / 60);
         $mins = $this->total_expired_minutes % 60;
-        return $hours > 0 ? "{$hours}h" . ($mins > 0 ? sprintf('%02d', $mins) : '') : "{$mins} min";
+
+        return $hours > 0 ? "{$hours}h".($mins > 0 ? sprintf('%02d', $mins) : '') : "{$mins} min";
     }
 
     /**

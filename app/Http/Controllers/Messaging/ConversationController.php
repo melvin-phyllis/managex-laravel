@@ -18,7 +18,7 @@ class ConversationController extends Controller
     public function index(Request $request)
     {
         $user = auth()->user();
-        
+
         $conversations = Conversation::forUser($user->id)
             ->with(['latestMessage.sender', 'activeParticipants.user'])
             ->withCount(['messages as unread_count' => function ($query) use ($user) {
@@ -43,7 +43,7 @@ class ConversationController extends Controller
     public function adminChat(Request $request)
     {
         $user = auth()->user();
-        
+
         $conversations = Conversation::forUser($user->id)
             ->with(['latestMessage.sender', 'activeParticipants.user'])
             ->withCount(['messages as unread_count' => function ($query) use ($user) {
@@ -53,9 +53,10 @@ class ConversationController extends Controller
             }])
             ->get()
             ->map(function ($conv) use ($user) {
-                $otherUser = $conv->type === 'direct' 
-                    ? $conv->activeParticipants->where('user_id', '!=', $user->id)->first()?->user 
+                $otherUser = $conv->type === 'direct'
+                    ? $conv->activeParticipants->where('user_id', '!=', $user->id)->first()?->user
                     : null;
+
                 return [
                     'id' => $conv->id,
                     'type' => $conv->type,
@@ -80,7 +81,7 @@ class ConversationController extends Controller
     public function list(Request $request)
     {
         $user = auth()->user();
-        
+
         $query = Conversation::forUser($user->id)
             ->with(['latestMessage.sender', 'activeParticipants.user']);
 
@@ -124,7 +125,7 @@ class ConversationController extends Controller
                         'name' => $otherUser->name,
                         'avatar' => $otherUser->avatar ? avatar_url($otherUser->avatar) : null,
                     ] : null,
-                    'participants' => $conversation->activeParticipants->map(fn($p) => [
+                    'participants' => $conversation->activeParticipants->map(fn ($p) => [
                         'id' => $p->user_id,
                         'name' => $p->user?->name,
                         'role' => $p->role,
@@ -144,7 +145,7 @@ class ConversationController extends Controller
     {
         $user = auth()->user();
 
-        if (!$conversation->hasParticipant($user->id)) {
+        if (! $conversation->hasParticipant($user->id)) {
             abort(403, 'Vous n\'êtes pas membre de cette conversation.');
         }
 
@@ -241,7 +242,7 @@ class ConversationController extends Controller
     {
         $user = auth()->user();
 
-        if (!$conversation->isAdmin($user->id) && !$user->isAdmin()) {
+        if (! $conversation->isAdmin($user->id) && ! $user->isAdmin()) {
             abort(403, 'Vous n\'avez pas les droits pour modifier cette conversation.');
         }
 
@@ -263,7 +264,7 @@ class ConversationController extends Controller
         $user = auth()->user();
         $participant = $conversation->participants()->where('user_id', $user->id)->first();
 
-        if (!$participant) {
+        if (! $participant) {
             abort(403);
         }
 
@@ -299,7 +300,7 @@ class ConversationController extends Controller
         $user = auth()->user();
         $participant = $conversation->participants()->where('user_id', $user->id)->first();
 
-        if (!$participant) {
+        if (! $participant) {
             abort(403);
         }
 
@@ -316,7 +317,7 @@ class ConversationController extends Controller
         $user = auth()->user();
         $participant = $conversation->participants()->where('user_id', $user->id)->first();
 
-        if (!$participant) {
+        if (! $participant) {
             abort(403);
         }
 
@@ -334,6 +335,7 @@ class ConversationController extends Controller
             $otherParticipant = $conversation->activeParticipants
                 ->where('user_id', '!=', $user->id)
                 ->first();
+
             return $otherParticipant?->user?->name ?? 'Utilisateur supprimé';
         }
 
@@ -354,6 +356,7 @@ class ConversationController extends Controller
                 ->where('user_id', '!=', $user->id)
                 ->first();
             $avatarPath = $otherParticipant?->user?->avatar;
+
             return $avatarPath ? avatar_url($avatarPath) : null;
         }
 

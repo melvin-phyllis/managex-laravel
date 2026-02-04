@@ -10,11 +10,11 @@ use App\Models\Presence;
 use App\Models\Task;
 use App\Models\User;
 use Maatwebsite\Excel\Concerns\FromArray;
-use Maatwebsite\Excel\Concerns\WithMultipleSheets;
-use Maatwebsite\Excel\Concerns\WithTitle;
-use Maatwebsite\Excel\Concerns\WithHeadings;
-use Maatwebsite\Excel\Concerns\WithStyles;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithMultipleSheets;
+use Maatwebsite\Excel\Concerns\WithStyles;
+use Maatwebsite\Excel\Concerns\WithTitle;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class AnalyticsExport implements WithMultipleSheets
@@ -44,7 +44,7 @@ class AnalyticsExport implements WithMultipleSheets
     }
 }
 
-class KpisSheet implements FromArray, WithTitle, WithStyles, ShouldAutoSize
+class KpisSheet implements FromArray, ShouldAutoSize, WithStyles, WithTitle
 {
     protected array $data;
 
@@ -62,24 +62,24 @@ class KpisSheet implements FromArray, WithTitle, WithStyles, ShouldAutoSize
     {
         $kpis = $this->data['kpis'] ?? [];
         $evalStats = $this->data['evaluation_stats'] ?? [];
-        
+
         return [
             // Row 1: Header
             ['RAPPORT ANALYTICS RH', '', ''],
             // Row 2: Period
-            ['Période:', $this->data['period_label'] ?? '-', 'Généré le ' . ($this->data['generated_at'] ?? '-')],
+            ['Période:', $this->data['period_label'] ?? '-', 'Généré le '.($this->data['generated_at'] ?? '-')],
             ['', '', ''],
             // Row 4: Section EFFECTIFS
             ['EFFECTIFS', '', ''],
-            ['Effectif Total', $kpis['effectif_total']['value'] ?? 0, 'Variation: ' . ($kpis['effectif_total']['variation'] ?? 0) . '%'],
-            ['Stagiaires Actifs', $kpis['interns']['count'] ?? 0, 'À évaluer: ' . ($kpis['interns']['to_evaluate'] ?? 0)],
+            ['Effectif Total', $kpis['effectif_total']['value'] ?? 0, 'Variation: '.($kpis['effectif_total']['variation'] ?? 0).'%'],
+            ['Stagiaires Actifs', $kpis['interns']['count'] ?? 0, 'À évaluer: '.($kpis['interns']['to_evaluate'] ?? 0)],
             ['', '', ''],
             // Row 8: Section PRESENCES
             ['PRÉSENCES', '', ''],
-            ['Taux de Présence', ($kpis['presents_today']['percentage'] ?? 0) . '%', ($kpis['presents_today']['value'] ?? 0) . '/' . ($kpis['presents_today']['expected'] ?? 0)],
-            ['En Congé', $kpis['en_conge']['value'] ?? 0, 'CP: ' . ($kpis['en_conge']['types']['conge'] ?? 0) . ' / Maladie: ' . ($kpis['en_conge']['types']['maladie'] ?? 0)],
+            ['Taux de Présence', ($kpis['presents_today']['percentage'] ?? 0).'%', ($kpis['presents_today']['value'] ?? 0).'/'.($kpis['presents_today']['expected'] ?? 0)],
+            ['En Congé', $kpis['en_conge']['value'] ?? 0, 'CP: '.($kpis['en_conge']['types']['conge'] ?? 0).' / Maladie: '.($kpis['en_conge']['types']['maladie'] ?? 0)],
             ['Absents Non Justifiés', $kpis['absents_non_justifies']['value'] ?? 0, ''],
-            ['Heures de Retard', ($kpis['late_hours']['total'] ?? 0) . 'h', ($kpis['late_hours']['employees'] ?? 0) . ' employé(s) concerné(s)'],
+            ['Heures de Retard', ($kpis['late_hours']['total'] ?? 0).'h', ($kpis['late_hours']['employees'] ?? 0).' employé(s) concerné(s)'],
             ['', '', ''],
             // Row 14: Section EVALUATIONS EMPLOYES
             ['ÉVALUATIONS EMPLOYÉS', '', ''],
@@ -96,9 +96,9 @@ class KpisSheet implements FromArray, WithTitle, WithStyles, ShouldAutoSize
             ['', '', ''],
             // Row 25: Section TURNOVER & FINANCES
             ['TURNOVER & FINANCES', '', ''],
-            ['Taux de Turnover', ($kpis['turnover']['rate'] ?? 0) . '%', 'Entrées: ' . ($kpis['turnover']['entries'] ?? 0) . ' / Sorties: ' . ($kpis['turnover']['exits'] ?? 0)],
-            ['Masse Salariale', $kpis['masse_salariale']['formatted'] ?? '0 FCFA', 'Variation: ' . ($kpis['masse_salariale']['variation'] ?? 0) . '%'],
-            ['Heures Supplémentaires', ($kpis['heures_supplementaires']['value'] ?? 0) . 'h', ($kpis['heures_supplementaires']['count'] ?? 0) . ' employé(s)'],
+            ['Taux de Turnover', ($kpis['turnover']['rate'] ?? 0).'%', 'Entrées: '.($kpis['turnover']['entries'] ?? 0).' / Sorties: '.($kpis['turnover']['exits'] ?? 0)],
+            ['Masse Salariale', $kpis['masse_salariale']['formatted'] ?? '0 FCFA', 'Variation: '.($kpis['masse_salariale']['variation'] ?? 0).'%'],
+            ['Heures Supplémentaires', ($kpis['heures_supplementaires']['value'] ?? 0).'h', ($kpis['heures_supplementaires']['count'] ?? 0).' employé(s)'],
             ['', '', ''],
             // Row 30: Section TACHES
             ['TÂCHES', '', ''],
@@ -139,7 +139,7 @@ class KpisSheet implements FromArray, WithTitle, WithStyles, ShouldAutoSize
         // Section headers (avec fond coloré)
         $sectionRows = [4, 8, 14, 20, 25, 30];
         $sectionColors = ['3B82F6', '10B981', '059669', '7C3AED', 'F59E0B', '6366F1'];
-        
+
         foreach ($sectionRows as $index => $row) {
             $sheet->getStyle("A{$row}:C{$row}")->applyFromArray([
                 'font' => ['bold' => true, 'size' => 12, 'color' => ['rgb' => 'FFFFFF']],
@@ -168,7 +168,7 @@ class KpisSheet implements FromArray, WithTitle, WithStyles, ShouldAutoSize
     }
 }
 
-class AllEmployeesSheet implements FromArray, WithTitle, WithHeadings, WithStyles, ShouldAutoSize
+class AllEmployeesSheet implements FromArray, ShouldAutoSize, WithHeadings, WithStyles, WithTitle
 {
     protected array $data;
 
@@ -207,6 +207,7 @@ class AllEmployeesSheet implements FromArray, WithTitle, WithHeadings, WithStyle
                 $emp->status ?? 'actif',
             ];
         }
+
         return $rows;
     }
 
@@ -218,7 +219,7 @@ class AllEmployeesSheet implements FromArray, WithTitle, WithHeadings, WithStyle
     }
 }
 
-class DepartmentsSheet implements FromArray, WithTitle, WithHeadings, WithStyles, ShouldAutoSize
+class DepartmentsSheet implements FromArray, ShouldAutoSize, WithHeadings, WithStyles, WithTitle
 {
     protected array $data;
 
@@ -241,8 +242,8 @@ class DepartmentsSheet implements FromArray, WithTitle, WithHeadings, WithStyles
     {
         $rows = [];
         $departments = Department::withCount([
-            'users as employees_count' => fn($q) => $q->where('role', 'employee')->where('contract_type', '!=', 'stage'),
-            'users as interns_count' => fn($q) => $q->where('role', 'employee')->where('contract_type', 'stage'),
+            'users as employees_count' => fn ($q) => $q->where('role', 'employee')->where('contract_type', '!=', 'stage'),
+            'users as interns_count' => fn ($q) => $q->where('role', 'employee')->where('contract_type', 'stage'),
         ])->get();
 
         foreach ($departments as $dept) {
@@ -253,12 +254,12 @@ class DepartmentsSheet implements FromArray, WithTitle, WithHeadings, WithStyles
                 $dept->employees_count + $dept->interns_count,
             ];
         }
-        
+
         // Total row
         $totalEmployees = $departments->sum('employees_count');
         $totalInterns = $departments->sum('interns_count');
         $rows[] = ['TOTAL', $totalEmployees, $totalInterns, $totalEmployees + $totalInterns];
-        
+
         return $rows;
     }
 
@@ -270,7 +271,7 @@ class DepartmentsSheet implements FromArray, WithTitle, WithHeadings, WithStyles
     }
 }
 
-class PresencesSheet implements FromArray, WithTitle, WithHeadings, WithStyles, ShouldAutoSize
+class PresencesSheet implements FromArray, ShouldAutoSize, WithHeadings, WithStyles, WithTitle
 {
     protected array $data;
 
@@ -294,7 +295,7 @@ class PresencesSheet implements FromArray, WithTitle, WithHeadings, WithStyles, 
         $rows = [];
         $month = now()->month;
         $year = now()->year;
-        
+
         $presences = Presence::with(['user', 'user.department'])
             ->whereMonth('date', $month)
             ->whereYear('date', $year)
@@ -309,12 +310,13 @@ class PresencesSheet implements FromArray, WithTitle, WithHeadings, WithStyles, 
                 $p->user->department->name ?? '-',
                 $p->check_in?->format('H:i') ?? '-',
                 $p->check_out?->format('H:i') ?? '-',
-                $p->hours_worked ? round($p->hours_worked, 1) . 'h' : '-',
+                $p->hours_worked ? round($p->hours_worked, 1).'h' : '-',
                 $p->is_late ? 'Oui' : 'Non',
                 $p->late_minutes ?? 0,
                 $p->recovery_minutes ?? 0,
             ];
         }
+
         return $rows;
     }
 
@@ -326,7 +328,7 @@ class PresencesSheet implements FromArray, WithTitle, WithHeadings, WithStyles, 
     }
 }
 
-class EmployeeEvaluationsSheet implements FromArray, WithTitle, WithHeadings, WithStyles, ShouldAutoSize
+class EmployeeEvaluationsSheet implements FromArray, ShouldAutoSize, WithHeadings, WithStyles, WithTitle
 {
     protected array $data;
 
@@ -350,7 +352,7 @@ class EmployeeEvaluationsSheet implements FromArray, WithTitle, WithHeadings, Wi
         $rows = [];
         $month = now()->month;
         $year = now()->year;
-        
+
         $evaluations = EmployeeEvaluation::with(['user', 'user.department'])
             ->forPeriod($month, $year)
             ->orderByDesc('total_score')
@@ -367,15 +369,15 @@ class EmployeeEvaluationsSheet implements FromArray, WithTitle, WithHeadings, Wi
                 $eval->accountability,
                 $eval->total_score,
                 EmployeeEvaluation::MAX_SCORE,
-                $eval->score_percentage . '%',
+                $eval->score_percentage.'%',
                 $eval->status_label,
             ];
         }
-        
+
         if (empty($rows)) {
             $rows[] = ['Aucune évaluation ce mois', '', '', '', '', '', '', '', '', '', ''];
         }
-        
+
         return $rows;
     }
 
@@ -387,7 +389,7 @@ class EmployeeEvaluationsSheet implements FromArray, WithTitle, WithHeadings, Wi
     }
 }
 
-class InternEvaluationsSheet implements FromArray, WithTitle, WithHeadings, WithStyles, ShouldAutoSize
+class InternEvaluationsSheet implements FromArray, ShouldAutoSize, WithHeadings, WithStyles, WithTitle
 {
     protected array $data;
 
@@ -409,7 +411,7 @@ class InternEvaluationsSheet implements FromArray, WithTitle, WithHeadings, With
     public function array(): array
     {
         $rows = [];
-        
+
         $evaluations = InternEvaluation::with(['intern', 'intern.department', 'tutor'])
             ->where('week_start', '>=', now()->subWeeks(4)->startOfWeek())
             ->orderByDesc('week_start')
@@ -431,11 +433,11 @@ class InternEvaluationsSheet implements FromArray, WithTitle, WithHeadings, With
                 $eval->status === 'submitted' ? 'Soumise' : 'Brouillon',
             ];
         }
-        
+
         if (empty($rows)) {
             $rows[] = ['Aucune évaluation récente', '', '', '', '', '', '', '', '', '', ''];
         }
-        
+
         return $rows;
     }
 
@@ -447,7 +449,7 @@ class InternEvaluationsSheet implements FromArray, WithTitle, WithHeadings, With
     }
 }
 
-class TopPerformersSheet implements FromArray, WithTitle, WithHeadings, WithStyles, ShouldAutoSize
+class TopPerformersSheet implements FromArray, ShouldAutoSize, WithHeadings, WithStyles, WithTitle
 {
     protected array $data;
 
@@ -469,7 +471,7 @@ class TopPerformersSheet implements FromArray, WithTitle, WithHeadings, WithStyl
     public function array(): array
     {
         $rows = [];
-        
+
         $rows[] = ['--- TOP EMPLOYES ---', '', '', '', '', '', ''];
         foreach ($this->data['top_performers']['employees'] ?? [] as $emp) {
             $rows[] = [
@@ -479,10 +481,10 @@ class TopPerformersSheet implements FromArray, WithTitle, WithHeadings, WithStyl
                 $emp['department'],
                 $emp['score'],
                 $emp['max_score'],
-                $emp['percentage'] . '%',
+                $emp['percentage'].'%',
             ];
         }
-        
+
         $rows[] = ['', '', '', '', '', '', ''];
         $rows[] = ['--- TOP STAGIAIRES ---', '', '', '', '', '', ''];
         foreach ($this->data['top_performers']['interns'] ?? [] as $intern) {
@@ -493,14 +495,14 @@ class TopPerformersSheet implements FromArray, WithTitle, WithHeadings, WithStyl
                 $intern['department'],
                 $intern['score'],
                 $intern['max_score'],
-                $intern['percentage'] . '%',
+                $intern['percentage'].'%',
             ];
         }
-        
+
         if (count($rows) <= 3) {
             $rows[] = ['Aucune donnee disponible', '', '', '', '', '', ''];
         }
-        
+
         return $rows;
     }
 
@@ -512,7 +514,7 @@ class TopPerformersSheet implements FromArray, WithTitle, WithHeadings, WithStyl
     }
 }
 
-class BestAttendanceSheet implements FromArray, WithTitle, WithHeadings, WithStyles, ShouldAutoSize
+class BestAttendanceSheet implements FromArray, ShouldAutoSize, WithHeadings, WithStyles, WithTitle
 {
     protected array $data;
 
@@ -542,15 +544,15 @@ class BestAttendanceSheet implements FromArray, WithTitle, WithHeadings, WithSty
                 $att['presence_count'],
                 $att['on_time_count'],
                 $att['late_count'],
-                $att['punctuality_rate'] . '%',
-                $att['total_hours'] . 'h',
+                $att['punctuality_rate'].'%',
+                $att['total_hours'].'h',
             ];
         }
-        
+
         if (empty($rows)) {
             $rows[] = ['Aucune donnée disponible', '', '', '', '', '', '', ''];
         }
-        
+
         return $rows;
     }
 
@@ -562,7 +564,7 @@ class BestAttendanceSheet implements FromArray, WithTitle, WithHeadings, WithSty
     }
 }
 
-class LatecomersSheet implements FromArray, WithTitle, WithHeadings, WithStyles, ShouldAutoSize
+class LatecomersSheet implements FromArray, ShouldAutoSize, WithHeadings, WithStyles, WithTitle
 {
     protected array $data;
 
@@ -594,11 +596,11 @@ class LatecomersSheet implements FromArray, WithTitle, WithHeadings, WithStyles,
                 $latecomer['count'] * $latecomer['avg_minutes'],
             ];
         }
-        
+
         if (empty($rows)) {
             $rows[] = ['Aucun retard ce mois', '', '', '', '', ''];
         }
-        
+
         return $rows;
     }
 
@@ -610,7 +612,7 @@ class LatecomersSheet implements FromArray, WithTitle, WithHeadings, WithStyles,
     }
 }
 
-class TasksSheet implements FromArray, WithTitle, WithHeadings, WithStyles, ShouldAutoSize
+class TasksSheet implements FromArray, ShouldAutoSize, WithHeadings, WithStyles, WithTitle
 {
     protected array $data;
 
@@ -650,11 +652,11 @@ class TasksSheet implements FromArray, WithTitle, WithHeadings, WithStyles, Shou
                 $task->created_at?->format('d/m/Y') ?? '-',
             ];
         }
-        
+
         if (empty($rows)) {
             $rows[] = ['Aucune tâche ce mois', '', '', '', '', '', '', ''];
         }
-        
+
         return $rows;
     }
 
@@ -666,7 +668,7 @@ class TasksSheet implements FromArray, WithTitle, WithHeadings, WithStyles, Shou
     }
 }
 
-class LeavesSheet implements FromArray, WithTitle, WithHeadings, WithStyles, ShouldAutoSize
+class LeavesSheet implements FromArray, ShouldAutoSize, WithHeadings, WithStyles, WithTitle
 {
     protected array $data;
 
@@ -706,11 +708,11 @@ class LeavesSheet implements FromArray, WithTitle, WithHeadings, WithStyles, Sho
                 $leave->created_at?->format('d/m/Y') ?? '-',
             ];
         }
-        
+
         if (empty($rows)) {
             $rows[] = ['Aucune demande ce mois', '', '', '', '', '', '', ''];
         }
-        
+
         return $rows;
     }
 

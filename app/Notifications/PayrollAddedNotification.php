@@ -39,9 +39,9 @@ class PayrollAddedNotification extends Notification implements ShouldQueue
     {
         return (new MailMessage)
             ->subject('Nouvelle fiche de paie disponible - ManageX')
-            ->greeting('Bonjour ' . $notifiable->name . ',')
-            ->line('Votre fiche de paie pour ' . $this->payroll->periode . ' est maintenant disponible.')
-            ->line('Montant : ' . $this->payroll->montant_formatted)
+            ->greeting('Bonjour '.$notifiable->name.',')
+            ->line('Votre fiche de paie pour '.$this->payroll->periode.' est maintenant disponible.')
+            ->line('Montant : '.$this->payroll->montant_formatted)
             ->action('Voir mes fiches de paie', route('employee.payrolls.index'))
             ->line('Merci d\'utiliser ManageX !');
     }
@@ -58,9 +58,8 @@ class PayrollAddedNotification extends Notification implements ShouldQueue
             'payroll_id' => $this->payroll->id,
             'periode' => $this->payroll->periode,
             'montant' => $this->payroll->montant_formatted,
-            'message' => 'Nouvelle fiche de paie disponible pour ' . $this->payroll->periode . '.',
+            'message' => 'Nouvelle fiche de paie disponible pour '.$this->payroll->periode.'.',
             'url' => route('employee.payrolls.index'),
         ];
     }
 }
-

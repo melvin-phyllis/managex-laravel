@@ -2,24 +2,24 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use App\Models\User;
-use App\Models\Department;
-use App\Models\Position;
 use App\Models\Contract;
-use App\Models\Presence;
+use App\Models\Department;
 use App\Models\Leave;
-use App\Models\Task;
 use App\Models\Payroll;
 use App\Models\PayrollCountry;
 use App\Models\PayrollCountryRule;
+use App\Models\Position;
+use App\Models\Presence;
 use App\Models\Setting;
 use App\Models\Survey;
 use App\Models\SurveyQuestion;
 use App\Models\SurveyResponse;
+use App\Models\Task;
+use App\Models\User;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class RealisticTestSeeder extends Seeder
 {
@@ -81,7 +81,9 @@ class RealisticTestSeeder extends Seeder
     ];
 
     private ?PayrollCountry $civCountry = null;
+
     private array $positionIds = [];
+
     private array $employeeLeaves = [];
 
     public function run(): void
@@ -126,7 +128,7 @@ class RealisticTestSeeder extends Seeder
             'survey_responses', 'survey_questions', 'surveys',
             'payrolls', 'tasks', 'leaves', 'presences',
             'contracts', 'users', 'positions', 'departments',
-            'payroll_country_rules', 'payroll_countries', 'settings'
+            'payroll_country_rules', 'payroll_countries', 'settings',
         ];
 
         foreach ($tables as $table) {
@@ -166,7 +168,7 @@ class RealisticTestSeeder extends Seeder
         foreach ($this->departments as $deptName => $deptData) {
             $department = Department::create([
                 'name' => $deptName,
-                'description' => 'Département ' . $deptName,
+                'description' => 'Département '.$deptName,
                 'color' => $deptData['color'],
                 'is_active' => true,
             ]);
@@ -175,7 +177,7 @@ class RealisticTestSeeder extends Seeder
                 $position = Position::create([
                     'department_id' => $department->id,
                     'name' => $positionName,
-                    'description' => 'Poste de ' . $positionName,
+                    'description' => 'Poste de '.$positionName,
                     'is_active' => true,
                 ]);
 
@@ -302,7 +304,7 @@ class RealisticTestSeeder extends Seeder
                 'email' => $emp['email'],
                 'password' => Hash::make('password'),
                 'role' => 'employee',
-                'telephone' => '+225 0' . rand(1, 9) . ' ' . sprintf('%02d', rand(0, 99)) . ' ' . sprintf('%02d', rand(0, 99)) . ' ' . sprintf('%02d', rand(0, 99)) . ' ' . sprintf('%02d', rand(0, 99)),
+                'telephone' => '+225 0'.rand(1, 9).' '.sprintf('%02d', rand(0, 99)).' '.sprintf('%02d', rand(0, 99)).' '.sprintf('%02d', rand(0, 99)).' '.sprintf('%02d', rand(0, 99)),
                 'address' => $this->getRandomAddress(),
                 'city' => 'Abidjan',
                 'country' => 'Côte d\'Ivoire',
@@ -349,7 +351,7 @@ class RealisticTestSeeder extends Seeder
             $monthStart = $currentMonth->copy()->startOfMonth();
             $monthEnd = $currentMonth->copy()->endOfMonth();
 
-            $this->command->info("  📅 " . $currentMonth->translatedFormat('F Y'));
+            $this->command->info('  📅 '.$currentMonth->translatedFormat('F Y'));
 
             foreach ($employees as $employee) {
                 // Présences
@@ -424,12 +426,14 @@ class RealisticTestSeeder extends Seeder
             // Skip weekends
             if ($current->isWeekend()) {
                 $current->addDay();
+
                 continue;
             }
 
             // Skip si en congé approuvé
             if ($this->isOnLeave($employee->id, $current)) {
                 $current->addDay();
+
                 continue;
             }
 
@@ -477,7 +481,7 @@ class RealisticTestSeeder extends Seeder
 
     private function isOnLeave(int $employeeId, Carbon $date): bool
     {
-        if (!isset($this->employeeLeaves[$employeeId])) {
+        if (! isset($this->employeeLeaves[$employeeId])) {
             return false;
         }
 
@@ -522,8 +526,8 @@ class RealisticTestSeeder extends Seeder
 
             Task::create([
                 'user_id' => $employee->id,
-                'titre' => $taskTitle . ' - ' . $month->translatedFormat('M Y'),
-                'description' => 'Tâche assignée pour ' . $month->translatedFormat('F Y'),
+                'titre' => $taskTitle.' - '.$month->translatedFormat('M Y'),
+                'description' => 'Tâche assignée pour '.$month->translatedFormat('F Y'),
                 'statut' => $statut,
                 'progression' => $progression,
                 'priorite' => $priorite,
@@ -536,7 +540,9 @@ class RealisticTestSeeder extends Seeder
     private function createPayroll(User $employee, int $month, int $year): void
     {
         $contract = $employee->currentContract;
-        if (!$contract) return;
+        if (! $contract) {
+            return;
+        }
 
         $baseSalary = $contract->base_salary;
         $transport = 25000; // Indemnité transport standard
@@ -675,6 +681,7 @@ class RealisticTestSeeder extends Seeder
     {
         $parts = ($status === 'married') ? 2.0 : 1.0;
         $parts += $children * 0.5;
+
         return min($parts, 5.0);
     }
 
@@ -700,7 +707,9 @@ class RealisticTestSeeder extends Seeder
 
     private function calculateIGR(float $base, float $parts): float
     {
-        if ($parts <= 0) $parts = 1;
+        if ($parts <= 0) {
+            $parts = 1;
+        }
         $Q = $base / $parts;
 
         $table = [
@@ -732,13 +741,15 @@ class RealisticTestSeeder extends Seeder
     {
         $ceiling = 1647315;
         $rate = 0.063;
+
         return floor(min($gross, $ceiling) * $rate);
     }
 
     private function getRandomAddress(): string
     {
         $quartiers = ['Cocody', 'Plateau', 'Marcory', 'Treichville', 'Yopougon', 'Abobo', 'Adjamé', 'Bingerville'];
-        return $quartiers[array_rand($quartiers)] . ', Abidjan';
+
+        return $quartiers[array_rand($quartiers)].', Abidjan';
     }
 
     private function getLeaveReason(string $type): string

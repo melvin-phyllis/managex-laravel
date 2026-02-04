@@ -44,14 +44,14 @@ class LoginRequest extends FormRequest
 
         // Vérifier d'abord si le compte existe et n'est pas bloqué
         $user = User::where('email', $this->email)->first();
-        
+
         if ($user && in_array($user->status, ['suspended', 'terminated'])) {
             RateLimiter::hit($this->throttleKey());
-            
-            $message = $user->status === 'suspended' 
+
+            $message = $user->status === 'suspended'
                 ? 'Votre compte a été suspendu. Veuillez contacter l\'administration.'
                 : 'Votre compte a été désactivé. Veuillez contacter l\'administration.';
-            
+
             throw ValidationException::withMessages([
                 'email' => $message,
             ]);

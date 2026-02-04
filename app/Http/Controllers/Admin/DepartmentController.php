@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Department;
-use App\Models\Position;
 use Illuminate\Http\Request;
 
 class DepartmentController extends Controller
@@ -77,7 +76,7 @@ class DepartmentController extends Controller
     public function update(Request $request, Department $department)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:departments,name,' . $department->id,
+            'name' => 'required|string|max:255|unique:departments,name,'.$department->id,
             'description' => 'nullable|string|max:1000',
             'color' => 'nullable|string|max:7|regex:/^#[0-9A-Fa-f]{6}$/',
             'is_active' => 'boolean',

@@ -56,7 +56,7 @@ class AttachmentController extends Controller
     {
         $user = auth()->user();
 
-        if (!$conversation->hasParticipant($user->id)) {
+        if (! $conversation->hasParticipant($user->id)) {
             abort(403);
         }
 
@@ -75,35 +75,35 @@ class AttachmentController extends Controller
             // SÉCURITÉ: Bloquer les extensions dangereuses
             if (in_array($extension, $this->dangerousExtensions)) {
                 return response()->json([
-                    'error' => "Extension de fichier non autorisée: .{$extension}"
+                    'error' => "Extension de fichier non autorisée: .{$extension}",
                 ], 422);
             }
 
             // Fallback: navigateur peut envoyer application/octet-stream pour les blobs vocaux
             $audioExtensionToMime = ['webm' => 'audio/webm', 'ogg' => 'audio/ogg', 'mp3' => 'audio/mpeg', 'wav' => 'audio/wav', 'm4a' => 'audio/mp4'];
-            if (!array_key_exists($mimeType, $this->allowedTypes) && isset($audioExtensionToMime[$extension])) {
+            if (! array_key_exists($mimeType, $this->allowedTypes) && isset($audioExtensionToMime[$extension])) {
                 $mimeType = $audioExtensionToMime[$extension];
             }
 
             // SÉCURITÉ: Valider le MIME type
-            if (!array_key_exists($mimeType, $this->allowedTypes)) {
+            if (! array_key_exists($mimeType, $this->allowedTypes)) {
                 return response()->json([
-                    'error' => "Type de fichier non autorisé: {$file->getClientOriginalName()}"
+                    'error' => "Type de fichier non autorisé: {$file->getClientOriginalName()}",
                 ], 422);
             }
 
             // SÉCURITÉ: Vérifier que l'extension correspond au MIME type
             $allowedExtensions = $this->allowedTypes[$mimeType];
-            if (!in_array($extension, $allowedExtensions)) {
+            if (! in_array($extension, $allowedExtensions)) {
                 $extension = $allowedExtensions[0];
             }
 
             // SÉCURITÉ: Générer un nom de fichier sécurisé (UUID + extension validée)
             $safeExtension = $allowedExtensions[0];
-            $filename = Str::uuid() . '.' . $safeExtension;
-            
+            $filename = Str::uuid().'.'.$safeExtension;
+
             // SÉCURITÉ: Stockage privé (non accessible publiquement)
-            $path = $file->storeAs('messaging/attachments/' . date('Y/m'), $filename, 'local');
+            $path = $file->storeAs('messaging/attachments/'.date('Y/m'), $filename, 'local');
 
             $attachments[] = [
                 'original_name' => $file->getClientOriginalName(),
@@ -167,19 +167,19 @@ class AttachmentController extends Controller
         $conversation = $attachment->message->conversation;
 
         // SÉCURITÉ: Vérifier que l'utilisateur a accès à cette conversation
-        if (!$conversation->hasParticipant($user->id)) {
+        if (! $conversation->hasParticipant($user->id)) {
             abort(403, 'Accès non autorisé à ce fichier.');
         }
 
         // SÉCURITÉ: Vérifier que le fichier existe
-        if (!Storage::disk('local')->exists($attachment->path)) {
+        if (! Storage::disk('local')->exists($attachment->path)) {
             abort(404, 'Fichier introuvable.');
         }
 
         // Servir le fichier depuis le stockage privé
         return Storage::disk('local')->download($attachment->path, $attachment->original_name);
     }
-    
+
     /**
      * Afficher une image ou un audio (pour previews / lecture inline)
      */
@@ -188,11 +188,11 @@ class AttachmentController extends Controller
         $user = auth()->user();
         $conversation = $attachment->message->conversation;
 
-        if (!$conversation->hasParticipant($user->id)) {
+        if (! $conversation->hasParticipant($user->id)) {
             abort(403);
         }
 
-        if (!$attachment->isImage() && !$attachment->isAudio()) {
+        if (! $attachment->isImage() && ! $attachment->isAudio()) {
             abort(404);
         }
 

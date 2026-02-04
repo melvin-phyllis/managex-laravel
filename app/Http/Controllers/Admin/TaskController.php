@@ -28,24 +28,24 @@ class TaskController extends Controller
 
         if ($request->filled('search')) {
             $search = $request->search;
-            $query->where(function($q) use ($search) {
-                $q->where('titre', 'like', '%' . $search . '%')
-                  ->orWhere('description', 'like', '%' . $search . '%');
+            $query->where(function ($q) use ($search) {
+                $q->where('titre', 'like', '%'.$search.'%')
+                    ->orWhere('description', 'like', '%'.$search.'%');
             });
         }
 
         // Current date for database-agnostic queries
         $now = now()->format('Y-m-d H:i:s');
-        
+
         // Tri par défaut: tâches en retard d'abord, puis par priorité, puis par date
         $tasks = $query->orderByRaw("CASE 
             WHEN date_fin < ? AND statut NOT IN ('validated', 'completed') THEN 0 
             ELSE 1 
         END", [$now])
-        ->orderByRaw("CASE priorite WHEN 'high' THEN 0 WHEN 'medium' THEN 1 ELSE 2 END")
-        ->orderBy('created_at', 'desc')
-        ->paginate(15);
-        
+            ->orderByRaw("CASE priorite WHEN 'high' THEN 0 WHEN 'medium' THEN 1 ELSE 2 END")
+            ->orderBy('created_at', 'desc')
+            ->paginate(15);
+
         $employees = User::where('role', 'employee')->orderBy('name')->get();
 
         // Statistiques optimisées (une seule requête au lieu de 6)
@@ -72,6 +72,7 @@ class TaskController extends Controller
     public function create()
     {
         $employees = User::where('role', 'employee')->orderBy('name')->get();
+
         return view('admin.tasks.create', compact('employees'));
     }
 
@@ -101,18 +102,20 @@ class TaskController extends Controller
         $task->user->notify(new TaskStatusNotification($task, 'assigned'));
 
         return redirect()->route('admin.tasks.index')
-            ->with('success', 'Tâche assignée avec succès à ' . $task->user->name);
+            ->with('success', 'Tâche assignée avec succès à '.$task->user->name);
     }
 
     public function show(Task $task)
     {
         $task->load('user');
+
         return view('admin.tasks.show', compact('task'));
     }
 
     public function edit(Task $task)
     {
         $employees = User::where('role', 'employee')->orderBy('name')->get();
+
         return view('admin.tasks.edit', compact('task', 'employees'));
     }
 
@@ -129,7 +132,7 @@ class TaskController extends Controller
         ]);
 
         $task->update($request->only([
-            'user_id', 'titre', 'description', 'priorite', 'date_debut', 'date_fin', 'statut'
+            'user_id', 'titre', 'description', 'priorite', 'date_debut', 'date_fin', 'statut',
         ]));
 
         return redirect()->route('admin.tasks.index')
@@ -196,7 +199,7 @@ class TaskController extends Controller
         if ($oldStatus === 'validated' && $newStatus !== 'validated') {
             return response()->json([
                 'success' => false,
-                'message' => 'Une tâche validée ne peut pas être modifiée.'
+                'message' => 'Une tâche validée ne peut pas être modifiée.',
             ], 422);
         }
 
@@ -212,8 +215,8 @@ class TaskController extends Controller
             'message' => 'Statut mis à jour avec succès.',
             'task' => [
                 'id' => $task->id,
-                'statut' => $task->statut
-            ]
+                'statut' => $task->statut,
+            ],
         ]);
     }
 

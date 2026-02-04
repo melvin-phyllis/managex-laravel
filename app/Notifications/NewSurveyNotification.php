@@ -39,11 +39,11 @@ class NewSurveyNotification extends Notification implements ShouldQueue
     {
         $mail = (new MailMessage)
             ->subject('Nouveau sondage disponible - ManageX')
-            ->greeting('Bonjour ' . $notifiable->name . ',')
-            ->line('Un nouveau sondage "' . $this->survey->titre . '" est disponible et attend votre participation.');
+            ->greeting('Bonjour '.$notifiable->name.',')
+            ->line('Un nouveau sondage "'.$this->survey->titre.'" est disponible et attend votre participation.');
 
         if ($this->survey->date_limite) {
-            $mail->line('Date limite de participation : ' . $this->survey->date_limite->format('d/m/Y'));
+            $mail->line('Date limite de participation : '.$this->survey->date_limite->format('d/m/Y'));
         }
 
         return $mail
@@ -63,9 +63,8 @@ class NewSurveyNotification extends Notification implements ShouldQueue
             'survey_id' => $this->survey->id,
             'survey_titre' => $this->survey->titre,
             'date_limite' => $this->survey->date_limite?->format('d/m/Y'),
-            'message' => 'Nouveau sondage disponible : "' . $this->survey->titre . '".',
+            'message' => 'Nouveau sondage disponible : "'.$this->survey->titre.'".',
             'url' => route('employee.surveys.show', $this->survey),
         ];
     }
 }
-

@@ -3,14 +3,14 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
-use App\Models\Presence;
-use App\Models\Task;
-use App\Models\Leave;
-use App\Models\Survey;
 use App\Models\Department;
-use Illuminate\Http\Request;
+use App\Models\Leave;
+use App\Models\Presence;
+use App\Models\Survey;
+use App\Models\Task;
+use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
@@ -202,7 +202,7 @@ class DashboardController extends Controller
         foreach ($pendingLeaves as $leave) {
             $waitingHours = now()->diffInHours($leave->created_at);
             $alerts['pending'][] = [
-                'id' => 'leave_' . $leave->id,
+                'id' => 'leave_'.$leave->id,
                 'type' => 'Demande de congé',
                 'user' => $leave->user->name,
                 'waitingTime' => $this->formatWaitingTime($waitingHours),
@@ -220,7 +220,7 @@ class DashboardController extends Controller
         foreach ($pendingTasks as $task) {
             $waitingHours = now()->diffInHours($task->created_at);
             $alerts['pending'][] = [
-                'id' => 'task_' . $task->id,
+                'id' => 'task_'.$task->id,
                 'type' => 'Tâche à valider',
                 'user' => $task->user->name,
                 'waitingTime' => $this->formatWaitingTime($waitingHours),
@@ -245,7 +245,7 @@ class DashboardController extends Controller
         foreach ($recentPresences as $presence) {
             $isCheckOut = $presence->check_out && $presence->check_out->isToday();
             $activities[] = [
-                'id' => 'presence_' . $presence->id . ($isCheckOut ? '_out' : '_in'),
+                'id' => 'presence_'.$presence->id.($isCheckOut ? '_out' : '_in'),
                 'type' => $isCheckOut ? 'check_out' : 'check_in',
                 'user' => $presence->user->name,
                 'avatar' => $presence->user->avatar ? avatar_url($presence->user->avatar) : null,
@@ -268,11 +268,11 @@ class DashboardController extends Controller
 
         foreach ($recentCompletedTasks as $task) {
             $activities[] = [
-                'id' => 'task_' . $task->id,
+                'id' => 'task_'.$task->id,
                 'type' => 'task_completed',
                 'user' => $task->user->name,
                 'avatar' => $task->user->avatar ? avatar_url($task->user->avatar) : null,
-                'message' => 'a terminé la tâche "' . \Str::limit($task->titre, 30) . '"',
+                'message' => 'a terminé la tâche "'.\Str::limit($task->titre, 30).'"',
                 'time' => $task->updated_at->diffForHumans(),
                 'timestamp' => $task->updated_at->timestamp,
                 'badge' => 'success',
@@ -288,11 +288,11 @@ class DashboardController extends Controller
 
         foreach ($recentLeaves as $leave) {
             $activities[] = [
-                'id' => 'leave_' . $leave->id,
+                'id' => 'leave_'.$leave->id,
                 'type' => 'leave_requested',
                 'user' => $leave->user->name,
                 'avatar' => $leave->user->avatar ? avatar_url($leave->user->avatar) : null,
-                'message' => 'a demandé un congé du ' . $leave->date_debut->format('d/m') . ' au ' . $leave->date_fin->format('d/m'),
+                'message' => 'a demandé un congé du '.$leave->date_debut->format('d/m').' au '.$leave->date_fin->format('d/m'),
                 'time' => $leave->created_at->diffForHumans(),
                 'timestamp' => $leave->created_at->timestamp,
                 'badge' => $leave->statut === 'pending' ? 'warning' : ($leave->statut === 'approved' ? 'success' : 'danger'),
@@ -301,12 +301,12 @@ class DashboardController extends Controller
         }
 
         // Trier par timestamp et limiter
-        usort($activities, fn($a, $b) => $b['timestamp'] - $a['timestamp']);
+        usort($activities, fn ($a, $b) => $b['timestamp'] - $a['timestamp']);
 
         return array_slice($activities, 0, 15);
     }
 
-    private function getCalendarEvents(int $month = null, int $year = null): array
+    private function getCalendarEvents(?int $month = null, ?int $year = null): array
     {
         $month = $month ?? now()->month;
         $year = $year ?? now()->year;
@@ -329,10 +329,10 @@ class DashboardController extends Controller
             while ($current <= $leave->date_fin) {
                 if ($current->month == $month && $current->year == $year) {
                     $events[] = [
-                        'id' => 'leave_' . $leave->id . '_' . $current->format('Y-m-d'),
+                        'id' => 'leave_'.$leave->id.'_'.$current->format('Y-m-d'),
                         'date' => $current->format('Y-m-d'),
                         'type' => 'leave',
-                        'title' => $leave->user->name . ' - Congé',
+                        'title' => $leave->user->name.' - Congé',
                         'subtitle' => $leave->type_label ?? $leave->type,
                         'link' => route('admin.leaves.show', $leave->id),
                     ];
@@ -350,7 +350,7 @@ class DashboardController extends Controller
 
         foreach ($tasks as $task) {
             $events[] = [
-                'id' => 'task_' . $task->id,
+                'id' => 'task_'.$task->id,
                 'date' => $task->date_fin->format('Y-m-d'),
                 'type' => 'task',
                 'title' => $task->titre,
@@ -367,11 +367,11 @@ class DashboardController extends Controller
         foreach ($employees as $employee) {
             if ($employee->date_of_birth) {
                 $events[] = [
-                    'id' => 'birthday_' . $employee->id,
+                    'id' => 'birthday_'.$employee->id,
                     'date' => Carbon::create($year, $month, $employee->date_of_birth->day)->format('Y-m-d'),
                     'type' => 'birthday',
-                    'title' => 'Anniversaire de ' . $employee->name,
-                    'subtitle' => 'Équipe ' . ($employee->department->name ?? 'N/A'),
+                    'title' => 'Anniversaire de '.$employee->name,
+                    'subtitle' => 'Équipe '.($employee->department->name ?? 'N/A'),
                     'link' => route('admin.employees.show', $employee->id),
                 ];
             }
@@ -388,7 +388,7 @@ class DashboardController extends Controller
 
         return $departments->map(function ($dept) {
             $presencesToday = Presence::today()
-                ->whereHas('user', fn($q) => $q->where('department_id', $dept->id))
+                ->whereHas('user', fn ($q) => $q->where('department_id', $dept->id))
                 ->count();
 
             return [
@@ -444,9 +444,9 @@ class DashboardController extends Controller
             $date = Carbon::now()->subMonths($i);
             $labels[] = $date->translatedFormat('M Y');
             $data[] = Leave::whereMonth('date_debut', $date->month)
-                          ->whereYear('date_debut', $date->year)
-                          ->approved()
-                          ->count();
+                ->whereYear('date_debut', $date->year)
+                ->approved()
+                ->count();
         }
 
         return [
@@ -462,7 +462,7 @@ class DashboardController extends Controller
         $workingDays = 0;
 
         while ($start <= $end) {
-            if (!$start->isWeekend()) {
+            if (! $start->isWeekend()) {
                 $workingDays++;
             }
             $start->addDay();
@@ -495,26 +495,29 @@ class DashboardController extends Controller
         foreach (array_slice($parts, 0, 2) as $part) {
             $initials .= strtoupper(substr($part, 0, 1));
         }
+
         return $initials;
     }
 
     private function formatDelay(int $minutes): string
     {
         if ($minutes < 60) {
-            return $minutes . ' min';
+            return $minutes.' min';
         }
         $hours = floor($minutes / 60);
         $mins = $minutes % 60;
-        return $hours . 'h' . ($mins > 0 ? sprintf('%02d', $mins) : '');
+
+        return $hours.'h'.($mins > 0 ? sprintf('%02d', $mins) : '');
     }
 
     private function formatWaitingTime(int $hours): string
     {
         if ($hours < 24) {
-            return $hours . ' heures';
+            return $hours.' heures';
         }
         $days = floor($hours / 24);
-        return $days . ' jour' . ($days > 1 ? 's' : '');
+
+        return $days.' jour'.($days > 1 ? 's' : '');
     }
 
     public function markNotificationAsRead($id)
@@ -538,7 +541,7 @@ class DashboardController extends Controller
     public function getUnreadNotificationsCount()
     {
         return response()->json([
-            'count' => auth()->user()->unreadNotifications()->count()
+            'count' => auth()->user()->unreadNotifications()->count(),
         ]);
     }
 }

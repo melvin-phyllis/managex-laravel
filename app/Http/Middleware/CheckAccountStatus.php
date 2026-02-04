@@ -17,17 +17,17 @@ class CheckAccountStatus
     {
         if (Auth::check()) {
             $user = Auth::user();
-            
+
             // Vérifier si le compte est suspendu ou terminé
             if (in_array($user->status, ['suspended', 'terminated'])) {
                 Auth::logout();
                 $request->session()->invalidate();
                 $request->session()->regenerateToken();
-                
+
                 $message = $user->status === 'suspended'
                     ? 'Votre compte a été suspendu. Veuillez contacter l\'administration.'
                     : 'Votre compte a été désactivé. Veuillez contacter l\'administration.';
-                
+
                 return redirect()->route('login')->withErrors([
                     'email' => $message,
                 ]);

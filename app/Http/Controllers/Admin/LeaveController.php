@@ -42,11 +42,11 @@ class LeaveController extends Controller
         $totalCount = $stats->total ?? 0;
 
         return view('admin.leaves.index', compact(
-            'leaves', 
-            'employees', 
-            'pendingCount', 
-            'approvedCount', 
-            'rejectedCount', 
+            'leaves',
+            'employees',
+            'pendingCount',
+            'approvedCount',
+            'rejectedCount',
             'totalCount'
         ));
     }
@@ -54,6 +54,7 @@ class LeaveController extends Controller
     public function show(Leave $leave)
     {
         $leave->load('user');
+
         return view('admin.leaves.show', compact('leave'));
     }
 

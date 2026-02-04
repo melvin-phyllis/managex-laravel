@@ -30,8 +30,9 @@ class CheckExpiredLateHours extends Command
     public function handle(): int
     {
         // Vérifier si le système de pénalité est activé
-        if (!Setting::get('late_penalty_enabled', true)) {
+        if (! Setting::get('late_penalty_enabled', true)) {
             $this->info('Le système de pénalité est désactivé.');
+
             return Command::SUCCESS;
         }
 
@@ -41,10 +42,10 @@ class CheckExpiredLateHours extends Command
         $recoveryDays = Setting::get('late_recovery_days', 7);
         $penaltyThreshold = Setting::get('late_penalty_threshold_minutes', 480); // 8h par défaut
 
-        $this->info("Configuration:");
+        $this->info('Configuration:');
         $this->info("- Délai de rattrapage: {$recoveryDays} jours");
-        $this->info("- Seuil de pénalité: {$penaltyThreshold} minutes (" . round($penaltyThreshold / 60, 1) . "h)");
-        $this->info("- Mode: " . ($dryRun ? 'SIMULATION' : 'PRODUCTION'));
+        $this->info("- Seuil de pénalité: {$penaltyThreshold} minutes (".round($penaltyThreshold / 60, 1).'h)');
+        $this->info('- Mode: '.($dryRun ? 'SIMULATION' : 'PRODUCTION'));
         $this->newLine();
 
         // Étape 1: Marquer les retards expirés
@@ -89,7 +90,7 @@ class CheckExpiredLateHours extends Command
             if ($unrecoveredMinutes > 0) {
                 $this->line("  - Présence #{$presence->id} ({$presence->date->format('d/m/Y')}): {$unrecoveredMinutes} min non rattrapées");
 
-                if (!$dryRun) {
+                if (! $dryRun) {
                     $presence->update([
                         'is_late_expired' => true,
                         'expired_late_minutes' => $unrecoveredMinutes,
@@ -112,7 +113,7 @@ class CheckExpiredLateHours extends Command
         $query = User::where('role', 'employee')
             ->whereHas('presences', function ($q) {
                 $q->where('is_late_expired', true)
-                  ->where('expired_late_minutes', '>', 0);
+                    ->where('expired_late_minutes', '>', 0);
             });
 
         if ($userId) {
@@ -156,7 +157,7 @@ class CheckExpiredLateHours extends Command
                 ->whereJsonContains('source_presence_ids', $presence->id)
                 ->exists();
 
-            if (!$alreadyPenalized) {
+            if (! $alreadyPenalized) {
                 $totalExpiredMinutes += $presence->expired_late_minutes;
                 $presenceIds[] = $presence->id;
             }
@@ -167,14 +168,16 @@ class CheckExpiredLateHours extends Command
         $penaltiesCreated = 0;
 
         // Créer des pénalités tant que le seuil est atteint
-        while ($totalExpiredMinutes >= $thresholdMinutes && !empty($presenceIds)) {
+        while ($totalExpiredMinutes >= $thresholdMinutes && ! empty($presenceIds)) {
             // Sélectionner les présences pour cette pénalité (jusqu'au seuil)
             $minutesForPenalty = 0;
             $presencesForPenalty = [];
-            
+
             foreach ($presenceIds as $key => $presenceId) {
                 $presence = $expiredPresences->firstWhere('id', $presenceId);
-                if (!$presence) continue;
+                if (! $presence) {
+                    continue;
+                }
 
                 $minutesForPenalty += $presence->expired_late_minutes;
                 $presencesForPenalty[] = $presenceId;
@@ -188,7 +191,7 @@ class CheckExpiredLateHours extends Command
             if ($minutesForPenalty >= $thresholdMinutes) {
                 $this->warn("    → Création d'une absence pénalité ({$minutesForPenalty} min >= {$thresholdMinutes} min)");
 
-                if (!$dryRun) {
+                if (! $dryRun) {
                     // Trouver la prochaine date de travail comme date d'absence
                     $absenceDate = $this->getNextWorkingDay($user);
 
@@ -225,7 +228,7 @@ class CheckExpiredLateHours extends Command
     {
         $date = Carbon::today();
         $workDays = $user->getWorkDayNumbers();
-        
+
         // Si pas de jours de travail configurés, utiliser lun-ven
         if (empty($workDays)) {
             $workDays = [1, 2, 3, 4, 5];
@@ -240,7 +243,7 @@ class CheckExpiredLateHours extends Command
                     ->where('absence_date', $date)
                     ->exists();
 
-                if (!$existingPenalty) {
+                if (! $existingPenalty) {
                     return $date;
                 }
             }

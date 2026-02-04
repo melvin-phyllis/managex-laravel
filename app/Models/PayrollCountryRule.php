@@ -58,11 +58,11 @@ class PayrollCountryRule extends Model
     {
         // Appliquer plafond/plancher
         $effectiveBase = $base;
-        
+
         if ($this->ceiling && $effectiveBase > $this->ceiling) {
             $effectiveBase = $this->ceiling;
         }
-        
+
         if ($this->floor && $effectiveBase < $this->floor) {
             $effectiveBase = $this->floor;
         }
@@ -70,17 +70,17 @@ class PayrollCountryRule extends Model
         switch ($this->calculation_type) {
             case 'percentage':
                 return floor($effectiveBase * ($this->rate / 100));
-                
+
             case 'fixed':
                 return $this->fixed_amount ?? 0;
-                
+
             case 'bracket':
                 return $this->calculateBracket($effectiveBase);
-                
+
             case 'formula':
                 // Évaluation de formule (sécurisée) - TODO
                 return 0;
-                
+
             default:
                 return 0;
         }
@@ -91,12 +91,12 @@ class PayrollCountryRule extends Model
      */
     protected function calculateBracket(float $base): float
     {
-        if (!$this->brackets || !is_array($this->brackets)) {
+        if (! $this->brackets || ! is_array($this->brackets)) {
             return 0;
         }
 
         $total = 0;
-        
+
         foreach ($this->brackets as $bracket) {
             $min = $bracket['min'] ?? 0;
             $max = $bracket['max'] ?? $base;

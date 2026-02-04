@@ -16,7 +16,7 @@ class ProfileController extends Controller
     public function index()
     {
         $user = auth()->user()->load(['department', 'position']);
-        
+
         return view('employee.profile.index', compact('user'));
     }
 
@@ -26,7 +26,7 @@ class ProfileController extends Controller
     public function edit()
     {
         $user = auth()->user()->load(['department', 'position']);
-        
+
         return view('employee.profile.edit', compact('user'));
     }
 
@@ -134,7 +134,7 @@ class ProfileController extends Controller
         $settings = $user->settings ?? [];
         $settings['email_notifications'] = $validated['email_notifications'] ?? false;
         $settings['push_notifications'] = $validated['push_notifications'] ?? false;
-        
+
         // If settings is a JSON field on user model
         // $user->update(['settings' => $settings]);
 

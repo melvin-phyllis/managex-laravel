@@ -82,6 +82,7 @@ class DocumentType extends Model
         if (empty($this->allowed_extensions)) {
             return 'PDF, JPG, PNG';
         }
+
         return strtoupper(implode(', ', $this->allowed_extensions));
     }
 
@@ -90,6 +91,7 @@ class DocumentType extends Model
         if (empty($this->allowed_extensions)) {
             return in_array(strtolower($extension), ['pdf', 'jpg', 'jpeg', 'png']);
         }
+
         return in_array(strtolower($extension), array_map('strtolower', $this->allowed_extensions));
     }
 
@@ -115,7 +117,7 @@ class DocumentType extends Model
             ->where('status', 'approved')
             ->where(function ($q) {
                 $q->whereNull('expiry_date')
-                  ->orWhere('expiry_date', '>=', today());
+                    ->orWhere('expiry_date', '>=', today());
             })
             ->exists();
     }

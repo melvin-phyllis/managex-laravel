@@ -26,9 +26,9 @@ class EmployeeController extends Controller
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%")
-                  ->orWhere('poste', 'like', "%{$search}%")
-                  ->orWhere('employee_id', 'like', "%{$search}%");
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('poste', 'like', "%{$search}%")
+                    ->orWhere('employee_id', 'like', "%{$search}%");
             });
         }
 
@@ -49,11 +49,11 @@ class EmployeeController extends Controller
 
         // Charger les présences du jour pour chaque employé
         $employees = $query->orderBy('name')->paginate(10)->withQueryString();
-        
+
         // Charger la présence du jour pour chaque employé
         $today = now()->toDateString();
         $employeeIds = $employees->pluck('id');
-        
+
         // Pre-charger les présences (optimisé: 1 requête)
         $todayPresences = \App\Models\Presence::whereIn('user_id', $employeeIds)
             ->whereDate('date', $today)
@@ -88,19 +88,19 @@ class EmployeeController extends Controller
 
         // Statistiques
         $totalEmployees = User::where('role', 'employee')->count();
-        
+
         $presentToday = \App\Models\Presence::whereDate('date', $today)
-            ->whereHas('user', fn($q) => $q->where('role', 'employee'))
+            ->whereHas('user', fn ($q) => $q->where('role', 'employee'))
             ->distinct('user_id')
             ->count('user_id');
-        
+
         $onLeaveToday = \App\Models\Leave::where('statut', 'approved')
             ->whereDate('date_debut', '<=', $today)
             ->whereDate('date_fin', '>=', $today)
-            ->whereHas('user', fn($q) => $q->where('role', 'employee'))
+            ->whereHas('user', fn ($q) => $q->where('role', 'employee'))
             ->distinct('user_id')
             ->count('user_id');
-        
+
         $newThisMonth = User::where('role', 'employee')
             ->whereMonth('created_at', now()->month)
             ->whereYear('created_at', now()->year)
@@ -125,7 +125,7 @@ class EmployeeController extends Controller
         $status = $request->get('status');
         $contractType = $request->get('contract_type');
 
-        $filename = 'employes-' . now()->format('Y-m-d') . '.xlsx';
+        $filename = 'employes-'.now()->format('Y-m-d').'.xlsx';
 
         return Excel::download(
             new EmployeesExport($departmentId, $status, $contractType),
@@ -136,6 +136,7 @@ class EmployeeController extends Controller
     public function create()
     {
         $departments = Department::getActiveCached();
+
         return view('admin.employees.create', compact('departments'));
     }
 
@@ -213,7 +214,7 @@ class EmployeeController extends Controller
             'rtt_balance' => $request->rtt_balance ?? 0,
             'status' => 'active',
         ]);
-        
+
         // Définir password et role explicitement (hors mass assignment)
         $employee->password = Hash::make($password);
         $employee->role = 'employee';
@@ -252,16 +253,16 @@ class EmployeeController extends Controller
             $nextNumber = 1;
         }
 
-        return $prefix . $year . str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
+        return $prefix.$year.str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
     }
 
     public function show(User $employee)
     {
         $employee->load(['department', 'position',
-                        'presences' => fn($q) => $q->latest()->take(10),
-                        'tasks' => fn($q) => $q->latest()->take(5),
-                        'leaves' => fn($q) => $q->latest()->take(5),
-                        'payrolls' => fn($q) => $q->latest()->take(6)]);
+            'presences' => fn ($q) => $q->latest()->take(10),
+            'tasks' => fn ($q) => $q->latest()->take(5),
+            'leaves' => fn ($q) => $q->latest()->take(5),
+            'payrolls' => fn ($q) => $q->latest()->take(6)]);
 
         return view('admin.employees.show', compact('employee'));
     }
@@ -273,6 +274,7 @@ class EmployeeController extends Controller
         $positions = $employee->department_id
             ? Position::where('department_id', $employee->department_id)->active()->orderBy('name')->get()
             : collect();
+
         return view('admin.employees.edit', compact('employee', 'departments', 'positions'));
     }
 
@@ -280,7 +282,7 @@ class EmployeeController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $employee->id],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,'.$employee->id],
             'poste' => ['nullable', 'string', 'max:255'],
             'telephone' => ['nullable', 'string', 'max:20'],
             'password' => ['nullable', 'confirmed', Rules\Password::defaults()],
@@ -304,7 +306,7 @@ class EmployeeController extends Controller
             'contract_end_date' => ['nullable', 'date', 'after:hire_date'],
             'contract_type' => ['nullable', 'in:cdi,cdd,stage,alternance,freelance,interim'],
             'base_salary' => ['nullable', 'numeric', 'min:0'],
-            'employee_id' => ['nullable', 'string', 'max:50', 'unique:users,employee_id,' . $employee->id],
+            'employee_id' => ['nullable', 'string', 'max:50', 'unique:users,employee_id,'.$employee->id],
             // Informations administratives
             'social_security_number' => ['nullable', 'string', 'max:50'],
             'bank_iban' => ['nullable', 'string', 'max:50'],
@@ -392,8 +394,8 @@ class EmployeeController extends Controller
         ]);
 
         $contract = $employee->currentContract;
-        
-        if (!$contract) {
+
+        if (! $contract) {
             return back()->withErrors(['error' => 'Cet employé n\'a pas de contrat actif.']);
         }
 
@@ -403,11 +405,11 @@ class EmployeeController extends Controller
         }
 
         $file = $request->file('contract_document');
-        $filename = \Str::uuid() . '.' . $file->getClientOriginalExtension();
-        $path = 'contracts/' . $employee->id . '/' . $filename;
+        $filename = \Str::uuid().'.'.$file->getClientOriginalExtension();
+        $path = 'contracts/'.$employee->id.'/'.$filename;
 
         \Storage::disk('documents')->putFileAs(
-            'contracts/' . $employee->id,
+            'contracts/'.$employee->id,
             $file,
             $filename
         );
@@ -428,12 +430,12 @@ class EmployeeController extends Controller
     public function downloadContract(User $employee)
     {
         $contract = $employee->currentContract;
-        
-        if (!$contract || !$contract->document_path) {
+
+        if (! $contract || ! $contract->document_path) {
             abort(404, 'Document introuvable');
         }
 
-        if (!\Storage::disk('documents')->exists($contract->document_path)) {
+        if (! \Storage::disk('documents')->exists($contract->document_path)) {
             abort(404, 'Fichier introuvable');
         }
 
@@ -449,13 +451,13 @@ class EmployeeController extends Controller
     public function deleteContract(User $employee)
     {
         $contract = $employee->currentContract;
-        
-        if (!$contract || !$contract->document_path) {
+
+        if (! $contract || ! $contract->document_path) {
             return back()->withErrors(['error' => 'Aucun document à supprimer.']);
         }
 
         \Storage::disk('documents')->delete($contract->document_path);
-        
+
         $contract->update([
             'document_path' => null,
             'document_original_name' => null,
@@ -479,7 +481,7 @@ class EmployeeController extends Controller
         $newStatus = $employee->status === 'active' ? 'suspended' : 'active';
         $employee->update(['status' => $newStatus]);
 
-        $message = $newStatus === 'active' 
+        $message = $newStatus === 'active'
             ? "Le compte de {$employee->name} a été activé."
             : "Le compte de {$employee->name} a été suspendu.";
 

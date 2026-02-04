@@ -39,7 +39,7 @@ class StatusController extends Controller
         ]);
 
         $user = auth()->user();
-        
+
         $status = UserStatus::updateOrCreate(
             ['user_id' => $user->id],
             [
@@ -88,7 +88,7 @@ class StatusController extends Controller
     public function heartbeat()
     {
         $user = auth()->user();
-        
+
         UserStatus::updateOrCreate(
             ['user_id' => $user->id],
             [
@@ -106,7 +106,7 @@ class StatusController extends Controller
     public function offline()
     {
         $user = auth()->user();
-        
+
         UserStatus::where('user_id', $user->id)->update([
             'status' => 'offline',
             'last_seen_at' => now(),

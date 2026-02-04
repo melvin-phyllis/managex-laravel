@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Employee;
 
 use App\Http\Controllers\Controller;
 use App\Models\Payroll;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Barryvdh\DomPDF\Facade\Pdf;
 
 class PayrollController extends Controller
 {
@@ -20,8 +20,8 @@ class PayrollController extends Controller
         }
 
         $payrolls = $query->orderBy('annee', 'desc')
-                         ->orderBy('mois', 'desc')
-                         ->paginate(12);
+            ->orderBy('mois', 'desc')
+            ->paginate(12);
 
         // Années disponibles pour le filtre
         $years = $user->payrolls()
@@ -46,6 +46,7 @@ class PayrollController extends Controller
     public function show(Payroll $payroll)
     {
         $this->authorize('view', $payroll);
+
         return view('employee.payrolls.show', compact('payroll'));
     }
 
@@ -54,7 +55,7 @@ class PayrollController extends Controller
         $this->authorize('view', $payroll);
 
         // Générer le PDF s'il n'existe pas
-        if (!$payroll->pdf_url || !Storage::disk('public')->exists($payroll->pdf_url)) {
+        if (! $payroll->pdf_url || ! Storage::disk('public')->exists($payroll->pdf_url)) {
             $this->generatePdf($payroll);
         }
 

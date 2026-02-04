@@ -36,6 +36,7 @@ class PositionController extends Controller
     public function create()
     {
         $departments = Department::getActiveCached();
+
         return view('admin.positions.create', compact('departments'));
     }
 
@@ -86,6 +87,7 @@ class PositionController extends Controller
     public function edit(Position $position)
     {
         $departments = Department::getActiveCached();
+
         return view('admin.positions.edit', compact('position', 'departments'));
     }
 

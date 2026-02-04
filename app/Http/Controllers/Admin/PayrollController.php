@@ -5,10 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Payroll;
 use App\Models\User;
-use App\Services\Payroll\PayrollService;
 use App\Notifications\PayrollAddedNotification;
-use Illuminate\Http\Request;
+use App\Services\Payroll\PayrollService;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class PayrollController extends Controller
@@ -41,8 +41,8 @@ class PayrollController extends Controller
         }
 
         $payrolls = $query->orderBy('annee', 'desc')
-                         ->orderBy('mois', 'desc')
-                         ->paginate(15);
+            ->orderBy('mois', 'desc')
+            ->paginate(15);
 
         $employees = User::where('role', 'employee')->orderBy('name')->get();
 
@@ -52,6 +52,7 @@ class PayrollController extends Controller
     public function create()
     {
         $employees = User::where('role', 'employee')->with('currentContract')->orderBy('name')->get();
+
         return view('admin.payrolls.create', compact('employees'));
     }
 
@@ -103,9 +104,9 @@ class PayrollController extends Controller
         $request->validate([
             'user_id' => 'required',
             'mois' => 'required',
-            'annee' => 'required'
+            'annee' => 'required',
         ]);
-        
+
         // Similaire store mais sans save (si le service supporte dry-run)
         // Pour l'instant on skip
     }
@@ -114,11 +115,11 @@ class PayrollController extends Controller
     {
         $request->validate([
             'mois' => 'required|integer',
-            'annee' => 'required|integer'
+            'annee' => 'required|integer',
         ]);
 
         $users = User::where('role', 'employee')
-            ->whereHas('currentContract', fn($q) => $q->active())
+            ->whereHas('currentContract', fn ($q) => $q->active())
             ->get();
 
         $count = 0;
@@ -143,6 +144,7 @@ class PayrollController extends Controller
     public function show(Payroll $payroll)
     {
         $payroll->load(['user', 'items']);
+
         return view('admin.payrolls.show', compact('payroll'));
     }
 
@@ -152,6 +154,7 @@ class PayrollController extends Controller
             Storage::disk('public')->delete($payroll->pdf_url);
         }
         $payroll->delete();
+
         return redirect()->route('admin.payrolls.index')->with('success', 'Bulletin supprimé.');
     }
 
@@ -161,6 +164,7 @@ class PayrollController extends Controller
     public function edit(Payroll $payroll)
     {
         $payroll->load(['user.currentContract', 'items']);
+
         return view('admin.payrolls.edit', compact('payroll'));
     }
 
@@ -193,6 +197,7 @@ class PayrollController extends Controller
                 'validated_by' => auth()->id(),
             ]);
             $this->generatePdf($payroll);
+
             return redirect()->route('admin.payrolls.show', $payroll)
                 ->with('success', 'Fiche de paie validée et PDF généré.');
         }
@@ -203,22 +208,24 @@ class PayrollController extends Controller
 
     public function downloadPdf(Payroll $payroll)
     {
-        if (!$payroll->pdf_url || !Storage::disk('public')->exists($payroll->pdf_url)) {
+        if (! $payroll->pdf_url || ! Storage::disk('public')->exists($payroll->pdf_url)) {
             $this->generatePdf($payroll);
         }
+
         return Storage::disk('public')->download($payroll->pdf_url);
     }
-    
+
     public function markAsPaid(Payroll $payroll)
     {
         $payroll->update(['statut' => 'paid']);
+
         return back()->with('success', 'Marqué comme payé.');
     }
 
     private function generatePdf(Payroll $payroll): void
     {
         $payroll->load(['user.currentContract', 'items']);
-        
+
         $pdf = Pdf::loadView('pdf.payroll-civ', [
             'payroll' => $payroll,
             'user' => $payroll->user,

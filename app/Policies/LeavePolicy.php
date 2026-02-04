@@ -46,7 +46,7 @@ class LeavePolicy
         if ($user->isAdmin()) {
             return true;
         }
-        
+
         return $user->id === $leave->user_id && $leave->statut === 'pending';
     }
 
@@ -60,7 +60,7 @@ class LeavePolicy
         if ($user->isAdmin()) {
             return true;
         }
-        
+
         return $user->id === $leave->user_id && $leave->statut === 'pending';
     }
 

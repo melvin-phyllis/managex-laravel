@@ -31,8 +31,11 @@ class GlobalDocument extends Model
 
     // Document types constants
     const TYPE_REGLEMENT_INTERIEUR = 'reglement_interieur';
+
     const TYPE_FICHE_POSTE = 'fiche_poste';
+
     const TYPE_CHARTE_INFORMATIQUE = 'charte_informatique';
+
     const TYPE_POLITIQUE_CONGES = 'politique_conges';
 
     public static function getTypes(): array
@@ -87,16 +90,18 @@ class GlobalDocument extends Model
     {
         $bytes = $this->file_size;
         if ($bytes >= 1048576) {
-            return round($bytes / 1048576, 2) . ' MB';
+            return round($bytes / 1048576, 2).' MB';
         } elseif ($bytes >= 1024) {
-            return round($bytes / 1024, 2) . ' KB';
+            return round($bytes / 1024, 2).' KB';
         }
-        return $bytes . ' B';
+
+        return $bytes.' B';
     }
 
     public function getFileIconAttribute(): string
     {
         $extension = strtolower(pathinfo($this->original_filename, PATHINFO_EXTENSION));
+
         return match ($extension) {
             'pdf' => '📄',
             'jpg', 'jpeg', 'png', 'gif' => '🖼️',
@@ -121,7 +126,7 @@ class GlobalDocument extends Model
      */
     public function acknowledge(User $user): void
     {
-        if (!$this->isAcknowledgedBy($user)) {
+        if (! $this->isAcknowledgedBy($user)) {
             $this->acknowledgedBy()->attach($user->id, [
                 'acknowledged_at' => now(),
             ]);
@@ -134,6 +139,7 @@ class GlobalDocument extends Model
     public function usersNotAcknowledged()
     {
         $acknowledgedIds = $this->acknowledgedBy()->pluck('users.id');
+
         return User::whereNotIn('id', $acknowledgedIds)
             ->where('role', '!=', 'admin')
             ->get();
@@ -165,6 +171,7 @@ class GlobalDocument extends Model
         if ($this->fileExists()) {
             return Storage::disk('documents')->delete($this->file_path);
         }
+
         return true;
     }
 

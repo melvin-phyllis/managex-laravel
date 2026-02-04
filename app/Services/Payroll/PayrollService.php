@@ -2,22 +2,22 @@
 
 namespace App\Services\Payroll;
 
-use App\Models\User;
-use App\Models\Payroll;
 use App\Models\Contract;
-use App\Models\Setting;
-use App\Models\PayrollCountry;
 use App\Models\EmployeeEvaluation;
-use App\Services\Payroll\PayrollCalculator;
+use App\Models\Payroll;
+use App\Models\PayrollCountry;
+use App\Models\Setting;
+use App\Models\User;
 
 class PayrollService
 {
     protected PayrollCalculator $calculator;
+
     protected ?PayrollCountry $country = null;
 
     public function __construct()
     {
-        $this->calculator = new PayrollCalculator();
+        $this->calculator = new PayrollCalculator;
     }
 
     /**
@@ -26,11 +26,11 @@ class PayrollService
     public function forCountry(?PayrollCountry $country = null): self
     {
         $this->country = $country ?? Setting::getDefaultPayrollCountry();
-        
+
         if ($this->country) {
             $this->calculator->forCountry($this->country);
         }
-        
+
         return $this;
     }
 
@@ -40,13 +40,13 @@ class PayrollService
     public function calculatePayroll(User $user, int $month, int $year, array $options = []): Payroll
     {
         // S'assurer qu'on a un pays configuré
-        if (!$this->country) {
+        if (! $this->country) {
             $this->forCountry();
         }
 
         // 1. Récupérer le contrat
         $contract = $user->currentContract;
-        if (!$contract) {
+        if (! $contract) {
             throw new \Exception("Aucun contrat actif pour l'employé {$user->name}.");
         }
 
@@ -54,7 +54,7 @@ class PayrollService
         // Pour les CDI/CDD : basé sur l'évaluation mensuelle
         // Pour les stagiaires : salaire fixe du contrat
         $baseSalary = $this->determineBaseSalary($user, $contract, $month, $year);
-        
+
         $inputs = [
             'base_salary' => $baseSalary,
             'transport_allowance' => $options['transport_allowance'] ?? 0,
@@ -92,30 +92,30 @@ class PayrollService
             'annee' => $year,
             'statut' => 'pending',
             'workflow_status' => 'draft',
-            
+
             'gross_salary' => $result['gross_salary'],
             'transport_allowance' => $result['transport_allowance'],
             'housing_allowance' => $result['housing_allowance'] ?? 0,
             'other_allowances' => $inputs['other_allowances'],
             'overtime_amount' => $result['overtime_amount'] ?? 0,
             'bonuses' => $result['bonuses'] ?? 0,
-            
+
             'taxable_gross' => $result['taxable_gross'],
-            
+
             'tax_is' => $result['tax_is'],
             'tax_cn' => $result['tax_cn'],
             'tax_igr' => $result['tax_igr'],
             'cnps_employee' => $result['cnps_employee'],
             'cnps_employer' => array_sum($result['employer_charges'] ?? []),
-            
+
             'total_deductions' => $result['total_deductions'],
             'net_salary' => $result['net_salary'],
-            
+
             'fiscal_parts' => $result['fiscal_parts'],
         ]);
-        
+
         $payroll->save();
-        
+
         // 6. Sync Items (Details)
         $this->syncPayrollItems($payroll, $baseSalary, $inputs, $result);
 
@@ -128,10 +128,10 @@ class PayrollService
     protected function syncPayrollItems(Payroll $payroll, float $baseSalary, array $inputs, array $result): void
     {
         $payroll->items()->delete();
-        
+
         // Gains
         $this->addItem($payroll, 'earning', 'BASE', 'Salaire de Base', $baseSalary);
-        
+
         if (($inputs['transport_allowance'] ?? 0) > 0) {
             $this->addItem($payroll, 'earning', 'TRANSPORT', 'Indemnité de Transport', $inputs['transport_allowance'], false);
         }
@@ -144,7 +144,7 @@ class PayrollService
         if (($inputs['bonuses'] ?? 0) > 0) {
             $this->addItem($payroll, 'earning', 'PRIME', 'Primes et Bonus', $inputs['bonuses']);
         }
-        
+
         // Retenues fiscales
         if ($result['cnps_employee'] > 0) {
             $this->addItem($payroll, 'deduction', 'CNPS', 'CNPS (Retraite)', $result['cnps_employee']);
@@ -158,7 +158,7 @@ class PayrollService
         if ($result['tax_igr'] > 0) {
             $this->addItem($payroll, 'deduction', 'IGR', 'Impôt Général sur le Revenu (IGR)', $result['tax_igr']);
         }
-        
+
         // Retenues diverses
         if (($inputs['advance_payment'] ?? 0) > 0) {
             $this->addItem($payroll, 'deduction', 'ACOMPTE', 'Acompte', $inputs['advance_payment']);
@@ -191,7 +191,7 @@ class PayrollService
         $cnps = floor(min($taxableGross, $cnpsCeiling) * $cnpsRate);
         $is = floor($taxableGross * $isRate);
         $cn = $this->calculateCNManual($taxableGross);
-        
+
         $igrBase = $taxableGross - $is - $cn - $cnps;
         $parts = $this->calculateFiscalParts($user);
         $igr = $this->calculateIGRManual($igrBase, $parts);
@@ -238,12 +238,15 @@ class PayrollService
                 $tax += $base * $rate;
             }
         }
+
         return floor($tax);
     }
 
     protected function calculateIGRManual(float $igrBase, float $parts): float
     {
-        if ($parts <= 0) $parts = 1;
+        if ($parts <= 0) {
+            $parts = 1;
+        }
 
         $table = [
             ['min' => 0, 'max' => 25000, 'rate' => 0.00, 'deduction' => 0],
@@ -258,17 +261,17 @@ class PayrollService
 
         $Q = $igrBase / $parts;
         $taxPerPart = 0;
-        
+
         foreach ($table as $bracket) {
             $min = $bracket['min'];
             $max = $bracket['max'];
-            
+
             if ($Q > $min && ($max === null || $Q <= $max)) {
                 $taxPerPart = ($Q * $bracket['rate']) - $bracket['deduction'];
                 break;
             }
         }
-        
+
         return floor(max(0, $taxPerPart * $parts));
     }
 
@@ -283,7 +286,7 @@ class PayrollService
 
         $parts = ($user->marital_status === 'married') ? 2.0 : 1.0;
         $childrenParts = ($user->children_count ?? 0) * 0.5;
-        
+
         return min($parts + $childrenParts, 5.0);
     }
 

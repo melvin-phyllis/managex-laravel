@@ -47,7 +47,7 @@ class SurveyQuestion extends Model
      */
     public function getTypeLabelAttribute(): string
     {
-        return match($this->type) {
+        return match ($this->type) {
             'text' => 'Texte libre',
             'choice' => 'Choix multiples',
             'rating' => 'Évaluation (1-5)',
@@ -72,7 +72,8 @@ class SurveyQuestion extends Model
         if ($this->type === 'rating') {
             $avg = $responses->avg('reponse');
             $distribution = $responses->groupBy('reponse')
-                ->map(fn($group) => $group->count());
+                ->map(fn ($group) => $group->count());
+
             return [
                 'total' => $total,
                 'average' => round($avg, 1),
@@ -82,10 +83,11 @@ class SurveyQuestion extends Model
 
         if ($this->type === 'choice' || $this->type === 'yesno') {
             $distribution = $responses->groupBy('reponse')
-                ->map(fn($group) => [
+                ->map(fn ($group) => [
                     'count' => $group->count(),
                     'percentage' => round(($group->count() / $total) * 100, 1),
                 ]);
+
             return [
                 'total' => $total,
                 'distribution' => $distribution,

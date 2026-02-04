@@ -2,8 +2,8 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
@@ -33,7 +33,7 @@ return new class extends Migration
         $users = DB::table('users')
             ->where(function ($query) {
                 $query->whereNotNull('base_salary')
-                      ->orWhereNotNull('hire_date');
+                    ->orWhereNotNull('hire_date');
             })
             ->get();
 

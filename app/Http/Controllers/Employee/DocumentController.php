@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Employee;
 
 use App\Http\Controllers\Controller;
 use App\Models\Document;
-use App\Models\DocumentCategory;
 use App\Models\DocumentType;
 use App\Services\DocumentService;
 use Illuminate\Http\Request;
@@ -29,7 +28,7 @@ class DocumentController extends Controller
         // Types de documents que l'employé peut uploader (CV, etc.)
         // Exclure les types gérés ailleurs (contrat, règlement, fiche de poste)
         $excludedSlugs = ['work_contract', 'internal_rules', 'job_description', 'contract_amendment', 'work_certificate'];
-        
+
         $documentTypes = DocumentType::active()
             ->employeeUploadable()
             ->whereNotIn('slug', $excludedSlugs)
@@ -59,8 +58,8 @@ class DocumentController extends Controller
             ->toArray() : [];
 
         return view('employee.documents.index', compact(
-            'documentTypes', 
-            'userDocuments', 
+            'documentTypes',
+            'userDocuments',
             'contract',
             'hasContractDocument',
             'globalDocuments',
@@ -86,7 +85,7 @@ class DocumentController extends Controller
     public function create(DocumentType $type)
     {
         // Vérifier que l'employé peut uploader ce type
-        if (!$type->employee_can_upload) {
+        if (! $type->employee_can_upload) {
             abort(403, 'Vous ne pouvez pas uploader ce type de document.');
         }
 
@@ -110,7 +109,7 @@ class DocumentController extends Controller
         $type = DocumentType::findOrFail($request->document_type_id);
 
         // Vérifier que l'employé peut uploader
-        if (!$type->employee_can_upload) {
+        if (! $type->employee_can_upload) {
             abort(403, 'Vous ne pouvez pas uploader ce type de document.');
         }
 
@@ -128,7 +127,7 @@ class DocumentController extends Controller
                 ]
             );
 
-            $message = $type->requires_validation 
+            $message = $type->requires_validation
                 ? 'Document envoyé. En attente de validation par les RH.'
                 : 'Document ajouté avec succès.';
 
@@ -146,7 +145,7 @@ class DocumentController extends Controller
     {
         $this->authorize('view', $document);
 
-        if (!$document->fileExists()) {
+        if (! $document->fileExists()) {
             abort(404, 'Fichier introuvable');
         }
 
@@ -166,7 +165,7 @@ class DocumentController extends Controller
         $this->authorize('delete', $document);
 
         // Vérifier que le type autorise la suppression par l'employé
-        if (!$document->type->employee_can_delete) {
+        if (! $document->type->employee_can_delete) {
             abort(403, 'Vous ne pouvez pas supprimer ce document.');
         }
 
@@ -187,7 +186,7 @@ class DocumentController extends Controller
     {
         $this->authorize('view', $document);
 
-        if (!$document->requires_acknowledgment) {
+        if (! $document->requires_acknowledgment) {
             return back()->withErrors(['error' => 'Ce document ne nécessite pas d\'accusé.']);
         }
 
@@ -208,11 +207,11 @@ class DocumentController extends Controller
         $user = auth()->user();
         $contract = $user->currentContract;
 
-        if (!$contract || !$contract->document_path) {
+        if (! $contract || ! $contract->document_path) {
             abort(404, 'Document de contrat introuvable');
         }
 
-        if (!Storage::disk('documents')->exists($contract->document_path)) {
+        if (! Storage::disk('documents')->exists($contract->document_path)) {
             abort(404, 'Fichier introuvable');
         }
 

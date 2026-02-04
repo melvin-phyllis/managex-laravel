@@ -18,15 +18,20 @@ class CacheService
      * TTL par défaut (en secondes)
      */
     const TTL_SHORT = 300;      // 5 minutes - données volatiles
+
     const TTL_MEDIUM = 900;     // 15 minutes - statistiques
+
     const TTL_LONG = 3600;      // 1 heure - données stables
+
     const TTL_VERY_LONG = 86400; // 24 heures - données rarement modifiées
 
     /**
      * Préfixes de cache
      */
     const PREFIX_DASHBOARD = 'dashboard.';
+
     const PREFIX_STATS = 'stats.';
+
     const PREFIX_USER = 'user.';
 
     /**
@@ -34,14 +39,14 @@ class CacheService
      */
     public static function getAdminDashboardStats(): array
     {
-        return Cache::remember(self::PREFIX_DASHBOARD . 'admin.stats', self::TTL_SHORT, function () {
+        return Cache::remember(self::PREFIX_DASHBOARD.'admin.stats', self::TTL_SHORT, function () {
             $today = now()->toDateString();
 
             return [
                 'total_employees' => User::where('role', 'employee')->count(),
                 'active_employees' => User::where('role', 'employee')->where('status', 'active')->count(),
                 'present_today' => Presence::whereDate('date', $today)
-                    ->whereHas('user', fn($q) => $q->where('role', 'employee'))
+                    ->whereHas('user', fn ($q) => $q->where('role', 'employee'))
                     ->distinct('user_id')
                     ->count('user_id'),
                 'on_leave_today' => Leave::where('statut', 'approved')
@@ -63,7 +68,7 @@ class CacheService
      */
     public static function getLeaveStats(): object
     {
-        return Cache::remember(self::PREFIX_STATS . 'leaves', self::TTL_SHORT, function () {
+        return Cache::remember(self::PREFIX_STATS.'leaves', self::TTL_SHORT, function () {
             return Leave::selectRaw("
                 COUNT(*) as total,
                 SUM(CASE WHEN statut = 'pending' THEN 1 ELSE 0 END) as pending_count,
@@ -78,8 +83,9 @@ class CacheService
      */
     public static function getTaskStats(): object
     {
-        return Cache::remember(self::PREFIX_STATS . 'tasks', self::TTL_SHORT, function () {
+        return Cache::remember(self::PREFIX_STATS.'tasks', self::TTL_SHORT, function () {
             $now = now()->format('Y-m-d H:i:s');
+
             return Task::selectRaw("
                 COUNT(*) as total,
                 SUM(CASE WHEN statut = 'pending' THEN 1 ELSE 0 END) as pending_count,
@@ -96,7 +102,7 @@ class CacheService
      */
     public static function getEmployeeCount(): int
     {
-        return Cache::remember(self::PREFIX_STATS . 'employee_count', self::TTL_MEDIUM, function () {
+        return Cache::remember(self::PREFIX_STATS.'employee_count', self::TTL_MEDIUM, function () {
             return User::where('role', 'employee')->count();
         });
     }
@@ -106,7 +112,7 @@ class CacheService
      */
     public static function getUserDashboardStats(int $userId): array
     {
-        return Cache::remember(self::PREFIX_USER . $userId . '.dashboard', self::TTL_SHORT, function () use ($userId) {
+        return Cache::remember(self::PREFIX_USER.$userId.'.dashboard', self::TTL_SHORT, function () use ($userId) {
             $today = now()->toDateString();
             $month = now()->month;
             $year = now()->year;
@@ -129,10 +135,10 @@ class CacheService
      */
     public static function clearAdminDashboard(): void
     {
-        Cache::forget(self::PREFIX_DASHBOARD . 'admin.stats');
-        Cache::forget(self::PREFIX_STATS . 'leaves');
-        Cache::forget(self::PREFIX_STATS . 'tasks');
-        Cache::forget(self::PREFIX_STATS . 'employee_count');
+        Cache::forget(self::PREFIX_DASHBOARD.'admin.stats');
+        Cache::forget(self::PREFIX_STATS.'leaves');
+        Cache::forget(self::PREFIX_STATS.'tasks');
+        Cache::forget(self::PREFIX_STATS.'employee_count');
     }
 
     /**
@@ -140,7 +146,7 @@ class CacheService
      */
     public static function clearUserCache(int $userId): void
     {
-        Cache::forget(self::PREFIX_USER . $userId . '.dashboard');
+        Cache::forget(self::PREFIX_USER.$userId.'.dashboard');
     }
 
     /**
@@ -148,8 +154,8 @@ class CacheService
      */
     public static function clearLeaveCache(): void
     {
-        Cache::forget(self::PREFIX_STATS . 'leaves');
-        Cache::forget(self::PREFIX_DASHBOARD . 'admin.stats');
+        Cache::forget(self::PREFIX_STATS.'leaves');
+        Cache::forget(self::PREFIX_DASHBOARD.'admin.stats');
     }
 
     /**
@@ -157,8 +163,8 @@ class CacheService
      */
     public static function clearTaskCache(): void
     {
-        Cache::forget(self::PREFIX_STATS . 'tasks');
-        Cache::forget(self::PREFIX_DASHBOARD . 'admin.stats');
+        Cache::forget(self::PREFIX_STATS.'tasks');
+        Cache::forget(self::PREFIX_DASHBOARD.'admin.stats');
     }
 
     /**
@@ -166,7 +172,7 @@ class CacheService
      */
     public static function clearPresenceCache(): void
     {
-        Cache::forget(self::PREFIX_DASHBOARD . 'admin.stats');
+        Cache::forget(self::PREFIX_DASHBOARD.'admin.stats');
     }
 
     /**

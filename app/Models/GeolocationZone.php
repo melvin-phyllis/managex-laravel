@@ -47,6 +47,7 @@ class GeolocationZone extends Model
     public function isWithinZone(float $lat, float $lng): bool
     {
         $distance = $this->calculateDistance($lat, $lng);
+
         return $distance <= $this->radius;
     }
 

@@ -90,11 +90,11 @@ class EmployeeEvaluation extends Model
      */
     public function calculateTotalScore(): float
     {
-        $total = $this->problem_solving 
-               + $this->objectives_respect 
-               + $this->work_under_pressure 
+        $total = $this->problem_solving
+               + $this->objectives_respect
+               + $this->work_under_pressure
                + $this->accountability;
-        
+
         return min($total, self::MAX_SCORE);
     }
 
@@ -105,10 +105,10 @@ class EmployeeEvaluation extends Model
     {
         $smic = Setting::getSmicAmount();
         $score = $this->calculateTotalScore();
-        
+
         // Si score = 0, on garde le SMIC minimum
         $calculatedSalary = $score * $smic;
-        
+
         return max($smic, $calculatedSalary);
     }
 
@@ -162,7 +162,8 @@ class EmployeeEvaluation extends Model
             7 => 'Juillet', 8 => 'Août', 9 => 'Septembre',
             10 => 'Octobre', 11 => 'Novembre', 12 => 'Décembre',
         ];
-        return ($mois[$this->month] ?? $this->month) . ' ' . $this->year;
+
+        return ($mois[$this->month] ?? $this->month).' '.$this->year;
     }
 
     public function getScorePercentageAttribute(): float
@@ -172,12 +173,12 @@ class EmployeeEvaluation extends Model
 
     public function getCalculatedSalaryFormattedAttribute(): string
     {
-        return number_format($this->calculated_salary, 0, ',', ' ') . ' FCFA';
+        return number_format($this->calculated_salary, 0, ',', ' ').' FCFA';
     }
 
     public function getStatusLabelAttribute(): string
     {
-        return match($this->status) {
+        return match ($this->status) {
             'draft' => 'Brouillon',
             'validated' => 'Validé',
             default => 'Inconnu',
@@ -186,7 +187,7 @@ class EmployeeEvaluation extends Model
 
     public function getStatusColorAttribute(): string
     {
-        return match($this->status) {
+        return match ($this->status) {
             'draft' => 'yellow',
             'validated' => 'green',
             default => 'gray',
@@ -200,6 +201,7 @@ class EmployeeEvaluation extends Model
     {
         $max = self::CRITERIA[$criteria]['max'] ?? 1;
         $value = $this->{$criteria} ?? 0;
+
         return round(($value / $max) * 100, 1);
     }
 
@@ -218,6 +220,7 @@ class EmployeeEvaluation extends Model
     {
         $this->status = 'validated';
         $this->validated_at = now();
+
         return $this->save();
     }
 }

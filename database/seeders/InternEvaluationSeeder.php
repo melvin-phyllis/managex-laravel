@@ -2,14 +2,14 @@
 
 namespace Database\Seeders;
 
-use App\Models\InternEvaluation;
-use App\Models\User;
 use App\Models\Department;
+use App\Models\InternEvaluation;
 use App\Models\Position;
-use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\DB;
+use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class InternEvaluationSeeder extends Seeder
 {
@@ -25,27 +25,28 @@ class InternEvaluationSeeder extends Seeder
             ['name' => 'Stagiaire'],
             ['description' => 'Poste de stagiaire']
         );
-        $this->command->info('Position created/found: ' . $internPosition->id);
+        $this->command->info('Position created/found: '.$internPosition->id);
 
         // Get first department or create one
         $department = Department::first();
-        if (!$department) {
+        if (! $department) {
             $department = Department::create([
                 'name' => 'Ressources Humaines',
-                'description' => 'Département RH'
+                'description' => 'Département RH',
             ]);
         }
-        $this->command->info('Department found: ' . $department->id);
+        $this->command->info('Department found: '.$department->id);
 
         // Get a tutor (admin or any existing employee)
-        $tutor = User::where('role', 'admin')->first() 
+        $tutor = User::where('role', 'admin')->first()
             ?? User::where('role', 'employee')->first();
 
-        if (!$tutor) {
+        if (! $tutor) {
             $this->command->error('Aucun tuteur disponible. Créez d\'abord un admin ou employé.');
+
             return;
         }
-        $this->command->info('Tutor found: ' . $tutor->id . ' - ' . $tutor->name);
+        $this->command->info('Tutor found: '.$tutor->id.' - '.$tutor->name);
 
         // Create test interns using DB insert instead of Eloquent
         $internEmails = [
@@ -59,12 +60,12 @@ class InternEvaluationSeeder extends Seeder
         $createdInterns = [];
 
         foreach ($internEmails as $index => $internData) {
-            $this->command->info('Creating intern: ' . $internData['name']);
-            
+            $this->command->info('Creating intern: '.$internData['name']);
+
             // Check if user exists
             $intern = User::where('email', $internData['email'])->first();
-            
-            if (!$intern) {
+
+            if (! $intern) {
                 // Create using DB facade to avoid any model issues
                 $internId = DB::table('users')->insertGetId([
                     'name' => $internData['name'],
@@ -75,7 +76,7 @@ class InternEvaluationSeeder extends Seeder
                     'department_id' => $department->id,
                     'position_id' => $internPosition->id,
                     'hire_date' => now()->subMonths(rand(1, 3)),
-                    'employee_id' => 'STG-' . str_pad($index + 1, 3, '0', STR_PAD_LEFT),
+                    'employee_id' => 'STG-'.str_pad($index + 1, 3, '0', STR_PAD_LEFT),
                     'contract_type' => 'stage',
                     'supervisor_id' => $tutor->id,
                     'created_at' => now(),
@@ -91,17 +92,17 @@ class InternEvaluationSeeder extends Seeder
             }
 
             $createdInterns[] = $intern;
-            $this->command->info('  -> Intern ID: ' . $intern->id);
+            $this->command->info('  -> Intern ID: '.$intern->id);
         }
 
-        $this->command->info('✅ ' . count($createdInterns) . ' stagiaires créés/mis à jour');
+        $this->command->info('✅ '.count($createdInterns).' stagiaires créés/mis à jour');
 
         // Create evaluations
         $evaluationsCreated = 0;
 
         foreach ($createdInterns as $index => $intern) {
             $weeksToGenerate = rand(4, 8);
-            $this->command->info('Creating ' . $weeksToGenerate . ' evaluations for ' . $intern->name);
+            $this->command->info('Creating '.$weeksToGenerate.' evaluations for '.$intern->name);
 
             for ($week = 0; $week < $weeksToGenerate; $week++) {
                 $weekStart = Carbon::now()->subWeeks($week)->startOfWeek();
@@ -110,7 +111,7 @@ class InternEvaluationSeeder extends Seeder
                 $exists = InternEvaluation::where('intern_id', $intern->id)
                     ->where('week_start', $weekStart)
                     ->exists();
-                    
+
                 if ($exists) {
                     continue;
                 }
@@ -141,16 +142,16 @@ class InternEvaluationSeeder extends Seeder
             }
         }
 
-        $this->command->info('✅ ' . $evaluationsCreated . ' évaluations créées');
+        $this->command->info('✅ '.$evaluationsCreated.' évaluations créées');
         $this->command->newLine();
         $this->command->info('📋 Récapitulatif:');
         $this->command->table(
             ['Stagiaire', 'Email', 'Tuteur', 'Évaluations'],
-            collect($createdInterns)->map(fn($i) => [
+            collect($createdInterns)->map(fn ($i) => [
                 $i->name,
                 $i->email,
                 $tutor->name,
-                InternEvaluation::where('intern_id', $i->id)->count()
+                InternEvaluation::where('intern_id', $i->id)->count(),
             ])->toArray()
         );
     }

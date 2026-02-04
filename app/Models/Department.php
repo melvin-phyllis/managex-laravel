@@ -23,6 +23,7 @@ class Department extends Model
      * Cache key pour les départements actifs
      */
     const CACHE_KEY_ACTIVE = 'departments.active';
+
     const CACHE_TTL = 3600; // 1 heure
 
     /**
@@ -31,8 +32,8 @@ class Department extends Model
     protected static function booted(): void
     {
         // Invalider le cache à chaque modification
-        static::saved(fn() => self::clearCache());
-        static::deleted(fn() => self::clearCache());
+        static::saved(fn () => self::clearCache());
+        static::deleted(fn () => self::clearCache());
     }
 
     /**

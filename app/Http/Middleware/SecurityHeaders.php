@@ -4,12 +4,11 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Middleware pour ajouter des en-têtes de sécurité HTTP
- * 
+ *
  * Ces en-têtes protègent contre:
  * - Clickjacking (X-Frame-Options)
  * - XSS (X-XSS-Protection, X-Content-Type-Options)
@@ -30,11 +29,11 @@ class SecurityHeaders
     {
         // Générer un nonce unique pour cette requête
         $nonce = $this->generateNonce();
-        
+
         // Stocker le nonce pour qu'il soit accessible dans les views
         app()->instance('csp-nonce', $nonce);
         view()->share('cspNonce', $nonce);
-        
+
         $response = $next($request);
 
         // Protection contre le clickjacking
@@ -94,7 +93,7 @@ class SecurityHeaders
 
         // Sources de base
         $defaultSrc = "'self'";
-        
+
         // Scripts: CDNs nécessaires (Chart.js, Alpine.js, jQuery, Lightbox, etc.)
         $scriptCdns = 'https://cdn.jsdelivr.net https://unpkg.com https://cdnjs.cloudflare.com https://code.jquery.com';
         if ($isProduction) {

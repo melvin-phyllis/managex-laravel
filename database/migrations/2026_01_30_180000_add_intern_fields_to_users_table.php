@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::table('users', function (Blueprint $table) {
             // Flag to identify interns
             $table->boolean('is_intern')->default(false)->after('status');
-            
+
             // Tutor assigned to intern
             $table->foreignId('tutor_id')->nullable()->after('is_intern')
                 ->constrained('users')->nullOnDelete();

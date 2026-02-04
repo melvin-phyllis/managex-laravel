@@ -27,6 +27,7 @@ class DocumentRequestController extends Controller
     public function create()
     {
         $types = DocumentRequest::getTypes();
+
         return view('employee.document-requests.create', compact('types'));
     }
 
@@ -36,7 +37,7 @@ class DocumentRequestController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'type' => 'required|string|in:' . implode(',', array_keys(DocumentRequest::getTypes())),
+            'type' => 'required|string|in:'.implode(',', array_keys(DocumentRequest::getTypes())),
             'message' => 'nullable|string|max:1000',
         ], [
             'type.required' => 'Veuillez sélectionner un type de document.',
@@ -64,7 +65,7 @@ class DocumentRequestController extends Controller
             abort(403);
         }
 
-        if (!$documentRequest->hasDocument()) {
+        if (! $documentRequest->hasDocument()) {
             abort(404, 'Aucun document attaché');
         }
 

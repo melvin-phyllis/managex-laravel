@@ -12,13 +12,14 @@ class WelcomeEmployeeNotification extends Notification
     use Queueable;
 
     public string $employeeName;
+
     protected ?string $resetToken = null;
 
     /**
      * Create a new notification instance.
-     * 
-     * @param string $employeeName Le nom de l'employé
-     * @param string|null $resetToken Token de réinitialisation (optionnel, généré automatiquement si null)
+     *
+     * @param  string  $employeeName  Le nom de l'employé
+     * @param  string|null  $resetToken  Token de réinitialisation (optionnel, généré automatiquement si null)
      */
     public function __construct(string $employeeName, ?string $resetToken = null)
     {
@@ -42,10 +43,10 @@ class WelcomeEmployeeNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         $appName = config('app.name');
-        
+
         // Générer le token de réinitialisation si non fourni
         $token = $this->resetToken ?? Password::broker()->createToken($notifiable);
-        
+
         // URL sécurisée pour définir le mot de passe
         $resetUrl = url(route('password.reset', [
             'token' => $token,
@@ -81,4 +82,3 @@ class WelcomeEmployeeNotification extends Notification
         ];
     }
 }
-

@@ -28,12 +28,17 @@ class DocumentRequest extends Model
 
     // Types de documents demandables
     const TYPE_ATTESTATION_TRAVAIL = 'attestation_travail';
+
     const TYPE_CERTIFICAT_EMPLOI = 'certificat_emploi';
+
     const TYPE_ATTESTATION_SALAIRE = 'attestation_salaire';
+
     const TYPE_AUTRE = 'autre';
 
     const STATUS_PENDING = 'pending';
+
     const STATUS_APPROVED = 'approved';
+
     const STATUS_REJECTED = 'rejected';
 
     public static function getTypes(): array
@@ -98,7 +103,7 @@ class DocumentRequest extends Model
 
     public function getStatusColorAttribute(): string
     {
-        return match($this->status) {
+        return match ($this->status) {
             self::STATUS_PENDING => 'amber',
             self::STATUS_APPROVED => 'green',
             self::STATUS_REJECTED => 'red',
@@ -120,6 +125,6 @@ class DocumentRequest extends Model
 
     public function hasDocument(): bool
     {
-        return !empty($this->document_path);
+        return ! empty($this->document_path);
     }
 }

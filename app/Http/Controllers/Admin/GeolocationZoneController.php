@@ -81,7 +81,7 @@ class GeolocationZoneController extends Controller
     public function update(Request $request, GeolocationZone $geolocationZone)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:geolocation_zones,name,' . $geolocationZone->id,
+            'name' => 'required|string|max:255|unique:geolocation_zones,name,'.$geolocationZone->id,
             'description' => 'nullable|string|max:1000',
             'latitude' => 'required|numeric|between:-90,90',
             'longitude' => 'required|numeric|between:-180,180',

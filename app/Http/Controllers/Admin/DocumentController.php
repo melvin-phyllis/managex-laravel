@@ -40,11 +40,11 @@ class DocumentController extends Controller
 
         if ($request->filled('search')) {
             $query->where(function ($q) use ($request) {
-                $q->where('title', 'like', '%' . $request->search . '%')
-                  ->orWhere('original_filename', 'like', '%' . $request->search . '%')
-                  ->orWhereHas('user', function ($uq) use ($request) {
-                      $uq->where('name', 'like', '%' . $request->search . '%');
-                  });
+                $q->where('title', 'like', '%'.$request->search.'%')
+                    ->orWhere('original_filename', 'like', '%'.$request->search.'%')
+                    ->orWhereHas('user', function ($uq) use ($request) {
+                        $uq->where('name', 'like', '%'.$request->search.'%');
+                    });
             });
         }
 
@@ -54,12 +54,12 @@ class DocumentController extends Controller
         // Stats simples
         $stats = [
             'total' => Document::count(),
-            'contracts' => Document::whereHas('type', fn($q) => $q->where('slug', 'work_contract'))->count(),
+            'contracts' => Document::whereHas('type', fn ($q) => $q->where('slug', 'work_contract'))->count(),
         ];
 
         $documentTypes = DocumentType::active()->ordered()->get();
         $employees = User::where('role', 'employee')->with(['position', 'currentContract'])->orderBy('name')->get();
-        
+
         // Get active global règlement for status check
         $activeReglement = \App\Models\GlobalDocument::active()
             ->ofType(\App\Models\GlobalDocument::TYPE_REGLEMENT_INTERIEUR)
@@ -137,7 +137,7 @@ class DocumentController extends Controller
             );
 
             return redirect()->route('admin.employees.show', $user)
-                ->with('success', 'Document "' . $document->title . '" ajouté avec succès.');
+                ->with('success', 'Document "'.$document->title.'" ajouté avec succès.');
         } catch (\Exception $e) {
             return back()->withErrors(['file' => $e->getMessage()])->withInput();
         }
@@ -201,6 +201,7 @@ class DocumentController extends Controller
         }
 
         $action = $request->action === 'approve' ? 'approuvés' : 'rejetés';
+
         return back()->with('success', "{$count} documents {$action}.");
     }
 
@@ -209,7 +210,7 @@ class DocumentController extends Controller
      */
     public function download(Document $document)
     {
-        if (!$document->fileExists()) {
+        if (! $document->fileExists()) {
             abort(404, 'Fichier introuvable');
         }
 
@@ -229,7 +230,7 @@ class DocumentController extends Controller
         $title = $document->title;
         $document->delete();
 
-        return back()->with('success', 'Document "' . $title . '" supprimé.');
+        return back()->with('success', 'Document "'.$title.'" supprimé.');
     }
 
     /**

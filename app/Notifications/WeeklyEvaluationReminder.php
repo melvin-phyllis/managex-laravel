@@ -39,19 +39,19 @@ class WeeklyEvaluationReminder extends Notification implements ShouldQueue
     {
         $count = $this->interns->count();
         $internNames = $this->interns->pluck('name')->implode(', ');
-        $weekLabel = 'Semaine du ' . now()->startOfWeek()->format('d/m/Y');
+        $weekLabel = 'Semaine du '.now()->startOfWeek()->format('d/m/Y');
 
         $message = (new MailMessage)
             ->subject('Rappel : Évaluations hebdomadaires à compléter - ManageX')
-            ->greeting('Bonjour ' . $notifiable->name . ',')
+            ->greeting('Bonjour '.$notifiable->name.',')
             ->line('C\'est le moment de compléter les évaluations hebdomadaires de vos stagiaires.')
-            ->line('**' . $weekLabel . '**')
+            ->line('**'.$weekLabel.'**')
             ->line('');
 
         if ($count === 1) {
-            $message->line('Stagiaire à évaluer : **' . $internNames . '**');
+            $message->line('Stagiaire à évaluer : **'.$internNames.'**');
         } else {
-            $message->line('Stagiaires à évaluer (' . $count . ') : ' . $internNames);
+            $message->line('Stagiaires à évaluer ('.$count.') : '.$internNames);
         }
 
         return $message
@@ -75,10 +75,9 @@ class WeeklyEvaluationReminder extends Notification implements ShouldQueue
             'interns' => $this->interns->pluck('name', 'id')->toArray(),
             'week_start' => now()->startOfWeek()->toDateString(),
             'message' => $count === 1
-                ? 'Évaluation hebdomadaire à compléter pour ' . $this->interns->first()->name
-                : $count . ' évaluations hebdomadaires à compléter',
+                ? 'Évaluation hebdomadaire à compléter pour '.$this->interns->first()->name
+                : $count.' évaluations hebdomadaires à compléter',
             'url' => route('employee.tutor.evaluations.index'),
         ];
     }
 }
-

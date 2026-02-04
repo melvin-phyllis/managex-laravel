@@ -2,17 +2,17 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-use App\Models\Presence;
-use App\Models\Task;
 use App\Models\Leave;
 use App\Models\Payroll;
+use App\Models\Presence;
 use App\Models\Survey;
 use App\Models\SurveyQuestion;
 use App\Models\SurveyResponse;
+use App\Models\Task;
+use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
-use Carbon\Carbon;
 
 class DatabaseSeeder extends Seeder
 {
@@ -83,7 +83,7 @@ class DatabaseSeeder extends Seeder
             $nbTasks = fake()->numberBetween(3, 8);
             for ($i = 0; $i < $nbTasks; $i++) {
                 $statut = fake()->randomElement($statuts);
-                $progression = match($statut) {
+                $progression = match ($statut) {
                     'completed' => 100,
                     'approved' => fake()->numberBetween(10, 90),
                     default => 0,
@@ -215,7 +215,7 @@ class DatabaseSeeder extends Seeder
         // Créer des réponses pour quelques employés
         foreach ($employees->take(5) as $employee) {
             foreach ($survey1->questions as $question) {
-                $reponse = match($question->type) {
+                $reponse = match ($question->type) {
                     'rating' => (string) fake()->numberBetween(1, 5),
                     'choice' => fake()->randomElement($question->options),
                     'yesno' => fake()->randomElement(['Oui', 'Non']),

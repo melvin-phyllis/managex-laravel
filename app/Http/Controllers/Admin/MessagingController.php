@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Events\NewMessage;
 use App\Http\Controllers\Controller;
 use App\Models\Messaging\Conversation;
-use App\Models\Messaging\Message;
 use App\Models\Messaging\ConversationParticipant;
+use App\Models\Messaging\Message;
 use App\Models\User;
-use App\Events\NewMessage;
 use Illuminate\Http\Request;
 
 class MessagingController extends Controller
@@ -80,15 +80,15 @@ class MessagingController extends Controller
                     'name' => $otherUser->name,
                     'avatar' => $otherUser->avatar ? avatar_url($otherUser->avatar) : null,
                 ] : null,
-                'participants' => $conv->activeParticipants->map(fn($p) => [
+                'participants' => $conv->activeParticipants->map(fn ($p) => [
                     'id' => $p->user_id,
                     'name' => $p->user?->name,
                     'role' => $p->role,
                 ])->values(),
             ];
         })
-        ->sortByDesc('last_message_at')
-        ->values();
+            ->sortByDesc('last_message_at')
+            ->values();
 
         $users = User::where('id', '!=', $user->id)
             ->select('id', 'name', 'email')
@@ -104,7 +104,7 @@ class MessagingController extends Controller
     public function show(Conversation $conversation)
     {
         $conversation->load(['activeParticipants.user', 'creator']);
-        
+
         $messages = $conversation->messages()
             ->with(['sender', 'attachments'])
             ->orderBy('created_at', 'desc')
@@ -160,7 +160,7 @@ class MessagingController extends Controller
     public function update(Request $request, Conversation $conversation)
     {
         $request->validate([
-            'name' => 'required|string|max:100|unique:conversations,name,' . $conversation->id,
+            'name' => 'required|string|max:100|unique:conversations,name,'.$conversation->id,
             'description' => 'nullable|string|max:500',
         ]);
 
@@ -219,22 +219,23 @@ class MessagingController extends Controller
 
         return redirect()->back()->with('success', 'Message supprimé.');
     }
+
     /**
      * Mark conversation as read for current user
      */
     public function markAsRead(Conversation $conversation)
     {
         $userId = auth()->id();
-        
+
         $participant = $conversation->participants()
             ->where('user_id', $userId)
             ->whereNull('left_at')
             ->first();
-        
+
         if ($participant) {
             $participant->update(['last_read_at' => now()]);
         }
-        
+
         return response()->json(['success' => true]);
     }
 
@@ -253,7 +254,7 @@ class MessagingController extends Controller
             $messages = $query->limit(50)->get();
 
             return response()->json([
-                'data' => $messages->map(fn($m) => [
+                'data' => $messages->map(fn ($m) => [
                     'id' => $m->id,
                     'conversation_id' => $m->conversation_id,
                     'sender_id' => $m->sender_id,
@@ -278,7 +279,7 @@ class MessagingController extends Controller
         $messages = $query->paginate(50);
 
         // Transform data for consistent format
-        $messages->getCollection()->transform(fn($m) => [
+        $messages->getCollection()->transform(fn ($m) => [
             'id' => $m->id,
             'conversation_id' => $m->conversation_id,
             'sender_id' => $m->sender_id,
@@ -321,7 +322,7 @@ class MessagingController extends Controller
         try {
             broadcast(new NewMessage($message))->toOthers();
         } catch (\Exception $e) {
-            \Log::debug('Broadcasting disabled or failed: ' . $e->getMessage());
+            \Log::debug('Broadcasting disabled or failed: '.$e->getMessage());
         }
 
         return response()->json([

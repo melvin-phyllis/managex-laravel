@@ -12,6 +12,7 @@ class UserStatus extends Model
     use HasFactory;
 
     protected $primaryKey = 'user_id';
+
     public $incrementing = false;
 
     protected $fillable = [
@@ -64,7 +65,7 @@ class UserStatus extends Model
      */
     public function getStatusLabelAttribute(): string
     {
-        return match($this->status) {
+        return match ($this->status) {
             'online' => 'En ligne',
             'away' => 'Absent',
             'busy' => 'Occupé',
@@ -79,7 +80,7 @@ class UserStatus extends Model
      */
     public function getStatusColorAttribute(): string
     {
-        return match($this->status) {
+        return match ($this->status) {
             'online' => 'green',
             'away' => 'yellow',
             'busy' => 'red',

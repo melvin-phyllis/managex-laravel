@@ -11,12 +11,12 @@ return new class extends Migration
         Schema::create('payroll_templates', function (Blueprint $table) {
             $table->id();
             $table->foreignId('country_id')->constrained('payroll_countries')->onDelete('cascade');
-            
+
             $table->string('name');
             $table->string('blade_path'); // pdf.payroll-civ, pdf.payroll-fra...
             $table->text('description')->nullable();
             $table->boolean('is_default')->default(false);
-            
+
             $table->timestamps();
         });
     }

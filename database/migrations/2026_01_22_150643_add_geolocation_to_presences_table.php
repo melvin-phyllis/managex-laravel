@@ -32,7 +32,7 @@ return new class extends Migration
             $table->dropColumn([
                 'check_in_latitude', 'check_in_longitude',
                 'check_out_latitude', 'check_out_longitude',
-                'geolocation_zone_id', 'check_in_status', 'check_out_status'
+                'geolocation_zone_id', 'check_in_status', 'check_out_status',
             ]);
         });
     }

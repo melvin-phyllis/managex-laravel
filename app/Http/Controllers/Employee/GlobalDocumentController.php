@@ -19,6 +19,7 @@ class GlobalDocumentController extends Controller
             ->get()
             ->map(function ($doc) {
                 $doc->is_acknowledged = $doc->isAcknowledgedBy(auth()->user());
+
                 return $doc;
             });
 
@@ -32,7 +33,7 @@ class GlobalDocumentController extends Controller
      */
     public function show(GlobalDocument $globalDocument)
     {
-        if (!$globalDocument->is_active) {
+        if (! $globalDocument->is_active) {
             abort(404);
         }
 
@@ -46,11 +47,11 @@ class GlobalDocumentController extends Controller
      */
     public function download(GlobalDocument $globalDocument)
     {
-        if (!$globalDocument->is_active) {
+        if (! $globalDocument->is_active) {
             abort(404);
         }
 
-        if (!$globalDocument->fileExists()) {
+        if (! $globalDocument->fileExists()) {
             abort(404, 'Fichier introuvable');
         }
 
@@ -65,7 +66,7 @@ class GlobalDocumentController extends Controller
      */
     public function acknowledge(GlobalDocument $globalDocument)
     {
-        if (!$globalDocument->is_active) {
+        if (! $globalDocument->is_active) {
             abort(404);
         }
 

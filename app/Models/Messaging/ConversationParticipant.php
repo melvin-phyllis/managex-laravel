@@ -79,7 +79,7 @@ class ConversationParticipant extends Model
      */
     public function togglePin(): void
     {
-        $this->update(['is_pinned' => !$this->is_pinned]);
+        $this->update(['is_pinned' => ! $this->is_pinned]);
     }
 
     /**
@@ -87,7 +87,7 @@ class ConversationParticipant extends Model
      */
     public function toggleArchive(): void
     {
-        $this->update(['is_archived' => !$this->is_archived]);
+        $this->update(['is_archived' => ! $this->is_archived]);
     }
 
     /**

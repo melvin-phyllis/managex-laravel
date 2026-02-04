@@ -23,7 +23,7 @@ class Payroll extends Model
         'pdf_url',
         'notes',
         'custom_fields',
-        
+
         // Revenus
         'gross_salary', // Salaire Brut (Base + Sursalaire + Primes fixes)
         'transport_allowance',
@@ -31,21 +31,21 @@ class Payroll extends Model
         'other_allowances',
         'overtime_amount',
         'bonuses',
-        
+
         // Bases
         'taxable_gross', // Brut Imposable
-        
+
         // Taxes CIV
         'tax_is', // Impôt sur Salaire (1.2%)
         'tax_cn', // Contribution Nationale
         'tax_igr', // Impôt Général sur le Revenu
         'cnps_employee', // Retraite (6.3%)
         'cnps_employer', // Patronal (pour info)
-        
+
         // Totaux
         'total_deductions', // Total retenues
         'net_salary', // Net à payer
-        
+
         // Metadata
         'fiscal_parts',
         'validated_at',
@@ -79,7 +79,7 @@ class Payroll extends Model
     {
         return $this->belongsTo(User::class);
     }
-    
+
     /**
      * Get the contract associated with this payroll
      */
@@ -95,12 +95,12 @@ class Payroll extends Model
     {
         return $this->hasMany(PayrollItem::class);
     }
-    
+
     public function earnings()
     {
         return $this->items()->where('type', 'earning');
     }
-    
+
     public function deductions()
     {
         return $this->items()->where('type', 'deduction');
@@ -124,7 +124,7 @@ class Payroll extends Model
      */
     public function getStatutLabelAttribute(): string
     {
-        return match($this->statut) {
+        return match ($this->statut) {
             'paid' => 'Payé',
             'pending' => 'En attente',
             default => 'Inconnu',
@@ -133,7 +133,7 @@ class Payroll extends Model
 
     public function getStatutColorAttribute(): string
     {
-        return match($this->statut) {
+        return match ($this->statut) {
             'paid' => 'green',
             'pending' => 'yellow',
             default => 'gray',
@@ -151,22 +151,23 @@ class Payroll extends Model
             '04' => 'Avril', '05' => 'Mai', '06' => 'Juin',
             '07' => 'Juillet', '08' => 'Août', '09' => 'Septembre',
         ];
+
         return $mois[$this->mois] ?? $this->mois;
     }
 
     public function getPeriodeAttribute(): string
     {
-        return $this->mois_label . ' ' . $this->annee;
+        return $this->mois_label.' '.$this->annee;
     }
-    
+
     // Format helpers
     public function getNetSalaryFormattedAttribute(): string
     {
-        return number_format($this->net_salary, 0, ',', ' ') . ' FCFA';
+        return number_format($this->net_salary, 0, ',', ' ').' FCFA';
     }
-    
+
     public function getGrossSalaryFormattedAttribute(): string
     {
-        return number_format($this->gross_salary, 0, ',', ' ') . ' FCFA';
+        return number_format($this->gross_salary, 0, ',', ' ').' FCFA';
     }
 }

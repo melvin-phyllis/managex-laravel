@@ -12,12 +12,13 @@ class LeaveTest extends TestCase
     use RefreshDatabase;
 
     protected User $admin;
+
     protected User $employee;
 
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         $this->admin = User::factory()->admin()->create();
         $this->employee = User::factory()->create([
             'conges_payes' => 25,

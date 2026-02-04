@@ -3,13 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Setting;
 use App\Models\Department;
-use App\Models\Position;
 use App\Models\PayrollCountry;
+use App\Models\Position;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules\Password;
 
 class SettingsController extends Controller
 {
@@ -151,7 +150,7 @@ class SettingsController extends Controller
     public function updateDepartment(Request $request, Department $department)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:departments,name,' . $department->id,
+            'name' => 'required|string|max:255|unique:departments,name,'.$department->id,
             'description' => 'nullable|string|max:1000',
             'color' => 'required|string|max:7',
             'is_active' => 'sometimes|boolean',
@@ -277,7 +276,7 @@ class SettingsController extends Controller
         $user = auth()->user();
 
         $validated = $request->validate([
-            'email' => 'required|email|unique:users,email,' . $user->id,
+            'email' => 'required|email|unique:users,email,'.$user->id,
             'password' => 'required|string',
         ], [
             'email.required' => 'L\'email est obligatoire.',
@@ -287,7 +286,7 @@ class SettingsController extends Controller
         ]);
 
         // Vérifier le mot de passe actuel
-        if (!Hash::check($validated['password'], $user->password)) {
+        if (! Hash::check($validated['password'], $user->password)) {
             return redirect()->route('admin.settings.index', ['tab' => 'compte'])
                 ->with('error', 'Le mot de passe est incorrect.');
         }
@@ -316,7 +315,7 @@ class SettingsController extends Controller
         ]);
 
         // Vérifier le mot de passe actuel
-        if (!Hash::check($validated['current_password'], $user->password)) {
+        if (! Hash::check($validated['current_password'], $user->password)) {
             return redirect()->route('admin.settings.index', ['tab' => 'compte'])
                 ->with('error', 'Le mot de passe actuel est incorrect.');
         }

@@ -21,7 +21,7 @@ class LeaveObserver
 
         // Notify all admins when a new leave request is created
         $admins = User::where('role', 'admin')->get();
-        
+
         foreach ($admins as $admin) {
             $admin->notify(new LeaveRequestNotification($leave));
         }
@@ -39,7 +39,7 @@ class LeaveObserver
         // Check if statut changed to approved or rejected
         if ($leave->isDirty('statut')) {
             $newStatus = $leave->statut;
-            
+
             if (in_array($newStatus, ['approved', 'rejected']) && $leave->user) {
                 $leave->user->notify(new LeaveStatusNotification($leave, $newStatus));
             }

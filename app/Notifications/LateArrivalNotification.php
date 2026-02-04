@@ -6,8 +6,8 @@ use App\Models\Presence;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\BroadcastMessage;
+use Illuminate\Notifications\Notification;
 
 class LateArrivalNotification extends Notification implements ShouldQueue
 {
@@ -48,4 +48,3 @@ class LateArrivalNotification extends Notification implements ShouldQueue
         return $this->toDatabase($notifiable);
     }
 }
-

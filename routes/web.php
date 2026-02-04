@@ -1,34 +1,33 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Admin\AIAssistantController as AdminAIAssistantController;
+use App\Http\Controllers\Admin\AnalyticsController;
+use App\Http\Controllers\Admin\AnnouncementController as AdminAnnouncementController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\DepartmentController;
+use App\Http\Controllers\Admin\DocumentController as AdminDocumentController;
 use App\Http\Controllers\Admin\EmployeeController;
-use App\Http\Controllers\Admin\PresenceController as AdminPresenceController;
-use App\Http\Controllers\Admin\TaskController as AdminTaskController;
+use App\Http\Controllers\Admin\EmployeeEvaluationController;
+use App\Http\Controllers\Admin\GeolocationZoneController;
+use App\Http\Controllers\Admin\InternEvaluationController as AdminInternEvaluationController;
 use App\Http\Controllers\Admin\LeaveController as AdminLeaveController;
 use App\Http\Controllers\Admin\PayrollController as AdminPayrollController;
-use App\Http\Controllers\Admin\SurveyController as AdminSurveyController;
-use App\Http\Controllers\Admin\DepartmentController;
-use App\Http\Controllers\Admin\PositionController;
-use App\Http\Controllers\Admin\GeolocationZoneController;
-use App\Http\Controllers\Admin\AnalyticsController;
+use App\Http\Controllers\Admin\PresenceController as AdminPresenceController;
 use App\Http\Controllers\Admin\SettingsController;
-use App\Http\Controllers\Admin\AnnouncementController as AdminAnnouncementController;
-use App\Http\Controllers\Admin\DocumentController as AdminDocumentController;
+use App\Http\Controllers\Admin\SurveyController as AdminSurveyController;
+use App\Http\Controllers\Admin\TaskController as AdminTaskController;
+use App\Http\Controllers\Employee\AIAssistantController;
 use App\Http\Controllers\Employee\AnnouncementController as EmployeeAnnouncementController;
-use App\Http\Controllers\Employee\DocumentController as EmployeeDocumentController;
 use App\Http\Controllers\Employee\DashboardController as EmployeeDashboardController;
-use App\Http\Controllers\Employee\PresenceController as EmployeePresenceController;
-use App\Http\Controllers\Employee\TaskController as EmployeeTaskController;
+use App\Http\Controllers\Employee\DocumentController as EmployeeDocumentController;
+use App\Http\Controllers\Employee\InternEvaluationController as EmployeeInternEvaluationController;
 use App\Http\Controllers\Employee\LeaveController as EmployeeLeaveController;
 use App\Http\Controllers\Employee\PayrollController as EmployeePayrollController;
+use App\Http\Controllers\Employee\PresenceController as EmployeePresenceController;
 use App\Http\Controllers\Employee\SurveyController as EmployeeSurveyController;
-use App\Http\Controllers\Admin\InternEvaluationController as AdminInternEvaluationController;
-use App\Http\Controllers\Admin\EmployeeEvaluationController;
+use App\Http\Controllers\Employee\TaskController as EmployeeTaskController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Tutor\InternEvaluationController as TutorInternEvaluationController;
-use App\Http\Controllers\Employee\InternEvaluationController as EmployeeInternEvaluationController;
-use App\Http\Controllers\Employee\AIAssistantController;
-use App\Http\Controllers\Admin\AIAssistantController as AdminAIAssistantController;
 use Illuminate\Support\Facades\Route;
 
 // ============================================================================
@@ -42,8 +41,10 @@ if (app()->environment('local')) {
             try {
                 $department = \App\Models\Department::first();
                 $tutor = \App\Models\User::where('role', 'admin')->first();
-                if (!$department || !$tutor) return response()->json(['error' => 'Missing department or tutor']);
-                
+                if (! $department || ! $tutor) {
+                    return response()->json(['error' => 'Missing department or tutor']);
+                }
+
                 $internPosition = \App\Models\Position::firstOrCreate(
                     ['name' => 'Stagiaire'],
                     ['description' => 'Poste de stagiaire', 'department_id' => $department->id]
@@ -60,14 +61,14 @@ if (app()->environment('local')) {
                 $created = [];
                 foreach ($interns as $i => $data) {
                     $intern = \App\Models\User::updateOrCreate(['email' => $data['email']], [
-                        'name' => $data['name'], 
+                        'name' => $data['name'],
                         'password' => bcrypt(\Illuminate\Support\Str::random(16)), // Mot de passe aléatoire sécurisé
                         'status' => 'active',
-                        'department_id' => $department->id, 
-                        'position_id' => $internPosition->id, 
+                        'department_id' => $department->id,
+                        'position_id' => $internPosition->id,
                         'hire_date' => now()->subMonths(rand(1, 3)),
-                        'employee_id' => 'STG-' . str_pad($i + 1, 3, '0', STR_PAD_LEFT), 
-                        'contract_type' => 'stage', 
+                        'employee_id' => 'STG-'.str_pad($i + 1, 3, '0', STR_PAD_LEFT),
+                        'contract_type' => 'stage',
                         'supervisor_id' => $tutor->id,
                     ]);
                     // Définir le rôle de manière sécurisée
@@ -79,7 +80,9 @@ if (app()->environment('local')) {
                 foreach ($created as $i => $intern) {
                     for ($w = 0; $w < rand(4, 8); $w++) {
                         $weekStart = \Carbon\Carbon::now()->subWeeks($w)->startOfWeek();
-                        if (\App\Models\InternEvaluation::where('intern_id', $intern->id)->where('week_start', $weekStart)->exists()) continue;
+                        if (\App\Models\InternEvaluation::where('intern_id', $intern->id)->where('week_start', $weekStart)->exists()) {
+                            continue;
+                        }
                         \App\Models\InternEvaluation::create([
                             'intern_id' => $intern->id, 'tutor_id' => $tutor->id, 'week_start' => $weekStart,
                             'discipline_score' => min(2.5, max(0.5, 1.5 + $i * 0.15 + rand(-5, 5) / 10)),
@@ -94,6 +97,7 @@ if (app()->environment('local')) {
                         $evalCount++;
                     }
                 }
+
                 return response()->json(['success' => true, 'interns' => count($created), 'evaluations' => $evalCount]);
             } catch (\Exception $e) {
                 return response()->json(['error' => $e->getMessage(), 'line' => $e->getLine()], 500);
@@ -103,40 +107,42 @@ if (app()->environment('local')) {
         // Test Payroll Route (DEV ONLY)
         Route::get('/test-payroll-civ', function () {
             $user = \App\Models\User::where('role', 'employee')->first();
-            if (!$user) return 'No employee found. Create an employee first.';
+            if (! $user) {
+                return 'No employee found. Create an employee first.';
+            }
 
-            if (!$user->currentContract) {
+            if (! $user->currentContract) {
                 \App\Models\Contract::create([
                     'user_id' => $user->id,
                     'base_salary' => 500000,
                     'start_date' => now()->subYear(),
                     'contract_type' => 'cdi',
-                    'is_current' => true
+                    'is_current' => true,
                 ]);
                 $user->refresh();
             }
-            
-            $service = new \App\Services\Payroll\PayrollService();
-            
+
+            $service = new \App\Services\Payroll\PayrollService;
+
             try {
                 $payroll = $service->calculatePayroll($user, now()->month, now()->year, [
                     'transport_allowance' => 30000,
                     'housing_allowance' => 50000,
-                    'bonuses' => 15000
+                    'bonuses' => 15000,
                 ]);
-                
+
                 $payroll->load(['user', 'items']);
-                
+
                 $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pdf.payroll-civ', [
-                        'payroll' => $payroll,
-                        'user' => $payroll->user,
-                        'contract' => $payroll->user->currentContract,
-                        'generatedAt' => now(),
+                    'payroll' => $payroll,
+                    'user' => $payroll->user,
+                    'contract' => $payroll->user->currentContract,
+                    'generatedAt' => now(),
                 ]);
-                
+
                 return $pdf->stream('bulletin-test.pdf');
             } catch (\Exception $e) {
-                return "Error: " . $e->getMessage();
+                return 'Error: '.$e->getMessage();
             }
         })->name('test-payroll');
     });
@@ -147,6 +153,7 @@ Route::get('/', function () {
     if (auth()->check()) {
         return redirect()->route('dashboard');
     }
+
     return view('landing');
 })->name('home');
 
@@ -155,6 +162,7 @@ Route::get('/dashboard', function () {
     if (auth()->user()->isAdmin()) {
         return redirect()->route('admin.dashboard');
     }
+
     return redirect()->route('employee.dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
@@ -186,7 +194,6 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/presences/export/csv', [AdminPresenceController::class, 'exportCsv'])->name('presences.export.csv');
     Route::get('/presences/export/pdf', [AdminPresenceController::class, 'exportPdf'])->name('presences.export.pdf');
     Route::get('/presences/export/excel', [AdminPresenceController::class, 'exportExcel'])->name('presences.export.excel');
-
 
     // Gestion des tâches
     Route::get('/tasks', [AdminTaskController::class, 'index'])->name('tasks.index');

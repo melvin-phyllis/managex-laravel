@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exports\PresencesExport;
 use App\Http\Controllers\Controller;
+use App\Models\Department;
 use App\Models\Presence;
 use App\Models\User;
-use App\Models\Department;
-use Illuminate\Http\Request;
-use Carbon\Carbon;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Exports\PresencesExport;
 
 class PresenceController extends Controller
 {
@@ -20,7 +20,7 @@ class PresenceController extends Controller
     public function masterView(Request $request)
     {
         $departments = Department::where('is_active', true)->orderBy('name')->get();
-        
+
         return view('admin.presences.master-view', compact('departments'));
     }
 
@@ -46,16 +46,16 @@ class PresenceController extends Controller
     private function getTodayData($departmentId)
     {
         $today = now()->toDateString();
-        
+
         // Employés attendus aujourd'hui (jours de travail configurés, embauchés avant ou aujourd'hui)
         $expectedEmployees = User::where('role', 'employee')
             ->with(['department', 'position'])
-            ->whereHas('workDays', fn($q) => $q->where('day_of_week', now()->dayOfWeekIso))
+            ->whereHas('workDays', fn ($q) => $q->where('day_of_week', now()->dayOfWeekIso))
             ->where(function ($q) {
                 $q->whereNull('hire_date')
-                  ->orWhere('hire_date', '<=', now()->toDateString());
+                    ->orWhere('hire_date', '<=', now()->toDateString());
             })
-            ->when($departmentId, fn($q) => $q->where('department_id', $departmentId))
+            ->when($departmentId, fn ($q) => $q->where('department_id', $departmentId))
             ->get();
 
         // Présences du jour
@@ -67,8 +67,8 @@ class PresenceController extends Controller
         // Construire la liste des employés avec leur statut
         $employees = $expectedEmployees->map(function ($employee) use ($presencesToday) {
             $presence = $presencesToday->get($employee->id);
-            
-            if (!$presence) {
+
+            if (! $presence) {
                 $employee->status = 'absent';
                 $employee->check_in = null;
                 $employee->check_out = null;
@@ -81,7 +81,7 @@ class PresenceController extends Controller
                 $employee->is_late = $presence->is_late;
                 $employee->late_minutes = $presence->late_minutes ?? 0;
             }
-            
+
             return $employee;
         })->sortByDesc('is_late')->sortBy('status')->values();
 
@@ -97,7 +97,7 @@ class PresenceController extends Controller
             'mode' => 'today',
             'date' => now()->format('d/m/Y'),
             'stats' => $stats,
-            'employees' => $employees->map(fn($e) => [
+            'employees' => $employees->map(fn ($e) => [
                 'id' => $e->id,
                 'name' => $e->name,
                 'avatar' => $e->avatar ? avatar_url($e->avatar) : null,
@@ -109,7 +109,7 @@ class PresenceController extends Controller
                 'check_out' => $e->check_out,
                 'is_late' => $e->is_late,
                 'late_minutes' => $e->late_minutes,
-            ])
+            ]),
         ]);
     }
 
@@ -119,7 +119,7 @@ class PresenceController extends Controller
     private function getHistoricalData(Request $request, $departmentId, $riskOnly)
     {
         $period = $request->get('period', 'month');
-        
+
         // Déterminer les dates
         if ($period === 'custom') {
             $startDate = Carbon::parse($request->get('start_date', now()->startOfMonth()));
@@ -144,7 +144,9 @@ class PresenceController extends Controller
         $workingDays = 0;
         $tempDate = $startDate->copy();
         while ($tempDate <= $endDate) {
-            if (!$tempDate->isWeekend()) $workingDays++;
+            if (! $tempDate->isWeekend()) {
+                $workingDays++;
+            }
             $tempDate->addDay();
         }
         $expectedHours = $workingDays * 8;
@@ -152,10 +154,10 @@ class PresenceController extends Controller
         // Employés avec stats
         $employees = User::where('role', 'employee')
             ->with(['department', 'position'])
-            ->withCount(['presences as presence_count' => fn($q) => $q->whereBetween('date', [$startDate, $endDate])])
-            ->withCount(['presences as late_count' => fn($q) => $q->whereBetween('date', [$startDate, $endDate])->where('is_late', true)])
-            ->withSum(['presences as total_late_minutes' => fn($q) => $q->whereBetween('date', [$startDate, $endDate])->where('is_late', true)], 'late_minutes')
-            ->when($departmentId, fn($q) => $q->where('department_id', $departmentId))
+            ->withCount(['presences as presence_count' => fn ($q) => $q->whereBetween('date', [$startDate, $endDate])])
+            ->withCount(['presences as late_count' => fn ($q) => $q->whereBetween('date', [$startDate, $endDate])->where('is_late', true)])
+            ->withSum(['presences as total_late_minutes' => fn ($q) => $q->whereBetween('date', [$startDate, $endDate])->where('is_late', true)], 'late_minutes')
+            ->when($departmentId, fn ($q) => $q->where('department_id', $departmentId))
             ->orderByDesc('late_count')
             ->get();
 
@@ -166,22 +168,22 @@ class PresenceController extends Controller
             ->get()
             ->groupBy('user_id');
 
-        $employees = $employees->map(function ($employee) use ($presencesByUser, $expectedHours, $workingDays) {
+        $employees = $employees->map(function ($employee) use ($presencesByUser, $expectedHours) {
             $userPresences = $presencesByUser->get($employee->id, collect());
-            $totalMinutes = $userPresences->sum(fn($p) => $p->check_in && $p->check_out 
-                ? Carbon::parse($p->check_in)->diffInMinutes(Carbon::parse($p->check_out)) 
+            $totalMinutes = $userPresences->sum(fn ($p) => $p->check_in && $p->check_out
+                ? Carbon::parse($p->check_in)->diffInMinutes(Carbon::parse($p->check_out))
                 : 0);
-            
+
             $employee->total_worked_hours = round($totalMinutes / 60, 1);
-            $employee->attendance_rate = $expectedHours > 0 
+            $employee->attendance_rate = $expectedHours > 0
                 ? min(100, round(($employee->total_worked_hours / $expectedHours) * 100, 1))
                 : 0;
-            
+
             $lateMin = (int) abs($employee->total_late_minutes ?? 0);
-            $employee->late_impact = $lateMin >= 60 
-                ? floor($lateMin / 60) . 'h ' . ($lateMin % 60) . 'min'
-                : $lateMin . 'min';
-            
+            $employee->late_impact = $lateMin >= 60
+                ? floor($lateMin / 60).'h '.($lateMin % 60).'min'
+                : $lateMin.'min';
+
             // Niveau de risque
             if ($employee->attendance_rate < 80 || $employee->late_count > 10 || $lateMin > 120) {
                 $employee->risk_level = 'high';
@@ -190,12 +192,12 @@ class PresenceController extends Controller
             } else {
                 $employee->risk_level = 'low';
             }
-            
+
             return $employee;
         });
 
         if ($riskOnly) {
-            $employees = $employees->filter(fn($e) => $e->risk_level !== 'low')->values();
+            $employees = $employees->filter(fn ($e) => $e->risk_level !== 'low')->values();
         }
 
         // Stats globales
@@ -214,7 +216,7 @@ class PresenceController extends Controller
             'working_days' => $workingDays,
             'expected_hours' => $expectedHours,
             'stats' => $stats,
-            'employees' => $employees->map(fn($e) => [
+            'employees' => $employees->map(fn ($e) => [
                 'id' => $e->id,
                 'name' => $e->name,
                 'avatar' => $e->avatar ? avatar_url($e->avatar) : null,
@@ -227,7 +229,7 @@ class PresenceController extends Controller
                 'attendance_rate' => $e->attendance_rate,
                 'late_impact' => $e->late_impact,
                 'risk_level' => $e->risk_level,
-            ])
+            ]),
         ]);
     }
 
@@ -237,7 +239,7 @@ class PresenceController extends Controller
     public function employeeDetails(Request $request, $userId)
     {
         $period = $request->get('period', 'month');
-        
+
         if ($period === 'custom') {
             $startDate = Carbon::parse($request->get('start_date', now()->startOfMonth()));
             $endDate = Carbon::parse($request->get('end_date', now()->endOfMonth()));
@@ -262,7 +264,7 @@ class PresenceController extends Controller
             ->where('is_late', true)
             ->orderByDesc('date')
             ->get()
-            ->map(fn($p) => [
+            ->map(fn ($p) => [
                 'date' => Carbon::parse($p->date)->format('d/m/Y'),
                 'day' => Carbon::parse($p->date)->translatedFormat('l'),
                 'check_in' => $p->check_in ? Carbon::parse($p->check_in)->format('H:i') : null,
@@ -271,7 +273,7 @@ class PresenceController extends Controller
 
         return response()->json([
             'user_id' => $userId,
-            'late_days' => $latePresences
+            'late_days' => $latePresences,
         ]);
     }
 
@@ -281,7 +283,7 @@ class PresenceController extends Controller
     public function showEmployeePresence(Request $request, $userId)
     {
         $user = User::with('department')->findOrFail($userId);
-        
+
         // Période
         $period = $request->get('period', 'month');
         if ($period === 'custom') {
@@ -317,7 +319,7 @@ class PresenceController extends Controller
         $workDays = 0;
         $current = $startDate->copy();
         while ($current <= $endDate && $current <= now()) {
-            if (!$current->isWeekend()) {
+            if (! $current->isWeekend()) {
                 $workDays++;
             }
             $current->addDay();
@@ -338,14 +340,17 @@ class PresenceController extends Controller
 
         // Temps de travail total
         $totalWorkMinutes = $presences->sum(function ($p) {
-            if (!$p->check_in || !$p->check_out) return 0;
+            if (! $p->check_in || ! $p->check_out) {
+                return 0;
+            }
             $checkIn = Carbon::parse($p->check_in);
             $checkOut = Carbon::parse($p->check_out);
+
             return $checkIn->diffInMinutes($checkOut);
         });
 
         // Liste des retards détaillés (pour les stats, pas affichée)
-        $latePresences = $presences->where('is_late', true)->map(fn($p) => [
+        $latePresences = $presences->where('is_late', true)->map(fn ($p) => [
             'date' => Carbon::parse($p->date)->format('d/m/Y'),
             'day' => Carbon::parse($p->date)->translatedFormat('l'),
             'check_in' => $p->check_in ? Carbon::parse($p->check_in)->format('H:i') : '-',
@@ -356,7 +361,7 @@ class PresenceController extends Controller
         $allowedPerPage = [10, 20, 30, 40, 50, 100, 150, 200];
         $perPage = (int) $request->get('per_page', 30);
         $perPage = in_array($perPage, $allowedPerPage) ? $perPage : 30;
-        
+
         $paginatedPresences = Presence::where('user_id', $userId)
             ->whereBetween('date', [$startDate, $endDate])
             ->orderByDesc('date')
@@ -364,7 +369,7 @@ class PresenceController extends Controller
             ->withQueryString();
 
         // Transformer les données paginées
-        $allPresences = $paginatedPresences->getCollection()->map(fn($p) => [
+        $allPresences = $paginatedPresences->getCollection()->map(fn ($p) => [
             'date' => Carbon::parse($p->date)->format('d/m/Y'),
             'day' => Carbon::parse($p->date)->translatedFormat('l'),
             'check_in' => $p->check_in ? Carbon::parse($p->check_in)->format('H:i') : '-',
@@ -372,8 +377,8 @@ class PresenceController extends Controller
             'is_late' => $p->is_late,
             'late_minutes' => $p->late_minutes,
             'overtime_minutes' => $p->overtime_minutes ?? 0,
-            'work_hours' => $p->check_in && $p->check_out 
-                ? round(Carbon::parse($p->check_in)->diffInMinutes(Carbon::parse($p->check_out)) / 60, 1) 
+            'work_hours' => $p->check_in && $p->check_out
+                ? round(Carbon::parse($p->check_in)->diffInMinutes(Carbon::parse($p->check_out)) / 60, 1)
                 : 0,
         ]);
 
@@ -398,7 +403,6 @@ class PresenceController extends Controller
             'pagination' => $paginatedPresences,
         ]);
     }
-
 
     public function index(Request $request)
     {
@@ -432,7 +436,7 @@ class PresenceController extends Controller
     {
         $presences = $this->getFilteredPresences($request);
 
-        $filename = 'presences_' . now()->format('Y-m-d') . '.csv';
+        $filename = 'presences_'.now()->format('Y-m-d').'.csv';
         $headers = [
             'Content-Type' => 'text/csv',
             'Content-Disposition' => "attachment; filename=\"$filename\"",
@@ -448,7 +452,7 @@ class PresenceController extends Controller
                     $presence->date->format('d/m/Y'),
                     $presence->check_in_formatted,
                     $presence->check_out_formatted ?? '-',
-                    $presence->hours_worked ? number_format($presence->hours_worked, 2) . 'h' : '-',
+                    $presence->hours_worked ? number_format($presence->hours_worked, 2).'h' : '-',
                 ]);
             }
 
@@ -467,13 +471,14 @@ class PresenceController extends Controller
             'generatedAt' => now(),
         ]);
 
-        return $pdf->download('presences_' . now()->format('Y-m-d') . '.pdf');
+        return $pdf->download('presences_'.now()->format('Y-m-d').'.pdf');
     }
 
     public function exportExcel(Request $request)
     {
         $filters = $request->only(['user_id', 'date_debut', 'date_fin']);
-        return Excel::download(new PresencesExport($filters), 'presences_' . now()->format('Y-m-d') . '.xlsx');
+
+        return Excel::download(new PresencesExport($filters), 'presences_'.now()->format('Y-m-d').'.xlsx');
     }
 
     private function getFilteredPresences(Request $request)

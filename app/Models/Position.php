@@ -24,7 +24,9 @@ class Position extends Model
      * Cache keys
      */
     const CACHE_KEY_ACTIVE = 'positions.active';
+
     const CACHE_KEY_BY_DEPARTMENT = 'positions.department.';
+
     const CACHE_TTL = 3600; // 1 heure
 
     /**
@@ -33,8 +35,8 @@ class Position extends Model
     protected static function booted(): void
     {
         // Invalider le cache à chaque modification
-        static::saved(fn($position) => self::clearCache($position->department_id));
-        static::deleted(fn($position) => self::clearCache($position->department_id));
+        static::saved(fn ($position) => self::clearCache($position->department_id));
+        static::deleted(fn ($position) => self::clearCache($position->department_id));
     }
 
     /**
@@ -66,7 +68,7 @@ class Position extends Model
      */
     public function getFullNameAttribute(): string
     {
-        return $this->department->name . ' - ' . $this->name;
+        return $this->department->name.' - '.$this->name;
     }
 
     /**
@@ -84,7 +86,7 @@ class Position extends Model
      */
     public static function getByDepartmentCached(int $departmentId)
     {
-        return Cache::remember(self::CACHE_KEY_BY_DEPARTMENT . $departmentId, self::CACHE_TTL, function () use ($departmentId) {
+        return Cache::remember(self::CACHE_KEY_BY_DEPARTMENT.$departmentId, self::CACHE_TTL, function () use ($departmentId) {
             return static::where('department_id', $departmentId)
                 ->active()
                 ->orderBy('name')
@@ -99,7 +101,7 @@ class Position extends Model
     {
         Cache::forget(self::CACHE_KEY_ACTIVE);
         if ($departmentId) {
-            Cache::forget(self::CACHE_KEY_BY_DEPARTMENT . $departmentId);
+            Cache::forget(self::CACHE_KEY_BY_DEPARTMENT.$departmentId);
         }
     }
 }

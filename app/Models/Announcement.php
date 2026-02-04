@@ -4,9 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Announcement extends Model
 {
@@ -75,15 +75,15 @@ class Announcement extends Model
         return $query->where('is_active', true)
             ->where(function ($q) {
                 $q->whereNull('publish_at')
-                  ->orWhere('publish_at', '<=', now());
+                    ->orWhere('publish_at', '<=', now());
             })
             ->where(function ($q) {
                 $q->whereNull('start_date')
-                  ->orWhere('start_date', '<=', today());
+                    ->orWhere('start_date', '<=', today());
             })
             ->where(function ($q) {
                 $q->whereNull('end_date')
-                  ->orWhere('end_date', '>=', today());
+                    ->orWhere('end_date', '>=', today());
             });
     }
 
@@ -96,20 +96,20 @@ class Announcement extends Model
             // Toutes
             $q->where('target_type', 'all')
             // Ou son département
-            ->orWhere(function ($q2) use ($user) {
-                $q2->where('target_type', 'department')
-                   ->where('department_id', $user->department_id);
-            })
+                ->orWhere(function ($q2) use ($user) {
+                    $q2->where('target_type', 'department')
+                        ->where('department_id', $user->department_id);
+                })
             // Ou son poste
-            ->orWhere(function ($q2) use ($user) {
-                $q2->where('target_type', 'position')
-                   ->where('position_id', $user->position_id);
-            })
+                ->orWhere(function ($q2) use ($user) {
+                    $q2->where('target_type', 'position')
+                        ->where('position_id', $user->position_id);
+                })
             // Ou ciblé spécifiquement
-            ->orWhere(function ($q2) use ($user) {
-                $q2->where('target_type', 'custom')
-                   ->whereJsonContains('target_user_ids', $user->id);
-            });
+                ->orWhere(function ($q2) use ($user) {
+                    $q2->where('target_type', 'custom')
+                        ->whereJsonContains('target_user_ids', $user->id);
+                });
         });
     }
 
@@ -129,8 +129,8 @@ class Announcement extends Model
     public function scopeOrderByPriority($query)
     {
         return $query->orderByRaw("FIELD(priority, 'critical', 'high', 'normal')")
-                     ->orderBy('is_pinned', 'desc')
-                     ->orderBy('created_at', 'desc');
+            ->orderBy('is_pinned', 'desc')
+            ->orderBy('created_at', 'desc');
     }
 
     // ============ HELPERS ============
@@ -192,12 +192,14 @@ class Announcement extends Model
     public function getReadPercentageAttribute(): float
     {
         $total = $this->target_users_count;
+
         return $total > 0 ? round(($this->read_count / $total) * 100, 1) : 0;
     }
 
     public function getAcknowledgedPercentageAttribute(): float
     {
         $total = $this->target_users_count;
+
         return $total > 0 ? round(($this->acknowledged_count / $total) * 100, 1) : 0;
     }
 
@@ -241,7 +243,7 @@ class Announcement extends Model
             'all' => 'Tous les employés',
             'department' => $this->department?->name ?? 'Département',
             'position' => $this->position?->name ?? 'Poste',
-            'custom' => count($this->target_user_ids ?? []) . ' utilisateur(s)',
+            'custom' => count($this->target_user_ids ?? []).' utilisateur(s)',
             default => 'Inconnu',
         };
     }
@@ -268,7 +270,7 @@ class Announcement extends Model
     public function getUnreadUsers()
     {
         $readUserIds = $this->reads()->pluck('user_id')->toArray();
-        
+
         return match ($this->target_type) {
             'all' => User::where('role', 'employee')
                 ->whereNotIn('id', $readUserIds)->get(),

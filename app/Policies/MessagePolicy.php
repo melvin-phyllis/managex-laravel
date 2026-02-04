@@ -88,7 +88,7 @@ class MessagePolicy
         $conversation = $message->conversation;
 
         // Must be a participant
-        if (!$conversation->hasParticipant($user->id)) {
+        if (! $conversation->hasParticipant($user->id)) {
             return false;
         }
 

@@ -62,7 +62,7 @@ class Survey extends Model
     public function hasUserResponded(User $user): bool
     {
         return $this->questions()
-            ->whereHas('responses', fn($q) => $q->where('user_id', $user->id))
+            ->whereHas('responses', fn ($q) => $q->where('user_id', $user->id))
             ->exists();
     }
 

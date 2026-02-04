@@ -77,6 +77,7 @@ class SurveyController extends Controller
     public function show(Survey $survey)
     {
         $survey->load('questions.responses.user', 'admin');
+
         return view('admin.surveys.show', compact('survey'));
     }
 
@@ -97,9 +98,10 @@ class SurveyController extends Controller
 
     public function toggle(Survey $survey)
     {
-        $survey->update(['is_active' => !$survey->is_active]);
+        $survey->update(['is_active' => ! $survey->is_active]);
 
         $status = $survey->is_active ? 'activé' : 'désactivé';
+
         return redirect()->back()->with('success', "Sondage {$status} avec succès.");
     }
 

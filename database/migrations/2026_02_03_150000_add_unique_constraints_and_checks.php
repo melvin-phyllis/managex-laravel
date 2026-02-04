@@ -2,12 +2,12 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * SECURITY AUDIT FIX: Ajoute les contraintes uniques et les types enum
- * 
+ *
  * - Contraintes uniques pour SSN, IBAN, CNPS
  * - Types enum pour les statuts
  */
@@ -58,7 +58,7 @@ return new class extends Migration
                 }
             }
 
-            // Document requests status - valeurs autorisées  
+            // Document requests status - valeurs autorisées
             if (Schema::hasTable('document_requests') && Schema::hasColumn('document_requests', 'status')) {
                 try {
                     DB::statement("ALTER TABLE document_requests ADD CONSTRAINT document_requests_status_check CHECK (status IN ('pending', 'processing', 'completed', 'rejected'))");
@@ -82,29 +82,35 @@ return new class extends Migration
         Schema::table('users', function (Blueprint $table) {
             try {
                 $table->dropUnique('users_ssn_unique');
-            } catch (\Exception $e) {}
-            
+            } catch (\Exception $e) {
+            }
+
             try {
                 $table->dropUnique('users_cnps_unique');
-            } catch (\Exception $e) {}
-            
+            } catch (\Exception $e) {
+            }
+
             try {
                 $table->dropUnique('users_iban_unique');
-            } catch (\Exception $e) {}
+            } catch (\Exception $e) {
+            }
         });
 
         if (DB::connection()->getDriverName() === 'mysql') {
             try {
-                DB::statement("ALTER TABLE tasks DROP CONSTRAINT tasks_statut_check");
-            } catch (\Exception $e) {}
-            
+                DB::statement('ALTER TABLE tasks DROP CONSTRAINT tasks_statut_check');
+            } catch (\Exception $e) {
+            }
+
             try {
-                DB::statement("ALTER TABLE tasks DROP CONSTRAINT tasks_priorite_check");
-            } catch (\Exception $e) {}
-            
+                DB::statement('ALTER TABLE tasks DROP CONSTRAINT tasks_priorite_check');
+            } catch (\Exception $e) {
+            }
+
             try {
-                DB::statement("ALTER TABLE document_requests DROP CONSTRAINT document_requests_status_check");
-            } catch (\Exception $e) {}
+                DB::statement('ALTER TABLE document_requests DROP CONSTRAINT document_requests_status_check');
+            } catch (\Exception $e) {
+            }
         }
     }
 };

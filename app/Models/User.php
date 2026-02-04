@@ -115,10 +115,11 @@ class User extends Authenticatable
      */
     public function setRole(string $role): self
     {
-        if (!in_array($role, self::VALID_ROLES)) {
-            throw new \InvalidArgumentException("Rôle invalide: {$role}. Rôles valides: " . implode(', ', self::VALID_ROLES));
+        if (! in_array($role, self::VALID_ROLES)) {
+            throw new \InvalidArgumentException("Rôle invalide: {$role}. Rôles valides: ".implode(', ', self::VALID_ROLES));
         }
         $this->role = $role;
+
         return $this;
     }
 
@@ -208,6 +209,7 @@ class User extends Authenticatable
     public function hasCheckedOutToday(): bool
     {
         $presence = $this->todayPresence();
+
         return $presence && $presence->check_out !== null;
     }
 
@@ -241,6 +243,7 @@ class User extends Authenticatable
     public function isWorkingDay(?int $dayOfWeek = null): bool
     {
         $dayOfWeek = $dayOfWeek ?? now()->dayOfWeekIso; // 1=Lundi, 7=Dimanche
+
         return $this->workDays()->where('day_of_week', $dayOfWeek)->exists();
     }
 
@@ -258,7 +261,8 @@ class User extends Authenticatable
     public function getWorkDayNamesAttribute(): string
     {
         $days = $this->workDays()->orderBy('day_of_week')->get();
-        return $days->map(fn($d) => EmployeeWorkDay::DAYS[$d->day_of_week] ?? '')->implode(', ');
+
+        return $days->map(fn ($d) => EmployeeWorkDay::DAYS[$d->day_of_week] ?? '')->implode(', ');
     }
 
     /**
@@ -273,6 +277,7 @@ class User extends Authenticatable
         if ($this->position) {
             $parts[] = $this->position->name;
         }
+
         return implode(' - ', $parts) ?: 'Non assigné';
     }
 
@@ -286,14 +291,14 @@ class User extends Authenticatable
     public function scopeDepartedInPeriod($query, \Carbon\Carbon $start, \Carbon\Carbon $end)
     {
         return $query->whereBetween('contract_end_date', [$start, $end])
-                     ->whereNotNull('contract_end_date');
+            ->whereNotNull('contract_end_date');
     }
 
     public function scopeExpiringContracts($query, int $daysAhead = 30)
     {
         return $query->whereNotNull('contract_end_date')
-                     ->where('contract_end_date', '<=', now()->addDays($daysAhead))
-                     ->where('contract_end_date', '>=', now());
+            ->where('contract_end_date', '<=', now()->addDays($daysAhead))
+            ->where('contract_end_date', '>=', now());
     }
 
     public function scopeUpcomingBirthdays($query, int $daysAhead = 7)
@@ -301,7 +306,7 @@ class User extends Authenticatable
         return $query->whereNotNull('date_of_birth')
             ->whereRaw("DATE_FORMAT(date_of_birth, '%m-%d') BETWEEN ? AND ?", [
                 now()->format('m-d'),
-                now()->addDays($daysAhead)->format('m-d')
+                now()->addDays($daysAhead)->format('m-d'),
             ]);
     }
 
@@ -471,15 +476,16 @@ class User extends Authenticatable
         $absBalance = abs($balance);
         $hours = floor($absBalance / 60);
         $mins = $absBalance % 60;
-        
-        $formatted = $hours > 0 ? "{$hours}h" . ($mins > 0 ? sprintf('%02d', $mins) : '') : "{$mins} min";
-        
+
+        $formatted = $hours > 0 ? "{$hours}h".($mins > 0 ? sprintf('%02d', $mins) : '') : "{$mins} min";
+
         if ($balance > 0) {
             return "-{$formatted}"; // Deficit (needs to recover)
         } elseif ($balance < 0) {
             return "+{$formatted}"; // Surplus
         }
-        return "0";
+
+        return '0';
     }
 
     /**
@@ -488,8 +494,13 @@ class User extends Authenticatable
     public function getLateBalanceStatusAttribute(): string
     {
         $balance = $this->late_balance_minutes;
-        if ($balance > 30) return 'deficit'; // More than 30 min to recover
-        if ($balance > 0) return 'warning'; // Small deficit
+        if ($balance > 30) {
+            return 'deficit';
+        } // More than 30 min to recover
+        if ($balance > 0) {
+            return 'warning';
+        } // Small deficit
+
         return 'ok'; // No deficit or surplus
     }
 
@@ -646,7 +657,7 @@ class User extends Authenticatable
 
         $expiredMinutes = $this->expired_late_minutes;
         $expiringMinutes = $this->expiring_late_minutes;
-        $progressTowardsPenalty = $penaltyThreshold > 0 
+        $progressTowardsPenalty = $penaltyThreshold > 0
             ? min(100, round(($expiredMinutes / $penaltyThreshold) * 100))
             : 0;
 
