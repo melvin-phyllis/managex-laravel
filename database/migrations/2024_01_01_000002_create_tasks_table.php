@@ -17,10 +17,10 @@ return new class extends Migration
             $table->string('titre');
             $table->text('description')->nullable();
             $table->integer('progression')->default(0);
-            $table->enum('statut', ['pending', 'approved', 'rejected', 'completed'])->default('pending');
+            $table->string('statut')->default('pending'); // pending, approved, rejected, completed, validated
             $table->date('date_debut')->nullable();
             $table->date('date_fin')->nullable();
-            $table->enum('priorite', ['low', 'medium', 'high'])->default('medium');
+            $table->string('priorite')->default('medium'); // low, medium, high
             $table->timestamps();
         });
     }

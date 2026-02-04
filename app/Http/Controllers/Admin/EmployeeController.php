@@ -183,10 +183,10 @@ class EmployeeController extends Controller
         // Générer un mot de passe aléatoire
         $password = Str::random(12);
 
-        $employee = User::create([
+        // Créer l'instance User (password et role sont hors $fillable pour sécurité)
+        $employee = new User([
             'name' => $request->name,
             'email' => $request->email,
-            // 'role' défini explicitement après création pour sécurité
             'poste' => $request->poste,
             'telephone' => $request->telephone,
             'department_id' => $request->department_id,
@@ -213,10 +213,11 @@ class EmployeeController extends Controller
             'rtt_balance' => $request->rtt_balance ?? 0,
             'status' => 'active',
         ]);
-
+        
+        // Définir password et role explicitement (hors mass assignment)
         $employee->password = Hash::make($password);
-        $employee->saveQuietly();
-        $employee->setRole('employee')->save();
+        $employee->role = 'employee';
+        $employee->save();
 
         // Enregistrer les jours de travail
         foreach ($request->work_days as $day) {
@@ -463,5 +464,53 @@ class EmployeeController extends Controller
         ]);
 
         return back()->with('success', 'Document du contrat supprimé.');
+    }
+
+    /**
+     * Activer ou suspendre un compte employé.
+     */
+    public function toggleStatus(User $employee)
+    {
+        if ($employee->role !== 'employee') {
+            return back()->withErrors(['error' => 'Action non autorisée.']);
+        }
+
+        // Toggle entre active et suspended
+        $newStatus = $employee->status === 'active' ? 'suspended' : 'active';
+        $employee->update(['status' => $newStatus]);
+
+        $message = $newStatus === 'active' 
+            ? "Le compte de {$employee->name} a été activé."
+            : "Le compte de {$employee->name} a été suspendu.";
+
+        return back()->with('success', $message);
+    }
+
+    /**
+     * Suspendre un compte employé.
+     */
+    public function suspend(User $employee)
+    {
+        if ($employee->role !== 'employee') {
+            return back()->withErrors(['error' => 'Action non autorisée.']);
+        }
+
+        $employee->update(['status' => 'suspended']);
+
+        return back()->with('success', "Le compte de {$employee->name} a été suspendu.");
+    }
+
+    /**
+     * Activer un compte employé.
+     */
+    public function activate(User $employee)
+    {
+        if ($employee->role !== 'employee') {
+            return back()->withErrors(['error' => 'Action non autorisée.']);
+        }
+
+        $employee->update(['status' => 'active']);
+
+        return back()->with('success', "Le compte de {$employee->name} a été activé.");
     }
 }

@@ -35,7 +35,7 @@
     </template>
 </div>
 
-<script>
+<script nonce="{{ $cspNonce ?? '' }}">
 function realtimeToasts(notificationCountUrl) {
     return {
         toasts: [],

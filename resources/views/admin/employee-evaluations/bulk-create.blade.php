@@ -1,12 +1,12 @@
-<x-layouts.admin>
+﻿<x-layouts.admin>
     <div class="space-y-6">
         <!-- Header -->
         <div class="flex items-center justify-between">
             <div>
-                <h1 class="text-2xl font-bold text-gray-900">Évaluation groupée</h1>
+                <h1 class="text-2xl font-bold text-gray-900">évaluation groupée</h1>
                 <p class="text-sm text-gray-500 mt-1">
                     {{ \Carbon\Carbon::create()->month((int) $month)->translatedFormat('F') }} {{ $year }} - 
-                    {{ $employees->count() }} employé(s) à évaluer
+                    {{ $employees->count() }} employé(s) é  évaluer
                 </p>
             </div>
             <a href="{{ route('admin.employee-evaluations.index', ['month' => $month, 'year' => $year]) }}" 
@@ -25,7 +25,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                     </svg>
                 </div>
-                <p class="text-gray-500">Tous les employés ont déjà été évalués ce mois.</p>
+                <p class="text-gray-500">Tous les employés ont déjé  été évalués ce mois.</p>
             </div>
         @else
             <!-- Info -->
@@ -37,9 +37,9 @@
                         </svg>
                     </div>
                     <div>
-                        <p class="text-sm font-medium text-blue-900">Critères d'évaluation</p>
+                        <p class="text-sm font-medium text-blue-900">Critéres d'évaluation</p>
                         <p class="text-xs text-blue-700">
-                            Résolution problèmes (max 2) | Objectifs (max 0,5) | Pression (max 1) | Rendre compte (max 2) | <strong>Total max: 5,5</strong>
+                            Résolution problémes (max 2) | Objectifs (max 0,5) | Pression (max 1) | Rendre compte (max 2) | <strong>Total max: 5,5</strong>
                         </p>
                     </div>
                 </div>
@@ -138,7 +138,7 @@
         @endif
     </div>
 
-    <script>
+    <script nonce="{{ $cspNonce ?? '' }}">
         const smic = {{ $smic }};
 
         function updateRow(rowIndex) {

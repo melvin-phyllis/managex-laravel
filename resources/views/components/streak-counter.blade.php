@@ -11,7 +11,8 @@ $progressToMilestone = $nextMilestone > 0 ? min(100, ($currentStreak / $nextMile
 $isAtMilestone = in_array($currentStreak, $milestones);
 @endphp
 
-<div {{ $attributes->merge(['class' => ' w-full bg-gradient-to-r from-orange-400 via-orange-500 to-red-500 rounded-xl shadow-lg p-6 text-white animate-fade-in-up']) }}
+<div {{ $attributes->merge(['class' => 'w-full rounded-xl shadow-lg p-6 text-white animate-fade-in-up border']) }}
+     style="background: linear-gradient(90deg, rgba(149, 128, 111, 1) 14%, rgba(249, 115, 22, 1) 100%, rgba(200, 55, 55, 1) 67%); border-width: 1px;"
      x-data="streakCounter({{ $currentStreak }}, {{ $isAtMilestone ? 'true' : 'false' }})"
      x-init="init()">
 
@@ -113,7 +114,7 @@ $isAtMilestone = in_array($currentStreak, $milestones);
     @endif
 </div>
 
-<script>
+<script nonce="{{ $cspNonce ?? '' }}">
 function streakCounter(streak, isAtMilestone) {
     return {
         displayCount: 0,

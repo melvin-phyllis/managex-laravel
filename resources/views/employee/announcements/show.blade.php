@@ -1,4 +1,4 @@
-<x-layouts.employee>
+﻿<x-layouts.employee>
     <div class="max-w-3xl mx-auto space-y-6">
         <!-- Back Button -->
         <a href="{{ route('employee.announcements.index') }}" 
@@ -26,13 +26,13 @@
                     <div class="flex-1">
                         <div class="flex items-center gap-2 flex-wrap mb-1">
                             @if($announcement->is_pinned)
-                                <span>📌</span>
+                                <span>ðŸ“Œ</span>
                             @endif
                             <h1 class="text-2xl font-bold">{{ $announcement->title }}</h1>
                         </div>
                         <div class="flex items-center gap-4 text-sm opacity-90">
-                            <span>{{ $announcement->created_at->translatedFormat('l d F Y à H:i') }}</span>
-                            <span>•</span>
+                            <span>{{ $announcement->created_at->translatedFormat('l d F Y é  H:i') }}</span>
+                            <span>â€¢</span>
                             <span>Par {{ $announcement->creator?->name ?? 'Administration' }}</span>
                         </div>
                     </div>
@@ -41,12 +41,12 @@
                 <!-- Badges -->
                 <div class="flex flex-wrap gap-2 mt-4">
                     @if($announcement->priority === 'critical')
-                        <span class="px-3 py-1 text-xs font-medium bg-white/20 rounded-full">🚨 Critique</span>
+                        <span class="px-3 py-1 text-xs font-medium bg-white/20 rounded-full">ðŸš Critique</span>
                     @elseif($announcement->priority === 'high')
-                        <span class="px-3 py-1 text-xs font-medium bg-white/20 rounded-full">⚡ Haute priorité</span>
+                        <span class="px-3 py-1 text-xs font-medium bg-white/20 rounded-full">âš¡ Haute priorité</span>
                     @endif
                     @if($announcement->requires_acknowledgment)
-                        <span class="px-3 py-1 text-xs font-medium bg-white/20 rounded-full">✅ Accusé requis</span>
+                        <span class="px-3 py-1 text-xs font-medium bg-white/20 rounded-full">âœ… Accusé requis</span>
                     @endif
                     <span class="px-3 py-1 text-xs font-medium bg-white/20 rounded-full">{{ $announcement->target_label }}</span>
                 </div>
@@ -92,7 +92,7 @@
                                 </div>
                                 <button id="acknowledgeBtn" onclick="acknowledgeAnnouncement()"
                                         class="px-6 py-2.5 bg-purple-600 text-white font-medium rounded-lg hover:bg-purple-700 transition-colors">
-                                    ✓ J'ai pris connaissance
+                                    âœ“ J'ai pris connaissance
                                 </button>
                             </div>
                         </div>
@@ -103,7 +103,7 @@
             <!-- Footer -->
             <div class="px-6 py-4 bg-gray-50 border-t border-gray-100">
                 <div class="flex items-center justify-between text-sm text-gray-500">
-                    <span>✓ Lu le {{ now()->format('d/m/Y à H:i') }}</span>
+                    <span>âœ“ Lu le {{ now()->format('d/m/Y é  H:i') }}</span>
                     @if($announcement->end_date)
                         <span>Valable jusqu'au {{ $announcement->end_date->format('d/m/Y') }}</span>
                     @endif
@@ -113,7 +113,7 @@
     </div>
 
     @push('scripts')
-    <script>
+    <script nonce="{{ $cspNonce ?? '' }}">
         function acknowledgeAnnouncement() {
             const btn = document.getElementById('acknowledgeBtn');
             btn.disabled = true;
@@ -129,7 +129,7 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    btn.textContent = '✓ Confirmé !';
+                    btn.textContent = 'âœ“ Confirmé !';
                     btn.classList.remove('bg-purple-600', 'hover:bg-purple-700');
                     btn.classList.add('bg-green-600');
                     

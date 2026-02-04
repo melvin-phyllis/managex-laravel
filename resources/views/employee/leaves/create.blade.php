@@ -1,4 +1,4 @@
-<x-layouts.employee>
+﻿<x-layouts.employee>
     <div class="space-y-6">
         <!-- Header avec gradient -->
         <div class="bg-gradient-to-r from-teal-600 via-cyan-600 to-blue-600 rounded-2xl p-6 text-white shadow-xl">
@@ -68,7 +68,7 @@
                                         </svg>
                                     </div>
                                     <div>
-                                        <p class="font-semibold text-gray-900">Arrêt maladie</p>
+                                        <p class="font-semibold text-gray-900">Arréªt maladie</p>
                                         <p class="text-xs text-gray-500">Raison médicale</p>
                                     </div>
                                     <div x-show="selectedType === 'maladie'" class="ml-auto">
@@ -91,7 +91,7 @@
                                     </div>
                                     <div>
                                         <p class="font-semibold text-gray-900">Autre</p>
-                                        <p class="text-xs text-gray-500">Événement familial...</p>
+                                        <p class="text-xs text-gray-500">événement familial...</p>
                                     </div>
                                     <div x-show="selectedType === 'autre'" class="ml-auto">
                                         <svg class="w-6 h-6 text-amber-600" fill="currentColor" viewBox="0 0 20 20">
@@ -189,7 +189,7 @@
                         </div>
                         <div>
                             <p class="text-sm font-medium text-blue-800">Information</p>
-                            <p class="text-sm text-blue-700 mt-1">Votre demande sera envoyée à l'administrateur pour approbation. Vous recevrez une notification dès qu'une décision sera prise.</p>
+                            <p class="text-sm text-blue-700 mt-1">Votre demande sera envoyée é  l'administrateur pour approbation. Vous recevrez une notification dés qu'une décision sera prise.</p>
                         </div>
                     </div>
                 </div>
@@ -212,7 +212,7 @@
         </div>
     </div>
 
-    <script>
+    <script nonce="{{ $cspNonce ?? '' }}">
         const dateDebut = document.getElementById('date_debut');
         const dateFin = document.getElementById('date_fin');
         const durationInfo = document.getElementById('duration-info');

@@ -1,4 +1,4 @@
-<x-layouts.admin>
+﻿<x-layouts.admin>
     <div class="space-y-6">
         <!-- Header avec gradient -->
         <div class="relative overflow-hidden bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-600 rounded-2xl shadow-xl">
@@ -30,7 +30,7 @@
                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                             </svg>
-                            Évaluer mes stagiaires
+                            évaluer mes stagiaires
                         </a>
                         @endif
                         @if(($stats['pending_evaluations'] ?? 0) > 0)
@@ -86,7 +86,7 @@
                 </div>
             </div>
 
-            <!-- Évaluations cette semaine -->
+            <!-- évaluations cette semaine -->
             <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
                 <div class="flex items-center gap-3">
                     <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-500/30">
@@ -117,7 +117,7 @@
             </div>
         </div>
 
-        <!-- Distribution des notes (Chart) + Évaluations récentes -->
+        <!-- Distribution des notes (Chart) + évaluations récentes -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <!-- Distribution des notes -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
@@ -137,14 +137,14 @@
                 </div>
             </div>
 
-            <!-- Évaluations récentes -->
+            <!-- évaluations récentes -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                 <div class="bg-gradient-to-r from-blue-500 to-indigo-600 px-5 py-4 flex items-center justify-between">
                     <h3 class="text-white font-semibold flex items-center gap-2">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                         </svg>
-                        Évaluations récentes
+                        évaluations récentes
                     </h3>
                     <span class="px-2 py-1 bg-white/20 text-white text-xs font-medium rounded-full">
                         {{ count($recentEvaluations) }} récentes
@@ -213,8 +213,8 @@
                             <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Stagiaire</th>
                             <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Département</th>
                             <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Tuteur</th>
-                            <th class="px-6 py-4 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">Évaluations</th>
-                            <th class="px-6 py-4 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">Dernière note</th>
+                            <th class="px-6 py-4 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">évaluations</th>
+                            <th class="px-6 py-4 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">Derniére note</th>
                             <th class="px-6 py-4 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">Actions</th>
                         </tr>
                     </thead>
@@ -308,7 +308,7 @@
                                             </svg>
                                         </div>
                                         <p class="text-gray-500 font-medium">Aucun stagiaire enregistré</p>
-                                        <p class="text-gray-400 text-sm mt-1">Les stagiaires apparaîtront ici une fois ajoutés</p>
+                                        <p class="text-gray-400 text-sm mt-1">Les stagiaires apparaé®tront ici une fois ajoutés</p>
                                     </div>
                                 </td>
                             </tr>
@@ -320,14 +320,14 @@
     </div>
 
     @push('scripts')
-    <script>
+    <script nonce="{{ $cspNonce ?? '' }}">
         document.addEventListener('DOMContentLoaded', function() {
             const ctx = document.getElementById('gradeDistributionChart');
             if (ctx) {
                 new Chart(ctx, {
                     type: 'doughnut',
                     data: {
-                        labels: ['A (Excellent)', 'B (Bien)', 'C (Satisfaisant)', 'D (À améliorer)', 'E (Insuffisant)'],
+                        labels: ['A (Excellent)', 'B (Bien)', 'C (Satisfaisant)', 'D (é€ améliorer)', 'E (Insuffisant)'],
                         datasets: [{
                             data: [
                                 {{ $scoreDistribution['A'] ?? 0 }},

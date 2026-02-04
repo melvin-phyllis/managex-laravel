@@ -1,7 +1,7 @@
-<x-layouts.employee>
+﻿<x-layouts.employee>
     <div class="space-y-6">
         <!-- Header -->
-        <x-table-header title="Mes Évaluations" subtitle="Suivi de ma progression" class="animate-fade-in-up">
+        <x-table-header title="Mes évaluations" subtitle="Suivi de ma progression" class="animate-fade-in-up">
             <x-slot:icon>
                 <div class="w-12 h-12 bg-gradient-to-br from-violet-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-violet-500/20">
                     <x-icon name="clipboard-check" class="w-6 h-6 text-white" />
@@ -34,7 +34,7 @@
             <!-- Latest Evaluation -->
             @if($latestEvaluation)
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Dernière évaluation</h3>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Derniére évaluation</h3>
                     <div class="text-center">
                         <div class="inline-flex items-center justify-center w-20 h-20 rounded-full 
                             @if($latestEvaluation->grade_letter === 'A') bg-green-100 text-green-600
@@ -137,7 +137,7 @@
     </div>
 
     @push('scripts')
-    <script>
+    <script nonce="{{ $cspNonce ?? '' }}">
         document.addEventListener('DOMContentLoaded', function() {
             const ctx = document.getElementById('progressionChart');
             if (ctx) {

@@ -62,9 +62,9 @@ class AppServiceProvider extends ServiceProvider
             return Limit::perMinute(10)->by($request->user()?->id ?: $request->ip());
         });
 
-        // Limite pour les exports/rapports: 5 par minute (opérations lourdes)
+        // Limite pour les exports/rapports: 15 par minute (opérations lourdes)
         RateLimiter::for('exports', function (Request $request) {
-            return Limit::perMinute(5)->by($request->user()?->id ?: $request->ip());
+            return Limit::perMinute(15)->by($request->user()?->id ?: $request->ip());
         });
 
         // Limite stricte pour le login: 5 tentatives par minute
@@ -75,6 +75,11 @@ class AppServiceProvider extends ServiceProvider
         // Limite pour les actions sensibles (suppression, etc.): 20 par minute
         RateLimiter::for('sensitive', function (Request $request) {
             return Limit::perMinute(20)->by($request->user()?->id ?: $request->ip());
+        });
+
+        // Limite pour les requêtes IA: 10 par minute par utilisateur
+        RateLimiter::for('ai', function (Request $request) {
+            return Limit::perMinute(10)->by($request->user()?->id ?: $request->ip());
         });
     }
 }

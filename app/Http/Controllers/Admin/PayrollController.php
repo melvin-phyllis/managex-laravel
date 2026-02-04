@@ -71,11 +71,13 @@ class PayrollController extends Controller
 
         try {
             $user = User::findOrFail($request->user_id);
+            // SECURITE: utiliser validated() au lieu de all() pour ne passer que les données validées
+            $validatedData = $request->validated();
             $payroll = $this->payrollService->calculatePayroll(
                 $user,
-                $request->mois,
-                $request->annee,
-                $request->all()
+                $validatedData['mois'],
+                $validatedData['annee'],
+                $validatedData
             );
 
             // Mettre à jour les notes

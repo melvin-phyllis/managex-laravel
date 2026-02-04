@@ -1,4 +1,4 @@
-<x-layouts.admin>
+﻿<x-layouts.admin>
     <div class="space-y-6" x-data="employeeEditForm()">
         <!-- Header -->
         <div class="flex items-center justify-between animate-fade-in-up">
@@ -261,7 +261,7 @@
                         </div>
 
                         <div>
-                            <label for="base_salary" class="block text-sm font-medium text-gray-700 mb-1">Salaire brut mensuel (€)</label>
+                            <label for="base_salary" class="block text-sm font-medium text-gray-700 mb-1">Salaire brut mensuel (â‚¬)</label>
                             <input type="number" name="base_salary" id="base_salary" value="{{ old('base_salary', $employee->base_salary) }}" step="0.01" min="0"
                                    class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
                         </div>
@@ -276,7 +276,7 @@
                         <svg class="w-5 h-5 mr-2 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
                         </svg>
-                        Fiscalité (Côte d'Ivoire)
+                        Fiscalité (Cé´te d'Ivoire)
                     </h2>
                 </div>
                 <div class="p-6">
@@ -384,7 +384,7 @@
                                 <option value="Conjoint(e)" {{ old('emergency_contact_relationship', $employee->emergency_contact_relationship) == 'Conjoint(e)' ? 'selected' : '' }}>Conjoint(e)</option>
                                 <option value="Parent" {{ old('emergency_contact_relationship', $employee->emergency_contact_relationship) == 'Parent' ? 'selected' : '' }}>Parent</option>
                                 <option value="Enfant" {{ old('emergency_contact_relationship', $employee->emergency_contact_relationship) == 'Enfant' ? 'selected' : '' }}>Enfant</option>
-                                <option value="Frère/Sœur" {{ old('emergency_contact_relationship', $employee->emergency_contact_relationship) == 'Frère/Sœur' ? 'selected' : '' }}>Frère/Sœur</option>
+                                <option value="Frére/SÅ“ur" {{ old('emergency_contact_relationship', $employee->emergency_contact_relationship) == 'Frére/SÅ“ur' ? 'selected' : '' }}>Frére/SÅ“ur</option>
                                 <option value="Ami(e)" {{ old('emergency_contact_relationship', $employee->emergency_contact_relationship) == 'Ami(e)' ? 'selected' : '' }}>Ami(e)</option>
                                 <option value="Autre" {{ old('emergency_contact_relationship', $employee->emergency_contact_relationship) == 'Autre' ? 'selected' : '' }}>Autre</option>
                             </select>
@@ -406,7 +406,7 @@
                 <div class="p-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         <div>
-                            <label for="social_security_number" class="block text-sm font-medium text-gray-700 mb-1">N° Sécurité sociale</label>
+                            <label for="social_security_number" class="block text-sm font-medium text-gray-700 mb-1">NÂ° Sécurité sociale</label>
                             <input type="text" name="social_security_number" id="social_security_number" value="{{ old('social_security_number', $employee->social_security_number) }}"
                                    class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
                         </div>
@@ -483,7 +483,7 @@
         </form>
     </div>
 
-    <script>
+    <script nonce="{{ $cspNonce ?? '' }}">
         function employeeEditForm() {
             return {
                 departmentId: '{{ old('department_id', $employee->department_id ?? '') }}',

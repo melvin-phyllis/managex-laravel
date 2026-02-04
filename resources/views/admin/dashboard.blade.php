@@ -312,7 +312,7 @@
     </div>
 
     @push('scripts')
-    <script>
+    <script nonce="{{ $cspNonce ?? '' }}">
         const presenceData = @json($presenceData);
         const taskData = @json($taskData);
         const leaveData = @json($leaveData);

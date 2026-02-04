@@ -172,7 +172,7 @@ $today = now();
     </template>
 </div>
 
-<script>
+<script nonce="{{ $cspNonce ?? '' }}">
 function miniCalendar(events, initialMonth, initialYear) {
     const monthNames = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
                        'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];

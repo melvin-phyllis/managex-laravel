@@ -1,4 +1,4 @@
-<x-layouts.admin>
+﻿<x-layouts.admin>
     <div class="space-y-6" x-data="taskManager()">
         <!-- Header amélioré -->
         <div class="relative overflow-hidden bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 rounded-2xl shadow-xl animate-fade-in-up">
@@ -13,7 +13,7 @@
                             <ol class="inline-flex items-center space-x-1">
                                 <li><a href="{{ route('admin.dashboard') }}" class="text-white/70 hover:text-white text-sm">Dashboard</a></li>
                                 <li><span class="text-white/50 mx-2">/</span></li>
-                                <li><span class="text-white text-sm font-medium">Tâches</span></li>
+                                <li><span class="text-white text-sm font-medium">Taches</span></li>
                             </ol>
                         </nav>
                         <h1 class="text-2xl md:text-3xl font-bold text-white flex items-center gap-3">
@@ -22,9 +22,9 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
                                 </svg>
                             </div>
-                            Gestion des Tâches
+                            Gestion des Taches
                         </h1>
-                        <p class="text-white/80 mt-2">Assignation, suivi et validation des tâches collaborateurs</p>
+                        <p class="text-white/80 mt-2">Assignation, suivi et validation des taches collaborateurs</p>
                     </div>
                     <div class="flex flex-wrap items-center gap-2">
                         <!-- Toggle View -->
@@ -41,19 +41,25 @@
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/></svg>
                                 Kanban
                             </button>
+                            <button @click="viewMode = 'calendar'; $nextTick(() => initCalendar())" 
+                                    :class="viewMode === 'calendar' ? 'bg-white text-purple-700' : 'text-white hover:bg-white/20'"
+                                    class="px-3 py-2 rounded-lg font-medium text-sm transition-all flex items-center gap-1">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                Calendrier
+                            </button>
                         </div>
                         <a href="{{ route('admin.tasks.create') }}" class="px-4 py-2.5 bg-white text-purple-700 font-semibold rounded-xl hover:bg-purple-50 transition-all shadow-lg flex items-center">
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
                             </svg>
-                            Nouvelle tâche
+                            Nouvelle tache
                         </a>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Stats Cards (optimisé: données depuis le contrôleur) -->
+        <!-- Stats Cards (optimisé: données depuis le contré´leur) -->
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 animate-fade-in-up animation-delay-100">
             @php
                 $stats = [
@@ -99,7 +105,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                     </svg>
                     <input type="text" name="search" value="{{ request('search') }}" 
-                           placeholder="Rechercher une tâche..." 
+                           placeholder="Rechercher une tache..." 
                            class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-sm">
                 </div>
 
@@ -119,7 +125,7 @@
                         <option value="">Tous statuts</option>
                         <option value="pending" {{ request('statut') == 'pending' ? 'selected' : '' }}>En attente</option>
                         <option value="approved" {{ request('statut') == 'approved' ? 'selected' : '' }}>En cours</option>
-                        <option value="completed" {{ request('statut') == 'completed' ? 'selected' : '' }}>Terminée (à valider)</option>
+                        <option value="completed" {{ request('statut') == 'completed' ? 'selected' : '' }}>Terminée (é  valider)</option>
                         <option value="validated" {{ request('statut') == 'validated' ? 'selected' : '' }}>Validée</option>
                         <option value="rejected" {{ request('statut') == 'rejected' ? 'selected' : '' }}>Rejetée</option>
                     </select>
@@ -200,11 +206,11 @@
                 <div class="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center flex-shrink-0">
                     <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                 </div>
-                <p class="text-sm text-indigo-700">Glissez-déposez les tâches entre les colonnes pour changer leur statut</p>
+                <p class="text-sm text-indigo-700">Glissez-déposez les taches entre les colonnes pour changer leur statut</p>
             </div>
 
             @php
-                // $kanbanTasks passé depuis le contrôleur (optimisé)
+                // $kanbanTasks passé depuis le contré´leur (optimisé)
                 $columns = [
                     'pending' => ['title' => 'En attente', 'color' => 'amber', 'icon' => 'clock'],
                     'approved' => ['title' => 'En cours', 'color' => 'blue', 'icon' => 'play'],
@@ -302,7 +308,7 @@
                             @if(($kanbanTasks->get($status)?->count() ?? 0) === 0)
                                 <div class="kanban-empty text-center py-8 text-gray-400 text-sm">
                                     <svg class="w-8 h-8 mx-auto mb-2 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
-                                    Déposez une tâche ici
+                                    Déposez une tache ici
                                 </div>
                             @endif
                         </div>
@@ -311,17 +317,24 @@
             </div>
         </div>
 
+        <!-- Calendar View -->
+        <div x-show="viewMode === 'calendar'" x-cloak class="animate-fade-in-up">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 md:p-6">
+                <div id="tasksCalendar" class="min-h-[600px]"></div>
+            </div>
+        </div>
+
         <!-- Table View -->
         <div x-show="viewMode === 'table'" class="animate-fade-in-up">
         <x-data-table>
             <x-slot:header>
                 <tr>
-                    <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Tâche</th>
+                    <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Tache</th>
                     <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Employé</th>
                     <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider w-48">Progression</th>
                     <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Priorité</th>
                     <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Statut</th>
-                    <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Échéance</th>
+                    <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">éƒâ€°chéance</th>
                     <th class="px-6 py-4 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">Actions</th>
                 </tr>
             </x-slot:header>
@@ -429,8 +442,8 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
                                     </svg>
                                 </div>
-                                <p class="text-lg font-medium text-gray-900">Aucune tâche trouvée</p>
-                                <p class="text-sm text-gray-500 mt-1">Modifiez vos filtres ou assignez une nouvelle tâche.</p>
+                                <p class="text-lg font-medium text-gray-900">Aucune tache trouvée</p>
+                                <p class="text-sm text-gray-500 mt-1">Modifiez vos filtres ou assignez une nouvelle tache.</p>
                             </div>
                         </td>
                     </tr>
@@ -443,7 +456,7 @@
         </x-data-table>
         </div>
 
-    <script>
+    <script nonce="{{ $cspNonce ?? '' }}">
         function taskManager() {
             return {
                 viewMode: localStorage.getItem('taskViewMode') || 'table',
@@ -546,7 +559,7 @@
                             if (!emptyDiv) {
                                 emptyDiv = document.createElement('div');
                                 emptyDiv.className = 'kanban-empty text-center py-8 text-gray-400 text-sm';
-                                emptyDiv.innerHTML = '<svg class="w-8 h-8 mx-auto mb-2 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>Déposez une tâche ici';
+                                emptyDiv.innerHTML = '<svg class="w-8 h-8 mx-auto mb-2 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>Déposez une tache ici';
                                 sourceColumn.appendChild(emptyDiv);
                             }
                             emptyDiv.style.display = 'block';
@@ -568,11 +581,11 @@
                         const data = await response.json();
 
                         if (data.success) {
-                            this.showToast('Statut mis à jour avec succès', 'success');
+                            this.showToast('Statut mis é  jour avec succés', 'success');
                         } else {
                             // Revert on error
                             this.revertMove(taskCard, sourceColumn, oldStatus, newStatus);
-                            this.showToast(data.message || 'Erreur lors de la mise à jour', 'error');
+                            this.showToast(data.message || 'Erreur lors de la mise é  jour', 'error');
                         }
                     } catch (error) {
                         console.error('Error updating task:', error);
@@ -648,7 +661,7 @@
                         <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
                             <h3 class="text-base font-semibold leading-6 text-gray-900" id="modal-title">Confirmer la suppression</h3>
                             <div class="mt-2">
-                                <p class="text-sm text-gray-500">Êtes-vous sûr de vouloir supprimer cette tâche ? Cette action est irréversible.</p>
+                                <p class="text-sm text-gray-500">éƒÅ tes-vous sé»r de vouloir supprimer cette tache ? Cette action est irréversible.</p>
                             </div>
                         </div>
                     </div>
@@ -672,4 +685,95 @@
         </div>
     </div>
     </div>
+
+    @push('scripts')
+    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css' rel='stylesheet' />
+    <script nonce="{{ $cspNonce ?? '' }}" src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
+    <script nonce="{{ $cspNonce ?? '' }}">
+        let calendarInstance = null;
+        
+        function initCalendar() {
+            if (calendarInstance) {
+                calendarInstance.render();
+                return;
+            }
+            
+            const calendarEl = document.getElementById('tasksCalendar');
+            if (!calendarEl) return;
+            
+            const tasks = @json($tasks->items());
+            const events = tasks.map(task => {
+                const priorityColors = {
+                    high: { bg: '#ef4444', border: '#dc2626' },
+                    medium: { bg: '#f59e0b', border: '#d97706' },
+                    low: { bg: '#22c55e', border: '#16a34a' }
+                };
+                const statusColors = {
+                    pending: { bg: '#fbbf24', border: '#f59e0b' },
+                    approved: { bg: '#3b82f6', border: '#2563eb' },
+                    in_progress: { bg: '#8b5cf6', border: '#7c3aed' },
+                    completed: { bg: '#a855f7', border: '#9333ea' },
+                    validated: { bg: '#22c55e', border: '#16a34a' },
+                    rejected: { bg: '#ef4444', border: '#dc2626' }
+                };
+                const colors = statusColors[task.statut] || priorityColors[task.priorite] || { bg: '#6b7280', border: '#4b5563' };
+                
+                return {
+                    id: task.id,
+                    title: task.titre,
+                    start: task.date_debut || task.created_at,
+                    end: task.date_fin,
+                    backgroundColor: colors.bg,
+                    borderColor: colors.border,
+                    extendedProps: {
+                        status: task.statut,
+                        priority: task.priorite,
+                        employee: task.user?.name,
+                        progression: task.progression
+                    }
+                };
+            });
+            
+            calendarInstance = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                locale: 'fr',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,listWeek'
+                },
+                buttonText: {
+                    today: "Aujourd'hui",
+                    month: 'Mois',
+                    week: 'Semaine',
+                    list: 'Liste'
+                },
+                events: events,
+                eventClick: function(info) {
+                    window.location.href = '/admin/tasks/' + info.event.id;
+                },
+                eventDidMount: function(info) {
+                    const props = info.event.extendedProps;
+                    let tooltip = info.event.title;
+                    if (props.employee) tooltip += '\né°Å¸â€˜Â¤ ' + props.employee;
+                    if (props.progression !== undefined) tooltip += '\né°Å¸â€œÅ  ' + props.progression + '%';
+                    info.el.title = tooltip;
+                },
+                height: 'auto',
+                dayMaxEvents: 3,
+                moreLinkText: function(n) { return '+' + n + ' autres'; },
+                noEventsText: 'Aucune tache'
+            });
+            
+            calendarInstance.render();
+        }
+        
+        // Initialize if calendar view is default
+        document.addEventListener('DOMContentLoaded', function() {
+            if (localStorage.getItem('taskViewMode') === 'calendar') {
+                setTimeout(initCalendar, 100);
+            }
+        });
+    </script>
+    @endpush
 </x-layouts.admin>

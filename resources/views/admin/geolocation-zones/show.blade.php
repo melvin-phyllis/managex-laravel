@@ -1,4 +1,4 @@
-<x-layouts.admin>
+﻿<x-layouts.admin>
     <x-slot name="header">
         <!-- Header moderne avec gradient -->
         <div class="bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 -mx-4 sm:-mx-6 lg:-mx-8 -mt-4 px-4 sm:px-6 lg:px-8 py-6 mb-4">
@@ -126,7 +126,7 @@
                             <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
                             </svg>
-                            Paramètres GPS
+                            Paramétres GPS
                         </h3>
                     </div>
 
@@ -167,7 +167,7 @@
                                 </div>
                                 <div class="flex-1 min-w-0">
                                     <p class="text-xs text-gray-500 font-medium uppercase tracking-wider">Rayon</p>
-                                    <p class="text-base font-bold text-gray-900">{{ $geolocationZone->radius }} <span class="text-sm font-normal text-gray-600">mètres</span></p>
+                                    <p class="text-base font-bold text-gray-900">{{ $geolocationZone->radius }} <span class="text-sm font-normal text-gray-600">métres</span></p>
                                 </div>
                             </div>
                         </div>
@@ -185,7 +185,7 @@
                     </a>
                     <a href="{{ route('admin.geolocation-zones.index') }}"
                        class="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors text-center">
-                        Retour à la liste
+                        Retour é  la liste
                     </a>
                 </div>
             </div>
@@ -200,7 +200,7 @@
                             </svg>
                             Visualisation de la zone
                         </h3>
-                        <p class="text-sm text-gray-500 mt-1">Aperçu de la zone de pointage autorisée</p>
+                        <p class="text-sm text-gray-500 mt-1">Aperé§u de la zone de pointage autorisée</p>
                     </div>
 
                     <div class="p-4">
@@ -209,7 +209,7 @@
                             <svg class="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
                             </svg>
-                            <span>Le cercle représente la zone de <strong>{{ $geolocationZone->radius }} mètres</strong> dans laquelle les employés peuvent pointer leur présence.</span>
+                            <span>Le cercle représente la zone de <strong>{{ $geolocationZone->radius }} métres</strong> dans laquelle les employés peuvent pointer leur présence.</span>
                         </div>
                     </div>
 
@@ -220,7 +220,7 @@
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                             </svg>
-                            Retour à la liste
+                            Retour é  la liste
                         </a>
                         <div class="flex gap-3">
                             <a href="{{ route('admin.geolocation-zones.edit', $geolocationZone) }}"
@@ -238,8 +238,8 @@
     </div>
 
     <!-- Leaflet JS -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script>
+    <script nonce="{{ $cspNonce ?? '' }}" src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script nonce="{{ $cspNonce ?? '' }}">
         document.addEventListener('DOMContentLoaded', function() {
             const lat = {{ $geolocationZone->latitude }};
             const lng = {{ $geolocationZone->longitude }};
@@ -249,7 +249,7 @@
             const map = L.map('map').setView([lat, lng], 15);
 
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '© OpenStreetMap contributors'
+                attribution: 'é‚Â OpenStreetMap contributors'
             }).addTo(map);
 
             // Marqueur avec popup personnalisé

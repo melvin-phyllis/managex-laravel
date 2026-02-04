@@ -3,8 +3,9 @@ $notifications = auth()->user()->unreadNotifications()->take(5)->get();
 $count = auth()->user()->unreadNotifications()->count();
 $isAdmin = auth()->user()->role === 'admin';
 
-// Helper function to get notification message
-function getNotificationMessage($notification) {
+// Helper function to get notification message (use function_exists to avoid redeclare error)
+if (!function_exists('getNotificationMessage')) {
+    function getNotificationMessage($notification) {
     $data = $notification->data;
     
     // If message exists, use it
@@ -79,6 +80,7 @@ function getNotificationMessage($notification) {
             return 'Nouvelle notification';
     }
 }
+} // End function_exists check
 @endphp
 
 <div x-data="notifDropdown()" @new-notification.window="addNotification($event.detail)" class="relative">
@@ -203,7 +205,7 @@ function getNotificationMessage($notification) {
     </div>
 </div>
 
-<script>
+<script nonce="{{ $cspNonce ?? '' }}">
 function notifDropdown() {
     return {
         open: false,

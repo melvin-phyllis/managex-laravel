@@ -12,8 +12,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Modifier l'enum pour ajouter 'validated'
-        DB::statement("ALTER TABLE tasks MODIFY COLUMN statut ENUM('pending', 'approved', 'rejected', 'completed', 'validated') DEFAULT 'pending'");
+        // SQLite doesn't support ENUM or MODIFY COLUMN, skip for SQLite
+        // (SQLite stores ENUM as TEXT, so 'validated' values will work)
+        if (DB::connection()->getDriverName() === 'mysql') {
+            DB::statement("ALTER TABLE tasks MODIFY COLUMN statut ENUM('pending', 'approved', 'rejected', 'completed', 'validated') DEFAULT 'pending'");
+        }
     }
 
     /**
@@ -21,7 +24,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        // Remettre l'ancien enum
-        DB::statement("ALTER TABLE tasks MODIFY COLUMN statut ENUM('pending', 'approved', 'rejected', 'completed') DEFAULT 'pending'");
+        if (DB::connection()->getDriverName() === 'mysql') {
+            DB::statement("ALTER TABLE tasks MODIFY COLUMN statut ENUM('pending', 'approved', 'rejected', 'completed') DEFAULT 'pending'");
+        }
     }
 };

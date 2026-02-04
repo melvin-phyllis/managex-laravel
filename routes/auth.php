@@ -58,9 +58,14 @@ Route::middleware('auth')->group(function () {
     Route::get('confirm-password', [ConfirmablePasswordController::class, 'show'])
                 ->name('password.confirm');
 
-    Route::post('confirm-password', [ConfirmablePasswordController::class, 'store']);
+    // SÉCURITÉ: Rate limit sur la confirmation de mot de passe (5 tentatives par minute)
+    Route::post('confirm-password', [ConfirmablePasswordController::class, 'store'])
+                ->middleware('throttle:5,1');
 
-    Route::put('password', [PasswordController::class, 'update'])->name('password.update');
+    // SÉCURITÉ: Rate limit sur la mise à jour du mot de passe
+    Route::put('password', [PasswordController::class, 'update'])
+                ->middleware('throttle:5,1')
+                ->name('password.update');
 
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
                 ->name('logout');

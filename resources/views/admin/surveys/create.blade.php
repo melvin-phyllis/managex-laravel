@@ -1,4 +1,4 @@
-<x-layouts.admin>
+﻿<x-layouts.admin>
     <div class="space-y-6">
         <!-- Breadcrumb -->
         <nav class="flex animate-fade-in-up" aria-label="Breadcrumb">
@@ -137,8 +137,8 @@
                                 <!-- Options for choice type -->
                                 <div x-show="question.type === 'choice'" class="md:col-span-2 pl-4 border-l-2 border-blue-200 mt-2">
                                     <label class="block text-sm font-medium text-gray-700 mb-1">Options (une par ligne)</label>
-                                    <textarea :name="'questions[' + index + '][options]'" x-model="question.options" rows="3" class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 bg-white" placeholder="Très satisfait&#10;Satisfait&#10;Neutre&#10;Insatisfait"></textarea>
-                                    <p class="text-xs text-gray-500 mt-1">Chaque ligne correspondra à une option de réponse.</p>
+                                    <textarea :name="'questions[' + index + '][options]'" x-model="question.options" rows="3" class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 bg-white" placeholder="Trés satisfait&#10;Satisfait&#10;Neutre&#10;Insatisfait"></textarea>
+                                    <p class="text-xs text-gray-500 mt-1">Chaque ligne correspondra é  une option de réponse.</p>
                                 </div>
                             </div>
 
@@ -151,7 +151,7 @@
                             <x-icon name="help-circle" class="w-6 h-6 text-gray-400" />
                         </div>
                         <p class="text-gray-500 font-medium">Aucune question ajoutée pour le moment.</p>
-                        <p class="text-gray-400 text-sm mt-1">Commencez par ajouter des questions à votre sondage.</p>
+                        <p class="text-gray-400 text-sm mt-1">Commencez par ajouter des questions é  votre sondage.</p>
                     </div>
                 </div>
             </div>
@@ -168,7 +168,7 @@
     </div>
 
     @push('scripts')
-    <script>
+    <script nonce="{{ $cspNonce ?? '' }}">
         function surveyForm() {
             return {
                 questions: [],

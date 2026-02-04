@@ -1,4 +1,4 @@
-<x-layouts.employee>
+﻿<x-layouts.employee>
     <div class="w-full mx-auto space-y-6">
         <!-- Header -->
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden animate-fade-in-up">
@@ -195,7 +195,7 @@
                 </div>
             </div>
             
-            <p class="text-xs text-gray-400 mt-4">Ces informations sont gérées par les RH et ne peuvent pas être modifiées.</p>
+            <p class="text-xs text-gray-400 mt-4">Ces informations sont gérées par les RH et ne peuvent pas éªtre modifiées.</p>
         </div>
 
         <!-- Security -->
@@ -207,7 +207,7 @@
             <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                 <div>
                     <p class="font-medium text-gray-900">Mot de passe</p>
-                    <p class="text-sm text-gray-500">Dernière modification : {{ $user->updated_at->diffForHumans() }}</p>
+                    <p class="text-sm text-gray-500">Derniére modification : {{ $user->updated_at->diffForHumans() }}</p>
                 </div>
                 <button onclick="document.getElementById('passwordModal').classList.remove('hidden')" 
                         class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">
@@ -290,7 +290,7 @@
                                            class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">N° CNPS</label>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">NÂ° CNPS</label>
                                     <input type="text" name="cnps_number" value="{{ $user->cnps_number }}"
                                            class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
                                 </div>
@@ -403,7 +403,7 @@
                         <label class="block text-sm font-medium text-gray-700 mb-1">Nouveau mot de passe</label>
                         <input type="password" name="password" required minlength="8"
                                class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
-                        <p class="text-xs text-gray-500 mt-1">Min 8 caractères, majuscule, minuscule et chiffre</p>
+                        <p class="text-xs text-gray-500 mt-1">Min 8 caractéres, majuscule, minuscule et chiffre</p>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Confirmer le mot de passe</label>
@@ -424,7 +424,7 @@
         </div>
     </div>
 
-    <script>
+    <script nonce="{{ $cspNonce ?? '' }}">
         function previewAvatar(input) {
             if (input.files && input.files[0]) {
                 const reader = new FileReader();

@@ -1,4 +1,4 @@
-<x-layouts.admin>
+﻿<x-layouts.admin>
     <div class="space-y-6" x-data="masterViewPage()" x-init="init()">
         <!-- Breadcrumbs -->
         <nav class="flex" aria-label="Breadcrumb">
@@ -81,7 +81,7 @@
                         <template x-if="filters.period === 'custom'">
                             <div class="flex items-center gap-2">
                                 <input type="date" x-model="filters.start_date" @change="loadData()" class="rounded-lg border-gray-300 text-sm">
-                                <span class="text-gray-400">→</span>
+                                <span class="text-gray-400">â†’</span>
                                 <input type="date" x-model="filters.end_date" @change="loadData()" class="rounded-lg border-gray-300 text-sm">
                             </div>
                         </template>
@@ -96,12 +96,12 @@
                     @endforeach
                 </select>
 
-                {{-- Filtre À risque (mode historique) --}}
+                {{-- Filtre é€ risque (mode historique) --}}
                 <template x-if="mode === 'historical'">
                     <label class="flex items-center gap-2 cursor-pointer bg-red-50 text-red-700 px-3 py-2 rounded-lg border border-red-200 hover:bg-red-100 transition-colors">
                         <input type="checkbox" x-model="filters.risk_only" @change="loadData()" class="rounded border-red-300 text-red-600">
                         <x-icon name="alert-triangle" class="w-4 h-4"/>
-                        <span class="text-sm font-medium">À risque</span>
+                        <span class="text-sm font-medium">é€ risque</span>
                     </label>
                 </template>
             </div>
@@ -118,11 +118,11 @@
                 <p class="text-3xl font-bold mt-1" x-text="data.stats?.present || 0"></p>
             </div>
             <div class="bg-gradient-to-br from-amber-500 to-orange-600 rounded-xl p-4 text-white">
-                <p class="text-amber-100 text-xs font-medium uppercase" x-text="mode === 'today' ? 'En retard' : 'À surveiller'"></p>
+                <p class="text-amber-100 text-xs font-medium uppercase" x-text="mode === 'today' ? 'En retard' : 'é€ surveiller'"></p>
                 <p class="text-3xl font-bold mt-1" x-text="data.stats?.late || 0"></p>
             </div>
             <div class="bg-gradient-to-br from-rose-500 to-pink-600 rounded-xl p-4 text-white">
-                <p class="text-rose-100 text-xs font-medium uppercase" x-text="mode === 'today' ? 'Absents' : 'À risque'"></p>
+                <p class="text-rose-100 text-xs font-medium uppercase" x-text="mode === 'today' ? 'Absents' : 'é€ risque'"></p>
                 <p class="text-3xl font-bold mt-1" x-text="data.stats?.absent || 0"></p>
             </div>
         </div>
@@ -190,13 +190,13 @@
                                 {{-- Mode Aujourd'hui: Statut --}}
                                 <td x-show="mode === 'today'" class="py-4 px-5 text-center">
                                     <span x-show="emp.status === 'present'" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700">
-                                        ✓ Présent
+                                        âœ“ Présent
                                     </span>
                                     <span x-show="emp.status === 'late'" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-700">
-                                        ⏱ En retard
+                                        â± En retard
                                     </span>
                                     <span x-show="emp.status === 'absent'" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-red-100 text-red-700">
-                                        ✕ Absent
+                                        âœ• Absent
                                     </span>
                                 </td>
                                 
@@ -229,7 +229,7 @@
                                 <td x-show="mode === 'historical'" class="py-4 px-5 text-center">
                                     <span class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-bold"
                                         x-bind:class="emp.late_count === 0 ? 'bg-green-100 text-green-700' : (emp.late_count <= 5 ? 'bg-amber-100 text-amber-700' : 'bg-red-100 text-red-700')">
-                                        ⏱ <span x-text="emp.late_count"></span>
+                                        â± <span x-text="emp.late_count"></span>
                                     </span>
                                 </td>
                                 
@@ -243,13 +243,13 @@
                                 {{-- Mode Historique: Statut risque --}}
                                 <td x-show="mode === 'historical'" class="py-4 px-5 text-center">
                                     <span x-show="emp.risk_level === 'low'" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700">
-                                        ✓ OK
+                                        âœ“ OK
                                     </span>
                                     <span x-show="emp.risk_level === 'medium'" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-700">
-                                        ⚠ Surveiller
+                                        âš  Surveiller
                                     </span>
                                     <span x-show="emp.risk_level === 'high'" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-red-100 text-red-700">
-                                        ⚠ Risque
+                                        âš  Risque
                                     </span>
                                 </td>
                                 
@@ -257,7 +257,7 @@
                                 <td x-show="mode === 'historical'" class="py-4 px-5 text-center">
                                     <a :href="'/admin/presences/employee/' + emp.id + '?period=' + filters.period + (filters.period === 'custom' ? '&start_date=' + filters.start_date + '&end_date=' + filters.end_date : '')" 
                                        class="inline-flex items-center gap-1 px-3 py-1.5 text-sm font-medium text-indigo-600 hover:text-white bg-indigo-50 hover:bg-indigo-600 rounded-lg transition-colors">
-                                        Détails →
+                                        Détails â†’
                                     </a>
                                 </td>
                             </tr>
@@ -266,7 +266,7 @@
                         {{-- Empty state --}}
                         <tr x-show="!data.employees?.length && !loading">
                             <td colspan="7" class="py-12 text-center text-gray-500">
-                                <p class="text-4xl mb-3">👥</p>
+                                <p class="text-4xl mb-3">ðŸ‘¥</p>
                                 <p>Aucun employé trouvé</p>
                             </td>
                         </tr>
@@ -277,7 +277,7 @@
     </div>
 
     @push('scripts')
-    <script>
+    <script nonce="{{ $cspNonce ?? '' }}">
         function masterViewPage() {
             return {
                 mode: 'today',

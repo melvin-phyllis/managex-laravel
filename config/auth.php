@@ -110,6 +110,7 @@ return [
     |
     */
 
-    'password_timeout' => env('AUTH_PASSWORD_TIMEOUT', 10800),
+    // SECURITE: Réduit de 3 heures (10800) à 30 minutes pour limiter la fenêtre d'attaque
+    'password_timeout' => env('AUTH_PASSWORD_TIMEOUT', 1800),
 
 ];

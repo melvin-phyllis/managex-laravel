@@ -34,11 +34,14 @@ class TaskController extends Controller
             });
         }
 
+        // Current date for database-agnostic queries
+        $now = now()->format('Y-m-d H:i:s');
+        
         // Tri par défaut: tâches en retard d'abord, puis par priorité, puis par date
         $tasks = $query->orderByRaw("CASE 
-            WHEN date_fin < NOW() AND statut NOT IN ('validated', 'completed') THEN 0 
+            WHEN date_fin < ? AND statut NOT IN ('validated', 'completed') THEN 0 
             ELSE 1 
-        END")
+        END", [$now])
         ->orderByRaw("CASE priorite WHEN 'high' THEN 0 WHEN 'medium' THEN 1 ELSE 2 END")
         ->orderBy('created_at', 'desc')
         ->paginate(15);
@@ -52,8 +55,8 @@ class TaskController extends Controller
             SUM(CASE WHEN statut IN ('approved', 'in_progress') THEN 1 ELSE 0 END) as in_progress_count,
             SUM(CASE WHEN statut = 'completed' THEN 1 ELSE 0 END) as completed_count,
             SUM(CASE WHEN statut = 'validated' THEN 1 ELSE 0 END) as validated_count,
-            SUM(CASE WHEN date_fin < NOW() AND statut NOT IN ('validated', 'completed') THEN 1 ELSE 0 END) as overdue_count
-        ")->first();
+            SUM(CASE WHEN date_fin < ? AND statut NOT IN ('validated', 'completed') THEN 1 ELSE 0 END) as overdue_count
+        ", [$now])->first();
 
         // Kanban tasks - limité à 50 tâches par statut pour performance
         $kanbanTasks = Task::with('user')

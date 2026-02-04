@@ -1,21 +1,31 @@
-<x-layouts.employee>
-    <div class="space-y-6">
+﻿<x-layouts.employee>
+    <div class="space-y-6" x-data="{ viewMode: localStorage.getItem('employeeTaskView') || 'cards' }" x-init="$watch('viewMode', v => localStorage.setItem('employeeTaskView', v))">
         <!-- Header avec gradient -->
         <div class="relative overflow-hidden bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 rounded-2xl p-6 text-white shadow-xl">
             <div class="absolute inset-0 bg-grid-white/10"></div>
             <div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-white/10 rounded-full blur-2xl"></div>
             <div class="absolute bottom-0 left-0 -mb-4 -ml-4 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
             
-            <div class="relative flex items-center justify-between">
+            <div class="relative flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <h1 class="text-2xl font-bold mb-1">Mes Tâches</h1>
-                    <p class="text-violet-100">Suivez et gérez vos tâches assignées</p>
+                    <h1 class="text-2xl font-bold mb-1">Mes Taches</h1>
+                    <p class="text-violet-100">Suivez et gérez vos taches assignées</p>
                 </div>
-                <div class="hidden sm:flex items-center gap-3">
-                    <div class="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
-                        </svg>
+                <div class="flex items-center gap-3">
+                    <!-- Toggle View -->
+                    <div class="bg-white/20 backdrop-blur-sm rounded-xl p-1 flex">
+                        <button @click="viewMode = 'cards'" 
+                                :class="viewMode === 'cards' ? 'bg-white text-violet-700' : 'text-white hover:bg-white/20'"
+                                class="px-3 py-2 rounded-lg font-medium text-sm transition-all flex items-center gap-1">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+                            Cartes
+                        </button>
+                        <button @click="viewMode = 'calendar'; $nextTick(() => initEmployeeCalendar())" 
+                                :class="viewMode === 'calendar' ? 'bg-white text-violet-700' : 'text-white hover:bg-white/20'"
+                                class="px-3 py-2 rounded-lg font-medium text-sm transition-all flex items-center gap-1">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                            Calendrier
+                        </button>
                     </div>
                 </div>
             </div>
@@ -38,7 +48,7 @@
                     </div>
                     <div>
                         <p class="text-2xl font-bold text-gray-900">{{ $totalTasks }}</p>
-                        <p class="text-xs text-gray-500">Total tâches</p>
+                        <p class="text-xs text-gray-500">Total taches</p>
                     </div>
                 </div>
             </div>
@@ -101,7 +111,7 @@
                             <option value="">Tous les statuts</option>
                             <option value="pending" {{ request('statut') == 'pending' ? 'selected' : '' }}>En attente</option>
                             <option value="approved" {{ request('statut') == 'approved' ? 'selected' : '' }}>En cours</option>
-                            <option value="completed" {{ request('statut') == 'completed' ? 'selected' : '' }}>Terminée (à valider)</option>
+                            <option value="completed" {{ request('statut') == 'completed' ? 'selected' : '' }}>Terminée (é  valider)</option>
                             <option value="validated" {{ request('statut') == 'validated' ? 'selected' : '' }}>Validée</option>
                             <option value="rejected" {{ request('statut') == 'rejected' ? 'selected' : '' }}>Rejetée</option>
                         </select>
@@ -129,8 +139,15 @@
             </div>
         </div>
 
-        <!-- Grille des tâches -->
-        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+        <!-- Calendar View -->
+        <div x-show="viewMode === 'calendar'" x-cloak class="animate-fade-in">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 md:p-6">
+                <div id="employeeTasksCalendar" class="min-h-[500px]"></div>
+            </div>
+        </div>
+
+        <!-- Grille des taches (Cards View) -->
+        <div x-show="viewMode === 'cards'" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
             @forelse($tasks as $task)
                 @php
                     $priorityColors = [
@@ -143,7 +160,7 @@
                     $statusConfig = [
                         'pending' => ['bg' => 'bg-gray-100', 'text' => 'text-gray-700', 'icon' => 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z', 'label' => 'En attente'],
                         'approved' => ['bg' => 'bg-blue-100', 'text' => 'text-blue-700', 'icon' => 'M13 10V3L4 14h7v7l9-11h-7z', 'label' => 'En cours'],
-                        'completed' => ['bg' => 'bg-amber-100', 'text' => 'text-amber-700', 'icon' => 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z', 'label' => 'À valider'],
+                        'completed' => ['bg' => 'bg-amber-100', 'text' => 'text-amber-700', 'icon' => 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z', 'label' => ' valider'],
                         'validated' => ['bg' => 'bg-emerald-100', 'text' => 'text-emerald-700', 'icon' => 'M5 13l4 4L19 7', 'label' => 'Validée'],
                         'rejected' => ['bg' => 'bg-red-100', 'text' => 'text-red-700', 'icon' => 'M6 18L18 6M6 6l12 12', 'label' => 'Rejetée'],
                     ];
@@ -151,7 +168,7 @@
                 @endphp
                 
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow group">
-                    <!-- En-tête de la carte -->
+                    <!-- En-téªte de la carte -->
                     <div class="p-5">
                         <div class="flex items-start justify-between gap-3 mb-3">
                             <h3 class="font-semibold text-gray-900 group-hover:text-violet-600 transition-colors line-clamp-2">
@@ -200,7 +217,7 @@
                     @if($task->statut === 'approved')
                         <div class="px-5 py-4 bg-gradient-to-r from-violet-50 to-purple-50 border-t border-violet-100">
                             <div x-data="{ progress: {{ $task->progression }}, saving: false, saved: false }" class="space-y-3">
-                                <label class="text-sm font-medium text-violet-700">Mettre à jour la progression</label>
+                                <label class="text-sm font-medium text-violet-700">Mettre é  jour la progression</label>
                                 <div class="flex items-center gap-3">
                                     <input type="range" min="0" max="100" step="5" x-model="progress" 
                                            class="flex-1 h-2 bg-violet-200 rounded-lg appearance-none cursor-pointer accent-violet-600">
@@ -208,7 +225,7 @@
                                 </div>
                                 <template x-if="progress == 100">
                                     <p class="text-xs text-amber-700 bg-amber-100 p-2 rounded-lg border border-amber-200">
-                                        <span class="font-semibold">A 100%</span>, la tâche sera envoyée à l'admin pour validation.
+                                        <span class="font-semibold">A 100%</span>, la tache sera envoyée é  l'admin pour validation.
                                     </p>
                                 </template>
                                 <button
@@ -231,7 +248,7 @@
                                     class="w-full px-4 py-2 bg-gradient-to-r from-violet-600 to-purple-600 text-white text-sm font-medium rounded-lg hover:from-violet-700 hover:to-purple-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm">
                                     <span x-show="!saving && !saved">Sauvegarder</span>
                                     <span x-show="saving" x-cloak>Enregistrement...</span>
-                                    <span x-show="saved" x-cloak>✓ Enregistré !</span>
+                                    <span x-show="saved" x-cloak> Enregistré !</span>
                                 </button>
                             </div>
                         </div>
@@ -254,7 +271,7 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                                     </svg>
                                 </div>
-                                <span class="text-sm text-emerald-700 font-medium">Tâche validée avec succès</span>
+                                <span class="text-sm text-emerald-700 font-medium">Tache validée avec succés</span>
                             </div>
                         </div>
                     @elseif($task->statut === 'rejected')
@@ -265,7 +282,7 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                                     </svg>
                                 </div>
-                                <span class="text-sm text-red-700 font-medium">Tâche rejetée</span>
+                                <span class="text-sm text-red-700 font-medium">Tache rejetée</span>
                             </div>
                         </div>
                     @elseif($task->statut === 'pending')
@@ -289,14 +306,14 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
                             </svg>
                         </div>
-                        <h3 class="text-lg font-semibold text-gray-900 mb-2">Aucune tâche trouvée</h3>
-                        <p class="text-gray-500 mb-4">Les tâches vous seront assignées par l'administration</p>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">Aucune tache trouvée</h3>
+                        <p class="text-gray-500 mb-4">Les taches vous seront assignées par l'administration</p>
                         @if(request('statut') || request('priorite'))
                             <a href="{{ route('employee.tasks.index') }}" class="inline-flex items-center gap-2 px-4 py-2 bg-violet-100 text-violet-700 rounded-lg hover:bg-violet-200 transition-colors">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
                                 </svg>
-                                Voir toutes les tâches
+                                Voir toutes les taches
                             </a>
                         @endif
                     </div>
@@ -304,11 +321,96 @@
             @endforelse
         </div>
 
-        <!-- Pagination -->
-        @if($tasks->hasPages())
-            <div class="flex justify-center">
-                {{ $tasks->links() }}
-            </div>
-        @endif
+        <!-- Pagination (cards view only) -->
+        <div x-show="viewMode === 'cards'">
+            @if($tasks->hasPages())
+                <div class="flex justify-center">
+                    {{ $tasks->links() }}
+                </div>
+            @endif
+        </div>
     </div>
+
+    @push('scripts')
+    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css' rel='stylesheet' />
+    <script nonce="{{ $cspNonce ?? '' }}" src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
+    <script nonce="{{ $cspNonce ?? '' }}">
+        let employeeCalendarInstance = null;
+        
+        function initEmployeeCalendar() {
+            if (employeeCalendarInstance) {
+                employeeCalendarInstance.render();
+                return;
+            }
+            
+            const calendarEl = document.getElementById('employeeTasksCalendar');
+            if (!calendarEl) return;
+            
+            const tasks = @json($tasks->items());
+            const events = tasks.map(task => {
+                const statusColors = {
+                    pending: { bg: '#fbbf24', border: '#f59e0b' },
+                    approved: { bg: '#3b82f6', border: '#2563eb' },
+                    in_progress: { bg: '#8b5cf6', border: '#7c3aed' },
+                    completed: { bg: '#a855f7', border: '#9333ea' },
+                    validated: { bg: '#22c55e', border: '#16a34a' },
+                    rejected: { bg: '#ef4444', border: '#dc2626' }
+                };
+                const colors = statusColors[task.statut] || { bg: '#6b7280', border: '#4b5563' };
+                
+                return {
+                    id: task.id,
+                    title: task.titre,
+                    start: task.date_debut || task.created_at,
+                    end: task.date_fin,
+                    backgroundColor: colors.bg,
+                    borderColor: colors.border,
+                    extendedProps: {
+                        status: task.statut,
+                        priority: task.priorite,
+                        progression: task.progression
+                    }
+                };
+            });
+            
+            employeeCalendarInstance = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                locale: 'fr',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,listWeek'
+                },
+                buttonText: {
+                    today: "Aujourd'hui",
+                    month: 'Mois',
+                    list: 'Liste'
+                },
+                events: events,
+                eventClick: function(info) {
+                    window.location.href = '/employee/tasks/' + info.event.id;
+                },
+                eventDidMount: function(info) {
+                    const props = info.event.extendedProps;
+                    let tooltip = info.event.title;
+                    if (props.progression !== undefined) tooltip += '\né°Å¸â€œÅ  ' + props.progression + '%';
+                    info.el.title = tooltip;
+                },
+                height: 'auto',
+                dayMaxEvents: 3,
+                moreLinkText: function(n) { return '+' + n + ' autres'; },
+                noEventsText: 'Aucune tache'
+            });
+            
+            employeeCalendarInstance.render();
+        }
+        
+        // Initialize if calendar view is default
+        document.addEventListener('DOMContentLoaded', function() {
+            if (localStorage.getItem('employeeTaskView') === 'calendar') {
+                setTimeout(initEmployeeCalendar, 100);
+            }
+        });
+    </script>
+    @endpush
 </x-layouts.employee>

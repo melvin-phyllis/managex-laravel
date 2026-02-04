@@ -44,7 +44,7 @@ class AnalyticsExport implements WithMultipleSheets
     }
 }
 
-class KpisSheet implements FromArray, WithTitle, WithHeadings, WithStyles, ShouldAutoSize
+class KpisSheet implements FromArray, WithTitle, WithStyles, ShouldAutoSize
 {
     protected array $data;
 
@@ -58,58 +58,113 @@ class KpisSheet implements FromArray, WithTitle, WithHeadings, WithStyles, Shoul
         return 'Resume KPIs';
     }
 
-    public function headings(): array
-    {
-        return ['Indicateur', 'Valeur', 'Details'];
-    }
-
     public function array(): array
     {
         $kpis = $this->data['kpis'] ?? [];
         $evalStats = $this->data['evaluation_stats'] ?? [];
         
         return [
+            // Row 1: Header
             ['RAPPORT ANALYTICS RH', '', ''],
-            ['Période', $this->data['period_label'] ?? '-', 'Généré le ' . ($this->data['generated_at'] ?? '-')],
+            // Row 2: Period
+            ['Période:', $this->data['period_label'] ?? '-', 'Généré le ' . ($this->data['generated_at'] ?? '-')],
             ['', '', ''],
-            ['--- EFFECTIFS ---', '', ''],
+            // Row 4: Section EFFECTIFS
+            ['EFFECTIFS', '', ''],
             ['Effectif Total', $kpis['effectif_total']['value'] ?? 0, 'Variation: ' . ($kpis['effectif_total']['variation'] ?? 0) . '%'],
-            ['Stagiaires Actifs', $kpis['interns']['count'] ?? 0, 'A evaluer: ' . ($kpis['interns']['to_evaluate'] ?? 0)],
+            ['Stagiaires Actifs', $kpis['interns']['count'] ?? 0, 'À évaluer: ' . ($kpis['interns']['to_evaluate'] ?? 0)],
             ['', '', ''],
-            ['--- PRESENCES ---', '', ''],
-            ['Taux de Presence', ($kpis['presents_today']['percentage'] ?? 0) . '%', ($kpis['presents_today']['value'] ?? 0) . '/' . ($kpis['presents_today']['expected'] ?? 0)],
-            ['En Conge', $kpis['en_conge']['value'] ?? 0, 'CP: ' . ($kpis['en_conge']['types']['conge'] ?? 0) . ' / Maladie: ' . ($kpis['en_conge']['types']['maladie'] ?? 0)],
-            ['Absents Non Justifies', $kpis['absents_non_justifies']['value'] ?? 0, ''],
-            ['Heures de Retard', ($kpis['late_hours']['total'] ?? 0) . 'h', ($kpis['late_hours']['employees'] ?? 0) . ' employe(s) concerne(s)'],
+            // Row 8: Section PRESENCES
+            ['PRÉSENCES', '', ''],
+            ['Taux de Présence', ($kpis['presents_today']['percentage'] ?? 0) . '%', ($kpis['presents_today']['value'] ?? 0) . '/' . ($kpis['presents_today']['expected'] ?? 0)],
+            ['En Congé', $kpis['en_conge']['value'] ?? 0, 'CP: ' . ($kpis['en_conge']['types']['conge'] ?? 0) . ' / Maladie: ' . ($kpis['en_conge']['types']['maladie'] ?? 0)],
+            ['Absents Non Justifiés', $kpis['absents_non_justifies']['value'] ?? 0, ''],
+            ['Heures de Retard', ($kpis['late_hours']['total'] ?? 0) . 'h', ($kpis['late_hours']['employees'] ?? 0) . ' employé(s) concerné(s)'],
             ['', '', ''],
-            ['--- EVALUATIONS EMPLOYES ---', '', ''],
-            ['Evaluations Validees', $evalStats['employees']['validated'] ?? 0, ''],
-            ['Employes Non Evalues', $evalStats['employees']['not_evaluated'] ?? 0, ''],
+            // Row 14: Section EVALUATIONS EMPLOYES
+            ['ÉVALUATIONS EMPLOYÉS', '', ''],
+            ['Évaluations Validées', $evalStats['employees']['validated'] ?? 0, ''],
+            ['Employés Non Évalués', $evalStats['employees']['not_evaluated'] ?? 0, ''],
             ['Note Moyenne', $evalStats['employees']['avg_score'] ?? 0, 'sur 5.5'],
             ['Meilleure Note', $evalStats['employees']['max_score'] ?? 0, 'sur 5.5'],
             ['', '', ''],
-            ['--- EVALUATIONS STAGIAIRES ---', '', ''],
-            ['Total Evaluations', $evalStats['interns']['total_evaluations'] ?? 0, '4 dernieres semaines'],
+            // Row 20: Section EVALUATIONS STAGIAIRES
+            ['ÉVALUATIONS STAGIAIRES', '', ''],
+            ['Total Évaluations', $evalStats['interns']['total_evaluations'] ?? 0, '4 dernières semaines'],
             ['Note Moyenne', $evalStats['interns']['avg_score'] ?? 0, 'sur 10'],
-            ['A Evaluer Cette Semaine', $evalStats['interns']['not_evaluated_this_week'] ?? 0, ''],
+            ['À Évaluer Cette Semaine', $evalStats['interns']['not_evaluated_this_week'] ?? 0, ''],
             ['', '', ''],
-            ['--- TURNOVER & FINANCES ---', '', ''],
-            ['Taux de Turnover', ($kpis['turnover']['rate'] ?? 0) . '%', 'Entrees: ' . ($kpis['turnover']['entries'] ?? 0) . ' / Sorties: ' . ($kpis['turnover']['exits'] ?? 0)],
+            // Row 25: Section TURNOVER & FINANCES
+            ['TURNOVER & FINANCES', '', ''],
+            ['Taux de Turnover', ($kpis['turnover']['rate'] ?? 0) . '%', 'Entrées: ' . ($kpis['turnover']['entries'] ?? 0) . ' / Sorties: ' . ($kpis['turnover']['exits'] ?? 0)],
             ['Masse Salariale', $kpis['masse_salariale']['formatted'] ?? '0 FCFA', 'Variation: ' . ($kpis['masse_salariale']['variation'] ?? 0) . '%'],
-            ['Heures Supplementaires', ($kpis['heures_supplementaires']['value'] ?? 0) . 'h', ($kpis['heures_supplementaires']['count'] ?? 0) . ' employe(s)'],
+            ['Heures Supplémentaires', ($kpis['heures_supplementaires']['value'] ?? 0) . 'h', ($kpis['heures_supplementaires']['count'] ?? 0) . ' employé(s)'],
             ['', '', ''],
-            ['--- TACHES ---', '', ''],
-            ['Taches Completees', $kpis['tasks']['completed'] ?? 0, ''],
-            ['Taches En Attente', $kpis['tasks']['pending'] ?? 0, ''],
+            // Row 30: Section TACHES
+            ['TÂCHES', '', ''],
+            ['Tâches Complétées', $kpis['tasks']['completed'] ?? 0, ''],
+            ['Tâches En Attente', $kpis['tasks']['pending'] ?? 0, ''],
         ];
     }
 
     public function styles(Worksheet $sheet)
     {
-        return [
-            1 => ['font' => ['bold' => true, 'size' => 14]],
-            'A' => ['font' => ['bold' => true]],
+        // Bordures pour toutes les cellules avec données
+        $borderStyle = [
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                    'color' => ['rgb' => 'CCCCCC'],
+                ],
+            ],
         ];
+
+        // Appliquer les bordures
+        $sheet->getStyle('A1:C33')->applyFromArray($borderStyle);
+
+        // Style du titre principal (Row 1)
+        $sheet->getStyle('A1:C1')->applyFromArray([
+            'font' => ['bold' => true, 'size' => 16, 'color' => ['rgb' => 'FFFFFF']],
+            'fill' => ['fillType' => 'solid', 'color' => ['rgb' => '4F46E5']],
+            'alignment' => ['horizontal' => 'center'],
+        ]);
+        $sheet->mergeCells('A1:C1');
+
+        // Style de la période (Row 2)
+        $sheet->getStyle('A2:C2')->applyFromArray([
+            'font' => ['italic' => true, 'size' => 11],
+            'fill' => ['fillType' => 'solid', 'color' => ['rgb' => 'E0E7FF']],
+        ]);
+
+        // Section headers (avec fond coloré)
+        $sectionRows = [4, 8, 14, 20, 25, 30];
+        $sectionColors = ['3B82F6', '10B981', '059669', '7C3AED', 'F59E0B', '6366F1'];
+        
+        foreach ($sectionRows as $index => $row) {
+            $sheet->getStyle("A{$row}:C{$row}")->applyFromArray([
+                'font' => ['bold' => true, 'size' => 12, 'color' => ['rgb' => 'FFFFFF']],
+                'fill' => ['fillType' => 'solid', 'color' => ['rgb' => $sectionColors[$index]]],
+            ]);
+            $sheet->mergeCells("A{$row}:C{$row}");
+        }
+
+        // Style des labels (colonne A) - gras
+        $sheet->getStyle('A:A')->applyFromArray([
+            'font' => ['bold' => true],
+        ]);
+
+        // Centrer les valeurs (colonne B)
+        $sheet->getStyle('B:B')->applyFromArray([
+            'alignment' => ['horizontal' => 'center'],
+            'font' => ['bold' => true, 'size' => 11],
+        ]);
+
+        // Largeur des colonnes
+        $sheet->getColumnDimension('A')->setWidth(30);
+        $sheet->getColumnDimension('B')->setWidth(20);
+        $sheet->getColumnDimension('C')->setWidth(35);
+
+        return [];
     }
 }
 

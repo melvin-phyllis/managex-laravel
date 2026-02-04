@@ -1,4 +1,4 @@
-<x-layouts.admin>
+﻿<x-layouts.admin>
     <div class="space-y-6" x-data="announcementManagement()">
         <!-- Breadcrumb -->
         <nav class="flex animate-fade-in-up" aria-label="Breadcrumb">
@@ -24,7 +24,7 @@
         <!-- Header -->
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 animate-fade-in-up animation-delay-100">
             <div>
-                <h1 class="text-2xl font-bold text-gray-900">📢 Annonces</h1>
+                <h1 class="text-2xl font-bold text-gray-900">ðŸ“¢ Annonces</h1>
                 <p class="text-gray-500 mt-1">Gérez les communications internes</p>
             </div>
             <a href="{{ route('admin.announcements.create') }}" 
@@ -41,7 +41,7 @@
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 animate-fade-in-up animation-delay-100">
                 <div class="flex items-center gap-4">
                     <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
-                        <span class="text-xl">📢</span>
+                        <span class="text-xl">ðŸ“¢</span>
                     </div>
                     <div>
                         <p class="text-2xl font-bold text-gray-900">{{ $stats['total'] }}</p>
@@ -52,7 +52,7 @@
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 animate-fade-in-up animation-delay-200">
                 <div class="flex items-center gap-4">
                     <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
-                        <span class="text-xl">✅</span>
+                        <span class="text-xl">âœ…</span>
                     </div>
                     <div>
                         <p class="text-2xl font-bold text-gray-900">{{ $stats['active'] }}</p>
@@ -63,7 +63,7 @@
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 animate-fade-in-up animation-delay-300">
                 <div class="flex items-center gap-4">
                     <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
-                        <span class="text-xl">🚨</span>
+                        <span class="text-xl">ðŸš</span>
                     </div>
                     <div>
                         <p class="text-2xl font-bold text-gray-900">{{ $stats['urgent'] }}</p>
@@ -74,11 +74,11 @@
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 animate-fade-in-up animation-delay-400">
                 <div class="flex items-center gap-4">
                     <div class="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center">
-                        <span class="text-xl">📌</span>
+                        <span class="text-xl">ðŸ“Œ</span>
                     </div>
                     <div>
                         <p class="text-2xl font-bold text-gray-900">{{ $stats['pinned'] }}</p>
-                        <p class="text-sm text-gray-500">Épinglées</p>
+                        <p class="text-sm text-gray-500">épinglées</p>
                     </div>
                 </div>
             </div>
@@ -99,11 +99,11 @@
                 </select>
                 <select name="type" class="rounded-lg border-gray-300 focus:border-green-500 focus:ring-green-500">
                     <option value="">Tous les types</option>
-                    <option value="info" {{ request('type') === 'info' ? 'selected' : '' }}>ℹ️ Info</option>
-                    <option value="success" {{ request('type') === 'success' ? 'selected' : '' }}>✅ Succès</option>
-                    <option value="warning" {{ request('type') === 'warning' ? 'selected' : '' }}>⚠️ Attention</option>
-                    <option value="urgent" {{ request('type') === 'urgent' ? 'selected' : '' }}>🚨 Urgent</option>
-                    <option value="event" {{ request('type') === 'event' ? 'selected' : '' }}>📅 Événement</option>
+                    <option value="info" {{ request('type') === 'info' ? 'selected' : '' }}>â„¹ï¸ Info</option>
+                    <option value="success" {{ request('type') === 'success' ? 'selected' : '' }}>âœ… Succés</option>
+                    <option value="warning" {{ request('type') === 'warning' ? 'selected' : '' }}>âš ï¸ Attention</option>
+                    <option value="urgent" {{ request('type') === 'urgent' ? 'selected' : '' }}>ðŸš Urgent</option>
+                    <option value="event" {{ request('type') === 'event' ? 'selected' : '' }}>ðŸ“… événement</option>
                 </select>
                 <select name="priority" class="rounded-lg border-gray-300 focus:border-green-500 focus:ring-green-500">
                     <option value="">Toutes priorités</option>
@@ -141,7 +141,7 @@
                         <div class="flex-1 min-w-0">
                             <div class="flex items-center gap-2 flex-wrap">
                                 @if($announcement->is_pinned)
-                                    <span class="text-amber-500">📌</span>
+                                    <span class="text-amber-500">ðŸ“Œ</span>
                                 @endif
                                 <a href="{{ route('admin.announcements.show', $announcement) }}" 
                                    class="font-semibold text-gray-900 hover:text-green-600 truncate">
@@ -158,9 +158,9 @@
                             </div>
                             <div class="flex items-center gap-4 mt-1 text-sm text-gray-500">
                                 <span>{{ $announcement->target_label }}</span>
-                                <span>•</span>
+                                <span>â€¢</span>
                                 <span>Par {{ $announcement->creator?->name ?? 'Admin' }}</span>
-                                <span>•</span>
+                                <span>â€¢</span>
                                 <span>{{ $announcement->created_at->diffForHumans() }}</span>
                             </div>
                             <!-- Read Progress -->
@@ -192,7 +192,7 @@
                             <!-- Toggle Pin -->
                             <button onclick="togglePin({{ $announcement->id }})" 
                                     class="p-2 rounded-lg hover:bg-gray-100 transition-colors"
-                                    title="{{ $announcement->is_pinned ? 'Désépingler' : 'Épingler' }}">
+                                    title="{{ $announcement->is_pinned ? 'Désépingler' : 'épingler' }}">
                                 <svg class="w-5 h-5 {{ $announcement->is_pinned ? 'text-amber-500' : 'text-gray-400' }}" fill="currentColor" viewBox="0 0 20 20">
                                     <path d="M5 5a2 2 0 012-2h6a2 2 0 012 2v2a2 2 0 01-2 2H7a2 2 0 01-2-2V5zM4 9v6a2 2 0 002 2h8a2 2 0 002-2V9a1 1 0 00-1-1H5a1 1 0 00-1 1z"/>
                                 </svg>
@@ -218,10 +218,10 @@
             @empty
                 <div class="p-12 text-center">
                     <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <span class="text-3xl">📢</span>
+                        <span class="text-3xl">ðŸ“¢</span>
                     </div>
                     <h3 class="text-lg font-medium text-gray-900">Aucune annonce</h3>
-                    <p class="text-gray-500 mt-1">Créez votre première annonce pour communiquer avec vos employés.</p>
+                    <p class="text-gray-500 mt-1">Créez votre premiére annonce pour communiquer avec vos employés.</p>
                     <a href="{{ route('admin.announcements.create') }}" 
                        class="inline-flex items-center px-4 py-2 mt-4 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
                         Créer une annonce
@@ -277,7 +277,7 @@
                         <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
                             <h3 class="text-base font-semibold leading-6 text-gray-900" id="modal-title">Confirmer la suppression</h3>
                             <div class="mt-2">
-                                <p class="text-sm text-gray-500">Êtes-vous sûr de vouloir supprimer cette annonce ? Cette action est irréversible.</p>
+                                <p class="text-sm text-gray-500">éŠtes-vous sé»r de vouloir supprimer cette annonce ? Cette action est irréversible.</p>
                             </div>
                         </div>
                     </div>
@@ -303,7 +303,7 @@
     </div>
 
     @push('scripts')
-    <script>
+    <script nonce="{{ $cspNonce ?? '' }}">
         function announcementManagement() {
             return {
                 showDeleteModal: false,

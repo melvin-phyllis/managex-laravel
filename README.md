@@ -20,7 +20,13 @@ L'application est conçue pour être **sécurisée**, **performante** et **facil
 
 <p align="center">
   <strong>Projet réalisé par Akou Melvin</strong><br>
-  Développeur Full-Stack
+  Développeur Full-Stack<br><br>
+  <a href="https://github.com/melvin-phyllis">
+    <img src="https://img.shields.io/badge/GitHub-melvin--phyllis-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub">
+  </a>
+  <a href="https://www.linkedin.com/in/melvin-akou/">
+    <img src="https://img.shields.io/badge/LinkedIn-Melvin_Akou-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn">
+  </a>
 </p>
 
 ---
@@ -462,40 +468,49 @@ PayrollCountry (1) ─────── (N) PayrollCountryField
 ## 📦 Installation
 
 ### Prérequis
-- PHP >= 8.2 avec extensions : bcmath, ctype, curl, fileinfo, json, mbstring, openssl, pdo, tokenizer, xml
-- Composer
-- Node.js >= 18
-- MySQL 8.x ou SQLite
 
-### Étapes d'installation
+| Outil | Version | Vérification |
+|-------|---------|--------------|
+| **PHP** | >= 8.2 | `php -v` |
+| **Composer** | >= 2.x | `composer -V` |
+| **Node.js** | >= 18 | `node -v` |
+| **npm** | >= 9 | `npm -v` |
+| **MySQL** | 8.x (ou SQLite) | `mysql --version` |
+
+**Extensions PHP requises :** bcmath, ctype, curl, fileinfo, json, mbstring, openssl, pdo, pdo_mysql, tokenizer, xml, gd, zip
+
+---
+
+## 🚀 Quick Start (5 minutes)
+
+### Option 1 : Installation locale (recommandé pour développement)
 
 ```bash
-# 1. Cloner le repository
-git clone https://github.com/votre-repo/managex.git
+# 1. Cloner le projet
+git clone https://github.com/melvin-phyllis/managex.git
 cd managex
 
-# 2. Installer les dépendances PHP
+# 2. Installer les dépendances
 composer install
-
-# 3. Installer les dépendances Node.js
 npm install
 
-# 4. Configurer l'environnement
+# 3. Configuration automatique
 cp .env.example .env
 php artisan key:generate
 
-# 5. Configurer la base de données dans .env
-# DB_CONNECTION=mysql
-# DB_HOST=127.0.0.1
-# DB_PORT=3306
+# 4. Créer la base de données MySQL
+# Via MySQL CLI ou phpMyAdmin :
+# CREATE DATABASE managex CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+# 5. Configurer .env (ouvrir le fichier et modifier)
 # DB_DATABASE=managex
 # DB_USERNAME=root
-# DB_PASSWORD=
+# DB_PASSWORD=votre_mot_de_passe
 
-# 6. Exécuter les migrations
-php artisan migrate
+# 6. Lancer les migrations et seeders
+php artisan migrate --seed
 
-# 7. Créer le lien symbolique pour le stockage
+# 7. Créer le lien de stockage
 php artisan storage:link
 
 # 8. Compiler les assets
@@ -505,82 +520,276 @@ npm run build
 php artisan serve
 ```
 
-### Mode Développement
+**Accéder à l'application :** http://127.0.0.1:8000
+
+### Option 2 : Utiliser SQLite (sans MySQL)
+
+```bash
+# Après l'étape 3, modifier .env :
+# DB_CONNECTION=sqlite
+# (commenter les autres lignes DB_*)
+
+# Créer le fichier de base de données
+touch database/database.sqlite
+
+# Continuer avec les étapes 6-9
+```
+
+### Option 3 : Docker (tout inclus)
+
+```bash
+# Cloner et lancer
+git clone https://github.com/melvin-phyllis/managex.git
+cd managex
+
+# Démarrer avec Docker Compose (app + MySQL + phpMyAdmin)
+docker-compose --profile tools up -d
+
+# Attendre ~60 secondes le temps que tout démarre
+# Puis accéder à : http://localhost:8080
+# phpMyAdmin : http://localhost:8081
+```
+
+---
+
+## 👤 Comptes de test
+
+Après `php artisan migrate --seed` ou le premier lancement Docker :
+
+| Rôle | Email | Mot de passe |
+|------|-------|--------------|
+| **Administrateur** | `admin@managex.com` | `password` |
+| **Employé** | `employee@managex.com` | `password` |
+
+---
+
+## 🔧 Mode Développement (avec hot reload)
+
+Ouvrir **4 terminaux** :
 
 ```bash
 # Terminal 1 - Serveur Laravel
 php artisan serve
 
-# Terminal 2 - WebSockets (optionnel)
-php artisan reverb:start
+# Terminal 2 - Vite (hot reload CSS/JS)
+npm run dev
 
-# Terminal 3 - Queue Worker (notifications)
+# Terminal 3 - Queue Worker (notifications temps réel)
 php artisan queue:work
 
-# Terminal 4 - Vite (hot reload)
-npm run dev
+# Terminal 4 - WebSockets (optionnel, pour messagerie temps réel)
+php artisan reverb:start
+```
+
+**Ou tout en une commande (Windows PowerShell) :**
+
+```powershell
+Start-Process powershell -ArgumentList "-NoExit", "-Command", "php artisan serve"
+Start-Process powershell -ArgumentList "-NoExit", "-Command", "npm run dev"
+Start-Process powershell -ArgumentList "-NoExit", "-Command", "php artisan queue:work"
+```
+
+**Ou tout en une commande (Linux/Mac) :**
+
+```bash
+# Installer concurrently si pas déjà fait
+npm install -g concurrently
+
+# Lancer tout
+concurrently "php artisan serve" "npm run dev" "php artisan queue:work"
+```
+
+---
+
+## 🔄 Commandes utiles
+
+```bash
+# Rafraîchir la base de données (ATTENTION : supprime toutes les données)
+php artisan migrate:fresh --seed
+
+# Vider tous les caches
+php artisan optimize:clear
+
+# Régénérer les caches (production)
+php artisan optimize
+
+# Créer un nouvel administrateur
+php artisan tinker
+>>> User::create(['name'=>'Admin', 'email'=>'admin@test.com', 'password'=>bcrypt('password'), 'role'=>'admin']);
+
+# Voir les routes disponibles
+php artisan route:list
+
+# Lancer les tests
+php artisan test
+```
+
+---
+
+## ⚠️ Dépannage
+
+### Erreur "Class not found" après installation
+```bash
+composer dump-autoload
+php artisan optimize:clear
+```
+
+### Erreur "SQLSTATE" ou problème de BDD
+```bash
+# Vérifier la connexion dans .env
+# Puis recréer la base :
+php artisan migrate:fresh --seed
+```
+
+### Les images/avatars ne s'affichent pas
+```bash
+php artisan storage:link
+```
+
+### Erreur "npm run build" échoue
+```bash
+rm -rf node_modules package-lock.json
+npm install
+npm run build
+```
+
+### Permissions (Linux/Mac)
+```bash
+chmod -R 775 storage bootstrap/cache
+chown -R www-data:www-data storage bootstrap/cache
 ```
 
 ---
 
 ## ⚙️ Configuration
 
-### Variables d'environnement importantes
+### Fichier .env - Variables essentielles
 
 ```env
-# Application
+# ============================================
+# APPLICATION
+# ============================================
 APP_NAME=ManageX
-APP_ENV=production
-APP_DEBUG=false
-APP_URL=https://votre-domaine.com
-APP_TIMEZONE=Africa/Abidjan
+APP_ENV=local                    # local, production
+APP_DEBUG=true                   # false en production !
+APP_URL=http://127.0.0.1:8000   # URL de votre application
+APP_TIMEZONE=Africa/Abidjan      # Fuseau horaire
 
-# Base de données
+# ============================================
+# BASE DE DONNÉES
+# ============================================
+# Option MySQL (recommandé)
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
+DB_PORT=3306
 DB_DATABASE=managex
-DB_USERNAME=managex_user
-DB_PASSWORD=mot_de_passe_securise
+DB_USERNAME=root
+DB_PASSWORD=
 
-# Cache/Session (recommandé : redis en production)
-CACHE_STORE=database
-SESSION_DRIVER=database
-QUEUE_CONNECTION=database
+# Option SQLite (plus simple, sans serveur)
+# DB_CONNECTION=sqlite
+# (créer le fichier : touch database/database.sqlite)
 
-# Email
+# ============================================
+# CACHE & SESSION
+# ============================================
+CACHE_STORE=file                 # file, database, redis
+SESSION_DRIVER=file              # file, database, redis
+QUEUE_CONNECTION=sync            # sync (immédiat), database (file d'attente)
+
+# ============================================
+# EMAIL (optionnel)
+# ============================================
 MAIL_MAILER=smtp
-MAIL_HOST=smtp.votre-provider.com
+MAIL_HOST=smtp.gmail.com         # ou smtp.mailtrap.io pour test
 MAIL_PORT=587
-MAIL_USERNAME=votre_email
-MAIL_PASSWORD=votre_mot_de_passe
+MAIL_USERNAME=votre_email@gmail.com
+MAIL_PASSWORD=mot_de_passe_application
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS=noreply@managex.com
+MAIL_FROM_NAME="${APP_NAME}"
+
+# ============================================
+# WEBSOCKETS (optionnel - temps réel)
+# ============================================
+BROADCAST_CONNECTION=log         # log (désactivé), reverb (activé)
+# Pour activer : changer en "reverb" et lancer "php artisan reverb:start"
 ```
+
+### Configurations par environnement
+
+| Environnement | APP_ENV | APP_DEBUG | CACHE | SESSION | QUEUE |
+|---------------|---------|-----------|-------|---------|-------|
+| **Développement** | local | true | file | file | sync |
+| **Production** | production | false | database | database | database |
+| **Hébergement mutualisé** | production | false | file | file | sync |
 
 ---
 
 ## 🚀 Déploiement en production
 
-Consultez le fichier **`docs/DEPLOYMENT-PRODUCTION.md`** pour un guide complet incluant :
-
-- Configuration serveur
-- Optimisations Laravel (cache, routes, vues)
-- Configuration du worker de file d'attente
-- Configuration du scheduler (tâches planifiées)
-- Configuration optionnelle de Redis et Reverb
-
-### Commandes essentielles
+### Checklist de déploiement
 
 ```bash
-# Optimisations
+# 1. Configurer .env pour la production
+APP_ENV=production
+APP_DEBUG=false
+APP_URL=https://votre-domaine.com
+
+# 2. Installer les dépendances (sans dev)
+composer install --no-dev --optimize-autoloader
+npm install
+npm run build
+
+# 3. Générer les caches
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
+php artisan event:cache
 
-# Queue worker (à lancer en daemon)
-php artisan queue:work --sleep=3 --tries=3
+# 4. Lancer les migrations
+php artisan migrate --force
 
-# Scheduler (ajouter au cron)
+# 5. Créer le lien de stockage
+php artisan storage:link
+
+# 6. Configurer les permissions (Linux)
+chmod -R 775 storage bootstrap/cache
+chown -R www-data:www-data storage bootstrap/cache
+```
+
+### Tâches planifiées (Cron)
+
+Ajouter cette ligne au crontab (`crontab -e`) :
+
+```bash
 * * * * * cd /chemin/vers/managex && php artisan schedule:run >> /dev/null 2>&1
 ```
+
+### Worker de file d'attente
+
+```bash
+# Lancer manuellement (test)
+php artisan queue:work --sleep=3 --tries=3
+
+# En production avec Supervisor (recommandé)
+# Créer /etc/supervisor/conf.d/managex-worker.conf :
+[program:managex-worker]
+command=php /var/www/managex/artisan queue:work --sleep=3 --tries=3 --max-time=3600
+autostart=true
+autorestart=true
+user=www-data
+numprocs=1
+redirect_stderr=true
+stdout_logfile=/var/www/managex/storage/logs/worker.log
+```
+
+### Hébergement mutualisé (Namecheap, OVH, etc.)
+
+Voir le fichier `.env.namecheap.example` pour une configuration adaptée :
+- Pas de WebSockets (utilise le polling AJAX)
+- File d'attente synchrone (`QUEUE_CONNECTION=sync`)
+- Cache fichier (`CACHE_STORE=file`)
 
 ---
 
@@ -595,18 +804,63 @@ php artisan queue:work --sleep=3 --tries=3
 
 ## 🔐 Sécurité
 
-L'application intègre de nombreuses mesures de sécurité :
+L'application intègre des mesures de sécurité robustes, validées par un audit complet :
 
-- **CSRF** : Protection sur tous les formulaires
-- **XSS** : Échappement des données utilisateur
-- **SQL Injection** : Requêtes préparées via Eloquent
-- **Rate limiting** : Protection contre les abus (login, API)
-- **En-têtes de sécurité** : X-Frame-Options, CSP, HSTS
-- **Gestion des rôles** : Séparation stricte admin/employé
-- **Policies** : Vérification des permissions sur chaque ressource
-- **Upload sécurisé** : Validation MIME type et extension
+### Protection des données
 
-Consultez **`docs/SECURITY-AUDIT.md`** pour plus de détails.
+| Mesure | Description |
+|--------|-------------|
+| **Chiffrement au repos** | `social_security_number`, `bank_iban`, `bank_bic` chiffrés en base |
+| **Sessions sécurisées** | Sessions stockées en BDD, chiffrées (`SESSION_ENCRYPT=true`) |
+| **Mots de passe** | Hash bcrypt via Laravel |
+| **HTTPS** | HSTS activé en production |
+
+### Protection contre les attaques
+
+| Attaque | Protection |
+|---------|------------|
+| **XSS** | Échappement Blade + CSP avec nonces |
+| **CSRF** | Tokens sur tous les formulaires |
+| **SQL Injection** | Requêtes préparées Eloquent |
+| **Brute Force** | Rate limiting sur login, password, bulk ops |
+| **Clickjacking** | X-Frame-Options: SAMEORIGIN |
+| **MIME Sniffing** | X-Content-Type-Options: nosniff |
+
+### En-têtes de sécurité (CSP)
+
+```http
+Content-Security-Policy: 
+  default-src 'self';
+  script-src 'self' 'nonce-xxx';
+  style-src 'self' 'nonce-xxx';
+  img-src 'self' data: https:;
+  connect-src 'self' wss:;
+  frame-ancestors 'self';
+```
+
+### Rate Limiting
+
+| Route | Limite |
+|-------|--------|
+| Login/Register | 5/min |
+| Password confirm | 5/min |
+| Bulk operations | Limité |
+| API messaging | 60/min |
+| Exports PDF/Excel | Limité |
+
+### Configuration sécurisée
+
+```env
+# .env (production)
+APP_DEBUG=false
+SESSION_DRIVER=database
+SESSION_ENCRYPT=true
+SESSION_SECURE_COOKIE=true
+```
+
+> ⚠️ **Important** : Sauvegardez votre `APP_KEY` ! Elle est nécessaire pour déchiffrer les données sensibles.
+
+Consultez **[SECURITY-AUDIT.md](SECURITY-AUDIT.md)** pour l'audit complet.
 
 ---
 
@@ -697,5 +951,7 @@ Les contributions sont les bienvenues !
 
 <p align="center">
   <strong>ManageX</strong> - Système de Gestion des Ressources Humaines<br>
-  Réalisé par <strong>Akou Melvin</strong>
+  Réalisé par <strong>Akou Melvin</strong><br><br>
+  <a href="https://github.com/melvin-phyllis"><img src="https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=github" alt="GitHub"></a>
+  <a href="https://www.linkedin.com/in/melvin-akou/"><img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=flat-square&logo=linkedin&logoColor=white" alt="LinkedIn"></a>
 </p>

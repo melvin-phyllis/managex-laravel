@@ -763,7 +763,7 @@
     </div>
 
     @push('scripts')
-    <script>
+    <script nonce="{{ $cspNonce ?? '' }}">
         // Chart Data
         const chartData = @json($chartData);
 

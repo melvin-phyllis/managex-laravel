@@ -1,4 +1,4 @@
-<x-layouts.admin>
+﻿<x-layouts.admin>
     <div class="max-w-4xl mx-auto space-y-6">
         <!-- Header -->
         <div class="flex items-center justify-between">
@@ -36,9 +36,9 @@
                         </div>
                     </div>
 
-                    <!-- Critères d'évaluation -->
+                    <!-- Critéres d'évaluation -->
                     <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                        <h3 class="text-lg font-semibold text-gray-900 mb-6">Critères d'évaluation</h3>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-6">Critéres d'évaluation</h3>
                         
                         <div class="space-y-6">
                             @foreach($criteria as $key => $criterion)
@@ -128,7 +128,7 @@
         </form>
     </div>
 
-    <script>
+    <script nonce="{{ $cspNonce ?? '' }}">
         const smic = {{ $smic }};
         const maxScore = 5.5;
 

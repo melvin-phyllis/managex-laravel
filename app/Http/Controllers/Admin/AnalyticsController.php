@@ -11,9 +11,11 @@ use App\Models\Payroll;
 use App\Models\Presence;
 use App\Models\Task;
 use App\Models\User;
+use App\Services\AI\AnalyticsInsightService;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class AnalyticsController extends Controller
@@ -405,68 +407,96 @@ class AnalyticsController extends Controller
 
     public function getRecentActivities(Request $request): JsonResponse
     {
-        $activities = collect();
-        
-        // Recent presences
-        $presences = Presence::with('user')->orderBy('created_at', 'desc')->take(5)->get()->map(function($p) {
-            return [
-                'type' => 'presence',
-                'user' => $p->user->name,
-                'avatar' => $p->user->avatar ? avatar_url($p->user->avatar) : null,
-                'description' => 'a pointé son arrivée à ' . $p->check_in_formatted,
-                'time' => $p->created_at->diffForHumans()
-            ];
-        });
-        
-        // Recent leaves
-        $leaves = Leave::with('user')->orderBy('created_at', 'desc')->take(5)->get()->map(function($l) {
-            return [
-                'type' => 'leave',
-                'user' => $l->user->name,
-                'avatar' => $l->user->avatar ? avatar_url($l->user->avatar) : null,
-                'description' => 'a demandé un congé (' . $l->type_label . ')',
-                'time' => $l->created_at->diffForHumans()
-            ];
+        // Cache pour 1 minute
+        $data = Cache::remember('analytics_activities', 60, function () {
+            $activities = collect();
+            
+            // Recent presences
+            $presences = Presence::with('user:id,name,avatar')
+                ->orderBy('created_at', 'desc')
+                ->take(5)
+                ->get()
+                ->map(function($p) {
+                    return [
+                        'type' => 'presence',
+                        'user' => $p->user->name ?? 'Inconnu',
+                        'avatar' => $p->user && $p->user->avatar ? avatar_url($p->user->avatar) : null,
+                        'description' => 'a pointé son arrivée à ' . $p->check_in_formatted,
+                        'time' => $p->created_at->diffForHumans()
+                    ];
+                });
+            
+            // Recent leaves
+            $leaves = Leave::with('user:id,name,avatar')
+                ->orderBy('created_at', 'desc')
+                ->take(5)
+                ->get()
+                ->map(function($l) {
+                    return [
+                        'type' => 'leave',
+                        'user' => $l->user->name ?? 'Inconnu',
+                        'avatar' => $l->user && $l->user->avatar ? avatar_url($l->user->avatar) : null,
+                        'description' => 'a demandé un congé (' . $l->type_label . ')',
+                        'time' => $l->created_at->diffForHumans()
+                    ];
+                });
+
+            // Recent tasks completed
+            $tasks = Task::with('user:id,name,avatar')
+                ->where('statut', 'completed')
+                ->orderBy('updated_at', 'desc')
+                ->take(5)
+                ->get()
+                ->map(function($t) {
+                    $user = $t->user; 
+                    return [
+                        'type' => 'task',
+                        'user' => $user ? $user->name : 'Système',
+                        'avatar' => $user && $user->avatar ? avatar_url($user->avatar) : null,
+                        'description' => 'a terminé la tâche "' . $t->titre . '"',
+                        'time' => $t->updated_at->diffForHumans()
+                    ];
+                });
+
+            return $presences->merge($leaves)->merge($tasks)->sortByDesc('time')->take(10)->values();
         });
 
-        // Recent tasks
-        $tasks = Task::with('user')->orderBy('updated_at', 'desc')->take(5)->get()->filter(fn($t) => $t->statut == 'completed')->map(function($t) {
-            $user = $t->user; 
-            return [
-                'type' => 'task',
-                'user' => $user ? $user->name : 'Système',
-                'avatar' => $user && $user->avatar ? avatar_url($user->avatar) : null,
-                'description' => 'a terminé la tâche "' . $t->titre . '"',
-                'time' => $t->updated_at->diffForHumans()
-            ];
-        });
-
-        return response()->json(
-            $presences->merge($leaves)->merge($tasks)->sortByDesc('time')->take(10)->values()
-        );
+        return response()->json($data);
     }
 
     public function getPendingRequests(Request $request): JsonResponse
     {
-        $pendingLeaves = Leave::with('user')->pending()->take(5)->get()->map(function($l) {
-            return [
-                'id' => $l->id,
-                'type' => 'Congé',
-                'user' => $l->user->name,
-                'details' => $l->type_label . ' (' . $l->duree . ' jours)',
-                'date' => $l->created_at->format('d/m/Y')
-            ];
+        // Cache pour 2 minutes
+        $data = Cache::remember('analytics_pending', 120, function () {
+            return Leave::with('user:id,name')
+                ->pending()
+                ->take(5)
+                ->get()
+                ->map(function($l) {
+                    return [
+                        'id' => $l->id,
+                        'type' => 'Congé',
+                        'user' => $l->user->name ?? 'Inconnu',
+                        'details' => $l->type_label . ' (' . $l->duree . ' jours)',
+                        'date' => $l->created_at->format('d/m/Y')
+                    ];
+                });
         });
 
-        return response()->json($pendingLeaves);
+        return response()->json($data);
     }
 
     public function getTopLatecomers(Request $request): JsonResponse
     {
         $month = now()->month;
-        return response()->json(
-            Presence::where('is_late', true)
+        $year = now()->year;
+        
+        // Cache pour 5 minutes
+        // BUGFIX: $year doit être utilisé dans la requête aussi, pas seulement dans la clé de cache
+        $data = Cache::remember("analytics_latecomers_{$month}_{$year}", 300, function () use ($month, $year) {
+            return Presence::where('is_late', true)
                 ->whereMonth('date', $month)
+                ->whereYear('date', $year)
                 ->select('user_id', DB::raw('COUNT(*) as late_count'), DB::raw('SUM(late_minutes) as total_minutes'))
                 ->groupBy('user_id')
                 ->orderByDesc('late_count')
@@ -476,29 +506,36 @@ class AnalyticsController extends Controller
                 ->map(fn($p, $i) => [
                     'rank' => $i + 1,
                     'user_id' => $p->user_id,
-                    'name' => $p->user->name,
+                    'name' => $p->user->name ?? 'Inconnu',
                     'department' => $p->user->department->name ?? '-',
                     'count' => $p->late_count,
                     'avg_minutes' => $p->late_count > 0 ? round($p->total_minutes / $p->late_count) : 0
-                ])
-        );
+                ]);
+        });
+        
+        return response()->json($data);
     }
 
     public function getHrAlerts(Request $request): JsonResponse
     {
-        return response()->json([
-            'contracts' => User::expiringContracts()->with('department')->limit(5)->get()->map(fn($u) => [
-                'name' => $u->name,
-                'department' => $u->department->name ?? '-',
-                'end_date' => $u->contract_end_date->format('d/m/Y'),
-                'days' => now()->diffInDays($u->contract_end_date),
-            ]),
-            'birthdays' => User::upcomingBirthdays()->limit(5)->get()->map(fn($u) => [
-                'name' => $u->name,
-                'date' => $u->date_of_birth->format('d/m'),
-                'age' => $u->date_of_birth->age + 1
-            ])
-        ]);
+        // Cache pour 10 minutes
+        $data = Cache::remember('analytics_hr_alerts', 600, function () {
+            return [
+                'contracts' => User::expiringContracts()->with('department:id,name')->limit(5)->get()->map(fn($u) => [
+                    'name' => $u->name,
+                    'department' => $u->department->name ?? '-',
+                    'end_date' => $u->contract_end_date ? $u->contract_end_date->format('d/m/Y') : '-',
+                    'days' => $u->contract_end_date ? now()->diffInDays($u->contract_end_date) : 0,
+                ]),
+                'birthdays' => User::upcomingBirthdays()->limit(5)->get()->map(fn($u) => [
+                    'name' => $u->name,
+                    'date' => $u->date_of_birth ? $u->date_of_birth->format('d/m') : '-',
+                    'age' => $u->date_of_birth ? $u->date_of_birth->age + 1 : 0
+                ])
+            ];
+        });
+        
+        return response()->json($data);
     }
 
     /**
@@ -509,60 +546,67 @@ class AnalyticsController extends Controller
         $month = (int) $request->get('custom_month', now()->month);
         $year = (int) $request->get('custom_year', now()->year);
         $departmentId = $request->get('department_id');
+        
+        // Cache pour 5 minutes avec clé unique
+        $cacheKey = "analytics_top_performers_{$month}_{$year}_{$departmentId}";
+        
+        $data = Cache::remember($cacheKey, 300, function () use ($month, $year, $departmentId) {
+            // Top employés par évaluation
+            $topEmployees = EmployeeEvaluation::with(['user:id,name,avatar,department_id', 'user.department:id,name'])
+                ->forPeriod($month, $year)
+                ->validated()
+                ->when($departmentId, fn($q) => $q->whereHas('user', fn($u) => $u->where('department_id', $departmentId)))
+                ->orderByDesc('total_score')
+                ->limit(5)
+                ->get()
+                ->map(fn($eval, $index) => [
+                    'rank' => $index + 1,
+                    'name' => $eval->user->name ?? '-',
+                    'avatar' => $eval->user && $eval->user->avatar ? avatar_url($eval->user->avatar) : null,
+                    'department' => $eval->user->department->name ?? '-',
+                    'score' => $eval->total_score,
+                    'max_score' => EmployeeEvaluation::MAX_SCORE,
+                    'percentage' => $eval->score_percentage,
+                ]);
 
-        // Top employés par évaluation
-        $topEmployees = EmployeeEvaluation::with(['user:id,name,avatar,department_id', 'user.department:id,name'])
-            ->forPeriod($month, $year)
-            ->validated()
-            ->when($departmentId, fn($q) => $q->whereHas('user', fn($u) => $u->where('department_id', $departmentId)))
-            ->orderByDesc('total_score')
-            ->limit(5)
-            ->get()
-            ->map(fn($eval, $index) => [
-                'rank' => $index + 1,
-                'name' => $eval->user->name ?? '-',
-                'avatar' => $eval->user->avatar ? avatar_url($eval->user->avatar) : null,
-                'department' => $eval->user->department->name ?? '-',
-                'score' => $eval->total_score,
-                'max_score' => EmployeeEvaluation::MAX_SCORE,
-                'percentage' => $eval->score_percentage,
-            ]);
+            // Top stagiaires par évaluation (dernières 4 semaines)
+            $weekStart = now()->startOfWeek();
+            $topInternsData = InternEvaluation::submitted()
+                ->where('week_start', '>=', $weekStart->copy()->subWeeks(4))
+                ->when($departmentId, fn($q) => $q->whereHas('intern', fn($u) => $u->where('department_id', $departmentId)))
+                ->selectRaw('intern_id, AVG(discipline_score + behavior_score + skills_score + communication_score) as avg_score')
+                ->groupBy('intern_id')
+                ->orderByDesc('avg_score')
+                ->limit(5)
+                ->get();
 
-        // Top stagiaires par évaluation (dernières 4 semaines)
-        $weekStart = now()->startOfWeek();
-        $topInternsData = InternEvaluation::submitted()
-            ->where('week_start', '>=', $weekStart->copy()->subWeeks(4))
-            ->when($departmentId, fn($q) => $q->whereHas('intern', fn($u) => $u->where('department_id', $departmentId)))
-            ->selectRaw('intern_id, AVG(discipline_score + behavior_score + skills_score + communication_score) as avg_score')
-            ->groupBy('intern_id')
-            ->orderByDesc('avg_score')
-            ->limit(5)
-            ->get();
+            // Load interns separately
+            $internIds = $topInternsData->pluck('intern_id');
+            $interns = User::with('department:id,name')
+                ->whereIn('id', $internIds)
+                ->get()
+                ->keyBy('id');
 
-        // Load interns separately
-        $internIds = $topInternsData->pluck('intern_id');
-        $interns = User::with('department:id,name')
-            ->whereIn('id', $internIds)
-            ->get()
-            ->keyBy('id');
+            $topInterns = $topInternsData->map(function ($eval, $index) use ($interns) {
+                $intern = $interns->get($eval->intern_id);
+                return [
+                    'rank' => $index + 1,
+                    'name' => $intern->name ?? '-',
+                    'avatar' => $intern && $intern->avatar ? avatar_url($intern->avatar) : null,
+                    'department' => $intern && $intern->department ? $intern->department->name : '-',
+                    'score' => round($eval->avg_score ?? 0, 1),
+                    'max_score' => 10,
+                    'percentage' => $eval->avg_score ? round(($eval->avg_score / 10) * 100, 1) : 0,
+                ];
+            });
 
-        $topInterns = $topInternsData->map(function ($eval, $index) use ($interns) {
-            $intern = $interns->get($eval->intern_id);
             return [
-                'rank' => $index + 1,
-                'name' => $intern->name ?? '-',
-                'avatar' => $intern && $intern->avatar ? avatar_url($intern->avatar) : null,
-                'department' => $intern->department->name ?? '-',
-                'score' => round($eval->avg_score ?? 0, 1),
-                'max_score' => 10,
-                'percentage' => $eval->avg_score ? round(($eval->avg_score / 10) * 100, 1) : 0,
+                'employees' => $topEmployees,
+                'interns' => $topInterns,
             ];
         });
 
-        return response()->json([
-            'employees' => $topEmployees,
-            'interns' => $topInterns,
-        ]);
+        return response()->json($data);
     }
 
     /**
@@ -573,62 +617,67 @@ class AnalyticsController extends Controller
         $month = (int) $request->get('custom_month', now()->month);
         $year = (int) $request->get('custom_year', now()->year);
         $departmentId = $request->get('department_id');
-
-        // Meilleure assiduité (plus de présences, moins de retards)
-        $attendanceData = Presence::whereMonth('date', $month)
-            ->whereYear('date', $year)
-            ->when($departmentId, fn($q) => $q->forDepartment($departmentId))
-            ->select('user_id')
-            ->selectRaw('COUNT(*) as presence_count')
-            ->selectRaw('SUM(CASE WHEN is_late = 0 OR is_late IS NULL THEN 1 ELSE 0 END) as on_time_count')
-            ->selectRaw('SUM(CASE WHEN is_late = 1 THEN 1 ELSE 0 END) as late_count')
-            ->groupBy('user_id')
-            ->orderByDesc('on_time_count')
-            ->orderBy('late_count')
-            ->limit(5)
-            ->get();
-
-        // Load users separately
-        $userIds = $attendanceData->pluck('user_id');
-        $users = User::with('department:id,name')
-            ->whereIn('id', $userIds)
-            ->get()
-            ->keyBy('id');
-
-        // Calculate total hours for each user
-        $totalHours = [];
-        if ($userIds->isNotEmpty()) {
-            $presences = Presence::whereMonth('date', $month)
+        
+        // Cache pour 5 minutes avec clé unique
+        $cacheKey = "analytics_best_attendance_{$month}_{$year}_{$departmentId}";
+        
+        $data = Cache::remember($cacheKey, 300, function () use ($month, $year, $departmentId) {
+            // Meilleure assiduité (plus de présences, moins de retards)
+            $attendanceData = Presence::whereMonth('date', $month)
                 ->whereYear('date', $year)
-                ->whereIn('user_id', $userIds)
-                ->whereNotNull('check_out')
+                ->when($departmentId, fn($q) => $q->forDepartment($departmentId))
+                ->select('user_id')
+                ->selectRaw('COUNT(*) as presence_count')
+                ->selectRaw('SUM(CASE WHEN is_late = 0 OR is_late IS NULL THEN 1 ELSE 0 END) as on_time_count')
+                ->selectRaw('SUM(CASE WHEN is_late = 1 THEN 1 ELSE 0 END) as late_count')
+                ->groupBy('user_id')
+                ->orderByDesc('on_time_count')
+                ->orderBy('late_count')
+                ->limit(5)
                 ->get();
-            
-            foreach ($presences as $presence) {
-                $userId = $presence->user_id;
-                $hours = $presence->hours_worked ?? 0;
-                $totalHours[$userId] = ($totalHours[$userId] ?? 0) + $hours;
-            }
-        }
 
-        $bestAttendance = $attendanceData->map(function ($p, $index) use ($users, $totalHours) {
-            $user = $users->get($p->user_id);
-            return [
-                'rank' => $index + 1,
-                'name' => $user->name ?? '-',
-                'avatar' => $user && $user->avatar ? avatar_url($user->avatar) : null,
-                'department' => $user->department->name ?? '-',
-                'presence_count' => (int) $p->presence_count,
-                'on_time_count' => (int) $p->on_time_count,
-                'late_count' => (int) $p->late_count,
-                'punctuality_rate' => $p->presence_count > 0 
-                    ? round(($p->on_time_count / $p->presence_count) * 100, 1) 
-                    : 0,
-                'total_hours' => round($totalHours[$p->user_id] ?? 0, 1),
-            ];
+            // Load users separately
+            $userIds = $attendanceData->pluck('user_id');
+            $users = User::with('department:id,name')
+                ->whereIn('id', $userIds)
+                ->get()
+                ->keyBy('id');
+
+            // Calculate total hours for each user
+            $totalHours = [];
+            if ($userIds->isNotEmpty()) {
+                $presences = Presence::whereMonth('date', $month)
+                    ->whereYear('date', $year)
+                    ->whereIn('user_id', $userIds)
+                    ->whereNotNull('check_out')
+                    ->get();
+                
+                foreach ($presences as $presence) {
+                    $userId = $presence->user_id;
+                    $hours = $presence->hours_worked ?? 0;
+                    $totalHours[$userId] = ($totalHours[$userId] ?? 0) + $hours;
+                }
+            }
+
+            return $attendanceData->map(function ($p, $index) use ($users, $totalHours) {
+                $user = $users->get($p->user_id);
+                return [
+                    'rank' => $index + 1,
+                    'name' => $user->name ?? '-',
+                    'avatar' => $user && $user->avatar ? avatar_url($user->avatar) : null,
+                    'department' => $user && $user->department ? $user->department->name : '-',
+                    'presence_count' => (int) $p->presence_count,
+                    'on_time_count' => (int) $p->on_time_count,
+                    'late_count' => (int) $p->late_count,
+                    'punctuality_rate' => $p->presence_count > 0 
+                        ? round(($p->on_time_count / $p->presence_count) * 100, 1) 
+                        : 0,
+                    'total_hours' => round($totalHours[$p->user_id] ?? 0, 1),
+                ];
+            });
         });
 
-        return response()->json($bestAttendance);
+        return response()->json($data);
     }
 
     /**
@@ -815,5 +864,27 @@ class AnalyticsController extends Controller
             'best_attendance' => $bestAttendance,
             'evaluation_stats' => $evaluationStats,
         ];
+    }
+
+    /**
+     * Get AI-generated insights based on current KPIs.
+     */
+    public function getAiInsights(Request $request, AnalyticsInsightService $insightService): JsonResponse
+    {
+        $kpisResponse = $this->getKpiData($request);
+        $kpis = json_decode($kpisResponse->getContent(), true);
+
+        $filters = [
+            'period' => $request->get('period', 'month'),
+            'department_id' => $request->get('department_id'),
+            'contract_type' => $request->get('contract_type'),
+        ];
+
+        $insights = $insightService->generateInsights($kpis, $filters);
+
+        return response()->json([
+            'insights' => $insights,
+            'available' => $insights !== null,
+        ]);
     }
 }

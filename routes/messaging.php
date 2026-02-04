@@ -52,6 +52,7 @@ Route::middleware(['auth'])->prefix('messaging')->name('messaging.')->group(func
             ->middleware('throttle:uploads')
             ->name('attachments.store');
         Route::get('/attachments/{attachment}/download', [App\Http\Controllers\Messaging\AttachmentController::class, 'download'])->name('attachments.download');
+        Route::get('/attachments/{attachment}/show', [App\Http\Controllers\Messaging\AttachmentController::class, 'show'])->name('attachments.show');
         Route::delete('/attachments/{attachment}', [App\Http\Controllers\Messaging\AttachmentController::class, 'destroy'])
             ->middleware('throttle:sensitive')
             ->name('attachments.destroy');
@@ -64,13 +65,18 @@ Route::middleware(['auth'])->prefix('messaging')->name('messaging.')->group(func
         Route::post('/status/batch', [App\Http\Controllers\Messaging\StatusController::class, 'batch'])->name('status.batch');
 
         // Users search (for mentions and new conversations)
+        // SECURITE: Validation d'entrée + rate limiting pour éviter l'énumération
         Route::get('/users/search', function(\Illuminate\Http\Request $request) {
+            $request->validate([
+                'q' => 'required|string|max:100'
+            ]);
+            
             $query = $request->get('q', '');
             $users = \App\Models\User::where('id', '!=', auth()->id())
                 ->where('name', 'like', "%{$query}%")
                 ->limit(10)
                 ->get(['id', 'name', 'email']);
             return response()->json($users);
-        })->name('users.search');
+        })->middleware('throttle:30,1')->name('users.search');
     });
 });

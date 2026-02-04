@@ -1,4 +1,4 @@
-<x-layouts.admin>
+﻿<x-layouts.admin>
     <div class="space-y-6">
         <!-- Breadcrumbs -->
         <nav class="flex animate-fade-in-up" aria-label="Breadcrumb">
@@ -119,7 +119,7 @@
                         </div>
                     </div>
 
-                    <script>
+                    <script nonce="{{ $cspNonce ?? '' }}">
                         document.getElementById('approveForm').addEventListener('submit', function() {
                             document.getElementById('approveComment').value = document.getElementById('commentaire_admin').value;
                         });
@@ -149,7 +149,7 @@
                         </div>
                     </div>
                     <a href="{{ route('admin.employees.show', $leave->user) }}" class="mt-4 block text-center text-sm text-blue-600 hover:text-blue-800">
-                        Voir le profil complet →
+                        Voir le profil complet â†’
                     </a>
                 </div>
 
@@ -159,12 +159,12 @@
                     <dl class="space-y-4">
                         <div>
                             <dt class="text-sm text-gray-500">Demande créée le</dt>
-                            <dd class="mt-1 text-sm font-medium text-gray-900">{{ $leave->created_at->format('d/m/Y à H:i') }}</dd>
+                            <dd class="mt-1 text-sm font-medium text-gray-900">{{ $leave->created_at->format('d/m/Y é  H:i') }}</dd>
                         </div>
                         @if($leave->updated_at != $leave->created_at)
                             <div>
-                                <dt class="text-sm text-gray-500">Dernière modification</dt>
-                                <dd class="mt-1 text-sm font-medium text-gray-900">{{ $leave->updated_at->format('d/m/Y à H:i') }}</dd>
+                                <dt class="text-sm text-gray-500">Derniére modification</dt>
+                                <dd class="mt-1 text-sm font-medium text-gray-900">{{ $leave->updated_at->format('d/m/Y é  H:i') }}</dd>
                             </div>
                         @endif
                     </dl>

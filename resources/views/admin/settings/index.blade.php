@@ -1,4 +1,4 @@
-<x-layouts.admin>
+﻿<x-layouts.admin>
     <div class="space-y-6" x-data="settingsPage()">
         <!-- Header avec gradient -->
         <div class="relative overflow-hidden bg-gradient-to-r from-slate-700 via-slate-800 to-slate-900 rounded-2xl shadow-xl">
@@ -16,8 +16,8 @@
                             </svg>
                         </div>
                         <div>
-                            <h1 class="text-2xl md:text-3xl font-bold text-white">Paramètres</h1>
-                            <p class="text-white/70 mt-1">Configuration générale du système</p>
+                            <h1 class="text-2xl md:text-3xl font-bold text-white">Paramétres</h1>
+                            <p class="text-white/70 mt-1">Configuration générale du systéme</p>
                         </div>
                     </div>
                     
@@ -148,7 +148,7 @@
                                 <label for="email_password" class="block text-sm font-medium text-gray-700 mb-1">Mot de passe actuel</label>
                                 <input type="password" name="password" id="email_password" required
                                        class="w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
-                                       placeholder="••••••••">
+                                       placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢">
                                 @error('password')
                                     <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                                 @enderror
@@ -157,7 +157,7 @@
                         
                         <div class="mt-6">
                             <button type="submit" class="w-full px-6 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-medium rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all shadow-lg shadow-indigo-500/30">
-                                Mettre à jour l'email
+                                Mettre é  jour l'email
                             </button>
                         </div>
                     </form>
@@ -182,7 +182,7 @@
                                 <label for="current_password" class="block text-sm font-medium text-gray-700 mb-1">Mot de passe actuel</label>
                                 <input type="password" name="current_password" id="current_password" required
                                        class="w-full rounded-xl border-gray-300 focus:border-rose-500 focus:ring-rose-500"
-                                       placeholder="••••••••">
+                                       placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢">
                                 @error('current_password')
                                     <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                                 @enderror
@@ -192,24 +192,24 @@
                                 <label for="new_password" class="block text-sm font-medium text-gray-700 mb-1">Nouveau mot de passe</label>
                                 <input type="password" name="new_password" id="new_password" required minlength="8"
                                        class="w-full rounded-xl border-gray-300 focus:border-rose-500 focus:ring-rose-500"
-                                       placeholder="••••••••">
+                                       placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢">
                                 @error('new_password')
                                     <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                                 @enderror
-                                <p class="mt-1 text-xs text-gray-500">Minimum 8 caractères</p>
+                                <p class="mt-1 text-xs text-gray-500">Minimum 8 caractéres</p>
                             </div>
                             
                             <div>
                                 <label for="new_password_confirmation" class="block text-sm font-medium text-gray-700 mb-1">Confirmer le nouveau mot de passe</label>
                                 <input type="password" name="new_password_confirmation" id="new_password_confirmation" required
                                        class="w-full rounded-xl border-gray-300 focus:border-rose-500 focus:ring-rose-500"
-                                       placeholder="••••••••">
+                                       placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢">
                             </div>
                         </div>
                         
                         <div class="mt-6">
                             <button type="submit" class="w-full px-6 py-2.5 bg-gradient-to-r from-rose-600 to-pink-600 text-white font-medium rounded-xl hover:from-rose-700 hover:to-pink-700 transition-all shadow-lg shadow-rose-500/30">
-                                Mettre à jour le mot de passe
+                                Mettre é  jour le mot de passe
                             </button>
                         </div>
                     </form>
@@ -225,9 +225,9 @@
                     <div>
                         <h4 class="font-semibold text-amber-800">Conseils de sécurité</h4>
                         <ul class="mt-1 text-sm text-amber-700 list-disc list-inside space-y-1">
-                            <li>Utilisez un mot de passe fort avec des lettres, chiffres et caractères spéciaux</li>
+                            <li>Utilisez un mot de passe fort avec des lettres, chiffres et caractéres spéciaux</li>
                             <li>Ne partagez jamais vos identifiants de connexion</li>
-                            <li>Changez régulièrement votre mot de passe</li>
+                            <li>Changez réguliérement votre mot de passe</li>
                         </ul>
                     </div>
                 </div>
@@ -283,7 +283,7 @@
                     <div class="mt-6 p-4 bg-green-50 rounded-lg max-w-2xl">
                         <p class="text-sm text-green-800">
                             <strong>Durée de travail :</strong> Les employés travailleront de
-                            <span class="font-mono">{{ $settings['work_start_time'] }}</span> à
+                            <span class="font-mono">{{ $settings['work_start_time'] }}</span> é 
                             <span class="font-mono">{{ $settings['work_end_time'] }}</span>
                         </p>
                     </div>
@@ -346,7 +346,7 @@
                     <div class="mt-6 p-4 bg-orange-50 rounded-lg max-w-2xl">
                         <p class="text-sm text-orange-800">
                             <strong>Durée de pause :</strong> De
-                            <span class="font-mono">{{ $settings['break_start_time'] }}</span> à
+                            <span class="font-mono">{{ $settings['break_start_time'] }}</span> é 
                             <span class="font-mono">{{ $settings['break_end_time'] }}</span>
                             (1 heure déduite automatiquement)
                         </p>
@@ -407,8 +407,8 @@
 
                     <div class="mt-6 p-4 bg-red-50 rounded-lg max-w-md">
                         <p class="text-sm text-red-800">
-                            <strong>Exemple :</strong> Avec une tolérance de {{ $settings['late_tolerance_minutes'] }} min et un début à {{ $settings['work_start_time'] }},
-                            un employé est en retard à partir de
+                            <strong>Exemple :</strong> Avec une tolérance de {{ $settings['late_tolerance_minutes'] }} min et un début é  {{ $settings['work_start_time'] }},
+                            un employé est en retard é  partir de
                             <span class="font-mono font-bold">
                                 @php
                                     $start = \Carbon\Carbon::createFromFormat('H:i', $settings['work_start_time']);
@@ -462,7 +462,7 @@
                                     <div>
                                         <h3 class="font-medium text-gray-900">{{ $department->name }}</h3>
                                         <p class="text-sm text-gray-500">
-                                            {{ $department->positions_count }} poste(s) · {{ $department->users_count }} employé(s)
+                                            {{ $department->positions_count }} poste(s) Â· {{ $department->users_count }} employé(s)
                                         </p>
                                     </div>
                                     @if(!$department->is_active)
@@ -704,7 +704,7 @@
                         </div>
                         <div>
                             <h2 class="text-lg font-semibold text-gray-900">Configuration Paie</h2>
-                            <p class="text-sm text-gray-500">Sélectionnez le pays dont les règles fiscales seront appliquées aux fiches de paie.</p>
+                            <p class="text-sm text-gray-500">Sélectionnez le pays dont les régles fiscales seront appliquées aux fiches de paie.</p>
                         </div>
                     </div>
 
@@ -725,22 +725,22 @@
                             <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                         @enderror
                         <p class="mt-2 text-xs text-gray-500">
-                            Les règles de calcul (IS, CN, IGR, CNPS...) du pays sélectionné seront utilisées pour toutes les fiches de paie.
+                            Les régles de calcul (IS, CN, IGR, CNPS...) du pays sélectionné seront utilisées pour toutes les fiches de paie.
                         </p>
                     </div>
 
                     @if(isset($payrollCountries) && $payrollCountries->count() > 0)
                         <div class="mt-6 p-4 bg-emerald-50 rounded-lg max-w-md">
                             <p class="text-sm text-emerald-800">
-                                <strong>{{ $payrollCountries->count() }} pays configuré(s)</strong> dans le système.
-                                <a href="{{ route('admin.payroll-settings.countries') }}" class="underline hover:no-underline">Gérer les pays →</a>
+                                <strong>{{ $payrollCountries->count() }} pays configuré(s)</strong> dans le systéme.
+                                <a href="{{ route('admin.payroll-settings.countries') }}" class="underline hover:no-underline">Gérer les pays â†’</a>
                             </p>
                         </div>
                     @else
                         <div class="mt-6 p-4 bg-yellow-50 rounded-lg max-w-md">
                             <p class="text-sm text-yellow-800">
                                 <strong>Aucun pays configuré.</strong>
-                                <a href="{{ route('admin.payroll-settings.countries') }}" class="underline hover:no-underline">Configurer un pays →</a>
+                                <a href="{{ route('admin.payroll-settings.countries') }}" class="underline hover:no-underline">Configurer un pays â†’</a>
                             </p>
                         </div>
                     @endif
@@ -755,7 +755,7 @@
         </div>
     </div>
 
-    <script>
+    <script nonce="{{ $cspNonce ?? '' }}">
         function settingsPage() {
             return {
                 activeTab: '{{ request('tab', 'compte') }}',

@@ -1,4 +1,4 @@
-<x-layouts.admin>
+﻿<x-layouts.admin>
     <div class="space-y-6">
         <!-- Header -->
         <div class="flex items-center justify-between">
@@ -10,7 +10,7 @@
                     </svg>
                 </a>
                 <div>
-                    <h1 class="text-2xl font-bold text-gray-900">🟡 Documents en Attente</h1>
+                    <h1 class="text-2xl font-bold text-gray-900">ðŸŸ¡ Documents en Attente</h1>
                     <p class="text-gray-500">{{ $documents->total() }} documents nécessitant une validation</p>
                 </div>
             </div>
@@ -29,7 +29,7 @@
                     <button type="submit" name="action" value="approve" 
                             class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50"
                             id="approveBtn" disabled>
-                        ✅ Approuver la sélection
+                        âœ… Approuver la sélection
                     </button>
                 </div>
             </div>
@@ -86,11 +86,11 @@
                         <div class="flex gap-2">
                             <button onclick="validateDoc({{ $document->id }}, 'approve')" 
                                     class="px-3 py-1 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700">
-                                ✅ Approuver
+                                âœ… Approuver
                             </button>
                             <button onclick="showReject({{ $document->id }})" 
                                     class="px-3 py-1 bg-red-100 text-red-700 text-sm rounded-lg hover:bg-red-200">
-                                ❌ Rejeter
+                                âŒ Rejeter
                             </button>
                         </div>
                     </div>
@@ -98,10 +98,10 @@
             @empty
                 <div class="col-span-full bg-white rounded-xl shadow-sm border border-gray-100 p-12 text-center">
                     <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <span class="text-3xl">✅</span>
+                        <span class="text-3xl">âœ…</span>
                     </div>
                     <h3 class="text-lg font-medium text-gray-900">Aucun document en attente</h3>
-                    <p class="text-gray-500 mt-1">Tous les documents ont été traités ! 🎉</p>
+                    <p class="text-gray-500 mt-1">Tous les documents ont été traités ! ðŸŽ</p>
                 </div>
             @endforelse
         </div>
@@ -121,7 +121,7 @@
     <!-- Reject Modal -->
     <div id="rejectModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
         <div class="bg-white rounded-xl shadow-xl max-w-md w-full mx-4 p-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">❌ Rejeter le document</h3>
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">âŒ Rejeter le document</h3>
             <form id="rejectForm" method="POST">
                 @csrf
                 <input type="hidden" name="action" value="reject">
@@ -145,7 +145,7 @@
     </div>
 
     @push('scripts')
-    <script>
+    <script nonce="{{ $cspNonce ?? '' }}">
         // Bulk selection
         const selectAll = document.getElementById('selectAll');
         const checkboxes = document.querySelectorAll('.doc-checkbox');
@@ -167,8 +167,8 @@
             if (approveBtn) {
                 approveBtn.disabled = checked === 0;
                 approveBtn.textContent = checked > 0 
-                    ? `✅ Approuver la sélection (${checked})` 
-                    : '✅ Approuver la sélection';
+                    ? `âœ… Approuver la sélection (${checked})` 
+                    : 'âœ… Approuver la sélection';
             }
         }
 

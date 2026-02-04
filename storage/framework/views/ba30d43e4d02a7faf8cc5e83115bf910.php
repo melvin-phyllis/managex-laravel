@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rapport de Progression - <?php echo e($intern->name); ?></title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'DejaVu Sans', Arial, sans-serif;
+            font-size: 11px;
+            line-height: 1.4;
+            color: #333;
+            padding: 20px;
+        }
+        .header {
+            border-bottom: 3px solid #8b5cf6;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+        .company-name {
+            font-size: 24px;
+            font-weight: bold;
+            color: #8b5cf6;
+        }
+        .document-title {
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+            color: #1f2937;
+            margin: 15px 0;
+            padding: 12px;
+            background: linear-gradient(135deg, #f3e8ff 0%, #ede9fe 100%);
+            border-radius: 6px;
+        }
+        .intern-info {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f9fafb;
+            border-radius: 6px;
+        }
+        .intern-name {
+            font-size: 16px;
+            font-weight: bold;
+            color: #1f2937;
+        }
+        .intern-details {
+            color: #6b7280;
+            margin-top: 5px;
+        }
+        .period-info {
+            float: right;
+            text-align: right;
+            font-size: 10px;
+            color: #6b7280;
+        }
+        .summary-box {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%);
+            color: white;
+            border-radius: 8px;
+        }
+        .summary-grid {
+            display: table;
+            width: 100%;
+        }
+        .summary-item {
+            display: table-cell;
+            text-align: center;
+            padding: 10px;
+        }
+        .summary-value {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .summary-label {
+            font-size: 10px;
+            opacity: 0.9;
+        }
+        .evaluations-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        .evaluations-table th {
+            background-color: #8b5cf6;
+            color: white;
+            padding: 10px;
+            font-size: 10px;
+            text-align: center;
+        }
+        .evaluations-table td {
+            padding: 8px;
+            border-bottom: 1px solid #e5e7eb;
+            text-align: center;
+            font-size: 10px;
+        }
+        .evaluations-table tr:nth-child(even) {
+            background-color: #f9fafb;
+        }
+        .grade-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 9px;
+        }
+        .grade-a { background-color: #d1fae5; color: #065f46; }
+        .grade-b { background-color: #dbeafe; color: #1e40af; }
+        .grade-c { background-color: #fef3c7; color: #92400e; }
+        .grade-d { background-color: #ffedd5; color: #c2410c; }
+        .grade-e { background-color: #fee2e2; color: #b91c1c; }
+        .averages-table {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        .averages-table td {
+            padding: 10px;
+            vertical-align: top;
+        }
+        .avg-box {
+            padding: 12px;
+            background-color: #f9fafb;
+            border-radius: 6px;
+            text-align: center;
+        }
+        .avg-box h4 {
+            font-size: 10px;
+            color: #6b7280;
+            margin-bottom: 5px;
+        }
+        .avg-box .value {
+            font-size: 18px;
+            font-weight: bold;
+            color: #8b5cf6;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background-color: #e5e7eb;
+            border-radius: 3px;
+            margin-top: 5px;
+        }
+        .progress-fill {
+            height: 100%;
+            background-color: #8b5cf6;
+            border-radius: 3px;
+        }
+        .footer {
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 1px solid #e5e7eb;
+            text-align: center;
+            color: #6b7280;
+            font-size: 9px;
+        }
+        .page-break {
+            page-break-after: always;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="company-name">ManageX</div>
+        <div style="color: #666; font-size: 12px;">Rapport de Progression - Stagiaire</div>
+    </div>
+
+    <div class="document-title">
+        RAPPORT DE PROGRESSION
+    </div>
+
+    <div class="intern-info" style="overflow: hidden;">
+        <div class="period-info">
+            <?php if($dateFrom && $dateTo): ?>
+                Période : <?php echo e(\Carbon\Carbon::parse($dateFrom)->format('d/m/Y')); ?> - <?php echo e(\Carbon\Carbon::parse($dateTo)->format('d/m/Y')); ?>
+
+            <?php else: ?>
+                Toutes les évaluations
+            <?php endif; ?>
+            <br>
+            Généré le <?php echo e(now()->format('d/m/Y')); ?>
+
+        </div>
+        <div class="intern-name"><?php echo e($intern->name); ?></div>
+        <div class="intern-details">
+            <?php echo e($intern->email); ?> | <?php echo e($intern->department->name ?? 'Non assigné'); ?>
+
+            <?php if($intern->supervisor): ?>
+                | Tuteur: <?php echo e($intern->supervisor->name); ?>
+
+            <?php endif; ?>
+        </div>
+    </div>
+
+    <?php if($evaluations->isNotEmpty()): ?>
+        <!-- Summary -->
+        <div class="summary-box">
+            <table class="summary-grid" style="width: 100%;">
+                <tr>
+                    <td class="summary-item">
+                        <div class="summary-value"><?php echo e($evaluations->count()); ?></div>
+                        <div class="summary-label">Évaluations</div>
+                    </td>
+                    <td class="summary-item">
+                        <div class="summary-value"><?php echo e($averages['total']); ?>/10</div>
+                        <div class="summary-label">Moyenne Générale</div>
+                    </td>
+                    <td class="summary-item">
+                        <?php
+                            $avgGrade = match(true) {
+                                $averages['total'] >= 9 => 'A',
+                                $averages['total'] >= 7 => 'B',
+                                $averages['total'] >= 5 => 'C',
+                                $averages['total'] >= 3 => 'D',
+                                default => 'E',
+                            };
+                        ?>
+                        <div class="summary-value"><?php echo e($avgGrade); ?></div>
+                        <div class="summary-label">Grade Moyen</div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Averages by Criteria -->
+        <table class="averages-table">
+            <tr>
+                <td width="25%">
+                    <div class="avg-box">
+                        <h4>Discipline</h4>
+                        <div class="value"><?php echo e($averages['discipline']); ?>/2.5</div>
+                        <div class="progress-bar"><div class="progress-fill" style="width: <?php echo e(($averages['discipline'] / 2.5) * 100); ?>%"></div></div>
+                    </div>
+                </td>
+                <td width="25%">
+                    <div class="avg-box">
+                        <h4>Comportement</h4>
+                        <div class="value"><?php echo e($averages['behavior']); ?>/2.5</div>
+                        <div class="progress-bar"><div class="progress-fill" style="width: <?php echo e(($averages['behavior'] / 2.5) * 100); ?>%"></div></div>
+                    </div>
+                </td>
+                <td width="25%">
+                    <div class="avg-box">
+                        <h4>Compétences</h4>
+                        <div class="value"><?php echo e($averages['skills']); ?>/2.5</div>
+                        <div class="progress-bar"><div class="progress-fill" style="width: <?php echo e(($averages['skills'] / 2.5) * 100); ?>%"></div></div>
+                    </div>
+                </td>
+                <td width="25%">
+                    <div class="avg-box">
+                        <h4>Communication</h4>
+                        <div class="value"><?php echo e($averages['communication']); ?>/2.5</div>
+                        <div class="progress-bar"><div class="progress-fill" style="width: <?php echo e(($averages['communication'] / 2.5) * 100); ?>%"></div></div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+
+        <!-- Evaluations History -->
+        <h3 style="font-size: 12px; margin-bottom: 10px; color: #374151;">Historique des Évaluations</h3>
+        <table class="evaluations-table">
+            <thead>
+                <tr>
+                    <th>Semaine</th>
+                    <th>Discipline</th>
+                    <th>Comportement</th>
+                    <th>Compétences</th>
+                    <th>Communication</th>
+                    <th>Total</th>
+                    <th>Grade</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php $__currentLoopData = $evaluations; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $eval): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <tr>
+                        <td style="text-align: left;"><?php echo e($eval->week_start->format('d/m/Y')); ?></td>
+                        <td><?php echo e($eval->discipline_score); ?></td>
+                        <td><?php echo e($eval->behavior_score); ?></td>
+                        <td><?php echo e($eval->skills_score); ?></td>
+                        <td><?php echo e($eval->communication_score); ?></td>
+                        <td><strong><?php echo e($eval->total_score); ?></strong></td>
+                        <td>
+                            <span class="grade-badge grade-<?php echo e(strtolower($eval->grade_letter)); ?>"><?php echo e($eval->grade_letter); ?></span>
+                        </td>
+                    </tr>
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+            </tbody>
+        </table>
+    <?php else: ?>
+        <div style="text-align: center; padding: 40px; color: #6b7280;">
+            Aucune évaluation disponible pour cette période.
+        </div>
+    <?php endif; ?>
+
+    <div class="footer">
+        <p>Document généré automatiquement par ManageX le <?php echo e(now()->format('d/m/Y à H:i')); ?></p>
+        <p>Ce document est confidentiel et destiné uniquement aux personnes autorisées.</p>
+    </div>
+</body>
+</html>
+<?php /**PATH D:\ManageX\resources\views\pdf\intern-progress-report.blade.php ENDPATH**/ ?>

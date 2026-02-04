@@ -47,10 +47,14 @@ class PresenceController extends Controller
     {
         $today = now()->toDateString();
         
-        // Employés attendus aujourd'hui (jours de travail configurés)
+        // Employés attendus aujourd'hui (jours de travail configurés, embauchés avant ou aujourd'hui)
         $expectedEmployees = User::where('role', 'employee')
             ->with(['department', 'position'])
             ->whereHas('workDays', fn($q) => $q->where('day_of_week', now()->dayOfWeekIso))
+            ->where(function ($q) {
+                $q->whereNull('hire_date')
+                  ->orWhere('hire_date', '<=', now()->toDateString());
+            })
             ->when($departmentId, fn($q) => $q->where('department_id', $departmentId))
             ->get();
 

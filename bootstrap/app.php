@@ -20,6 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // Ajouter les en-têtes de sécurité à toutes les requêtes web
         $middleware->appendToGroup('web', [
             \App\Http\Middleware\SecurityHeaders::class,
+            \App\Http\Middleware\CheckAccountStatus::class,
         ]);
 
         // SÉCURITÉ: Configuration des proxies de confiance

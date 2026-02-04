@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -16,6 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
  * - Information disclosure (X-Powered-By removal)
  * - Referrer leakage (Referrer-Policy)
  * - Permission policy (Permissions-Policy)
+ * - Content Security Policy avec nonces (CSP)
  */
 class SecurityHeaders
 {
@@ -26,6 +28,13 @@ class SecurityHeaders
      */
     public function handle(Request $request, Closure $next): Response
     {
+        // Générer un nonce unique pour cette requête
+        $nonce = $this->generateNonce();
+        
+        // Stocker le nonce pour qu'il soit accessible dans les views
+        app()->instance('csp-nonce', $nonce);
+        view()->share('cspNonce', $nonce);
+        
         $response = $next($request);
 
         // Protection contre le clickjacking
@@ -45,8 +54,8 @@ class SecurityHeaders
         $response->headers->set('Referrer-Policy', 'strict-origin-when-cross-origin');
 
         // Politique de permissions (remplace Feature-Policy)
-        // Désactive les fonctionnalités sensibles par défaut
-        $response->headers->set('Permissions-Policy', 'geolocation=(self), microphone=(), camera=()');
+        // microphone=(self) et camera=(self) pour messagerie vocale et photos
+        $response->headers->set('Permissions-Policy', 'geolocation=(self), microphone=(self), camera=(self)');
 
         // Supprimer l'en-tête X-Powered-By si présent (révèle la technologie serveur)
         $response->headers->remove('X-Powered-By');
@@ -60,23 +69,83 @@ class SecurityHeaders
             );
         }
 
-        // Content Security Policy (CSP) basique
-        // À personnaliser selon les besoins de l'application
-        // Note: Cette CSP est permissive pour permettre le développement
-        // En production, il faudrait la renforcer
-        if (app()->environment('production')) {
-            $response->headers->set(
-                'Content-Security-Policy',
-                "default-src 'self'; " .
-                "script-src 'self' 'unsafe-inline' 'unsafe-eval'; " .
-                "style-src 'self' 'unsafe-inline'; " .
-                "img-src 'self' data: https:; " .
-                "font-src 'self' data:; " .
-                "connect-src 'self' wss:; " .
-                "frame-ancestors 'self';"
-            );
-        }
+        // Content Security Policy (CSP) avec nonces
+        // SÉCURITÉ: Les nonces remplacent 'unsafe-inline' pour bloquer XSS
+        $csp = $this->buildCsp($nonce);
+        $response->headers->set('Content-Security-Policy', $csp);
 
         return $response;
+    }
+
+    /**
+     * Générer un nonce cryptographiquement sécurisé
+     */
+    private function generateNonce(): string
+    {
+        return base64_encode(random_bytes(16));
+    }
+
+    /**
+     * Construire la politique CSP
+     */
+    private function buildCsp(string $nonce): string
+    {
+        $isProduction = app()->environment('production');
+
+        // Sources de base
+        $defaultSrc = "'self'";
+        
+        // Scripts: CDNs nécessaires (Chart.js, Alpine.js, jQuery, Lightbox, etc.)
+        $scriptCdns = 'https://cdn.jsdelivr.net https://unpkg.com https://cdnjs.cloudflare.com https://code.jquery.com';
+        if ($isProduction) {
+            $scriptSrc = "'self' 'nonce-{$nonce}' {$scriptCdns}";
+        } else {
+            // En dev, on permet unsafe-inline pour le hot reload Vite et les event handlers inline
+            // Note: nonce est exclu car sa présence désactive unsafe-inline selon la spec CSP
+            $scriptSrc = "'self' 'unsafe-inline' 'unsafe-eval' {$scriptCdns}";
+        }
+
+        // Styles: fonts + CDNs (Lightbox CSS, FullCalendar CSS, Leaflet CSS, etc.)
+        $styleCdns = 'https://fonts.googleapis.com https://fonts.bunny.net https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://unpkg.com';
+        if ($isProduction) {
+            $styleSrc = "'self' 'nonce-{$nonce}' {$styleCdns}";
+        } else {
+            $styleSrc = "'self' 'unsafe-inline' {$styleCdns}";
+        }
+
+        // Images: self, data URIs, et HTTPS pour les images externes
+        $imgSrc = "'self' data: https:";
+
+        // Fonts: Google Fonts, Bunny Fonts
+        $fontSrc = "'self' data: https://fonts.gstatic.com https://fonts.bunny.net";
+
+        // Connexions: self, WebSockets, CDNs pour source maps
+        $connectSrc = "'self' wss: ws: https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://unpkg.com";
+
+        // Frame ancestors: self (clickjacking protection)
+        $frameAncestors = "'self'";
+
+        // Form action: self only
+        $formAction = "'self'";
+
+        // Base URI: self only
+        $baseUri = "'self'";
+
+        // Worker source: allow blob URLs for web workers
+        $workerSrc = "'self' blob:";
+
+        return implode('; ', [
+            "default-src {$defaultSrc}",
+            "script-src {$scriptSrc}",
+            "style-src {$styleSrc}",
+            "style-src-elem {$styleSrc}",
+            "img-src {$imgSrc}",
+            "font-src {$fontSrc}",
+            "connect-src {$connectSrc}",
+            "worker-src {$workerSrc}",
+            "frame-ancestors {$frameAncestors}",
+            "form-action {$formAction}",
+            "base-uri {$baseUri}",
+        ]);
     }
 }

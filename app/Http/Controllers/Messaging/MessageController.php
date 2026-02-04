@@ -400,10 +400,12 @@ class MessageController extends Controller
             'attachments' => $message->attachments->map(fn ($a) => [
                 'id' => $a->id,
                 'name' => $a->original_name,
-                'url' => $a->url,
+                'url' => ($a->isImage() || $a->isAudio()) ? route('messaging.api.attachments.show', $a) : route('messaging.api.attachments.download', $a),
+                'download_url' => route('messaging.api.attachments.download', $a),
                 'type' => $a->mime_type,
                 'size' => $a->human_size,
                 'is_image' => $a->isImage(),
+                'is_audio' => $a->isAudio(),
             ]),
             'reactions' => $message->groupedReactions(),
             'is_edited' => $message->is_edited,

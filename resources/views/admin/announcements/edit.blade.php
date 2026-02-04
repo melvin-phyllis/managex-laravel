@@ -1,4 +1,4 @@
-<x-layouts.admin>
+﻿<x-layouts.admin>
     <div class="max-w-4xl mx-auto space-y-6">
         <!-- Breadcrumb -->
         <nav class="flex animate-fade-in-up" aria-label="Breadcrumb">
@@ -50,7 +50,7 @@
 
             <!-- Main Content Card -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-6 animate-fade-in-up animation-delay-200">
-                <h2 class="text-lg font-semibold text-gray-900 border-b pb-3">📝 Contenu</h2>
+                <h2 class="text-lg font-semibold text-gray-900 border-b pb-3">ðŸ“ Contenu</h2>
 
                 <!-- Title -->
                 <div>
@@ -72,11 +72,11 @@
                         </label>
                         <select name="type" id="type" required
                                 class="w-full rounded-lg border-gray-300 focus:border-green-500 focus:ring-green-500">
-                            <option value="info" {{ old('type', $announcement->type) === 'info' ? 'selected' : '' }}>ℹ️ Information</option>
-                            <option value="success" {{ old('type', $announcement->type) === 'success' ? 'selected' : '' }}>✅ Bonne nouvelle</option>
-                            <option value="warning" {{ old('type', $announcement->type) === 'warning' ? 'selected' : '' }}>⚠️ Attention</option>
-                            <option value="urgent" {{ old('type', $announcement->type) === 'urgent' ? 'selected' : '' }}>🚨 Urgent</option>
-                            <option value="event" {{ old('type', $announcement->type) === 'event' ? 'selected' : '' }}>📅 Événement</option>
+                            <option value="info" {{ old('type', $announcement->type) === 'info' ? 'selected' : '' }}>â„¹ï¸ Information</option>
+                            <option value="success" {{ old('type', $announcement->type) === 'success' ? 'selected' : '' }}>âœ… Bonne nouvelle</option>
+                            <option value="warning" {{ old('type', $announcement->type) === 'warning' ? 'selected' : '' }}>âš ï¸ Attention</option>
+                            <option value="urgent" {{ old('type', $announcement->type) === 'urgent' ? 'selected' : '' }}>ðŸš Urgent</option>
+                            <option value="event" {{ old('type', $announcement->type) === 'event' ? 'selected' : '' }}>ðŸ“… événement</option>
                         </select>
                     </div>
                     <div>
@@ -87,7 +87,7 @@
                                 class="w-full rounded-lg border-gray-300 focus:border-green-500 focus:ring-green-500">
                             <option value="normal" {{ old('priority', $announcement->priority) === 'normal' ? 'selected' : '' }}>Normale</option>
                             <option value="high" {{ old('priority', $announcement->priority) === 'high' ? 'selected' : '' }}>Haute</option>
-                            <option value="critical" {{ old('priority', $announcement->priority) === 'critical' ? 'selected' : '' }}>Critique (bannière)</option>
+                            <option value="critical" {{ old('priority', $announcement->priority) === 'critical' ? 'selected' : '' }}>Critique (banniére)</option>
                         </select>
                     </div>
                 </div>
@@ -107,7 +107,7 @@
 
             <!-- Targeting Card -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-6 animate-fade-in-up animation-delay-300">
-                <h2 class="text-lg font-semibold text-gray-900 border-b pb-3">🎯 Ciblage</h2>
+                <h2 class="text-lg font-semibold text-gray-900 border-b pb-3">ðŸŽ¯ Ciblage</h2>
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-3">Destinataires</label>
@@ -178,7 +178,7 @@
 
             <!-- Scheduling Card -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-6">
-                <h2 class="text-lg font-semibold text-gray-900 border-b pb-3">📅 Planification</h2>
+                <h2 class="text-lg font-semibold text-gray-900 border-b pb-3">ðŸ“… Planification</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label for="start_date" class="block text-sm font-medium text-gray-700 mb-1">Date de début</label>
@@ -195,18 +195,18 @@
 
             <!-- Options Card -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-4">
-                <h2 class="text-lg font-semibold text-gray-900 border-b pb-3">⚙️ Options</h2>
+                <h2 class="text-lg font-semibold text-gray-900 border-b pb-3">âš™ï¸ Options</h2>
                 <label class="flex items-center gap-3 cursor-pointer">
                     <input type="checkbox" name="is_pinned" value="1" 
                            {{ old('is_pinned', $announcement->is_pinned) ? 'checked' : '' }}
                            class="rounded text-green-600 focus:ring-green-500">
-                    <span class="font-medium text-gray-900">📌 Épingler en haut</span>
+                    <span class="font-medium text-gray-900">ðŸ“Œ épingler en haut</span>
                 </label>
                 <label class="flex items-center gap-3 cursor-pointer">
                     <input type="checkbox" name="requires_acknowledgment" value="1" 
                            {{ old('requires_acknowledgment', $announcement->requires_acknowledgment) ? 'checked' : '' }}
                            class="rounded text-green-600 focus:ring-green-500">
-                    <span class="font-medium text-gray-900">✅ Exiger un accusé de réception</span>
+                    <span class="font-medium text-gray-900">âœ… Exiger un accusé de réception</span>
                 </label>
             </div>
 
@@ -224,7 +224,7 @@
     </div>
 
     @push('scripts')
-    <script>
+    <script nonce="{{ $cspNonce ?? '' }}">
         function updateTargetFields() {
             const targetType = document.querySelector('input[name="target_type"]:checked').value;
             document.getElementById('departmentField').classList.toggle('hidden', targetType !== 'department');

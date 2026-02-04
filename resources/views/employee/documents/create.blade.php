@@ -1,4 +1,4 @@
-<x-layouts.employee>
+﻿<x-layouts.employee>
     <div class="max-w-2xl mx-auto space-y-6">
         <!-- Header -->
         <a href="{{ route('employee.documents.index') }}" 
@@ -6,7 +6,7 @@
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
             </svg>
-            Retour à mes documents
+            Retour é  mes documents
         </a>
 
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
@@ -14,7 +14,7 @@
             <div class="p-6 bg-gradient-to-r from-green-500 to-emerald-600 text-white">
                 <div class="flex items-center gap-4">
                     <div class="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center">
-                        <span class="text-3xl">📤</span>
+                        <span class="text-3xl">ðŸ“¤</span>
                     </div>
                     <div>
                         <h1 class="text-xl font-bold">{{ $type->name }}</h1>
@@ -26,13 +26,13 @@
             <!-- Info Box -->
             @if($type->description)
                 <div class="p-4 bg-blue-50 border-b border-blue-100">
-                    <p class="text-sm text-blue-700">ℹ️ {{ $type->description }}</p>
+                    <p class="text-sm text-blue-700">â„¹ï¸ {{ $type->description }}</p>
                 </div>
             @endif
 
             @if($type->requires_validation)
                 <div class="p-4 bg-yellow-50 border-b border-yellow-100">
-                    <p class="text-sm text-yellow-700">🟡 Ce document nécessite une validation par les RH.</p>
+                    <p class="text-sm text-yellow-700">ðŸŸ¡ Ce document nécessite une validation par les RH.</p>
                 </div>
             @endif
 
@@ -58,12 +58,12 @@
                             </div>
                             <p class="text-gray-600">Cliquez ou glissez votre fichier ici</p>
                             <p class="text-sm text-gray-500 mt-1">
-                                {{ $type->getAllowedExtensionsString() }} • Max {{ $type->max_size_mb }}MB
+                                {{ $type->getAllowedExtensionsString() }} â€¢ Max {{ $type->max_size_mb }}MB
                             </p>
                         </div>
                         <div id="filePreview" class="hidden">
                             <div class="flex items-center justify-center gap-3">
-                                <span id="fileIcon" class="text-4xl">📄</span>
+                                <span id="fileIcon" class="text-4xl">ðŸ“„</span>
                                 <div class="text-left">
                                     <p id="fileName" class="font-medium text-gray-900"></p>
                                     <p id="fileSize" class="text-sm text-gray-500"></p>
@@ -105,7 +105,7 @@
                         Annuler
                     </a>
                     <button type="submit" class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
-                        📤 Envoyer
+                        ðŸ“¤ Envoyer
                     </button>
                 </div>
             </form>
@@ -113,7 +113,7 @@
     </div>
 
     @push('scripts')
-    <script>
+    <script nonce="{{ $cspNonce ?? '' }}">
         const fileInput = document.getElementById('file');
         const dropZone = document.getElementById('dropZone');
         const placeholder = document.getElementById('uploadPlaceholder');
@@ -149,7 +149,7 @@
                 fileSize.textContent = formatBytes(file.size);
                 
                 const ext = file.name.split('.').pop().toLowerCase();
-                fileIcon.textContent = ext === 'pdf' ? '📄' : '🖼️';
+                fileIcon.textContent = ext === 'pdf' ? 'ðŸ“„' : 'ðŸ–¼ï¸';
                 
                 placeholder.classList.add('hidden');
                 preview.classList.remove('hidden');

@@ -48,7 +48,8 @@ class DocumentController extends Controller
             });
         }
 
-        $documents = $query->orderBy('created_at', 'desc')->get();
+        // PERFORMANCE: utiliser paginate() au lieu de get() pour éviter de charger tous les documents en mémoire
+        $documents = $query->orderBy('created_at', 'desc')->paginate(20);
 
         // Stats simples
         $stats = [

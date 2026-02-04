@@ -1,4 +1,4 @@
-<x-layouts.admin>
+﻿<x-layouts.admin>
     <div class="max-w-4xl mx-auto space-y-6">
         <!-- Header -->
         <div class="flex items-center justify-between">
@@ -27,7 +27,7 @@
                 <div class="lg:col-span-2 space-y-6">
                     <!-- Sélection employé -->
                     <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Employé à évaluer</h3>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Employé é  évaluer</h3>
                         
                         @if($selectedEmployee)
                             <input type="hidden" name="user_id" value="{{ $selectedEmployee->id }}">
@@ -50,7 +50,7 @@
                                 @endforeach
                             </select>
                             @if($employees->isEmpty())
-                                <p class="mt-2 text-sm text-amber-600">Tous les employés ont déjà été évalués ce mois.</p>
+                                <p class="mt-2 text-sm text-amber-600">Tous les employés ont déjé  été évalués ce mois.</p>
                             @endif
                         @endif
                         @error('user_id')
@@ -58,9 +58,9 @@
                         @enderror
                     </div>
 
-                    <!-- Critères d'évaluation -->
+                    <!-- Critéres d'évaluation -->
                     <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                        <h3 class="text-lg font-semibold text-gray-900 mb-6">Critères d'évaluation</h3>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-6">Critéres d'évaluation</h3>
                         
                         <div class="space-y-6">
                             @foreach($criteria as $key => $criterion)
@@ -150,7 +150,7 @@
         </form>
     </div>
 
-    <script>
+    <script nonce="{{ $cspNonce ?? '' }}">
         const smic = {{ $smic }};
         const maxScore = 5.5;
 

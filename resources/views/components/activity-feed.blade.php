@@ -145,7 +145,7 @@
     </template>
 </div>
 
-<script>
+<script nonce="{{ $cspNonce ?? '' }}">
 function activityFeed(initialActivities, apiUrl, pollInterval) {
     return {
         activities: initialActivities || [],

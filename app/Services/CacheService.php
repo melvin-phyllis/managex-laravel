@@ -79,14 +79,15 @@ class CacheService
     public static function getTaskStats(): object
     {
         return Cache::remember(self::PREFIX_STATS . 'tasks', self::TTL_SHORT, function () {
+            $now = now()->format('Y-m-d H:i:s');
             return Task::selectRaw("
                 COUNT(*) as total,
                 SUM(CASE WHEN statut = 'pending' THEN 1 ELSE 0 END) as pending_count,
                 SUM(CASE WHEN statut IN ('approved', 'in_progress') THEN 1 ELSE 0 END) as in_progress_count,
                 SUM(CASE WHEN statut = 'completed' THEN 1 ELSE 0 END) as completed_count,
                 SUM(CASE WHEN statut = 'validated' THEN 1 ELSE 0 END) as validated_count,
-                SUM(CASE WHEN date_fin < NOW() AND statut NOT IN ('validated', 'completed') THEN 1 ELSE 0 END) as overdue_count
-            ")->first();
+                SUM(CASE WHEN date_fin < ? AND statut NOT IN ('validated', 'completed') THEN 1 ELSE 0 END) as overdue_count
+            ", [$now])->first();
         });
     }
 

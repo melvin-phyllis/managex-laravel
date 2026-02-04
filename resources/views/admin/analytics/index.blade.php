@@ -1,7 +1,7 @@
-<x-layouts.admin>
+﻿<x-layouts.admin>
     <div class="space-y-6" x-data="analyticsPage()">
 
-        {{-- Header amélioré --}}
+        {{-- Header amé©lioré© --}}
         <div class="relative overflow-hidden bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 rounded-2xl shadow-xl">
             <div class="absolute inset-0 bg-black/10"></div>
             <div class="absolute -top-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
@@ -16,10 +16,10 @@
                             </div>
                             Analytics RH
                         </h1>
-                        <p class="text-white/80 mt-2">Tableau de bord de performance et statistiques en temps réel</p>
+                        <p class="text-white/80 mt-2">Tableau de bord de performance et statistiques en temps ré©el</p>
                         <div class="flex items-center gap-4 mt-3">
                             <span class="px-3 py-1 bg-white/20 backdrop-blur-sm text-white text-xs font-medium rounded-full">
-                                Dernière mise à jour: <span x-text="lastUpdate">-</span>
+                                Derniére mise é  jour: <span x-text="lastUpdate">-</span>
                             </span>
                             <span class="px-3 py-1 bg-emerald-500/80 text-white text-xs font-medium rounded-full flex items-center gap-1" x-show="!loading">
                                 <span class="w-2 h-2 bg-white rounded-full animate-pulse"></span>
@@ -56,26 +56,26 @@
                 <option value="today">Aujourd'hui</option>
                 <option value="week">Cette semaine</option>
                 <option value="month">Ce mois</option>
-                <option value="year">Cette année</option>
-                <option value="custom">Mois spécifique...</option>
+                <option value="year">Cette anné©e</option>
+                <option value="custom">Mois spé©cifique...</option>
             </select>
 
-            {{-- Sélecteur de mois spécifique --}}
+            {{-- Sé©lecteur de mois spé©cifique --}}
             <template x-if="filters.period === 'custom'">
                 <div class="flex gap-2">
                     <select x-model="filters.custom_month" @change="loadData()" class="rounded-lg border-gray-300 text-sm focus:border-indigo-500 focus:ring-indigo-500">
                         <option value="1">Janvier</option>
-                        <option value="2">Février</option>
+                        <option value="2">Fé©vrier</option>
                         <option value="3">Mars</option>
                         <option value="4">Avril</option>
                         <option value="5">Mai</option>
                         <option value="6">Juin</option>
                         <option value="7">Juillet</option>
-                        <option value="8">Août</option>
+                        <option value="8">Aoé»t</option>
                         <option value="9">Septembre</option>
                         <option value="10">Octobre</option>
                         <option value="11">Novembre</option>
-                        <option value="12">Décembre</option>
+                        <option value="12">Dé©cembre</option>
                     </select>
                     <select x-model="filters.custom_year" @change="loadData()" class="rounded-lg border-gray-300 text-sm focus:border-indigo-500 focus:ring-indigo-500">
                         <option value="2026">2026</option>
@@ -86,7 +86,7 @@
             </template>
 
             <select x-model="filters.department_id" @change="loadData()" class="rounded-lg border-gray-300 text-sm focus:border-indigo-500 focus:ring-indigo-500">
-                <option value="">Tous les départements</option>
+                <option value="">Tous les dé©partements</option>
                 @foreach($departments as $dept)
                     <option value="{{ $dept->id }}">{{ $dept->name }}</option>
                 @endforeach
@@ -123,7 +123,7 @@
                 </div>
             </div>
 
-            {{-- 2. Taux de présence --}}
+            {{-- 2. Taux de pré©sence --}}
             <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100 relative overflow-hidden group hover:shadow-md transition-all">
                 <div class="absolute right-0 top-0 w-24 h-24 bg-gradient-to-br from-emerald-500/10 to-teal-500/10 rounded-full -mr-8 -mt-8 group-hover:scale-125 transition-transform"></div>
                 <div class="relative z-10">
@@ -134,7 +134,7 @@
                         <span class="text-xs font-medium text-gray-500" x-text="(kpis.presents_today?.value || 0) + '/' + (kpis.presents_today?.expected || 0)"></span>
                     </div>
                     <p class="text-3xl font-bold text-gray-900 mt-4"><span x-text="kpis.presents_today?.percentage || '0'"></span>%</p>
-                    <p class="text-sm text-gray-500 mt-1">Taux de présence</p>
+                    <p class="text-sm text-gray-500 mt-1">Taux de pré©sence</p>
                     <div class="w-full bg-gray-200 rounded-full h-2 mt-3">
                         <div class="bg-gradient-to-r from-emerald-500 to-teal-500 h-2 rounded-full transition-all duration-1000" :style="'width: ' + (kpis.presents_today?.percentage || 0) + '%'"></div>
                     </div>
@@ -151,12 +151,12 @@
                         </div>
                         <span class="text-xs font-medium px-2 py-1 rounded-full" 
                               :class="(kpis.turnover?.rate || 0) > 10 ? 'bg-red-100 text-red-700' : 'bg-emerald-100 text-emerald-700'"
-                              x-text="(kpis.turnover?.rate || 0) > 10 ? 'Élevé' : 'Normal'"></span>
+                              x-text="(kpis.turnover?.rate || 0) > 10 ? 'é‰levé©' : 'Normal'"></span>
                     </div>
                     <p class="text-3xl font-bold text-gray-900 mt-4"><span x-text="kpis.turnover?.rate || '0'"></span>%</p>
                     <p class="text-sm text-gray-500 mt-1">Taux de turnover</p>
                     <p class="text-xs text-gray-400 mt-1">
-                        <span class="text-emerald-600" x-text="'+' + (kpis.turnover?.entries || 0)"></span> entrées / 
+                        <span class="text-emerald-600" x-text="'+' + (kpis.turnover?.entries || 0)"></span> entré©es / 
                         <span class="text-red-600" x-text="'-' + (kpis.turnover?.exits || 0)"></span> sorties
                     </p>
                 </div>
@@ -183,13 +183,13 @@
 
         {{-- KPI Cards - Ligne 2 (Secondaires) --}}
         <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 animate-fade-in-up animation-delay-250">
-            {{-- En congé --}}
+            {{-- En congé© --}}
             <div class="bg-gradient-to-br from-violet-500 to-purple-600 rounded-xl p-4 text-white shadow-lg shadow-violet-500/20">
                 <div class="flex items-center justify-between">
                     <x-icon name="coffee" class="w-5 h-5 opacity-80"/>
                     <span class="text-2xl font-bold" x-text="kpis.en_conge?.value || '0'"></span>
                 </div>
-                <p class="text-xs text-white/80 mt-2">En congé</p>
+                <p class="text-xs text-white/80 mt-2">En congé©</p>
                 <div class="flex gap-1 mt-1">
                     <span class="text-[9px] bg-white/20 px-1 rounded" x-show="kpis.en_conge?.types?.conge > 0" x-text="'CP:' + kpis.en_conge?.types?.conge"></span>
                     <span class="text-[9px] bg-white/20 px-1 rounded" x-show="kpis.en_conge?.types?.maladie > 0" x-text="'Mal:' + kpis.en_conge?.types?.maladie"></span>
@@ -202,7 +202,7 @@
                     <x-icon name="alert-circle" class="w-5 h-5 opacity-80"/>
                     <span class="text-2xl font-bold" x-text="kpis.absents_non_justifies?.value || '0'"></span>
                 </div>
-                <p class="text-xs text-white/80 mt-2">Absents injustifiés</p>
+                <p class="text-xs text-white/80 mt-2">Absents injustifié©s</p>
             </div>
 
             {{-- Heures sup --}}
@@ -212,16 +212,16 @@
                     <span class="text-2xl font-bold" x-text="kpis.heures_supplementaires?.value || '0'"></span>
                 </div>
                 <p class="text-xs text-white/80 mt-2">Heures sup.</p>
-                <p class="text-[9px] text-white/60"><span x-text="kpis.heures_supplementaires?.count || 0"></span> employés</p>
+                <p class="text-[9px] text-white/60"><span x-text="kpis.heures_supplementaires?.count || 0"></span> employé©s</p>
             </div>
 
-            {{-- Tâches complétées --}}
+            {{-- Taches complé©té©es --}}
             <div class="bg-gradient-to-br from-emerald-500 to-green-600 rounded-xl p-4 text-white shadow-lg shadow-emerald-500/20">
                 <div class="flex items-center justify-between">
                     <x-icon name="check-square" class="w-5 h-5 opacity-80"/>
                     <span class="text-2xl font-bold" x-text="kpis.tasks?.completed || '0'"></span>
                 </div>
-                <p class="text-xs text-white/80 mt-2">Tâches complétées</p>
+                <p class="text-xs text-white/80 mt-2">Taches complé©té©es</p>
                 <p class="text-[9px] text-white/60"><span x-text="kpis.tasks?.pending || 0"></span> en attente</p>
             </div>
 
@@ -232,41 +232,41 @@
                     <span class="text-2xl font-bold" x-text="kpis.interns?.count || '0'"></span>
                 </div>
                 <p class="text-xs text-white/80 mt-2">Stagiaires actifs</p>
-                <p class="text-[9px] text-white/60"><span x-text="kpis.interns?.to_evaluate || 0"></span> à évaluer</p>
+                <p class="text-[9px] text-white/60"><span x-text="kpis.interns?.to_evaluate || 0"></span> é  é©valuer</p>
             </div>
 
-            {{-- Retards à rattraper --}}
+            {{-- Retards é  rattraper --}}
             <div class="bg-[#3506a2] rounded-xl p-4 text-orange-500 shadow-lg shadow-orange-500/20">
                 <div class="flex items-center justify-between text-white">
                     <x-icon name="alert-triangle" class="w-5 h-5 opacity-80"/>
                     <span class="text-2xl font-bold" x-text="kpis.late_hours?.total || '0'"></span>
                 </div>
                 <p class="text-xs text-white/80 mt-2">Heures de retard</p>
-                <p class="text-[9px] text-white/60"><span x-text="kpis.late_hours?.employees || 0"></span> employés concernés</p>
+                <p class="text-[9px] text-white/60"><span x-text="kpis.late_hours?.employees || 0"></span> employé©s concerné©s</p>
             </div>
         </div>
 
-        {{-- Résumé Évaluations --}}
+        {{-- Ré©sumé© é‰valuations --}}
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-fade-in-up animation-delay-300">
-            {{-- Stats Évaluations Employés --}}
+            {{-- Stats é‰valuations Employé©s --}}
             <div class="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl shadow-lg p-6 text-white">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="font-semibold flex items-center gap-2">
                         <x-icon name="clipboard-list" class="w-5 h-5"/>
-                        Évaluations Employés (Ce mois)
+                        é‰valuations Employé©s (Ce mois)
                     </h3>
                     <a href="{{ route('admin.employee-evaluations.index') }}" class="text-xs bg-white/20 hover:bg-white/30 px-3 py-1 rounded-full transition">
-                        Voir tout →
+                        Voir tout â†’
                     </a>
                 </div>
                 <div class="grid grid-cols-2 gap-4">
                     <div class="bg-white/10 rounded-lg p-3">
                         <p class="text-2xl font-bold" x-text="tables.evaluationStats.employees?.validated || 0"></p>
-                        <p class="text-xs text-white/80">Validées</p>
+                        <p class="text-xs text-white/80">Validé©es</p>
                     </div>
                     <div class="bg-white/10 rounded-lg p-3">
                         <p class="text-2xl font-bold" x-text="tables.evaluationStats.employees?.not_evaluated || 0"></p>
-                        <p class="text-xs text-white/80">Non évalués</p>
+                        <p class="text-xs text-white/80">Non é©valué©s</p>
                     </div>
                     <div class="bg-white/10 rounded-lg p-3">
                         <p class="text-2xl font-bold" x-text="tables.evaluationStats.employees?.avg_score || '0'"></p>
@@ -279,21 +279,21 @@
                 </div>
             </div>
 
-            {{-- Stats Évaluations Stagiaires --}}
+            {{-- Stats é‰valuations Stagiaires --}}
             <div class="bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl shadow-lg p-6 text-white">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="font-semibold flex items-center gap-2">
                         <x-icon name="user-check" class="w-5 h-5"/>
-                        Évaluations Stagiaires (4 sem.)
+                        é‰valuations Stagiaires (4 sem.)
                     </h3>
                     <a href="{{ route('admin.intern-evaluations.index') }}" class="text-xs bg-white/20 hover:bg-white/30 px-3 py-1 rounded-full transition">
-                        Voir tout →
+                        Voir tout â†’
                     </a>
                 </div>
                 <div class="grid grid-cols-3 gap-4">
                     <div class="bg-white/10 rounded-lg p-3">
                         <p class="text-2xl font-bold" x-text="tables.evaluationStats.interns?.total_evaluations || 0"></p>
-                        <p class="text-xs text-white/80">Total évaluations</p>
+                        <p class="text-xs text-white/80">Total é©valuations</p>
                     </div>
                     <div class="bg-white/10 rounded-lg p-3">
                         <p class="text-2xl font-bold" x-text="tables.evaluationStats.interns?.avg_score || '0'"></p>
@@ -301,21 +301,21 @@
                     </div>
                     <div class="bg-white/10 rounded-lg p-3">
                         <p class="text-2xl font-bold text-amber-300" x-text="tables.evaluationStats.interns?.not_evaluated_this_week || 0"></p>
-                        <p class="text-xs text-white/80">À évaluer cette sem.</p>
+                        <p class="text-xs text-white/80">é€ é©valuer cette sem.</p>
                     </div>
                 </div>
             </div>
         </div>
 
-        {{-- Section Évaluations & Classements --}}
+        {{-- Section é‰valuations & Classements --}}
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-fade-in-up animation-delay-350">
-            {{-- Meilleurs Employés (Évaluations) --}}
+            {{-- Meilleurs Employé©s (é‰valuations) --}}
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                 <div class="p-4 border-b border-gray-100 bg-gradient-to-r from-emerald-50 to-white flex items-center gap-2">
                     <div class="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center">
                         <x-icon name="award" class="w-4 h-4 text-emerald-600"/>
                     </div>
-                    <h3 class="font-semibold text-gray-900">🏆 Top Employés (Notes)</h3>
+                    <h3 class="font-semibold text-gray-900"> Top Employé©s (Notes)</h3>
                 </div>
                 <div class="divide-y divide-gray-100 max-h-80 overflow-y-auto">
                     <template x-for="emp in tables.topPerformers.employees" :key="emp.rank">
@@ -326,7 +326,7 @@
                                      x-text="emp.rank"></div>
                             </div>
                             <template x-if="emp.avatar">
-                                <img :src="'/storage/' + emp.avatar" class="w-10 h-10 rounded-full object-cover">
+                                <img :src="emp.avatar" class="w-10 h-10 rounded-full object-cover">
                             </template>
                             <template x-if="!emp.avatar">
                                 <div class="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 font-bold" x-text="emp.name.charAt(0)"></div>
@@ -342,18 +342,18 @@
                         </div>
                     </template>
                     <div x-show="!tables.topPerformers.employees?.length" class="p-8 text-center text-gray-500">
-                        Aucune évaluation ce mois
+                        Aucune é©valuation ce mois
                     </div>
                 </div>
             </div>
 
-            {{-- Meilleurs Stagiaires (Évaluations) --}}
+            {{-- Meilleurs Stagiaires (é‰valuations) --}}
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                 <div class="p-4 border-b border-gray-100 bg-gradient-to-r from-purple-50 to-white flex items-center gap-2">
                     <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
                         <x-icon name="star" class="w-4 h-4 text-purple-600"/>
                     </div>
-                    <h3 class="font-semibold text-gray-900">⭐ Top Stagiaires (Notes)</h3>
+                    <h3 class="font-semibold text-gray-900"> Top Stagiaires (Notes)</h3>
                 </div>
                 <div class="divide-y divide-gray-100 max-h-80 overflow-y-auto">
                     <template x-for="intern in tables.topPerformers.interns" :key="intern.rank">
@@ -364,7 +364,7 @@
                                      x-text="intern.rank"></div>
                             </div>
                             <template x-if="intern.avatar">
-                                <img :src="'/storage/' + intern.avatar" class="w-10 h-10 rounded-full object-cover">
+                                <img :src="intern.avatar" class="w-10 h-10 rounded-full object-cover">
                             </template>
                             <template x-if="!intern.avatar">
                                 <div class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 font-bold" x-text="intern.name.charAt(0)"></div>
@@ -380,18 +380,18 @@
                         </div>
                     </template>
                     <div x-show="!tables.topPerformers.interns?.length" class="p-8 text-center text-gray-500">
-                        Aucune évaluation stagiaire
+                        Aucune é©valuation stagiaire
                     </div>
                 </div>
             </div>
 
-            {{-- Meilleure Assiduité --}}
+            {{-- Meilleure Assiduité© --}}
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                 <div class="p-4 border-b border-gray-100 bg-gradient-to-r from-blue-50 to-white flex items-center gap-2">
                     <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
                         <x-icon name="check-circle" class="w-4 h-4 text-blue-600"/>
                     </div>
-                    <h3 class="font-semibold text-gray-900">👏 Meilleure Assiduité</h3>
+                    <h3 class="font-semibold text-gray-900">ðŸ‘ Meilleure Assiduité©</h3>
                 </div>
                 <div class="divide-y divide-gray-100 max-h-80 overflow-y-auto">
                     <template x-for="att in tables.bestAttendance" :key="att.rank">
@@ -402,7 +402,7 @@
                                      x-text="att.rank"></div>
                             </div>
                             <template x-if="att.avatar">
-                                <img :src="'/storage/' + att.avatar" class="w-10 h-10 rounded-full object-cover">
+                                <img :src="att.avatar" class="w-10 h-10 rounded-full object-cover">
                             </template>
                             <template x-if="!att.avatar">
                                 <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold" x-text="att.name.charAt(0)"></div>
@@ -418,7 +418,7 @@
                         </div>
                     </template>
                     <div x-show="!tables.bestAttendance?.length" class="p-8 text-center text-gray-500">
-                        Aucune donnée de présence
+                        Aucune donné©e de pré©sence
                     </div>
                 </div>
             </div>
@@ -433,12 +433,12 @@
                         <div class="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center">
                             <x-icon name="activity" class="w-4 h-4 text-indigo-600"/>
                         </div>
-                        Évolution des présences
+                        é‰volution des pré©sences
                     </h3>
                     <div class="flex items-center gap-2">
                         <span class="flex items-center text-xs text-gray-500">
                             <span class="w-3 h-3 rounded-full bg-indigo-500 mr-1"></span>
-                            Présences
+                            Pré©sences
                         </span>
                         <span class="flex items-center text-xs text-gray-500">
                             <span class="w-3 h-3 rounded-full bg-emerald-500 mr-1"></span>
@@ -457,7 +457,7 @@
                     <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
                         <x-icon name="pie-chart" class="w-4 h-4 text-purple-600"/>
                     </div>
-                    Répartition par département
+                    Ré©partition par dé©partement
                 </h3>
                 <div class="h-72 relative w-full flex justify-center">
                     <canvas id="departmentChart"></canvas>
@@ -473,14 +473,14 @@
                     <div class="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center">
                         <x-icon name="users" class="w-4 h-4 text-emerald-600"/>
                     </div>
-                    Recrutements vs Départs
+                    Recrutements vs Dé©parts
                 </h3>
                 <div class="h-64 relative w-full">
                     <canvas id="recruitmentChart"></canvas>
                 </div>
             </div>
 
-            {{-- Répartition par type de contrat (NOUVEAU) --}}
+            {{-- Ré©partition par type de contrat (NOUVEAU) --}}
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
                 <h3 class="font-semibold text-gray-900 mb-4 flex items-center gap-2">
                     <div class="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center">
@@ -493,13 +493,13 @@
                 </div>
             </div>
 
-            {{-- Performance Tâches (NOUVEAU) --}}
+            {{-- Performance Taches (NOUVEAU) --}}
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
                 <h3 class="font-semibold text-gray-900 mb-4 flex items-center gap-2">
                     <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
                         <x-icon name="check-square" class="w-4 h-4 text-blue-600"/>
                     </div>
-                    Performance des tâches
+                    Performance des taches
                 </h3>
                 <div class="h-64 relative w-full flex justify-center">
                     <canvas id="taskPerformanceChart"></canvas>
@@ -515,20 +515,20 @@
                     <div class="w-8 h-8 bg-rose-100 rounded-lg flex items-center justify-center">
                         <x-icon name="user-x" class="w-4 h-4 text-rose-600"/>
                     </div>
-                    Taux d'absentéisme par service
+                    Taux d'absenté©isme par service
                 </h3>
                 <div class="h-64 relative w-full">
                     <canvas id="absenteismChart"></canvas>
                 </div>
             </div>
 
-            {{-- Ponctualité par département (NOUVEAU) --}}
+            {{-- Ponctualité© par dé©partement (NOUVEAU) --}}
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
                 <h3 class="font-semibold text-gray-900 mb-4 flex items-center gap-2">
                     <div class="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center">
                         <x-icon name="clock" class="w-4 h-4 text-orange-600"/>
                     </div>
-                    Ponctualité par département
+                    Ponctualité© par dé©partement
                 </h3>
                 <div class="h-64 relative w-full">
                     <canvas id="punctualityChart"></canvas>
@@ -543,7 +543,7 @@
                     <div class="w-8 h-8 bg-cyan-100 rounded-lg flex items-center justify-center">
                         <x-icon name="clock" class="w-4 h-4 text-cyan-600"/>
                     </div>
-                    Heures travaillées (5 dernières semaines)
+                    Heures travaillé©es (5 derniéres semaines)
                 </h3>
                 <div class="text-sm text-gray-500">
                     Total: <span class="font-bold text-gray-900" x-text="charts.heures_travaillees_semaine?.total || 0"></span>h
@@ -554,7 +554,36 @@
             </div>
         </div>
 
-        {{-- Insights & Recommendations (NOUVEAU) --}}
+        {{-- Analyse IA (Mistral) --}}
+        <div class="bg-gradient-to-r from-violet-50 via-purple-50 to-fuchsia-50 rounded-xl border border-purple-200 p-6 animate-fade-in-up animation-delay-580" x-show="aiInsights.available || aiInsights.loading" x-cloak>
+            <div class="flex items-start gap-4">
+                <div class="w-12 h-12 bg-gradient-to-br from-violet-500 to-fuchsia-600 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714a2.25 2.25 0 00.659 1.591L19 14.5M14.25 3.104c.251.023.501.05.75.082M19 14.5l-2.47 2.47a2.25 2.25 0 01-1.591.659H9.061a2.25 2.25 0 01-1.591-.659L5 14.5m14 0V17a2.25 2.25 0 01-2.25 2.25H7.25A2.25 2.25 0 015 17v-2.5"/>
+                    </svg>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 class="font-semibold text-gray-900 flex items-center gap-2">
+                            Analyse IA
+                            <span class="text-[10px] font-normal bg-purple-100 text-purple-600 px-2 py-0.5 rounded-full">Mistral AI</span>
+                        </h3>
+                        <button @click="loadAiInsights()" class="text-xs text-purple-600 hover:text-purple-800 flex items-center gap-1 transition-colors">
+                            <x-icon name="refresh-cw" class="w-3 h-3" x-bind:class="{'animate-spin': aiInsights.loading}"/>
+                            Actualiser
+                        </button>
+                    </div>
+                    <div x-show="aiInsights.loading" class="flex items-center gap-2 text-sm text-gray-500 py-2">
+                        <div class="w-4 h-4 border-2 border-purple-300 border-t-purple-600 rounded-full animate-spin"></div>
+                        Analyse en cours...
+                    </div>
+                    <div x-show="!aiInsights.loading && aiInsights.content" class="text-sm text-gray-700 leading-relaxed" x-html="formatAiInsights(aiInsights.content)"></div>
+                    <div x-show="!aiInsights.loading && aiInsights.error" class="text-sm text-gray-500 italic" x-text="aiInsights.error"></div>
+                </div>
+            </div>
+        </div>
+
+        {{-- Insights & Recommendations --}}
         <div class="bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 rounded-xl border border-indigo-100 p-6 animate-fade-in-up animation-delay-600">
             <div class="flex items-start gap-4">
                 <div class="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center flex-shrink-0">
@@ -565,23 +594,23 @@
                     <div class="space-y-2">
                         <div class="flex items-center gap-2 text-sm" x-show="kpis.turnover?.rate > 10">
                             <span class="w-2 h-2 rounded-full bg-red-500"></span>
-                            <span class="text-gray-700">Taux de turnover élevé (<span x-text="kpis.turnover?.rate"></span>%) - Analyser les causes de départ</span>
+                            <span class="text-gray-700">Taux de turnover é©levé© (<span x-text="kpis.turnover?.rate"></span>%) - Analyser les causes de dé©part</span>
                         </div>
                         <div class="flex items-center gap-2 text-sm" x-show="kpis.presents_today?.percentage < 80">
                             <span class="w-2 h-2 rounded-full bg-amber-500"></span>
-                            <span class="text-gray-700">Taux de présence faible (<span x-text="kpis.presents_today?.percentage"></span>%) - Vérifier les absences non justifiées</span>
+                            <span class="text-gray-700">Taux de pré©sence faible (<span x-text="kpis.presents_today?.percentage"></span>%) - Vé©rifier les absences non justifié©es</span>
                         </div>
                         <div class="flex items-center gap-2 text-sm" x-show="kpis.interns?.to_evaluate > 0">
                             <span class="w-2 h-2 rounded-full bg-blue-500"></span>
-                            <span class="text-gray-700"><span x-text="kpis.interns?.to_evaluate"></span> stagiaire(s) en attente d'évaluation cette semaine</span>
+                            <span class="text-gray-700"><span x-text="kpis.interns?.to_evaluate"></span> stagiaire(s) en attente d'é©valuation cette semaine</span>
                         </div>
                         <div class="flex items-center gap-2 text-sm" x-show="kpis.late_hours?.total > 10">
                             <span class="w-2 h-2 rounded-full bg-orange-500"></span>
-                            <span class="text-gray-700"><span x-text="kpis.late_hours?.total"></span>h de retard cumulées - Planifier des sessions de rattrapage</span>
+                            <span class="text-gray-700"><span x-text="kpis.late_hours?.total"></span>h de retard cumulé©es - Planifier des sessions de rattrapage</span>
                         </div>
                         <div class="flex items-center gap-2 text-sm" x-show="tables.pending?.length > 5">
                             <span class="w-2 h-2 rounded-full bg-purple-500"></span>
-                            <span class="text-gray-700"><span x-text="tables.pending?.length"></span> demandes de congés en attente de validation</span>
+                            <span class="text-gray-700"><span x-text="tables.pending?.length"></span> demandes de congé©s en attente de validation</span>
                         </div>
                         <div class="flex items-center gap-2 text-sm" x-show="kpis.turnover?.rate <= 10 && kpis.presents_today?.percentage >= 80">
                             <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
@@ -594,14 +623,14 @@
 
         {{-- Tableaux Grid --}}
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-fade-in-up animation-delay-650">
-            {{-- Activité récente --}}
+            {{-- Activité© ré©cente --}}
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                 <div class="p-4 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white flex justify-between items-center">
                     <h3 class="font-semibold text-gray-900 flex items-center gap-2">
                         <div class="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center">
                             <x-icon name="activity" class="w-4 h-4 text-indigo-600"/>
                         </div>
-                        Activité Récente
+                        Activité© Ré©cente
                     </h3>
                 </div>
                 <div class="divide-y divide-gray-100 max-h-80 overflow-y-auto">
@@ -609,7 +638,7 @@
                         <div class="p-4 hover:bg-gray-50 transition-colors flex gap-3">
                             <div class="flex-shrink-0">
                                 <template x-if="activity.avatar">
-                                    <img :src="'/storage/' + activity.avatar" class="w-8 h-8 rounded-full object-cover">
+                                    <img :src="activity.avatar" class="w-8 h-8 rounded-full object-cover">
                                 </template>
                                 <template x-if="!activity.avatar">
                                     <div class="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 text-xs font-bold" x-text="activity.user.charAt(0)"></div>
@@ -624,7 +653,7 @@
                             </div>
                         </div>
                     </template>
-                    <div x-show="tables.activities.length === 0" class="p-8 text-center text-gray-500">Aucune activité récente</div>
+                    <div x-show="tables.activities.length === 0" class="p-8 text-center text-gray-500">Aucune activité© ré©cente</div>
                 </div>
             </div>
 
@@ -665,7 +694,7 @@
                 <div class="p-4 space-y-4">
                     {{-- Contracts --}}
                     <div>
-                        <h4 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Contrats expirant bientôt</h4>
+                        <h4 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Contrats expirant bienté´t</h4>
                         <div class="space-y-2">
                             <template x-for="contract in tables.alerts.contracts" :key="contract.name">
                                 <div class="flex justify-between items-center text-sm p-2 bg-red-50 rounded-lg text-red-700 border border-red-100">
@@ -682,7 +711,7 @@
 
                     {{-- Birthdays --}}
                     <div>
-                        <h4 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Anniversaires à venir</h4>
+                        <h4 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Anniversaires é  venir</h4>
                         <div class="space-y-2">
                             <template x-for="bd in tables.alerts.birthdays" :key="bd.name">
                                 <div class="flex justify-between items-center text-sm p-2 bg-blue-50 rounded-lg text-blue-700 border border-blue-100">
@@ -710,7 +739,7 @@
                 <table class="w-full text-sm">
                     <thead class="bg-gray-50 text-gray-500">
                         <tr>
-                            <th class="text-left py-2 px-4 font-medium">Employé</th>
+                            <th class="text-left py-2 px-4 font-medium">Employé©</th>
                             <th class="text-center py-2 px-4 font-medium">Retards</th>
                             <th class="text-right py-2 px-4 font-medium">Moyenne</th>
                         </tr>
@@ -732,7 +761,7 @@
                             </tr>
                         </template>
                         <tr x-show="!tables.latecomers?.length">
-                            <td colspan="3" class="py-8 text-center text-gray-500">Aucun retard signalé ce mois-ci 🎉</td>
+                            <td colspan="3" class="py-8 text-center text-gray-500">Aucun retard signalé© ce mois-ci </td>
                         </tr>
                     </tbody>
                 </table>
@@ -742,8 +771,8 @@
     </div>
 
     @push('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-    <script>
+    <script nonce="{{ $cspNonce ?? '' }}" src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script nonce="{{ $cspNonce ?? '' }}">
         function analyticsPage() {
             return {
                 loading: false,
@@ -761,6 +790,7 @@
                     evaluationStats: { employees: {}, interns: {} }
                 },
                 chartInstances: {},
+                aiInsights: { available: false, loading: false, content: null, error: null },
 
                 init() {
                     this.loadData();
@@ -793,6 +823,8 @@
                         this.$nextTick(() => {
                             this.updateCharts();
                         });
+
+                        this.loadAiInsights();
                     } catch (error) {
                         console.error('Error loading analytics:', error);
                     } finally {
@@ -802,11 +834,22 @@
 
                 exportData(format) {
                     const queryParams = new URLSearchParams(this.filters).toString();
+                    let url, filename, type;
+                    
                     if (format === 'pdf') {
-                        window.open(`{{ route('admin.analytics.export.pdf') }}?${queryParams}`, '_blank');
+                        url = `{{ route('admin.analytics.export.pdf') }}?${queryParams}`;
+                        filename = 'rapport-analytics.pdf';
+                        type = 'pdf';
                     } else if (format === 'excel') {
-                        window.open(`{{ route('admin.analytics.export.excel') }}?${queryParams}`, '_blank');
+                        url = `{{ route('admin.analytics.export.excel') }}?${queryParams}`;
+                        filename = 'rapport-analytics.xlsx';
+                        type = 'excel';
                     }
+                    
+                    // Utiliser l'overlay de té©lé©chargement
+                    window.dispatchEvent(new CustomEvent('start-download', {
+                        detail: { url, filename, type }
+                    }));
                 },
 
                 updateCharts() {
@@ -822,7 +865,7 @@
 
                 renderPresenceTrend() {
                     const ctx = document.getElementById('presenceTrendChart');
-                    if (!ctx) return;
+                    if (!ctx || !ctx.getContext) return;
                     
                     if (this.chartInstances.presence) this.chartInstances.presence.destroy();
 
@@ -831,7 +874,7 @@
                         data: {
                             labels: this.charts.presence_trend?.labels || [],
                             datasets: [{
-                                label: 'Présences',
+                                label: 'Pré©sences',
                                 data: this.charts.presence_trend?.data || [],
                                 borderColor: '#4F46E5', // Indigo 600
                                 backgroundColor: 'rgba(79, 70, 229, 0.1)',
@@ -856,7 +899,7 @@
 
                 renderDepartmentChart() {
                     const ctx = document.getElementById('departmentChart');
-                    if (!ctx) return;
+                    if (!ctx || !ctx.getContext) return;
                     
                     if (this.chartInstances.department) this.chartInstances.department.destroy();
 
@@ -883,7 +926,7 @@
 
                 renderRecruitmentChart() {
                     const ctx = document.getElementById('recruitmentChart');
-                    if (!ctx) return;
+                    if (!ctx || !ctx.getContext) return;
                     
                     if (this.chartInstances.recruitment) this.chartInstances.recruitment.destroy();
 
@@ -899,7 +942,7 @@
                                     borderRadius: 4
                                 },
                                 {
-                                    label: 'Départs',
+                                    label: 'Dé©parts',
                                     data: this.charts.recruitment_turnover?.departs || [],
                                     backgroundColor: '#EF4444',
                                     borderRadius: 4
@@ -919,7 +962,7 @@
 
                 renderAbsenteismChart() {
                     const ctx = document.getElementById('absenteismChart');
-                    if (!ctx) return;
+                    if (!ctx || !ctx.getContext) return;
 
                     if (this.chartInstances.absenteism) this.chartInstances.absenteism.destroy();
 
@@ -946,7 +989,7 @@
 
                 renderWeeklyHoursChart() {
                     const ctx = document.getElementById('weeklyHoursChart');
-                    if (!ctx) return;
+                    if (!ctx || !ctx.getContext) return;
 
                     if (this.chartInstances.weekly) this.chartInstances.weekly.destroy();
 
@@ -983,7 +1026,7 @@
 
                 renderContractTypeChart() {
                     const ctx = document.getElementById('contractTypeChart');
-                    if (!ctx) return;
+                    if (!ctx || !ctx.getContext) return;
 
                     if (this.chartInstances.contractType) this.chartInstances.contractType.destroy();
 
@@ -1014,7 +1057,7 @@
 
                 renderTaskPerformanceChart() {
                     const ctx = document.getElementById('taskPerformanceChart');
-                    if (!ctx) return;
+                    if (!ctx || !ctx.getContext) return;
 
                     if (this.chartInstances.taskPerf) this.chartInstances.taskPerf.destroy();
 
@@ -1022,7 +1065,7 @@
                     this.chartInstances.taskPerf = new Chart(ctx, {
                         type: 'doughnut',
                         data: {
-                            labels: ['Complétées', 'En cours', 'Approuvées', 'En attente', 'Annulées'],
+                            labels: ['Complé©té©es', 'En cours', 'Approuvé©es', 'En attente', 'Annulé©es'],
                             datasets: [{
                                 data: [
                                     taskData.completed || 0,
@@ -1052,7 +1095,7 @@
 
                 renderPunctualityChart() {
                     const ctx = document.getElementById('punctualityChart');
-                    if (!ctx) return;
+                    if (!ctx || !ctx.getContext) return;
 
                     if (this.chartInstances.punctuality) this.chartInstances.punctuality.destroy();
 
@@ -1062,7 +1105,7 @@
                             labels: this.charts.punctuality?.labels || [],
                             datasets: [
                                 {
-                                    label: 'À l\'heure',
+                                    label: 'é€ l\'heure',
                                     data: this.charts.punctuality?.on_time || [],
                                     backgroundColor: '#22C55E',
                                     borderRadius: 4,
@@ -1099,6 +1142,54 @@
                             }
                         }
                     });
+                },
+
+                async loadAiInsights() {
+                    this.aiInsights.loading = true;
+                    this.aiInsights.error = null;
+
+                    try {
+                        const query = new URLSearchParams(this.filters).toString();
+                        const response = await fetch(`{{ route('admin.analytics.ai-insights') }}?${query}`, {
+                            headers: { 'Accept': 'application/json' }
+                        });
+
+                        if (!response.ok) {
+                            if (response.status === 429) {
+                                this.aiInsights.error = 'Trop de requêtes. Réessayez dans une minute.';
+                            } else {
+                                this.aiInsights.error = 'Impossible de générer l\'analyse.';
+                            }
+                            this.aiInsights.available = !!this.aiInsights.content;
+                            return;
+                        }
+
+                        const data = await response.json();
+
+                        if (data.insights) {
+                            this.aiInsights.content = data.insights;
+                            this.aiInsights.available = true;
+                            this.aiInsights.error = null;
+                        } else if (data.error) {
+                            this.aiInsights.error = data.error;
+                            this.aiInsights.available = !!this.aiInsights.content;
+                        }
+                    } catch (error) {
+                        console.error('AI insights error:', error);
+                        this.aiInsights.error = 'Service IA temporairement indisponible.';
+                        this.aiInsights.available = !!this.aiInsights.content;
+                    } finally {
+                        this.aiInsights.loading = false;
+                    }
+                },
+
+                formatAiInsights(text) {
+                    if (!text) return '';
+                    return text
+                        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                        .replace(/^[\-\*]\s+/gm, '<span class="text-purple-500 mr-1">•</span>')
+                        .replace(/\n/g, '<br>')
+                        .replace(/(📈|📉|⚠️|✅|💡|🔴|🟢|🟡)/g, '<span class="text-base">$1</span>');
                 }
             }
         }

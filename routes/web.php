@@ -27,6 +27,8 @@ use App\Http\Controllers\Admin\InternEvaluationController as AdminInternEvaluati
 use App\Http\Controllers\Admin\EmployeeEvaluationController;
 use App\Http\Controllers\Tutor\InternEvaluationController as TutorInternEvaluationController;
 use App\Http\Controllers\Employee\InternEvaluationController as EmployeeInternEvaluationController;
+use App\Http\Controllers\Employee\AIAssistantController;
+use App\Http\Controllers\Admin\AIAssistantController as AdminAIAssistantController;
 use Illuminate\Support\Facades\Route;
 
 // ============================================================================
@@ -142,8 +144,11 @@ if (app()->environment('local')) {
 // ============================================================================
 
 Route::get('/', function () {
-    return redirect()->route('login');
-});
+    if (auth()->check()) {
+        return redirect()->route('dashboard');
+    }
+    return view('landing');
+})->name('home');
 
 // Redirection après login selon le rôle
 Route::get('/dashboard', function () {
@@ -168,6 +173,10 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::post('/employees/{employee}/contract/upload', [EmployeeController::class, 'uploadContract'])->name('employees.contract.upload');
     Route::get('/employees/{employee}/contract/download', [EmployeeController::class, 'downloadContract'])->name('employees.contract.download');
     Route::delete('/employees/{employee}/contract', [EmployeeController::class, 'deleteContract'])->name('employees.contract.delete');
+    // Gestion du statut des comptes
+    Route::post('/employees/{employee}/toggle-status', [EmployeeController::class, 'toggleStatus'])->name('employees.toggle-status');
+    Route::post('/employees/{employee}/suspend', [EmployeeController::class, 'suspend'])->name('employees.suspend');
+    Route::post('/employees/{employee}/activate', [EmployeeController::class, 'activate'])->name('employees.activate');
 
     // Gestion des présences - Master View (fusion présences + global-view)
     Route::get('/presences', [AdminPresenceController::class, 'masterView'])->name('presences.index');
@@ -199,16 +208,20 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::post('/leaves/{leave}/reject', [AdminLeaveController::class, 'reject'])->name('leaves.reject');
     Route::delete('/leaves/{leave}', [AdminLeaveController::class, 'destroy'])->name('leaves.destroy');
 
-    // Gestion des fiches de paie
-    Route::post('/payrolls/bulk-generate', [AdminPayrollController::class, 'bulkGenerate'])->name('payrolls.bulk-generate');
+    // Gestion des fiches de paie (SECURITE: rate limiting sur les opérations bulk)
+    Route::post('/payrolls/bulk-generate', [AdminPayrollController::class, 'bulkGenerate'])
+        ->middleware('throttle:sensitive')
+        ->name('payrolls.bulk-generate');
     Route::post('/payrolls/calculate-preview', [AdminPayrollController::class, 'calculatePreview'])->name('payrolls.calculate-preview');
     Route::resource('payrolls', AdminPayrollController::class);
     Route::get('/payrolls/{payroll}/download', [AdminPayrollController::class, 'downloadPdf'])->name('payrolls.download');
     Route::post('/payrolls/{payroll}/mark-paid', [AdminPayrollController::class, 'markAsPaid'])->name('payrolls.mark-paid');
 
-    // Évaluations des performances employés (CDI/CDD)
+    // Évaluations des performances employés (CDI/CDD) - SECURITE: rate limiting sur bulk
     Route::get('/employee-evaluations/bulk-create', [EmployeeEvaluationController::class, 'bulkCreate'])->name('employee-evaluations.bulk-create');
-    Route::post('/employee-evaluations/bulk-store', [EmployeeEvaluationController::class, 'bulkStore'])->name('employee-evaluations.bulk-store');
+    Route::post('/employee-evaluations/bulk-store', [EmployeeEvaluationController::class, 'bulkStore'])
+        ->middleware('throttle:sensitive')
+        ->name('employee-evaluations.bulk-store');
     Route::post('/employee-evaluations/calculate-salary', [EmployeeEvaluationController::class, 'calculateSalary'])->name('employee-evaluations.calculate-salary');
     Route::post('/employee-evaluations/{employeeEvaluation}/validate', [EmployeeEvaluationController::class, 'validate'])->name('employee-evaluations.validate');
     Route::resource('employee-evaluations', EmployeeEvaluationController::class);
@@ -238,8 +251,17 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
         Route::get('/top-performers', [AnalyticsController::class, 'getTopPerformers'])->name('top-performers');
         Route::get('/best-attendance', [AnalyticsController::class, 'getBestAttendance'])->name('best-attendance');
         Route::get('/evaluation-stats', [AnalyticsController::class, 'getEvaluationStats'])->name('evaluation-stats');
-        Route::get('/export/pdf', [AnalyticsController::class, 'exportPdf'])->name('export.pdf');
-        Route::get('/export/excel', [AnalyticsController::class, 'exportExcel'])->name('export.excel');
+        // Insights IA
+        Route::get('/ai-insights', [AnalyticsController::class, 'getAiInsights'])
+            ->middleware('throttle:ai')
+            ->name('ai-insights');
+        // SECURITE: Rate limiting sur les exports (opérations coûteuses)
+        Route::get('/export/pdf', [AnalyticsController::class, 'exportPdf'])
+            ->middleware('throttle:exports')
+            ->name('export.pdf');
+        Route::get('/export/excel', [AnalyticsController::class, 'exportExcel'])
+            ->middleware('throttle:exports')
+            ->name('export.excel');
     });
 
     // Paramètres
@@ -258,13 +280,19 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::put('/settings/positions/{position}', [SettingsController::class, 'updatePosition'])->name('settings.positions.update');
     Route::delete('/settings/positions/{position}', [SettingsController::class, 'destroyPosition'])->name('settings.positions.destroy');
 
-    // Gestion de la messagerie (admin)
+    // Gestion de la messagerie (admin) - SECURITE: rate limiting
     Route::get('/messaging', [\App\Http\Controllers\Admin\MessagingController::class, 'index'])->name('messaging.index');
     Route::get('/messaging-chat', [\App\Http\Controllers\Admin\MessagingController::class, 'chat'])->name('messaging.chat');
-    Route::post('/messaging', [\App\Http\Controllers\Admin\MessagingController::class, 'store'])->name('messaging.store');
+    Route::post('/messaging', [\App\Http\Controllers\Admin\MessagingController::class, 'store'])
+        ->middleware('throttle:messaging')
+        ->name('messaging.store');
     Route::get('/messaging/{conversation}', [\App\Http\Controllers\Admin\MessagingController::class, 'show'])->name('messaging.show');
-    Route::put('/messaging/{conversation}', [\App\Http\Controllers\Admin\MessagingController::class, 'update'])->name('messaging.update');
-    Route::delete('/messaging/{conversation}', [\App\Http\Controllers\Admin\MessagingController::class, 'destroy'])->name('messaging.destroy');
+    Route::put('/messaging/{conversation}', [\App\Http\Controllers\Admin\MessagingController::class, 'update'])
+        ->middleware('throttle:messaging')
+        ->name('messaging.update');
+    Route::delete('/messaging/{conversation}', [\App\Http\Controllers\Admin\MessagingController::class, 'destroy'])
+        ->middleware('throttle:sensitive')
+        ->name('messaging.destroy');
     Route::post('/messaging/{conversation}/participants', [\App\Http\Controllers\Admin\MessagingController::class, 'addParticipant'])->name('messaging.participants.add');
     Route::delete('/messaging/{conversation}/participants/{user}', [\App\Http\Controllers\Admin\MessagingController::class, 'removeParticipant'])->name('messaging.participants.remove');
     Route::delete('/messaging/messages/{message}', [\App\Http\Controllers\Admin\MessagingController::class, 'deleteMessage'])->name('messaging.message.delete');
@@ -290,7 +318,10 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
         Route::get('/{document}', [AdminDocumentController::class, 'show'])->name('show');
         Route::get('/{document}/download', [AdminDocumentController::class, 'download'])->name('download');
         Route::post('/{document}/validate', [AdminDocumentController::class, 'validate'])->name('validate');
-        Route::post('/bulk-validate', [AdminDocumentController::class, 'bulkValidate'])->name('bulk-validate');
+        // SECURITE: Rate limiting sur les opérations bulk
+        Route::post('/bulk-validate', [AdminDocumentController::class, 'bulkValidate'])
+            ->middleware('throttle:sensitive')
+            ->name('bulk-validate');
         Route::delete('/{document}', [AdminDocumentController::class, 'destroy'])->name('destroy');
     });
 
@@ -359,6 +390,11 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
         Route::post('/countries/{country}/fields', [\App\Http\Controllers\Admin\PayrollSettingsController::class, 'storeField'])->name('fields.store');
         Route::delete('/countries/{country}/fields/{field}', [\App\Http\Controllers\Admin\PayrollSettingsController::class, 'destroyField'])->name('fields.destroy');
     });
+
+    // Assistant IA Admin
+    Route::post('/ai/chat', [AdminAIAssistantController::class, 'chat'])
+        ->middleware('throttle:ai')
+        ->name('ai.chat');
 });
 
 // Routes Employee
@@ -475,6 +511,11 @@ Route::middleware(['auth', 'role:employee'])->prefix('employee')->name('employee
         Route::put('/{evaluation}', [TutorInternEvaluationController::class, 'update'])->name('update');
         Route::get('/intern/{intern}/history', [TutorInternEvaluationController::class, 'history'])->name('history');
     });
+
+    // Assistant IA RH
+    Route::post('/ai/chat', [AIAssistantController::class, 'chat'])
+        ->middleware('throttle:ai')
+        ->name('ai.chat');
 });
 
 // Routes profil (accessibles à tous les utilisateurs authentifiés)

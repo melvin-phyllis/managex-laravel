@@ -1,4 +1,4 @@
-<x-layouts.admin>
+﻿<x-layouts.admin>
     <div class="space-y-6">
         <!-- Header -->
         <x-table-header title="Détails du Stagiaire" subtitle="{{ $intern->name }}" class="animate-fade-in-up">
@@ -13,13 +13,12 @@
                         <x-icon name="arrow-left" class="w-4 h-4 mr-2" />
                         Retour
                     </a>
-                    <form action="{{ route('admin.intern-evaluations.export-pdf') }}" method="GET" class="inline">
-                        <input type="hidden" name="intern_id" value="{{ $intern->id }}">
-                        <button type="submit" class="inline-flex items-center px-4 py-2.5 bg-red-50 text-red-700 font-medium rounded-xl border border-red-200 hover:bg-red-100 transition-all text-sm">
-                            <x-icon name="file-text" class="w-4 h-4 mr-2" />
-                            Export PDF
-                        </button>
-                    </form>
+                    <button type="button" 
+                            onclick="window.dispatchEvent(new CustomEvent('start-download', { detail: { url: @js(route('admin.intern-evaluations.export-pdf', ['intern_id' => $intern->id])), filename: @js('evaluation-' . $intern->name . '.pdf'), type: 'pdf' } }))"
+                            class="inline-flex items-center px-4 py-2.5 bg-red-50 text-red-700 font-medium rounded-xl border border-red-200 hover:bg-red-100 transition-all text-sm">
+                        <x-icon name="file-text" class="w-4 h-4 mr-2" />
+                        Export PDF
+                    </button>
                 </div>
             </x-slot:actions>
         </x-table-header>
@@ -174,7 +173,7 @@
     </div>
 
     @push('scripts')
-    <script>
+    <script nonce="{{ $cspNonce ?? '' }}">
         document.addEventListener('DOMContentLoaded', function() {
             const ctx = document.getElementById('progressionChart');
             if (ctx) {

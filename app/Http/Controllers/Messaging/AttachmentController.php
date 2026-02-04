@@ -33,6 +33,8 @@ class AttachmentController extends Controller
         'audio/mpeg' => ['mp3'],
         'audio/wav' => ['wav'],
         'audio/ogg' => ['ogg'],
+        'audio/webm' => ['webm'],
+        'audio/mp4' => ['m4a', 'mp4'],
     ];
 
     /**
@@ -77,6 +79,12 @@ class AttachmentController extends Controller
                 ], 422);
             }
 
+            // Fallback: navigateur peut envoyer application/octet-stream pour les blobs vocaux
+            $audioExtensionToMime = ['webm' => 'audio/webm', 'ogg' => 'audio/ogg', 'mp3' => 'audio/mpeg', 'wav' => 'audio/wav', 'm4a' => 'audio/mp4'];
+            if (!array_key_exists($mimeType, $this->allowedTypes) && isset($audioExtensionToMime[$extension])) {
+                $mimeType = $audioExtensionToMime[$extension];
+            }
+
             // SÉCURITÉ: Valider le MIME type
             if (!array_key_exists($mimeType, $this->allowedTypes)) {
                 return response()->json([
@@ -87,13 +95,11 @@ class AttachmentController extends Controller
             // SÉCURITÉ: Vérifier que l'extension correspond au MIME type
             $allowedExtensions = $this->allowedTypes[$mimeType];
             if (!in_array($extension, $allowedExtensions)) {
-                return response()->json([
-                    'error' => "Extension '{$extension}' non valide pour ce type de fichier"
-                ], 422);
+                $extension = $allowedExtensions[0];
             }
 
             // SÉCURITÉ: Générer un nom de fichier sécurisé (UUID + extension validée)
-            $safeExtension = $allowedExtensions[0]; // Utiliser l'extension standard
+            $safeExtension = $allowedExtensions[0];
             $filename = Str::uuid() . '.' . $safeExtension;
             
             // SÉCURITÉ: Stockage privé (non accessible publiquement)
@@ -139,11 +145,12 @@ class AttachmentController extends Controller
                 'attachments' => $message->attachments->map(fn ($a) => [
                     'id' => $a->id,
                     'name' => $a->original_name,
-                    // SÉCURITÉ: URL de téléchargement authentifiée au lieu d'accès direct
-                    'url' => route('messaging.attachments.download', $a),
+                    'url' => $a->isImage() ? route('messaging.api.attachments.show', $a) : route('messaging.api.attachments.download', $a),
+                    'download_url' => route('messaging.api.attachments.download', $a),
                     'type' => $a->mime_type,
                     'size' => $a->human_size,
                     'is_image' => $a->isImage(),
+                    'is_audio' => $a->isAudio(),
                 ]),
                 'created_at' => $message->created_at->toIso8601String(),
                 'created_at_human' => $message->created_at->diffForHumans(),
@@ -174,7 +181,7 @@ class AttachmentController extends Controller
     }
     
     /**
-     * Afficher une image (pour les previews)
+     * Afficher une image ou un audio (pour previews / lecture inline)
      */
     public function show(Attachment $attachment)
     {
@@ -185,11 +192,13 @@ class AttachmentController extends Controller
             abort(403);
         }
 
-        if (!$attachment->isImage()) {
+        if (!$attachment->isImage() && !$attachment->isAudio()) {
             abort(404);
         }
 
-        return Storage::disk('local')->response($attachment->path);
+        return Storage::disk('local')->response($attachment->path, $attachment->original_name, [
+            'Content-Disposition' => 'inline',
+        ]);
     }
 
     /**

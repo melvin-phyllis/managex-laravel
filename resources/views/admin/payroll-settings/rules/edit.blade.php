@@ -1,4 +1,4 @@
-<x-layouts.admin>
+﻿<x-layouts.admin>
     <div class="space-y-6">
         <div class="animate-fade-in-up">
             <nav class="flex items-center text-sm text-gray-500 mb-2">
@@ -12,7 +12,7 @@
                 </svg>
                 <span class="text-gray-900">Modifier {{ $rule->code }}</span>
             </nav>
-            <h1 class="text-2xl font-bold text-gray-900">Modifier la Règle - {{ $rule->label }}</h1>
+            <h1 class="text-2xl font-bold text-gray-900">Modifier la Régle - {{ $rule->label }}</h1>
         </div>
 
         <form action="{{ route('admin.payroll-settings.rules.update', [$country, $rule]) }}" method="POST" class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 animate-fade-in-up animation-delay-100">
@@ -61,7 +61,7 @@
                             onchange="toggleCalculationFields()">
                         <option value="percentage" {{ old('calculation_type', $rule->calculation_type) === 'percentage' ? 'selected' : '' }}>Pourcentage</option>
                         <option value="fixed" {{ old('calculation_type', $rule->calculation_type) === 'fixed' ? 'selected' : '' }}>Montant Fixe</option>
-                        <option value="bracket" {{ old('calculation_type', $rule->calculation_type) === 'bracket' ? 'selected' : '' }}>Barème</option>
+                        <option value="bracket" {{ old('calculation_type', $rule->calculation_type) === 'bracket' ? 'selected' : '' }}>Baréme</option>
                     </select>
                 </div>
 
@@ -106,7 +106,7 @@
                 </div>
 
                 <div id="brackets_field" class="md:col-span-2" style="display: none;">
-                    <label for="brackets" class="block text-sm font-medium text-gray-700 mb-1">Barème (JSON)</label>
+                    <label for="brackets" class="block text-sm font-medium text-gray-700 mb-1">Baréme (JSON)</label>
                     <textarea name="brackets" id="brackets" rows="5"
                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 font-mono text-sm">{{ old('brackets', json_encode($rule->brackets, JSON_PRETTY_PRINT)) }}</textarea>
                 </div>
@@ -149,7 +149,7 @@
         </form>
     </div>
 
-    <script>
+    <script nonce="{{ $cspNonce ?? '' }}">
         function toggleCalculationFields() {
             const type = document.getElementById('calculation_type').value;
             document.getElementById('rate_field').style.display = (type === 'percentage') ? 'block' : 'none';

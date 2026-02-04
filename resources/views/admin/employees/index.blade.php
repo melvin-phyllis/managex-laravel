@@ -1,4 +1,4 @@
-<x-layouts.admin>
+﻿<x-layouts.admin>
     <div class="space-y-6" x-data="employeeTable()">
         <!-- Breadcrumbs -->
         <nav class="flex animate-fade-in-up" aria-label="Breadcrumb">
@@ -22,7 +22,7 @@
             </ol>
         </nav>
         <!-- Header -->
-        <x-table-header title="Gestion des Employés" subtitle="Gérez et suivez toute votre équipe de manière centralisée" class="animate-fade-in-up animation-delay-100">
+        <x-table-header title="Gestion des Employés" subtitle="Gérez et suivez toute votre équipe de maniére centralisée" class="animate-fade-in-up animation-delay-100">
             <x-slot:icon>
                 <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20">
                     <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -70,7 +70,7 @@
                         </svg>
                         Actifs
                     </span>
-                    <span class="text-gray-400 mx-2">•</span>
+                    <span class="text-gray-400 mx-2">â€¢</span>
                     <span class="text-gray-500">Effectif total</span>
                 </div>
             </div>
@@ -116,7 +116,7 @@
                     <span class="text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full font-medium">
                         Planifiés
                     </span>
-                    <span class="text-gray-400 mx-2">•</span>
+                    <span class="text-gray-400 mx-2">â€¢</span>
                     <span class="text-gray-500">Absences validées</span>
                 </div>
             </div>
@@ -138,7 +138,7 @@
                     <span class="text-purple-600 bg-purple-50 px-2 py-0.5 rounded-full font-medium">
                         +{{ $stats['new_this_month'] }}
                     </span>
-                    <span class="text-gray-400 mx-2">•</span>
+                    <span class="text-gray-400 mx-2">â€¢</span>
                     <span class="text-gray-500">Recrutements</span>
                 </div>
             </div>
@@ -292,7 +292,18 @@
                                     </span>
                                 </div>
                                 <div>
-                                    <div class="font-medium text-gray-900">{{ $employee->name }}</div>
+                                    <div class="flex items-center gap-2">
+                                        <span class="font-medium text-gray-900 {{ in_array($employee->status, ['suspended', 'terminated']) ? 'line-through opacity-60' : '' }}">{{ $employee->name }}</span>
+                                        @if($employee->status === 'suspended')
+                                            <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-orange-100 text-orange-700 border border-orange-200" title="Ce compte est suspendu">
+                                                Suspendu
+                                            </span>
+                                        @elseif($employee->status === 'terminated')
+                                            <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-red-100 text-red-700 border border-red-200" title="Ce compte est désactivé">
+                                                Parti
+                                            </span>
+                                        @endif
+                                    </div>
                                     <div class="text-xs text-gray-500 font-mono">{{ $employee->employee_id }}</div>
                                 </div>
                             </div>
@@ -361,9 +372,25 @@
                                 <a href="{{ route('admin.employees.show', $employee) }}" class="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Voir">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                                 </a>
-                                <a href="{{ route('admin.employees.edit', $employee) }}" class="p-1.5 text-gray-500 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors" title="Éditer">
+                                <a href="{{ route('admin.employees.edit', $employee) }}" class="p-1.5 text-gray-500 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors" title="éditer">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
                                 </a>
+                                {{-- Bouton Activer/Suspendre --}}
+                                @if($employee->status === 'active')
+                                    <button type="button" 
+                                            @click="confirmStatusChange('{{ route('admin.employees.toggle-status', $employee) }}', 'suspend', {{ Js::from($employee->name) }})"
+                                            class="p-1.5 text-gray-500 hover:text-orange-600 hover:bg-orange-50 rounded-lg transition-colors" 
+                                            title="Suspendre le compte">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
+                                    </button>
+                                @else
+                                    <button type="button" 
+                                            @click="confirmStatusChange('{{ route('admin.employees.toggle-status', $employee) }}', 'activate', {{ Js::from($employee->name) }})"
+                                            class="p-1.5 text-orange-500 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors" 
+                                            title="Activer le compte">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                    </button>
+                                @endif
                                 <button type="button" 
                                         @click="confirmDelete('{{ route('admin.employees.destroy', $employee) }}')"
                                         class="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" 
@@ -396,7 +423,7 @@
         </x-data-table>
 
     <!-- Scripts pour la gestion du tableau -->
-    <script>
+    <script nonce="{{ $cspNonce ?? '' }}">
         function employeeTable() {
             return {
                 selected: [],
@@ -433,6 +460,18 @@
                 confirmDelete(url) {
                     this.deleteUrl = url;
                     this.showDeleteModal = true;
+                },
+
+                // Status Change Modal Logic
+                showStatusModal: false,
+                statusUrl: '',
+                statusAction: '', // 'suspend' ou 'activate'
+                statusEmployeeName: '',
+                confirmStatusChange(url, action, employeeName) {
+                    this.statusUrl = url;
+                    this.statusAction = action;
+                    this.statusEmployeeName = employeeName;
+                    this.showStatusModal = true;
                 }
             }
         }
@@ -477,7 +516,7 @@
                         <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
                             <h3 class="text-base font-semibold leading-6 text-gray-900" id="modal-title">Confirmer la suppression</h3>
                             <div class="mt-2">
-                                <p class="text-sm text-gray-500">Êtes-vous sûr de vouloir supprimer cet employé ? Cette action est irréversible.</p>
+                                <p class="text-sm text-gray-500">éŠtes-vous sé»r de vouloir supprimer cet employé ? Cette action est irréversible.</p>
                             </div>
                         </div>
                     </div>
@@ -493,6 +532,90 @@
                     </form>
                     <button type="button" 
                             @click="showDeleteModal = false"
+                            class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto">
+                        Annuler
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Status Change Confirmation Modal -->
+    <div x-show="showStatusModal" 
+         class="fixed inset-0 z-[100] overflow-y-auto" 
+         aria-labelledby="status-modal-title" 
+         role="dialog" 
+         aria-modal="true"
+         style="display: none;">
+        
+        <!-- Backdrop -->
+        <div x-show="showStatusModal"
+             x-transition:enter="ease-out duration-300"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
+             x-transition:leave="ease-in duration-200"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0"
+             class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" 
+             @click="showStatusModal = false"></div>
+
+        <div class="flex min-h-screen items-end justify-center p-4 text-center sm:items-center sm:p-0">
+            <div x-show="showStatusModal"
+                 x-transition:enter="ease-out duration-300"
+                 x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                 x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
+                 x-transition:leave="ease-in duration-200"
+                 x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
+                 x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                 class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+                
+                <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                    <div class="sm:flex sm:items-start">
+                        <!-- Icé´ne dynamique selon l'action -->
+                        <template x-if="statusAction === 'suspend'">
+                            <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-orange-100 sm:mx-0 sm:h-10 sm:w-10">
+                                <svg class="h-6 w-6 text-orange-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/>
+                                </svg>
+                            </div>
+                        </template>
+                        <template x-if="statusAction === 'activate'">
+                            <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-green-100 sm:mx-0 sm:h-10 sm:w-10">
+                                <svg class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                            </div>
+                        </template>
+                        <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
+                            <h3 class="text-base font-semibold leading-6 text-gray-900" id="status-modal-title">
+                                <span x-show="statusAction === 'suspend'">Suspendre le compte</span>
+                                <span x-show="statusAction === 'activate'">Activer le compte</span>
+                            </h3>
+                            <div class="mt-2">
+                                <p class="text-sm text-gray-500" x-show="statusAction === 'suspend'">
+                                    éŠtes-vous sé»r de vouloir suspendre le compte de <span class="font-medium text-gray-700" x-text="statusEmployeeName"></span> ?
+                                    <br><span class="text-orange-600">L'employé ne pourra plus se connecter é  l'application.</span>
+                                </p>
+                                <p class="text-sm text-gray-500" x-show="statusAction === 'activate'">
+                                    éŠtes-vous sé»r de vouloir réactiver le compte de <span class="font-medium text-gray-700" x-text="statusEmployeeName"></span> ?
+                                    <br><span class="text-green-600">L'employé pourra é  nouveau se connecter.</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                    <form :action="statusUrl" method="POST" class="inline">
+                        @csrf
+                        <button type="submit" 
+                                class="inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm sm:ml-3 sm:w-auto"
+                                :class="statusAction === 'suspend' ? 'bg-orange-600 hover:bg-orange-500' : 'bg-green-600 hover:bg-green-500'">
+                            <span x-show="statusAction === 'suspend'">Suspendre</span>
+                            <span x-show="statusAction === 'activate'">Activer</span>
+                        </button>
+                    </form>
+                    <button type="button" 
+                            @click="showStatusModal = false"
                             class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto">
                         Annuler
                     </button>

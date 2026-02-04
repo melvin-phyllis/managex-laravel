@@ -1,4 +1,4 @@
-<x-layouts.admin>
+﻿<x-layouts.admin>
     <div class="max-w-2xl mx-auto space-y-6">
         <!-- Header -->
         <div class="flex items-center gap-4 animate-fade-in-up">
@@ -9,7 +9,7 @@
             </a>
             <div>
                 <h1 class="text-2xl font-bold text-gray-900">Ajouter un Document Global</h1>
-                <p class="text-gray-600 mt-1">Règlement intérieur, charte, politique...</p>
+                <p class="text-gray-600 mt-1">Réglement intérieur, charte, politique...</p>
             </div>
         </div>
 
@@ -58,7 +58,7 @@
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Titre *</label>
                 <input type="text" name="title" value="{{ old('title') }}" required
-                       placeholder="Ex: Règlement intérieur 2026"
+                       placeholder="Ex: Réglement intérieur 2026"
                        class="w-full rounded-lg border-gray-300 focus:border-emerald-500 focus:ring-emerald-500">
             </div>
 
@@ -66,7 +66,7 @@
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
                 <textarea name="description" rows="3"
-                          placeholder="Décrivez brièvement le contenu du document..."
+                          placeholder="Décrivez briévement le contenu du document..."
                           class="w-full rounded-lg border-gray-300 focus:border-emerald-500 focus:ring-emerald-500">{{ old('description') }}</textarea>
             </div>
 
@@ -79,7 +79,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
                     </svg>
                     <p class="text-gray-600">Cliquez ou glissez un fichier ici</p>
-                    <p class="text-sm text-gray-400 mt-1">PDF, DOC, DOCX • Max 10 MB</p>
+                    <p class="text-sm text-gray-400 mt-1">PDF, DOC, DOCX â€¢ Max 10 MB</p>
                     <input type="file" name="file" id="file-input" required accept=".pdf,.doc,.docx" class="hidden">
                 </div>
                 <p id="file-name" class="text-sm text-emerald-600 mt-2"></p>
@@ -104,10 +104,10 @@
         </form>
     </div>
 
-    <script>
+    <script nonce="{{ $cspNonce ?? '' }}">
         document.getElementById('file-input').addEventListener('change', function(e) {
             const fileName = e.target.files[0]?.name;
-            document.getElementById('file-name').textContent = fileName ? '📎 ' + fileName : '';
+            document.getElementById('file-name').textContent = fileName ? 'ðŸ“Ž ' + fileName : '';
         });
 
         // Toggle position dropdown for Fiche de poste

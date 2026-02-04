@@ -1,4 +1,4 @@
-<x-layouts.admin>
+﻿<x-layouts.admin>
     <x-slot name="header">
         <!-- Header moderne avec gradient -->
         <div class="bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 -mx-4 sm:-mx-6 lg:-mx-8 -mt-4 px-4 sm:px-6 lg:px-8 py-6 mb-4">
@@ -67,7 +67,7 @@
                 <div>
                     <h3 class="font-semibold text-amber-900">Modification de zone</h3>
                     <p class="text-sm text-amber-700 mt-1">
-                        Modifiez les paramètres de la zone. Les changements seront appliqués immédiatement et affecteront le pointage des employés assignés.
+                        Modifiez les paramétres de la zone. Les changements seront appliqués immédiatement et affecteront le pointage des employés assignés.
                     </p>
                 </div>
             </div>
@@ -102,7 +102,7 @@
                                 </label>
                                 <input type="text" name="name" id="name" value="{{ old('name', $geolocationZone->name) }}" required
                                        class="w-full rounded-lg border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 transition-colors"
-                                       placeholder="Ex: Siège social, Agence Paris...">
+                                       placeholder="Ex: Siége social, Agence Paris...">
                                 @error('name')
                                     <p class="mt-1.5 text-sm text-red-600 flex items-center gap-1">
                                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>
@@ -163,7 +163,7 @@
                             <!-- Rayon avec slider -->
                             <div>
                                 <label for="radius" class="block text-sm font-medium text-gray-700 mb-1.5">
-                                    Rayon de la zone : <span id="radiusValue" class="font-bold text-amber-600">{{ $geolocationZone->radius }}</span> mètres
+                                    Rayon de la zone : <span id="radiusValue" class="font-bold text-amber-600">{{ $geolocationZone->radius }}</span> métres
                                 </label>
                                 <input type="range" name="radius" id="radius" value="{{ old('radius', $geolocationZone->radius) }}"
                                        min="10" max="1000" step="10"
@@ -257,8 +257,8 @@
                         <!-- Boutons d'action (version desktop) -->
                         <div class="hidden lg:flex justify-between items-center px-5 py-4 bg-gray-50 border-t border-gray-100">
                             <div class="text-sm text-gray-500">
-                                <span class="font-medium">Dernière modification :</span> 
-                                {{ $geolocationZone->updated_at->format('d/m/Y à H:i') }}
+                                <span class="font-medium">Derniére modification :</span> 
+                                {{ $geolocationZone->updated_at->format('d/m/Y é  H:i') }}
                             </div>
                             <div class="flex gap-3">
                                 <a href="{{ route('admin.geolocation-zones.index') }}"
@@ -281,8 +281,8 @@
     </div>
 
     <!-- Leaflet JS -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script>
+    <script nonce="{{ $cspNonce ?? '' }}" src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script nonce="{{ $cspNonce ?? '' }}">
         document.addEventListener('DOMContentLoaded', function() {
             const latInput = document.getElementById('latitude');
             const lngInput = document.getElementById('longitude');
@@ -304,7 +304,7 @@
             const map = L.map('map').setView([initialLat, initialLng], 16);
 
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '© OpenStreetMap'
+                attribution: 'é‚Â OpenStreetMap'
             }).addTo(map);
 
             // Marqueur et cercle
@@ -317,7 +317,7 @@
                 weight: 2
             }).addTo(map);
 
-            // SÉCURITÉ: Fonction d'échappement HTML pour prévenir les XSS
+            // Séƒâ€°CURITéƒâ€°: Fonction d'échappement HTML pour prévenir les XSS
             function escapeHtml(text) {
                 if (!text) return '';
                 const div = document.createElement('div');
@@ -325,7 +325,7 @@
                 return div.innerHTML;
             }
 
-            // Mise à jour de la position
+            // Mise é  jour de la position
             function updatePosition(lat, lng, doReverseGeocode = true) {
                 latInput.value = lat.toFixed(8);
                 lngInput.value = lng.toFixed(8);
@@ -338,7 +338,7 @@
                 }
             }
 
-            // Reverse geocoding (coordonnées → adresse)
+            // Reverse geocoding (coordonnées aâ€ â€™ adresse)
             async function reverseGeocode(lat, lng) {
                 try {
                     const response = await fetch(
@@ -354,7 +354,7 @@
                 }
             }
 
-            // Recherche d'adresse (adresse → coordonnées)
+            // Recherche d'adresse (adresse aâ€ â€™ coordonnées)
             async function searchAddress(query) {
                 if (!query.trim()) return;
 
@@ -368,7 +368,7 @@
                     const data = await response.json();
 
                     if (data.length > 0) {
-                        // SÉCURITÉ: Échapper les données de l'API externe pour prévenir XSS
+                        // Séƒâ€°CURITéƒâ€°: éƒâ€°chapper les données de l'API externe pour prévenir XSS
                         searchResults.innerHTML = data.map((item, index) => `
                             <div class="p-3 hover:bg-amber-50 cursor-pointer border-b last:border-b-0 transition"
                                  data-lat="${escapeHtml(String(item.lat))}" 
@@ -406,7 +406,7 @@
                 searchBtn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg><span class="hidden sm:inline ml-2">Rechercher</span>';
             }
 
-            // Événements
+            // éƒâ€°vénements
             searchBtn.addEventListener('click', () => searchAddress(addressSearch.value));
             addressSearch.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') {
@@ -451,7 +451,7 @@
                     },
                     (error) => {
                         let message = 'Impossible d\'obtenir votre position';
-                        if (error.code === 1) message = 'Accès à la position refusé';
+                        if (error.code === 1) message = 'Accés é  la position refusé';
                         else if (error.code === 2) message = 'Position non disponible';
                         else if (error.code === 3) message = 'Délai d\'attente dépassé';
 
@@ -481,7 +481,7 @@
                 updatePosition(pos.lat, pos.lng);
             });
 
-            // Mise à jour du rayon
+            // Mise é  jour du rayon
             radiusInput.addEventListener('input', function() {
                 const radius = parseInt(this.value) || 100;
                 radiusValue.textContent = radius;

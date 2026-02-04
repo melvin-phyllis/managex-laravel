@@ -1,4 +1,4 @@
-<x-layouts.admin>
+﻿<x-layouts.admin>
     <div class="space-y-6" x-data="employeeForm()">
         <!-- Breadcrumbs -->
         <nav class="flex animate-fade-in-up" aria-label="Breadcrumb">
@@ -50,7 +50,7 @@
             </svg>
             <div class="text-sm text-blue-800">
                 <p class="font-medium">Génération automatique du mot de passe</p>
-                <p class="mt-1">Un mot de passe sécurisé sera généré automatiquement et envoyé par email à l'employé avec ses identifiants de connexion.</p>
+                <p class="mt-1">Un mot de passe sécurisé sera généré automatiquement et envoyé par email é  l'employé avec ses identifiants de connexion.</p>
             </div>
         </div>
 
@@ -272,7 +272,7 @@
 
                         <!-- Salaire de base -->
                         <div>
-                            <label for="base_salary" class="block text-sm font-medium text-gray-700 mb-1">Salaire brut mensuel (€)</label>
+                            <label for="base_salary" class="block text-sm font-medium text-gray-700 mb-1">Salaire brut mensuel (â‚¬)</label>
                             <input type="number" name="base_salary" id="base_salary" value="{{ old('base_salary') }}" step="0.01" min="0"
                                    class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                                    placeholder="2500.00">
@@ -292,7 +292,7 @@
                     </h2>
                 </div>
                 <div class="p-6">
-                    <p class="text-sm text-gray-500 mb-4">Sélectionnez les jours où l'employé doit travailler.</p>
+                    <p class="text-sm text-gray-500 mb-4">Sélectionnez les jours oé¹ l'employé doit travailler.</p>
                     <div class="flex flex-wrap gap-4">
                         @php
                             $days = [
@@ -358,7 +358,7 @@
                                 <option value="Conjoint(e)" {{ old('emergency_contact_relationship') == 'Conjoint(e)' ? 'selected' : '' }}>Conjoint(e)</option>
                                 <option value="Parent" {{ old('emergency_contact_relationship') == 'Parent' ? 'selected' : '' }}>Parent</option>
                                 <option value="Enfant" {{ old('emergency_contact_relationship') == 'Enfant' ? 'selected' : '' }}>Enfant</option>
-                                <option value="Frère/Sœur" {{ old('emergency_contact_relationship') == 'Frère/Sœur' ? 'selected' : '' }}>Frère/Sœur</option>
+                                <option value="Frére/SÅ“ur" {{ old('emergency_contact_relationship') == 'Frére/SÅ“ur' ? 'selected' : '' }}>Frére/SÅ“ur</option>
                                 <option value="Ami(e)" {{ old('emergency_contact_relationship') == 'Ami(e)' ? 'selected' : '' }}>Ami(e)</option>
                                 <option value="Autre" {{ old('emergency_contact_relationship') == 'Autre' ? 'selected' : '' }}>Autre</option>
                             </select>
@@ -381,7 +381,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         <!-- Numéro de sécurité sociale -->
                         <div>
-                            <label for="social_security_number" class="block text-sm font-medium text-gray-700 mb-1">N° Sécurité sociale</label>
+                            <label for="social_security_number" class="block text-sm font-medium text-gray-700 mb-1">NÂ° Sécurité sociale</label>
                             <input type="text" name="social_security_number" id="social_security_number" value="{{ old('social_security_number') }}"
                                    class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                                    placeholder="1 85 12 75 115 001 42">
@@ -419,7 +419,7 @@
         </form>
     </div>
 
-    <script>
+    <script nonce="{{ $cspNonce ?? '' }}">
         function employeeForm() {
             return {
                 departmentId: '{{ old('department_id', '') }}',

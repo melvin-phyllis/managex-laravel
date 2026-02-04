@@ -1,4 +1,4 @@
-<x-layouts.employee>
+﻿<x-layouts.employee>
     <div class="space-y-6">
         <!-- Header avec gradient -->
         <div class="bg-gradient-to-r from-indigo-600 via-blue-600 to-cyan-600 rounded-2xl p-6 text-white shadow-xl">
@@ -52,7 +52,7 @@
                     </div>
                     <div>
                         <p class="text-2xl font-bold text-gray-900">{{ $stats['pending_ack'] }}</p>
-                        <p class="text-xs text-gray-500">À confirmer</p>
+                        <p class="text-xs text-gray-500">é€ confirmer</p>
                     </div>
                 </div>
             </div>
@@ -84,7 +84,7 @@
             @if($stats['pending_ack'] > 0)
             <a href="{{ route('employee.announcements.index', ['filter' => 'acknowledgment']) }}" 
                class="px-4 py-2 rounded-lg font-medium transition-all {{ $filter === 'acknowledgment' ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-md' : 'bg-amber-50 text-amber-700 hover:bg-amber-100 border border-amber-200' }}">
-                À confirmer ({{ $stats['pending_ack'] }})
+                é€ confirmer ({{ $stats['pending_ack'] }})
             </a>
             @endif
         </div>
@@ -106,7 +106,7 @@
                 <div class="bg-white rounded-xl shadow-sm border {{ !$announcement->is_read ? 'border-indigo-300 bg-indigo-50/30' : 'border-gray-100' }} overflow-hidden hover:shadow-md transition-all">
                     <div class="p-5">
                         <div class="flex flex-col sm:flex-row sm:items-start gap-4">
-                            <!-- Icône -->
+                            <!-- Icé´ne -->
                             <div class="flex-shrink-0 w-12 h-12 bg-gradient-to-br {{ $typeColor }} rounded-xl flex items-center justify-center text-white shadow-sm">
                                 @if($announcement->type === 'urgent')
                                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -139,7 +139,7 @@
                                             <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                                                 <path d="M10 2a1 1 0 011 1v1.323l3.954 1.582 1.599-.8a1 1 0 01.894 1.79l-1.233.616 1.738 5.42a1 1 0 01-.285 1.05A3.989 3.989 0 0115 15a3.989 3.989 0 01-2.667-1.019 1 1 0 01-.285-1.05l1.715-5.349L11 6.477V16h2a1 1 0 110 2H7a1 1 0 110-2h2V6.477L6.237 7.582l1.715 5.349a1 1 0 01-.285 1.05A3.989 3.989 0 015 15a3.989 3.989 0 01-2.667-1.019 1 1 0 01-.285-1.05l1.738-5.42-1.233-.617a1 1 0 01.894-1.788l1.599.799L9 4.323V3a1 1 0 011-1z"/>
                                             </svg>
-                                            Épinglée
+                                            épinglée
                                         </span>
                                     @endif
                                     @if($announcement->priority === 'critical')
@@ -198,7 +198,7 @@
                             </div>
                         </div>
 
-                        <!-- Bannière d'accusé de réception -->
+                        <!-- Banniére d'accusé de réception -->
                         @if($announcement->requires_acknowledgment && !$announcement->is_acknowledged)
                             <div class="mt-4 p-4 bg-amber-50 rounded-xl border border-amber-200">
                                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -257,7 +257,7 @@
     </div>
 
     @push('scripts')
-    <script>
+    <script nonce="{{ $cspNonce ?? '' }}">
         function acknowledgeAnnouncement(id, button) {
             button.disabled = true;
             button.textContent = 'Envoi...';
@@ -272,7 +272,7 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    button.textContent = '✓ Confirmé';
+                    button.textContent = 'âœ“ Confirmé';
                     button.classList.remove('from-amber-500', 'to-orange-500');
                     button.classList.add('from-emerald-500', 'to-green-500');
                     

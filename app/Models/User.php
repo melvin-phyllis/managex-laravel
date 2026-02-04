@@ -74,6 +74,10 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        // SECURITE: Masquer les données sensibles de la sérialisation JSON
+        'social_security_number',
+        'bank_iban',
+        'bank_bic',
     ];
 
     /**
@@ -93,6 +97,10 @@ class User extends Authenticatable
             'leave_balance' => 'decimal:2',
             'sick_leave_balance' => 'decimal:2',
             'rtt_balance' => 'decimal:2',
+            // SECURITE: Chiffrement au repos pour les données sensibles (RGPD/PCI-DSS)
+            'social_security_number' => 'encrypted',
+            'bank_iban' => 'encrypted',
+            'bank_bic' => 'encrypted',
         ];
     }
 

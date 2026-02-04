@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
@@ -15,10 +15,10 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script nonce="{{ $cspNonce ?? '' }}" src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="font-sans antialiased" x-data="{ showLogoutModal: false }">
-    <script>window.userId = {{ auth()->id() ?? 'null' }};</script>
+    <script nonce="{{ $cspNonce ?? '' }}">window.userId = {{ auth()->id() ?? 'null' }};</script>
     <x-realtime-notifications />
     <div class="min-h-screen bg-gray-50">
         <!-- Decorative Background -->
@@ -69,7 +69,7 @@
                         <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
                         </svg>
-                        Mes Tâches
+                        Mes Taches
                     </x-sidebar-link>
 
                     <x-sidebar-link :href="route('employee.leaves.index')" :active="request()->routeIs('employee.leaves.*')">
@@ -112,7 +112,7 @@
                         <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
                         </svg>
-                        Mes Évaluations
+                        Mes évaluations
                     </x-sidebar-link>
                     @endif
                 </div>
@@ -124,7 +124,7 @@
                         <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
                         </svg>
-                        Évaluations hebdomadaires
+                        évaluations hebdomadaires
                     </x-sidebar-link>
                 </div>
                 @endif
@@ -156,7 +156,7 @@
                                 <!-- Avatar -->
                                 <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white text-sm font-semibold overflow-hidden">
                                     @if(auth()->user()->avatar && avatar_url(auth()->user()->avatar))
-                                        <img src="{{ avatar_url(auth()->user()->avatar) }}" alt="{{ auth()->user()->name }}" class="w-full h-full object-cover" onerror="this.style.display='none'; this.parentElement.innerHTML='{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}';">
+                                        <img src="{{ avatar_url(auth()->user()->avatar) }}" alt="{{ auth()->user()->name }}" class="w-full h-full object-cover" onerror="this.style.display='none'; this.parentElement.textContent=@js(strtoupper(substr(auth()->user()->name, 0, 1)));">
                                     @else
                                         {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
                                     @endif
@@ -197,7 +197,7 @@
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                                         </svg>
-                                        Paramètres
+                                        Paramétres
                                     </a>
                                 </div>
 
@@ -266,7 +266,7 @@
                         <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
                             <h3 class="text-base font-semibold leading-6 text-gray-900" id="modal-title">Déconnexion</h3>
                             <div class="mt-2">
-                                <p class="text-sm text-gray-500">Êtes-vous sûr de vouloir vous déconnecter ?</p>
+                                <p class="text-sm text-gray-500">éŠtes-vous sé»r de vouloir vous déconnecter ?</p>
                             </div>
                         </div>
                     </div>
@@ -314,7 +314,7 @@
         .toast-progress { animation: toast-progress linear forwards; }
     </style>
 
-    <script>
+    <script nonce="{{ $cspNonce ?? '' }}">
         // Beautiful Toast System
         function showToast(type, message, duration = 5000) {
             const container = document.getElementById('toast-container');
@@ -324,7 +324,7 @@
                 success: {
                     bg: 'bg-gradient-to-r from-emerald-500 to-green-600',
                     icon: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>`,
-                    title: 'Succès',
+                    title: 'Succés',
                     progressBg: 'bg-emerald-300/50'
                 },
                 error: {
@@ -406,6 +406,92 @@
         });
     </script>
 
+    {{-- Overlay de téléchargement global --}}
+    <x-download-overlay />
+
+    {{-- Assistant IA RH --}}
+    <x-ai-chat-widget />
+
+    {{-- Script pour transformer les liens d'export en téléchargements avec overlay --}}
+    <script nonce="{{ $cspNonce ?? '' }}">
+        document.addEventListener('DOMContentLoaded', function() {
+            // Patterns qui indiquent un vrai lien de téléchargement de fichier
+            const downloadPatterns = [
+                /\/export\/(pdf|excel|csv)/i,      // /export/pdf, /export/excel, /export/csv
+                /\/download\/(pdf|excel|csv)/i,    // /download/pdf, etc.
+                /\.(pdf|xlsx|xls|csv)(\?|$)/i,     // Fichiers avec extension
+                /export.*\?(.*format=|.*type=)/i,  // export?format= ou export?type=
+            ];
+            
+            // Vérifie si un lien est un vrai téléchargement
+            function isRealDownloadLink(href) {
+                return downloadPatterns.some(pattern => pattern.test(href));
+            }
+            
+            // Fonction pour configurer un lien de téléchargement
+            function setupDownloadLink(link) {
+                if (link.target === '_blank' || link.dataset.downloadHandled) return;
+                if (link.dataset.noOverlay === 'true') return;
+                
+                const href = link.getAttribute('href');
+                if (!href) return;
+                
+                // Ne traiter que si c'est explicitement marqué OU si c'est un vrai pattern de téléchargement
+                const hasExplicitDownload = link.hasAttribute('data-download');
+                if (!hasExplicitDownload && !isRealDownloadLink(href)) {
+                    return; // Ce n'est pas un lien de téléchargement
+                }
+                
+                let fileType = link.dataset.fileType || '';
+                let fileName = link.dataset.fileName || '';
+                
+                if (!fileType) {
+                    if (href.includes('pdf')) fileType = 'pdf';
+                    else if (href.includes('excel') || href.includes('xlsx')) fileType = 'excel';
+                    else if (href.includes('csv')) fileType = 'csv';
+                }
+                
+                if (!fileName) {
+                    const linkText = link.textContent.trim();
+                    if (linkText && !['Télécharger', 'Download', 'Export', 'Exporter', 'PDF', 'Excel', 'CSV'].includes(linkText)) {
+                        fileName = linkText;
+                    } else {
+                        fileName = fileType === 'pdf' ? 'document.pdf' : 
+                                   fileType === 'excel' ? 'export.xlsx' : 
+                                   fileType === 'csv' ? 'export.csv' : 'fichier';
+                    }
+                }
+                
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    window.dispatchEvent(new CustomEvent('start-download', {
+                        detail: { url: href, filename: fileName, type: fileType }
+                    }));
+                });
+                
+                link.dataset.downloadHandled = 'true';
+            }
+            
+            const exportLinks = document.querySelectorAll('a[href*="export"], a[href*="download"], a[data-download]');
+            exportLinks.forEach(setupDownloadLink);
+            
+            // Observer pour les liens ajoutés dynamiquement
+            const observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    mutation.addedNodes.forEach(function(node) {
+                        if (node.nodeType === 1) {
+                            if (node.matches && node.matches('a[href*="export"], a[href*="download"], a[data-download]')) {
+                                setupDownloadLink(node);
+                            }
+                            const childLinks = node.querySelectorAll && node.querySelectorAll('a[href*="export"], a[href*="download"], a[data-download]');
+                            if (childLinks) childLinks.forEach(setupDownloadLink);
+                        }
+                    });
+                });
+            });
+            observer.observe(document.body, { childList: true, subtree: true });
+        });
+    </script>
 
     @stack('scripts')
 </body>

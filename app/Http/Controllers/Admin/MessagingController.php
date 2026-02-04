@@ -269,7 +269,7 @@ class MessagingController extends Controller
                         'avatar' => $m->sender->avatar ? avatar_url($m->sender->avatar) : null,
                     ] : null,
                     'content' => $m->content,
-                    'attachments' => $m->attachments,
+                    'attachments' => $this->formatAttachments($m->attachments),
                     'created_at' => $m->created_at->toIso8601String(),
                 ]),
             ]);
@@ -294,7 +294,7 @@ class MessagingController extends Controller
                 'avatar' => $m->sender->avatar ? avatar_url($m->sender->avatar) : null,
             ] : null,
             'content' => $m->content,
-            'attachments' => $m->attachments,
+            'attachments' => $this->formatAttachments($m->attachments),
             'created_at' => $m->created_at->toIso8601String(),
         ]);
 
@@ -342,5 +342,22 @@ class MessagingController extends Controller
             'content' => $message->content,
             'created_at' => $message->created_at->toIso8601String(),
         ]);
+    }
+
+    /**
+     * Format attachments for JSON (urls for display/download)
+     */
+    private function formatAttachments($attachments): array
+    {
+        return $attachments->map(fn ($a) => [
+            'id' => $a->id,
+            'name' => $a->original_name,
+            'url' => ($a->isImage() || $a->isAudio()) ? route('messaging.api.attachments.show', $a) : route('messaging.api.attachments.download', $a),
+            'download_url' => route('messaging.api.attachments.download', $a),
+            'type' => $a->mime_type,
+            'size' => $a->human_size,
+            'is_image' => $a->isImage(),
+            'is_audio' => $a->isAudio(),
+        ])->toArray();
     }
 }

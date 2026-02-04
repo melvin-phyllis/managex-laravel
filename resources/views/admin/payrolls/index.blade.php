@@ -1,4 +1,4 @@
-<x-layouts.admin>
+﻿<x-layouts.admin>
     <div class="space-y-6" x-data="payrollTable()">
         <!-- Header -->
         <div class="flex items-center justify-between animate-fade-in-up">
@@ -261,7 +261,7 @@
                             <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
                                 <h3 class="text-base font-semibold leading-6 text-gray-900" id="modal-title">Confirmer la suppression</h3>
                                 <div class="mt-2">
-                                    <p class="text-sm text-gray-500">Êtes-vous sûr de vouloir supprimer cette fiche de paie ? Cette action est irréversible.</p>
+                                    <p class="text-sm text-gray-500">éŠtes-vous sé»r de vouloir supprimer cette fiche de paie ? Cette action est irréversible.</p>
                                 </div>
                             </div>
                         </div>
@@ -287,7 +287,7 @@
     </div>
     </div>
 
-    <script>
+    <script nonce="{{ $cspNonce ?? '' }}">
         function payrollTable() {
             return {
                 showBulkModal: false,

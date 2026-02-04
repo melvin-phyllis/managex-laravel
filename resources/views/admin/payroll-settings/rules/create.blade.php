@@ -1,4 +1,4 @@
-<x-layouts.admin>
+﻿<x-layouts.admin>
     <div class="space-y-6">
         <!-- Header -->
         <div class="flex items-center justify-between animate-fade-in-up">
@@ -12,9 +12,9 @@
                     <svg class="w-4 h-4 mx-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                     </svg>
-                    <span class="text-gray-900">Nouvelle Règle</span>
+                    <span class="text-gray-900">Nouvelle Régle</span>
                 </nav>
-                <h1 class="text-2xl font-bold text-gray-900">Ajouter une Règle de Calcul</h1>
+                <h1 class="text-2xl font-bold text-gray-900">Ajouter une Régle de Calcul</h1>
             </div>
         </div>
 
@@ -37,13 +37,13 @@
                     <label for="label" class="block text-sm font-medium text-gray-700 mb-1">Libellé *</label>
                     <input type="text" name="label" id="label" value="{{ old('label') }}" required
                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
-                           placeholder="Ex: Impôt sur le Salaire">
+                           placeholder="Ex: Impé´t sur le Salaire">
                     @error('label') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                 </div>
 
-                <!-- Type de règle -->
+                <!-- Type de régle -->
                 <div>
-                    <label for="rule_type" class="block text-sm font-medium text-gray-700 mb-1">Type de Règle *</label>
+                    <label for="rule_type" class="block text-sm font-medium text-gray-700 mb-1">Type de Régle *</label>
                     <select name="rule_type" id="rule_type" required
                             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">
                         <option value="tax" {{ old('rule_type') === 'tax' ? 'selected' : '' }}>Taxe</option>
@@ -73,7 +73,7 @@
                             onchange="toggleCalculationFields()">
                         <option value="percentage" {{ old('calculation_type', 'percentage') === 'percentage' ? 'selected' : '' }}>Pourcentage</option>
                         <option value="fixed" {{ old('calculation_type') === 'fixed' ? 'selected' : '' }}>Montant Fixe</option>
-                        <option value="bracket" {{ old('calculation_type') === 'bracket' ? 'selected' : '' }}>Barème Progressif</option>
+                        <option value="bracket" {{ old('calculation_type') === 'bracket' ? 'selected' : '' }}>Baréme Progressif</option>
                     </select>
                 </div>
 
@@ -84,7 +84,7 @@
                             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">
                         <option value="taxable_gross" {{ old('base_field', 'taxable_gross') === 'taxable_gross' ? 'selected' : '' }}>Brut Imposable</option>
                         <option value="gross_salary" {{ old('base_field') === 'gross_salary' ? 'selected' : '' }}>Salaire Brut</option>
-                        <option value="igr_base" {{ old('base_field') === 'igr_base' ? 'selected' : '' }}>Base IGR (après IS, CN, CNPS)</option>
+                        <option value="igr_base" {{ old('base_field') === 'igr_base' ? 'selected' : '' }}>Base IGR (aprés IS, CN, CNPS)</option>
                     </select>
                 </div>
 
@@ -129,9 +129,9 @@
                     <p class="mt-1 text-xs text-gray-500">Code affiché sur le bulletin de paie</p>
                 </div>
 
-                <!-- Barème (JSON) -->
+                <!-- Baréme (JSON) -->
                 <div id="brackets_field" class="md:col-span-2" style="display: none;">
-                    <label for="brackets" class="block text-sm font-medium text-gray-700 mb-1">Barème (JSON)</label>
+                    <label for="brackets" class="block text-sm font-medium text-gray-700 mb-1">Baréme (JSON)</label>
                     <textarea name="brackets" id="brackets" rows="5"
                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 font-mono text-sm"
                               placeholder='[{"min": 0, "max": 50000, "rate": 0}, {"min": 50000, "max": 130000, "rate": 0.015}]'>{{ old('brackets') }}</textarea>
@@ -179,7 +179,7 @@
         </form>
     </div>
 
-    <script>
+    <script nonce="{{ $cspNonce ?? '' }}">
         function toggleCalculationFields() {
             const type = document.getElementById('calculation_type').value;
             document.getElementById('rate_field').style.display = (type === 'percentage') ? 'block' : 'none';
