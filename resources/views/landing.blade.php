@@ -5,6 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="ManageX — La plateforme RH nouvelle génération. Gestion des présences, paie, congés, tâches et analytics, propulsée par l'IA.">
     <title>ManageX — Gestion RH Intelligente</title>
+    <script>
+        // Prevent flash of wrong theme on load
+        (function() {
+            var saved = localStorage.getItem('managex-theme');
+            var theme = saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
     <style>
         /* ========================================
            CSS VARIABLES & RESET
@@ -41,78 +49,34 @@
         }
 
         /* ========================================
-           DARK THEME OVERRIDES
+           DARK THEME OVERRIDE
         ======================================== */
         [data-theme="dark"] {
             --white: #0a0a0f;
-            --off-white: #0f1018;
-            --light: #141420;
-            --light-surface: #1a1a2e;
-            --light-card: #12121c;
-            --black: #ffffff;
-            --dark-text: #f5f5f7;
-            --gray-100: #d1d1e0;
-            --gray-300: #a8a8be;
-            --gray-500: #6c6c88;
-            --gray-600: #4a4a64;
+            --off-white: #111118;
+            --light: #1a1a24;
+            --light-surface: #22222e;
+            --light-card: #151520;
+            --black: #f0f1f6;
+            --dark-text: #e8e9f0;
+            --gray-100: #d0d1e0;
+            --gray-300: #a0a1b4;
+            --gray-500: #6b6c82;
+            --gray-600: #4a4b5e;
             --gold: #d4a830;
-            --gold-light: #e8bc40;
-            --accent: #8b6cf5;
-            --accent-light: #9b7cff;
-            --accent-glow: rgba(139, 108, 245, 0.25);
+            --gold-light: #e8c040;
+            --accent: #7c5cfc;
+            --accent-light: #8c6cff;
+            --accent-glow: rgba(124, 92, 252, 0.25);
             --border: rgba(255, 255, 255, 0.08);
-            --border-hover: rgba(139, 108, 245, 0.3);
-            --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+            --border-hover: rgba(124, 92, 252, 0.3);
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.2);
             --shadow-md: 0 8px 30px rgba(0,0,0,0.3);
             --shadow-lg: 0 20px 60px rgba(0,0,0,0.4);
         }
 
         [data-theme="dark"] body::after {
             opacity: 0.03;
-        }
-
-        /* Theme toggle button */
-        .theme-toggle {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            background: rgba(108, 76, 236, 0.08);
-            border: 1px solid var(--border);
-            cursor: pointer;
-            transition: all 0.3s var(--transition);
-            color: var(--gray-300);
-        }
-
-        .theme-toggle:hover {
-            background: rgba(108, 76, 236, 0.15);
-            border-color: var(--border-hover);
-            color: var(--accent);
-        }
-
-        .theme-toggle svg {
-            width: 18px;
-            height: 18px;
-            transition: transform 0.3s var(--transition);
-        }
-
-        .theme-toggle:hover svg {
-            transform: rotate(15deg);
-        }
-
-        .theme-toggle .icon-sun,
-        .theme-toggle .icon-moon {
-            display: none;
-        }
-
-        [data-theme="light"] .theme-toggle .icon-moon {
-            display: block;
-        }
-
-        [data-theme="dark"] .theme-toggle .icon-sun {
-            display: block;
         }
 
         *, *::before, *::after {
@@ -134,11 +98,12 @@
             color: var(--dark-text);
             overflow-x: hidden;
             line-height: 1.6;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         ::selection {
             background: var(--accent);
-            color: var(--white);
+            color: #ffffff;
         }
 
         a {
@@ -265,7 +230,7 @@
             justify-content: center;
             font-size: 1rem;
             font-weight: 900;
-            color: var(--white);
+            color: #ffffff;
         }
 
         .nav-links {
@@ -302,7 +267,7 @@
         .nav-cta {
             padding: 0.6rem 1.5rem;
             background: var(--accent);
-            color: var(--white) !important;
+            color: #ffffff !important;
             border-radius: 8px;
             font-weight: 600;
             font-size: 0.875rem;
@@ -358,6 +323,46 @@
             transform: rotate(-45deg) translate(6px, -6px);
         }
 
+        /* Theme Toggle Button */
+        .theme-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: rgba(108, 76, 236, 0.08);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.3s var(--transition);
+            color: var(--gray-300);
+            flex-shrink: 0;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(108, 76, 236, 0.15);
+            border-color: var(--border-hover);
+            color: var(--accent);
+        }
+
+        .theme-toggle svg {
+            width: 18px;
+            height: 18px;
+            transition: transform 0.3s var(--transition);
+        }
+
+        .theme-toggle:hover svg {
+            transform: rotate(15deg);
+        }
+
+        /* Light mode: show moon (click to go dark), hide sun */
+        .theme-toggle .icon-sun { display: none; }
+        .theme-toggle .icon-moon { display: block; }
+
+        /* Dark mode: show sun (click to go light), hide moon */
+        [data-theme="dark"] .theme-toggle .icon-sun { display: block; }
+        [data-theme="dark"] .theme-toggle .icon-moon { display: none; }
+
         /* ========================================
            HERO SECTION
         ======================================== */
@@ -387,6 +392,14 @@
             will-change: transform;
         }
 
+        [data-theme="dark"] .parallax-bg {
+            background:
+                radial-gradient(ellipse at 20% 50%, rgba(124, 92, 252, 0.12) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 20%, rgba(79, 70, 229, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 80%, rgba(124, 58, 237, 0.06) 0%, transparent 50%),
+                linear-gradient(180deg, var(--white) 0%, var(--off-white) 100%);
+        }
+
         .hero-grid {
             position: absolute;
             inset: 0;
@@ -396,6 +409,12 @@
             background-size: 60px 60px;
             mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
             -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
+        }
+
+        [data-theme="dark"] .hero-grid {
+            background-image:
+                linear-gradient(rgba(124, 92, 252, 0.06) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(124, 92, 252, 0.06) 1px, transparent 1px);
         }
 
         .hero-content {
@@ -419,6 +438,11 @@
             color: var(--accent);
             margin-bottom: 2rem;
             letter-spacing: 0.03em;
+        }
+
+        [data-theme="dark"] .hero-badge {
+            background: rgba(124, 92, 252, 0.12);
+            border-color: rgba(124, 92, 252, 0.25);
         }
 
         .hero-badge .dot {
@@ -474,7 +498,7 @@
             gap: 0.5rem;
             padding: 1rem 2rem;
             background: linear-gradient(135deg, var(--accent), var(--indigo));
-            color: var(--white);
+            color: #ffffff;
             font-weight: 600;
             font-size: 0.95rem;
             border-radius: 12px;
@@ -522,6 +546,15 @@
             background: rgba(0,0,0,0.06);
             border-color: rgba(0,0,0,0.12);
             transform: translateY(-2px);
+        }
+
+        [data-theme="dark"] .btn-secondary {
+            background: rgba(255,255,255,0.05);
+        }
+
+        [data-theme="dark"] .btn-secondary:hover {
+            background: rgba(255,255,255,0.08);
+            border-color: rgba(255,255,255,0.15);
         }
 
         .hero-stats {
@@ -577,6 +610,14 @@
             bottom: 10%;
             right: -5%;
             animation-delay: -3s;
+        }
+
+        [data-theme="dark"] .orb-1 {
+            background: rgba(124, 92, 252, 0.1);
+        }
+
+        [data-theme="dark"] .orb-2 {
+            background: rgba(79, 70, 229, 0.08);
         }
 
         @keyframes float-orb {
@@ -986,7 +1027,7 @@
             gap: 0.75rem;
             padding: 1rem 1.25rem;
             background: linear-gradient(135deg, var(--violet), var(--indigo));
-            color: var(--white);
+            color: #ffffff;
         }
 
         .ai-chat-avatar {
@@ -998,13 +1039,13 @@
             align-items: center;
             justify-content: center;
             font-size: 0.9rem;
-            color: var(--white);
+            color: #ffffff;
         }
 
         .ai-chat-name {
             font-size: 0.85rem;
             font-weight: 600;
-            color: var(--white);
+            color: #ffffff;
         }
 
         .ai-chat-status {
@@ -1031,7 +1072,7 @@
         .chat-bubble.user {
             align-self: flex-end;
             background: linear-gradient(135deg, var(--accent), var(--indigo));
-            color: var(--white);
+            color: #ffffff;
             border-bottom-right-radius: 4px;
         }
 
@@ -1079,7 +1120,7 @@
             border-radius: 10px;
             background: linear-gradient(135deg, var(--accent), var(--indigo));
             border: none;
-            color: var(--white);
+            color: #ffffff;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -1092,7 +1133,7 @@
             top: -10px;
             right: -10px;
             background: linear-gradient(135deg, var(--gold), var(--gold-light));
-            color: var(--white);
+            color: #ffffff;
             font-size: 0.65rem;
             font-weight: 700;
             padding: 0.3rem 0.75rem;
@@ -1161,7 +1202,7 @@
             justify-content: center;
             font-weight: 700;
             font-size: 0.85rem;
-            color: var(--white);
+            color: #ffffff;
         }
 
         .testimonial-name {
@@ -1454,15 +1495,6 @@
                 <div class="logo-icon">M</div>
                 ManageX
             </a>
-            <!-- Theme Toggle Button -->
-            <button class="theme-toggle" id="themeToggle" aria-label="Changer de thème">
-                <svg class="icon-sun" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                    <circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
-                </svg>
-                <svg class="icon-moon" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
-                </svg>
-            </button>
             <ul class="nav-links" id="navLinks">
                 <li><a href="#about">Plateforme</a></li>
                 <li><a href="#features">Fonctionnalités</a></li>
@@ -1470,6 +1502,10 @@
                 <li><a href="#testimonials">Témoignages</a></li>
                 <li><a href="{{ route('login') }}" class="nav-cta">Se connecter</a></li>
             </ul>
+            <button class="theme-toggle" id="themeToggle" aria-label="Changer le thème">
+                <svg class="icon-sun" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+                <svg class="icon-moon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+            </button>
             <button class="nav-mobile-toggle" id="mobileToggle" aria-label="Menu">
                 <div class="hamburger">
                     <span></span><span></span><span></span>

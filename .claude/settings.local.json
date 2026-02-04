@@ -8,7 +8,10 @@
       "Bash(ls:*)",
       "Bash(powershell:*)",
       "Bash(php -r \"require ''d:/ManageX/vendor/autoload.php''; $app = require ''d:/ManageX/bootstrap/app.php''; $kernel = $app->make\\(\\\\Illuminate\\\\Contracts\\\\Http\\\\Kernel::class\\); $kernel->handle\\(\\\\Illuminate\\\\Http\\\\Request::capture\\(\\)\\); $svc = app\\(\\\\App\\\\Services\\\\AI\\\\HRAssistantService::class\\); $ref = new ReflectionMethod\\($svc, ''buildAdminContext''\\); $ref->setAccessible\\(true\\); echo $ref->invoke\\($svc\\);\")",
-      "Bash(php:*)"
+      "Bash(php:*)",
+      "Bash(find:*)",
+      "Bash(findstr:*)",
+      "Bash(git add:*)"
     ]
   }
 }
