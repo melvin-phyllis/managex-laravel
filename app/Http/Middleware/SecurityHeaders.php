@@ -105,12 +105,12 @@ class SecurityHeaders
         }
 
         // Styles: fonts + CDNs (Lightbox CSS, FullCalendar CSS, Leaflet CSS, etc.)
+        // NOTE: 'unsafe-inline' est nécessaire pour les attributs style="" inline
+        // Le nonce seul ne couvre pas les style attributes selon la spec CSP
         $styleCdns = 'https://fonts.googleapis.com https://fonts.bunny.net https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://unpkg.com';
-        if ($isProduction) {
-            $styleSrc = "'self' 'nonce-{$nonce}' {$styleCdns}";
-        } else {
-            $styleSrc = "'self' 'unsafe-inline' {$styleCdns}";
-        }
+        // En production ET en dev, on a besoin de unsafe-inline pour les styles
+        // car de nombreux composants utilisent des attributs style="" inline
+        $styleSrc = "'self' 'unsafe-inline' {$styleCdns}";
 
         // Images: self, data URIs, et HTTPS pour les images externes
         $imgSrc = "'self' data: https:";

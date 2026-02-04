@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="ManageX — La plateforme RH nouvelle génération. Gestion des présences, paie, congés, tâches et analytics, propulsée par l'IA.">
     <title>ManageX — Gestion RH Intelligente</title>
-    <script>
+    <script @if(isset($cspNonce)) nonce="{{ $cspNonce }}" @endif>
         // Prevent flash of wrong theme on load
         (function() {
             var saved = localStorage.getItem('managex-theme');
@@ -1887,7 +1887,7 @@
     </footer>
 
     <!-- ==================== JAVASCRIPT ==================== -->
-    <script>
+    <script @if(isset($cspNonce)) nonce="{{ $cspNonce }}" @endif>
         // ========================================
         // THEME MANAGEMENT (Dark/Light Mode)
         // ========================================
