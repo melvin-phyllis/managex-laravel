@@ -60,7 +60,7 @@ return new class extends Migration
                 $table->timestamp('acknowledged_at');
                 $table->timestamps();
 
-                $table->unique(['global_document_id', 'user_id']);
+                $table->unique(['global_document_id', 'user_id'], 'gdoc_ack_docid_userid_unique');
             });
         }
     }
