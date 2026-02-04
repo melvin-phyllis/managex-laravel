@@ -1498,9 +1498,10 @@
             <ul class="nav-links" id="navLinks">
                 <li><a href="#about">Plateforme</a></li>
                 <li><a href="#features">Fonctionnalités</a></li>
-                <li><a href="#ai">Intelligence IA</a></li>
-                <li><a href="#testimonials">Témoignages</a></li>
-                <li><a href="<?php echo e(route('login')); ?>" class="nav-cta">Se connecter</a></li>
+                <li><a href="<?php echo e(url('/')); ?>">Accueil</a></li>
+                <li><a href="<?php echo e(url('/#features')); ?>">Fonctionnalités</a></li>
+                <li><a href="<?php echo e(route('demo-request')); ?>" class="nav-cta">Demander une démo</a></li>
+                <li><a href="<?php echo e(route('login')); ?>" style="font-size:0.875rem;font-weight:600;color:var(--dark-text);">Connexion</a></li>
             </ul>
             <button class="theme-toggle" id="themeToggle" aria-label="Changer le thème">
                 <svg class="icon-sun" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
@@ -1539,8 +1540,8 @@
             </p>
 
             <div class="hero-ctas reveal reveal-delay-3">
-                <a href="<?php echo e(route('login')); ?>" class="btn-primary">
-                    <span>Commencer</span>
+                <a href="<?php echo e(route('demo-request')); ?>" class="btn-primary">
+                    <span>Demander une démo</span>
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" style="position:relative;z-index:1"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                 </a>
                 <a href="#features" class="btn-secondary">
@@ -1819,12 +1820,9 @@
                 <h2 class="reveal reveal-delay-1">Modernisez votre gestion RH <span class="text-accent">dès aujourd'hui</span></h2>
                 <p class="reveal reveal-delay-2">Rejoignez les entreprises qui ont choisi ManageX pour simplifier, automatiser et piloter leur capital humain avec intelligence.</p>
 
-                <form class="cta-form reveal reveal-delay-3" id="ctaForm">
-                    <input type="email" placeholder="Votre email professionnel" required>
-                    <button type="submit" class="btn-primary"><span>Demander une démo</span></button>
-                </form>
-                <div class="cta-success" id="ctaSuccess">
-                    &#10003; &nbsp;Merci ! Notre équipe vous contactera sous 24h pour planifier votre démonstration.
+                <div class="reveal reveal-delay-3" style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+                    <a href="<?php echo e(route('demo-request')); ?>" class="btn-primary"><span>Demander une démo</span></a>
+                    <a href="<?php echo e(route('login')); ?>" class="btn-secondary">Se connecter</a>
                 </div>
             </div>
         </div>

@@ -1498,9 +1498,10 @@
             <ul class="nav-links" id="navLinks">
                 <li><a href="#about">Plateforme</a></li>
                 <li><a href="#features">Fonctionnalités</a></li>
-                <li><a href="#ai">Intelligence IA</a></li>
-                <li><a href="#testimonials">Témoignages</a></li>
-                <li><a href="{{ route('login') }}" class="nav-cta">Se connecter</a></li>
+                <li><a href="{{ url('/') }}">Accueil</a></li>
+                <li><a href="{{ url('/#features') }}">Fonctionnalités</a></li>
+                <li><a href="{{ route('demo-request') }}" class="nav-cta">Demander une démo</a></li>
+                <li><a href="{{ route('login') }}" style="font-size:0.875rem;font-weight:600;color:var(--dark-text);">Connexion</a></li>
             </ul>
             <button class="theme-toggle" id="themeToggle" aria-label="Changer le thème">
                 <svg class="icon-sun" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>

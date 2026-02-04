@@ -11,7 +11,9 @@
       "Bash(php:*)",
       "Bash(find:*)",
       "Bash(findstr:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(vendor/bin/pint:*)",
+      "Bash(git commit:*)"
     ]
   }
 }
