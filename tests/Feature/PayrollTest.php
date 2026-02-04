@@ -20,11 +20,7 @@ class PayrollTest extends TestCase
         parent::setUp();
 
         $this->admin = User::factory()->admin()->create();
-        $this->employee = User::factory()->create([
-            'salaire_base' => 500000, // 500,000 FCFA
-            'situation_familiale' => 'celibataire',
-            'nombre_parts' => 1,
-        ]);
+        $this->employee = User::factory()->create();
     }
 
     /** @test */

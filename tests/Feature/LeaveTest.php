@@ -20,11 +20,7 @@ class LeaveTest extends TestCase
         parent::setUp();
 
         $this->admin = User::factory()->admin()->create();
-        $this->employee = User::factory()->create([
-            'conges_payes' => 25,
-            'conges_maladie' => 10,
-            'rtt' => 5,
-        ]);
+        $this->employee = User::factory()->create();
     }
 
     /** @test */

@@ -43,7 +43,7 @@ return new class extends Migration
             // Tasks.statut - valeurs autorisées
             if (Schema::hasTable('tasks') && Schema::hasColumn('tasks', 'statut')) {
                 try {
-                    DB::statement("ALTER TABLE tasks ADD CONSTRAINT tasks_statut_check CHECK (statut IN ('pending', 'approved', 'in_progress', 'completed', 'cancelled'))");
+                    DB::statement("ALTER TABLE tasks ADD CONSTRAINT tasks_statut_check CHECK (statut IN ('pending', 'approved', 'in_progress', 'completed', 'validated', 'cancelled'))");
                 } catch (\Exception $e) {
                     // Constraint may already exist, continue
                 }
