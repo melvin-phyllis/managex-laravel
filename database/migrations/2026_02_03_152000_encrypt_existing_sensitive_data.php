@@ -21,6 +21,23 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // ÉTAPE 0: Supprimer les index uniques AVANT de changer les colonnes en TEXT
+        // MySQL ne permet pas d'index sur TEXT sans longueur de clé spécifiée
+        Schema::table('users', function (Blueprint $table) {
+            // Supprimer les index uniques créés par la migration précédente
+            try {
+                $table->dropUnique('users_ssn_unique');
+            } catch (\Exception $e) {
+                // Index n'existe peut-être pas
+            }
+
+            try {
+                $table->dropUnique('users_iban_unique');
+            } catch (\Exception $e) {
+                // Index n'existe peut-être pas
+            }
+        });
+
         // ÉTAPE 1: Changer les colonnes en TEXT pour accommoder les données chiffrées
         Schema::table('users', function (Blueprint $table) {
             $table->text('social_security_number')->nullable()->change();
