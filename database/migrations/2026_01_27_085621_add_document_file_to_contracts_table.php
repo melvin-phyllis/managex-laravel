@@ -46,7 +46,7 @@ return new class extends Migration
                 $table->string('mime_type');
                 $table->integer('file_size');
                 $table->boolean('is_active')->default(true);
-                $table->foreignId('uploaded_by')->constrained('users')->nullOnDelete();
+                $table->foreignId('uploaded_by')->nullable()->constrained('users')->nullOnDelete();
                 $table->timestamps();
             });
         }
