@@ -95,14 +95,11 @@ class SecurityHeaders
         $defaultSrc = "'self'";
 
         // Scripts: CDNs nécessaires (Chart.js, Alpine.js, jQuery, Lightbox, etc.)
+        // NOTE: 'unsafe-eval' est nécessaire pour Alpine.js (évaluation des expressions x-data)
         $scriptCdns = 'https://cdn.jsdelivr.net https://unpkg.com https://cdnjs.cloudflare.com https://code.jquery.com';
-        if ($isProduction) {
-            $scriptSrc = "'self' 'nonce-{$nonce}' {$scriptCdns}";
-        } else {
-            // En dev, on permet unsafe-inline pour le hot reload Vite et les event handlers inline
-            // Note: nonce est exclu car sa présence désactive unsafe-inline selon la spec CSP
-            $scriptSrc = "'self' 'unsafe-inline' 'unsafe-eval' {$scriptCdns}";
-        }
+        // Alpine.js nécessite 'unsafe-eval' pour évaluer les expressions comme x-data="{ open: false }"
+        // C'est un compromis nécessaire pour l'interactivité frontend
+        $scriptSrc = "'self' 'unsafe-inline' 'unsafe-eval' {$scriptCdns}";
 
         // Styles: fonts + CDNs (Lightbox CSS, FullCalendar CSS, Leaflet CSS, etc.)
         // NOTE: 'unsafe-inline' est nécessaire pour les attributs style="" inline
