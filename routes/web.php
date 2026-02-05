@@ -150,6 +150,9 @@ if (app()->environment('local')) {
 }
 // ============================================================================
 
+// Health check endpoint for Railway/Docker
+Route::get('/health', [PageController::class, 'health'])->name('health');
+
 Route::get('/', [PageController::class, 'home'])->name('home');
 Route::get('/demo', [PageController::class, 'demoRequest'])->name('demo-request');
 Route::post('/demo', [PageController::class, 'storeDemoRequest'])->name('demo-request.store');

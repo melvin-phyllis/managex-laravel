@@ -45,4 +45,12 @@ class PageController extends Controller
 
         return redirect()->route('demo-request')->with('success', 'Merci ! Notre équipe vous contactera sous 24h pour planifier votre démonstration.');
     }
+
+    public function health()
+    {
+        return response()->json([
+            'status' => 'healthy',
+            'timestamp' => now()->toIso8601String(),
+        ]);
+    }
 }
