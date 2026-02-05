@@ -1,7 +1,7 @@
 ﻿<x-layouts.admin>
     <div class="space-y-6" x-data="taskManager()">
         <!-- Header amélioré -->
-        <div class="relative overflow-hidden bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 rounded-2xl shadow-xl animate-fade-in-up">
+        <div class="relative overflow-hidden rounded-2xl shadow-xl animate-fade-in-up" style="background: linear-gradient(135deg, #5680E9, #84CEEB) !important;">
             <div class="absolute inset-0 bg-black/10"></div>
             <div class="absolute -top-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
             <div class="absolute -bottom-24 -left-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
@@ -30,25 +30,28 @@
                         <!-- Toggle View -->
                         <div class="bg-white/20 backdrop-blur-sm rounded-xl p-1 flex">
                             <button @click="viewMode = 'table'" 
-                                    :class="viewMode === 'table' ? 'bg-white text-purple-700' : 'text-white hover:bg-white/20'"
+                                    :class="viewMode === 'table' ? 'bg-white' : 'text-white hover:bg-white/20'"
+                                    :style="viewMode === 'table' ? 'color: #5680E9;' : ''"
                                     class="px-3 py-2 rounded-lg font-medium text-sm transition-all flex items-center gap-1">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
                                 Liste
                             </button>
                             <button @click="viewMode = 'kanban'" 
-                                    :class="viewMode === 'kanban' ? 'bg-white text-purple-700' : 'text-white hover:bg-white/20'"
+                                    :class="viewMode === 'kanban' ? 'bg-white' : 'text-white hover:bg-white/20'"
+                                    :style="viewMode === 'kanban' ? 'color: #5680E9;' : ''"
                                     class="px-3 py-2 rounded-lg font-medium text-sm transition-all flex items-center gap-1">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/></svg>
                                 Kanban
                             </button>
                             <button @click="viewMode = 'calendar'; $nextTick(() => initCalendar())" 
-                                    :class="viewMode === 'calendar' ? 'bg-white text-purple-700' : 'text-white hover:bg-white/20'"
+                                    :class="viewMode === 'calendar' ? 'bg-white' : 'text-white hover:bg-white/20'"
+                                    :style="viewMode === 'calendar' ? 'color: #5680E9;' : ''"
                                     class="px-3 py-2 rounded-lg font-medium text-sm transition-all flex items-center gap-1">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                                 Calendrier
                             </button>
                         </div>
-                        <a href="{{ route('admin.tasks.create') }}" class="px-4 py-2.5 bg-white text-purple-700 font-semibold rounded-xl hover:bg-purple-50 transition-all shadow-lg flex items-center">
+                        <a href="{{ route('admin.tasks.create') }}" class="px-4 py-2.5 bg-white font-semibold rounded-xl hover:bg-purple-50 transition-all shadow-lg flex items-center" style="color: #5680E9;">
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
                             </svg>
@@ -63,30 +66,30 @@
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 animate-fade-in-up animation-delay-100">
             @php
                 $stats = [
-                    ['label' => 'Total', 'value' => $taskStats->total ?? 0, 'color' => 'gray', 'icon' => 'clipboard-list'],
-                    ['label' => 'En attente', 'value' => $taskStats->pending_count ?? 0, 'color' => 'amber', 'icon' => 'clock'],
-                    ['label' => 'En cours', 'value' => $taskStats->in_progress_count ?? 0, 'color' => 'blue', 'icon' => 'play'],
-                    ['label' => 'Terminées', 'value' => $taskStats->completed_count ?? 0, 'color' => 'purple', 'icon' => 'check'],
-                    ['label' => 'Validées', 'value' => $taskStats->validated_count ?? 0, 'color' => 'emerald', 'icon' => 'badge-check'],
-                    ['label' => 'En retard', 'value' => $taskStats->overdue_count ?? 0, 'color' => 'red', 'icon' => 'exclamation'],
+                    ['label' => 'Total', 'value' => $taskStats->total ?? 0, 'color' => '#6B7280', 'bg' => 'rgba(107, 114, 128, 0.1)', 'icon' => 'clipboard-list'],
+                    ['label' => 'En attente', 'value' => $taskStats->pending_count ?? 0, 'color' => '#5680E9', 'bg' => 'rgba(86, 128, 233, 0.1)', 'icon' => 'clock'],
+                    ['label' => 'En cours', 'value' => $taskStats->in_progress_count ?? 0, 'color' => '#5AB9EA', 'bg' => 'rgba(90, 185, 234, 0.15)', 'icon' => 'play'],
+                    ['label' => 'Terminées', 'value' => $taskStats->completed_count ?? 0, 'color' => '#84CEEB', 'bg' => 'rgba(132, 206, 235, 0.2)', 'icon' => 'check'],
+                    ['label' => 'Validées', 'value' => $taskStats->validated_count ?? 0, 'color' => '#5AB9EA', 'bg' => 'rgba(90, 185, 234, 0.2)', 'icon' => 'badge-check'],
+                    ['label' => 'En retard', 'value' => $taskStats->overdue_count ?? 0, 'color' => '#8860D0', 'bg' => 'rgba(136, 96, 208, 0.15)', 'icon' => 'exclamation'],
                 ];
             @endphp
             @foreach($stats as $stat)
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
                     <div class="flex items-center justify-between">
-                        <div class="w-10 h-10 bg-{{ $stat['color'] }}-100 rounded-lg flex items-center justify-center">
+                        <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background-color: {{ $stat['bg'] }};">
                             @if($stat['icon'] === 'clipboard-list')
-                                <svg class="w-5 h-5 text-{{ $stat['color'] }}-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
+  <svg class="w-5 h-5" style="color: {{ $stat['color'] }};" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
                             @elseif($stat['icon'] === 'clock')
-                                <svg class="w-5 h-5 text-{{ $stat['color'] }}-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                <svg class="w-5 h-5" style="color: {{ $stat['color'] }};" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                             @elseif($stat['icon'] === 'play')
-                                <svg class="w-5 h-5 text-{{ $stat['color'] }}-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                <svg class="w-5 h-5" style="color: {{ $stat['color'] }};" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                             @elseif($stat['icon'] === 'check')
-                                <svg class="w-5 h-5 text-{{ $stat['color'] }}-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                <svg class="w-5 h-5" style="color: {{ $stat['color'] }};" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
                             @elseif($stat['icon'] === 'badge-check')
-                                <svg class="w-5 h-5 text-{{ $stat['color'] }}-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+                                <svg class="w-5 h-5" style="color: {{ $stat['color'] }};" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
                             @elseif($stat['icon'] === 'exclamation')
-                                <svg class="w-5 h-5 text-{{ $stat['color'] }}-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                                <svg class="w-5 h-5" style="color: {{ $stat['color'] }};" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
                             @endif
                         </div>
                         <span class="text-2xl font-bold text-gray-900">{{ $stat['value'] }}</span>
@@ -106,7 +109,7 @@
                     </svg>
                     <input type="text" name="search" value="{{ request('search') }}" 
                            placeholder="Rechercher une tache..." 
-                           class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-sm">
+                           class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 text-sm" style="--tw-ring-color: #5680E9; border-color: #5680E9 on focus;">
                 </div>
 
                 <!-- Employé -->
@@ -143,7 +146,7 @@
 
                 <!-- Buttons -->
                 <div class="flex gap-2">
-                    <button type="submit" class="px-6 py-2.5 bg-purple-600 text-white font-medium rounded-xl hover:bg-purple-700 transition-colors shadow-lg shadow-purple-500/25 flex items-center">
+                    <button type="submit" class="px-6 py-2.5 text-white font-medium rounded-xl transition-colors shadow-lg flex items-center" style="background: linear-gradient(135deg, #5680E9, #5AB9EA);">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
                         Filtrer
                     </button>
@@ -279,7 +282,7 @@
                                             @if($task->user->avatar)
                                                 <img class="w-6 h-6 rounded-full object-cover ring-2 ring-white" src="{{ avatar_url($task->user->avatar) }}" alt="{{ $task->user->name }}">
                                             @else
-                                                <div class="w-6 h-6 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center ring-2 ring-white">
+                                                <div class="w-6 h-6 rounded-full flex items-center justify-center ring-2 ring-white" style="background: linear-gradient(135deg, #5680E9, #84CEEB);">
                                                     <span class="text-white font-bold text-[10px]">{{ strtoupper(substr($task->user->name, 0, 2)) }}</span>
                                                 </div>
                                             @endif
@@ -292,7 +295,7 @@
                                         @endif
                                     </div>
                                     <div class="w-full bg-gray-100 rounded-full h-1 mt-2">
-                                        <div class="h-1 rounded-full transition-all {{ $task->progression < 30 ? 'bg-red-500' : ($task->progression < 70 ? 'bg-amber-500' : 'bg-green-500') }}" style="width: {{ $task->progression }}%"></div>
+                                        <div class="h-1 rounded-full transition-all" style="width: {{ $task->progression }}%; background-color: {{ $task->progression < 30 ? '#8860D0' : ($task->progression < 70 ? '#84CEEB' : '#5AB9EA') }};"></div>
                                     </div>
                                     <!-- Actions on hover -->
                                     <div class="hidden group-hover:flex items-center justify-end gap-1 mt-2 pt-2 border-t border-gray-100">
@@ -361,7 +364,7 @@
                                     @if($task->user->avatar)
                                         <img class="h-8 w-8 rounded-full object-cover ring-2 ring-white shadow-sm" src="{{ avatar_url($task->user->avatar) }}" alt="{{ $task->user->name }}">
                                     @else
-                                        <div class="h-8 w-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center ring-2 ring-white shadow-sm">
+                                        <div class="h-8 w-8 rounded-full flex items-center justify-center ring-2 ring-white shadow-sm" style="background: linear-gradient(135deg, #5680E9, #84CEEB);">
                                             <span class="text-white font-bold text-xs">{{ strtoupper(substr($task->user->name, 0, 2)) }}</span>
                                         </div>
                                     @endif
@@ -372,8 +375,8 @@
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="flex items-center gap-3">
                                 <div class="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
-                                    <div class="h-full rounded-full transition-all duration-500 {{ $task->progression < 30 ? 'bg-red-500' : ($task->progression < 70 ? 'bg-amber-500' : 'bg-green-500') }}"
-                                         style="width: {{ $task->progression }}%"></div>
+                                    <div class="h-full rounded-full transition-all duration-500"
+                                         style="width: {{ $task->progression }}%; background-color: {{ $task->progression < 30 ? '#8860D0' : ($task->progression < 70 ? '#84CEEB' : '#5AB9EA') }};"></div>
                                 </div>
                                 <span class="text-xs font-semibold text-gray-700 w-8 text-right">{{ $task->progression }}%</span>
                             </div>
@@ -704,17 +707,17 @@
             const tasks = @json($tasks->items());
             const events = tasks.map(task => {
                 const priorityColors = {
-                    high: { bg: '#ef4444', border: '#dc2626' },
-                    medium: { bg: '#f59e0b', border: '#d97706' },
-                    low: { bg: '#22c55e', border: '#16a34a' }
+                    high: { bg: '#8860D0', border: '#7c3aed' },
+                    medium: { bg: '#84CEEB', border: '#5AB9EA' },
+                    low: { bg: '#6B7280', border: '#4b5563' }
                 };
                 const statusColors = {
-                    pending: { bg: '#fbbf24', border: '#f59e0b' },
-                    approved: { bg: '#3b82f6', border: '#2563eb' },
-                    in_progress: { bg: '#8b5cf6', border: '#7c3aed' },
-                    completed: { bg: '#a855f7', border: '#9333ea' },
-                    validated: { bg: '#22c55e', border: '#16a34a' },
-                    rejected: { bg: '#ef4444', border: '#dc2626' }
+                    pending: { bg: '#5680E9', border: '#4c73d2' },
+                    approved: { bg: '#5AB9EA', border: '#3b82f6' },
+                    in_progress: { bg: '#5AB9EA', border: '#3b82f6' },
+                    completed: { bg: '#84CEEB', border: '#5AB9EA' },
+                    validated: { bg: '#5AB9EA', border: '#3b82f6' },
+                    rejected: { bg: '#8860D0', border: '#7c3aed' }
                 };
                 const colors = statusColors[task.statut] || priorityColors[task.priorite] || { bg: '#6b7280', border: '#4b5563' };
                 

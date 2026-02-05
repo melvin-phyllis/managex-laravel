@@ -2,18 +2,18 @@
     <div class="space-y-6">
         <!-- Flash Messages -->
         @if(session('success'))
-            <div class="bg-emerald-50 border-l-4 border-emerald-500 p-4 rounded-r-lg animate-fade-in" x-data="{ show: true }" x-show="show" x-transition>
+            <div class="border-l-4 p-4 rounded-r-lg animate-fade-in" style="background: rgba(59, 139, 235, 0.1); border-color: #3B8BEB;" x-data="{ show: true }" x-show="show" x-transition>
                 <div class="flex items-start">
                     <div class="flex-shrink-0">
-                        <svg class="h-5 w-5 text-emerald-500" fill="currentColor" viewBox="0 0 20 20">
+                        <svg class="h-5 w-5" style="color: #3B8BEB;" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
                         </svg>
                     </div>
                     <div class="ml-3 flex-1">
-                        <h3 class="text-sm font-medium text-emerald-800">Succès</h3>
-                        <p class="mt-1 text-sm text-emerald-700">{{ session('success') }}</p>
+                        <h3 class="text-sm font-medium" style="color: #3B8BEB;">Succès</h3>
+                        <p class="mt-1 text-sm" style="color: #8590AA;">{{ session('success') }}</p>
                     </div>
-                    <button @click="show = false" class="ml-3 text-emerald-400 hover:text-emerald-600">
+                    <button @click="show = false" class="ml-3 hover:opacity-80" style="color: #8590AA;">
                         <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                         </svg>
@@ -26,13 +26,8 @@
         @if(isset($urgentAnnouncements) && $urgentAnnouncements->count() > 0)
             <div class="space-y-3">
                 @foreach($urgentAnnouncements as $announcement)
-                    <div class="relative overflow-hidden rounded-2xl shadow-lg
-                        @if($announcement->type === 'urgent' || $announcement->priority === 'critical')
-                            bg-gradient-to-r from-red-500 to-rose-600
-                        @else
-                            bg-gradient-to-r from-amber-500 to-orange-500
-                        @endif
-                        text-white p-4"
+                    <div class="relative overflow-hidden rounded-2xl shadow-lg text-white p-4"
+                        style="background: linear-gradient(135deg, #B23850, #8590AA);"
                         x-data="{ dismissed: false }" 
                         x-show="!dismissed"
                         x-transition>
@@ -62,7 +57,7 @@
                                     </a>
                                     @if($announcement->requires_acknowledgment)
                                         <button onclick="acknowledgeAnnouncement({{ $announcement->id }}, this)"
-                                                class="px-3 py-1 bg-white text-red-600 text-sm font-medium rounded-lg hover:bg-white/90 transition">
+                                                class="px-3 py-1 bg-white text-sm font-medium rounded-lg hover:bg-white/90 transition" style="color: #B23850;">
                                             ✓ J'ai pris connaissance
                                         </button>
                                     @endif
@@ -86,7 +81,7 @@
         <!-- Header with Streak -->
         <div class="space-y-4 animate-fade-in-up">
             <div class="flex items-center gap-4">
-                <div class="w-14 h-14 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-500/30">
+                <div class="w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg" style="background: linear-gradient(135deg, #3B8BEB, #C4DBF6); box-shadow: 0 10px 15px -3px rgba(59, 139, 235, 0.3);">
                     <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
                     </svg>
@@ -109,71 +104,71 @@
         <!-- Quick Stats -->
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 animate-fade-in-up animation-delay-100">
             <!-- Présences -->
-            <a href="{{ route('employee.presences.index') }}" class="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 hover:shadow-md hover:border-emerald-200 transition-all group">
+            <a href="{{ route('employee.presences.index') }}" class="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 hover:shadow-md transition-all group" style="border-color: rgba(59, 139, 235, 0.2);">
                 <div class="flex items-center justify-between">
-                    <div class="bg-gradient-to-br from-emerald-500 to-green-600 p-2.5 rounded-xl shadow-lg shadow-emerald-500/30 group-hover:scale-110 transition-transform">
+                    <div class="p-2.5 rounded-xl group-hover:scale-110 transition-transform" style="background: linear-gradient(135deg, #3B8BEB, #C4DBF6); box-shadow: 0 10px 15px -3px rgba(59, 139, 235, 0.3);">
                         <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                         </svg>
                     </div>
-                    <svg class="w-5 h-5 text-gray-300 group-hover:text-emerald-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-5 h-5 text-gray-300 group-hover:text-[#3B8BEB] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                     </svg>
                 </div>
                 <p class="text-2xl font-bold text-gray-900 mt-3">{{ $stats['presences_month'] }}</p>
                 <p class="text-xs text-gray-500">Présences ce mois</p>
-                <p class="text-xs text-emerald-600 font-medium mt-1">{{ $stats['heures_month'] }}h travaillées</p>
+                <p class="text-xs font-medium mt-1" style="color: #3B8BEB;">{{ $stats['heures_month'] }}h travaillées</p>
             </a>
 
             <!-- Tâches -->
-            <a href="{{ route('employee.tasks.index') }}" class="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 hover:shadow-md hover:border-blue-200 transition-all group">
+            <a href="{{ route('employee.tasks.index') }}" class="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 hover:shadow-md transition-all group" style="border-color: rgba(133, 144, 170, 0.2);">
                 <div class="flex items-center justify-between">
-                    <div class="bg-gradient-to-br from-blue-500 to-indigo-600 p-2.5 rounded-xl shadow-lg shadow-blue-500/30 group-hover:scale-110 transition-transform">
+                    <div class="p-2.5 rounded-xl group-hover:scale-110 transition-transform" style="background: linear-gradient(135deg, #8590AA, #3B8BEB); box-shadow: 0 10px 15px -3px rgba(133, 144, 170, 0.3);">
                         <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
                         </svg>
                     </div>
-                    <svg class="w-5 h-5 text-gray-300 group-hover:text-blue-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-5 h-5 text-gray-300 group-hover:text-[#8590AA] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                     </svg>
                 </div>
                 <p class="text-2xl font-bold text-gray-900 mt-3">{{ $stats['active_tasks'] }}</p>
                 <p class="text-xs text-gray-500">Tâches en cours</p>
-                <p class="text-xs text-blue-600 font-medium mt-1">{{ $stats['tasks_completed'] }} terminées</p>
+                <p class="text-xs font-medium mt-1" style="color: #8590AA;">{{ $stats['tasks_completed'] }} terminées</p>
             </a>
 
             <!-- Congés -->
-            <a href="{{ route('employee.leaves.index') }}" class="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 hover:shadow-md hover:border-violet-200 transition-all group">
+            <a href="{{ route('employee.leaves.index') }}" class="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 hover:shadow-md transition-all group" style="border-color: rgba(196, 219, 246, 0.3);">
                 <div class="flex items-center justify-between">
-                    <div class="bg-gradient-to-br from-violet-500 to-purple-600 p-2.5 rounded-xl shadow-lg shadow-violet-500/30 group-hover:scale-110 transition-transform">
+                    <div class="p-2.5 rounded-xl group-hover:scale-110 transition-transform" style="background: linear-gradient(135deg, #C4DBF6, #3B8BEB); box-shadow: 0 10px 15px -3px rgba(196, 219, 246, 0.3);">
                         <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                         </svg>
                     </div>
-                    <svg class="w-5 h-5 text-gray-300 group-hover:text-violet-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-5 h-5 text-gray-300 group-hover:text-[#3B8BEB] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                     </svg>
                 </div>
                 <p class="text-2xl font-bold text-gray-900 mt-3">{{ $stats['leave_days_remaining'] }}</p>
                 <p class="text-xs text-gray-500">Congés restants</p>
-                <p class="text-xs text-violet-600 font-medium mt-1">jours disponibles</p>
+                <p class="text-xs font-medium mt-1" style="color: #3B8BEB;">jours disponibles</p>
             </a>
 
             <!-- Sondages -->
-            <a href="{{ route('employee.surveys.index') }}" class="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 hover:shadow-md hover:border-amber-200 transition-all group">
+            <a href="{{ route('employee.surveys.index') }}" class="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 hover:shadow-md transition-all group" style="border-color: rgba(231, 227, 212, 0.2);">
                 <div class="flex items-center justify-between">
-                    <div class="bg-gradient-to-br from-amber-500 to-orange-600 p-2.5 rounded-xl shadow-lg shadow-amber-500/30 group-hover:scale-110 transition-transform">
+                    <div class="p-2.5 rounded-xl group-hover:scale-110 transition-transform" style="background: linear-gradient(135deg, #E7E3D4, #8590AA); box-shadow: 0 10px 15px -3px rgba(231, 227, 212, 0.3);">
                         <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
                         </svg>
                     </div>
-                    <svg class="w-5 h-5 text-gray-300 group-hover:text-amber-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-5 h-5 text-gray-300 group-hover:text-[#8590AA] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                     </svg>
                 </div>
                 <p class="text-2xl font-bold text-gray-900 mt-3">{{ $stats['pending_surveys'] }}</p>
                 <p class="text-xs text-gray-500">Sondages</p>
-                <p class="text-xs text-amber-600 font-medium mt-1">à compléter</p>
+                <p class="text-xs font-medium mt-1" style="color: #8590AA;">à compléter</p>
             </a>
         </div>
 
@@ -181,9 +176,9 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-fade-in-up animation-delay-200">
             <!-- Presence Check-in/out -->
             <div class="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-                <div class="px-6 py-4 border-b border-gray-100 bg-gradient-to-r from-blue-50 to-indigo-50">
+                <div class="px-6 py-4 border-b border-gray-100" style="background: linear-gradient(90deg, rgba(59, 139, 235, 0.1), rgba(196, 219, 246, 0.08));">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-500/30">
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: linear-gradient(135deg, #3B8BEB, #C4DBF6); box-shadow: 0 10px 15px -3px rgba(59, 139, 235, 0.3);">
                             <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                             </svg>
@@ -227,7 +222,7 @@
                                     <input type="hidden" name="latitude" id="dashboardCheckOutLat">
                                     <input type="hidden" name="longitude" id="dashboardCheckOutLng">
                                     <button type="button" id="dashboardCheckOutBtn"
-                                            class="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-red-500 to-rose-600 text-white font-medium rounded-xl hover:from-red-600 hover:to-rose-700 transition-all duration-200 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-red-500/30 hover:shadow-xl touch-target">
+                                            class="w-full sm:w-auto px-6 py-3 text-white font-medium rounded-xl transition-all duration-200 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-xl touch-target" style="background: linear-gradient(135deg, #B23850, #8590AA); box-shadow: 0 10px 15px -3px rgba(178, 56, 80, 0.3);">
                                         <svg id="dashboardCheckOutIcon" class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
                                         </svg>
@@ -254,7 +249,7 @@
                                 <input type="hidden" name="latitude" id="dashboardCheckInLat">
                                 <input type="hidden" name="longitude" id="dashboardCheckInLng">
                                 <button type="button" id="dashboardCheckInBtn"
-                                        class="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-emerald-500 to-green-600 text-white font-medium rounded-xl hover:from-emerald-600 hover:to-green-700 transition-all duration-200 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-emerald-500/30 hover:shadow-xl touch-target">
+                                        class="w-full sm:w-auto px-6 py-3 text-white font-medium rounded-xl transition-all duration-200 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-xl touch-target" style="background: linear-gradient(135deg, #3B8BEB, #C4DBF6); box-shadow: 0 10px 15px -3px rgba(59, 139, 235, 0.3);">
                                     <svg id="dashboardCheckInIcon" class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
                                     </svg>
@@ -287,9 +282,9 @@
 
         <!-- Monthly Goals -->
         <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in-up">
-            <div class="px-6 py-4 border-b border-gray-100 bg-gradient-to-r from-violet-50 to-purple-50">
+            <div class="px-6 py-4 border-b border-gray-100" style="background: linear-gradient(90deg, rgba(133, 144, 170, 0.1), rgba(231, 227, 212, 0.08));">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shadow-lg shadow-violet-500/30">
+                    <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: linear-gradient(135deg, #8590AA, #E7E3D4); box-shadow: 0 10px 15px -3px rgba(133, 144, 170, 0.3);">
                         <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
                         </svg>
@@ -337,9 +332,9 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <!-- Mes Demandes de Documents -->
             <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow animate-fade-in-up">
-                <div class="px-5 py-4 border-b border-gray-100 bg-gradient-to-r from-amber-50 to-orange-50">
+                <div class="px-5 py-4 border-b border-gray-100" style="background: linear-gradient(90deg, rgba(133, 144, 170, 0.1), rgba(59, 139, 235, 0.08));">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shadow-lg shadow-amber-500/30">
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: linear-gradient(135deg, #8590AA, #3B8BEB); box-shadow: 0 10px 15px -3px rgba(133, 144, 170, 0.3);">
                             <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                             </svg>
@@ -358,26 +353,26 @@
                                 <div class="flex items-center justify-between p-2 rounded-lg bg-gray-50">
                                     <div class="flex items-center gap-2">
                                         @if($request->status === 'approved')
-                                            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                                            <span class="w-2 h-2 rounded-full" style="background: #3B8BEB;"></span>
                                         @elseif($request->status === 'rejected')
                                             <span class="w-2 h-2 rounded-full bg-red-500"></span>
                                         @else
-                                            <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+                                            <span class="w-2 h-2 rounded-full animate-pulse" style="background: #8590AA;"></span>
                                         @endif
                                         <span class="text-sm text-gray-700 truncate">{{ Str::limit($request->type_label, 18) }}</span>
                                     </div>
                                     @if($request->hasDocument())
                                         <a href="{{ route('employee.document-requests.download', $request) }}" 
-                                           class="text-amber-600 hover:text-amber-800">
+                                           class="hover:opacity-80" style="color: #3B8BEB;">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
                                             </svg>
                                         </a>
                                     @else
                                         <span class="text-xs px-2 py-0.5 rounded-full 
-                                            @if($request->status === 'approved') bg-emerald-100 text-emerald-700
+                                            @if($request->status === 'approved') text-white
                                             @elseif($request->status === 'rejected') bg-red-100 text-red-700
-                                            @else bg-amber-100 text-amber-700 @endif">
+                                            @else text-white @endif" style="@if($request->status === 'approved') background: #3B8BEB; @elseif($request->status === 'pending') background: #8590AA; @endif">
                                             {{ $request->status_label }}
                                         </span>
                                     @endif
@@ -389,7 +384,7 @@
                     @endif
                     
                     <a href="{{ route('employee.document-requests.create') }}" 
-                       class="w-full inline-flex items-center justify-center px-4 py-2.5 bg-gradient-to-r from-amber-500 to-orange-600 text-white text-sm font-medium rounded-xl hover:from-amber-600 hover:to-orange-700 transition-all shadow-lg shadow-amber-500/30">
+                       class="w-full inline-flex items-center justify-center px-4 py-2.5 text-white text-sm font-medium rounded-xl transition-all" style="background: linear-gradient(135deg, #8590AA, #3B8BEB); box-shadow: 0 10px 15px -3px rgba(133, 144, 170, 0.3);">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                         </svg>
@@ -400,9 +395,9 @@
 
             <!-- Documents à Consulter -->
             <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow animate-fade-in-up">
-                <div class="px-5 py-4 border-b border-gray-100 bg-gradient-to-r from-cyan-50 to-teal-50">
+                <div class="px-5 py-4 border-b border-gray-100" style="background: linear-gradient(90deg, rgba(59, 139, 235, 0.1), rgba(133, 144, 170, 0.08));">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-teal-600 flex items-center justify-center shadow-lg shadow-cyan-500/30">
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: linear-gradient(135deg, #3B8BEB, #8590AA); box-shadow: 0 10px 15px -3px rgba(59, 139, 235, 0.3);">
                             <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
                             </svg>
@@ -416,8 +411,8 @@
                 
                 <div class="p-5">
                     @if($unreadGlobalDocs->count() > 0)
-                        <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 mb-4">
-                            <div class="flex items-center gap-2 text-amber-700">
+                        <div class="border rounded-xl p-3 mb-4" style="background: rgba(133, 144, 170, 0.1); border-color: rgba(133, 144, 170, 0.3);">
+                            <div class="flex items-center gap-2" style="color: #8590AA;">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
                                 </svg>
@@ -425,7 +420,7 @@
                             </div>
                             <ul class="mt-2 space-y-1">
                                 @foreach($unreadGlobalDocs->take(2) as $doc)
-                                    <li class="text-sm text-amber-600 flex items-center gap-1">
+                                    <li class="text-sm flex items-center gap-1" style="color: #3B8BEB;">
                                         <span>•</span>
                                         <span class="truncate">{{ Str::limit($doc->title, 25) }}</span>
                                     </li>
@@ -433,8 +428,8 @@
                             </ul>
                         </div>
                     @else
-                        <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-3 mb-4">
-                            <div class="flex items-center gap-2 text-emerald-700">
+                        <div class="border rounded-xl p-3 mb-4" style="background: rgba(59, 139, 235, 0.1); border-color: rgba(59, 139, 235, 0.3);">
+                            <div class="flex items-center gap-2" style="color: #3B8BEB;">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                                 </svg>
@@ -444,7 +439,7 @@
                     @endif
                     
                     <a href="{{ route('employee.documents.index') }}" 
-                       class="w-full inline-flex items-center justify-center px-4 py-2.5 bg-gradient-to-r from-cyan-500 to-teal-600 text-white text-sm font-medium rounded-xl hover:from-cyan-600 hover:to-teal-700 transition-all shadow-lg shadow-cyan-500/30">
+                       class="w-full inline-flex items-center justify-center px-4 py-2.5 text-white text-sm font-medium rounded-xl transition-all" style="background: linear-gradient(135deg, #3B8BEB, #8590AA); box-shadow: 0 10px 15px -3px rgba(59, 139, 235, 0.3);">
                         Consulter
                         <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
@@ -455,9 +450,9 @@
 
             <!-- Mon Contrat -->
             <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow animate-fade-in-up">
-                <div class="px-5 py-4 border-b border-gray-100 bg-gradient-to-r from-emerald-50 to-green-50">
+                <div class="px-5 py-4 border-b border-gray-100" style="background: linear-gradient(90deg, rgba(196, 219, 246, 0.15), rgba(59, 139, 235, 0.08));">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-green-600 flex items-center justify-center shadow-lg shadow-emerald-500/30">
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: linear-gradient(135deg, #C4DBF6, #3B8BEB); box-shadow: 0 10px 15px -3px rgba(196, 219, 246, 0.3);">
                             <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                             </svg>
@@ -484,7 +479,7 @@
                         
                         @if($hasContractDocument)
                             <a href="{{ route('employee.documents.download-contract') }}" 
-                               class="w-full inline-flex items-center justify-center px-4 py-2.5 bg-gradient-to-r from-emerald-500 to-green-600 text-white text-sm font-medium rounded-xl hover:from-emerald-600 hover:to-green-700 transition-all shadow-lg shadow-emerald-500/30">
+                               class="w-full inline-flex items-center justify-center px-4 py-2.5 text-white text-sm font-medium rounded-xl transition-all" style="background: linear-gradient(135deg, #3B8BEB, #C4DBF6); box-shadow: 0 10px 15px -3px rgba(59, 139, 235, 0.3);">
                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
                                 </svg>
@@ -513,9 +508,9 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <!-- Weekly Hours Chart -->
             <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in-up flex flex-col">
-                <div class="px-6 py-4 border-b border-gray-100 bg-gradient-to-r from-emerald-50 to-green-50">
+                <div class="px-6 py-4 border-b border-gray-100" style="background: linear-gradient(90deg, rgba(59, 139, 235, 0.1), rgba(133, 144, 170, 0.08));">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-green-600 flex items-center justify-center shadow-lg shadow-emerald-500/30">
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: linear-gradient(135deg, #3B8BEB, #8590AA); box-shadow: 0 10px 15px -3px rgba(59, 139, 235, 0.3);">
                             <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
                             </svg>
@@ -535,9 +530,9 @@
 
             <!-- Tasks Distribution Chart -->
             <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in-up flex flex-col">
-                <div class="px-6 py-4 border-b border-gray-100 bg-gradient-to-r from-blue-50 to-indigo-50">
+                <div class="px-6 py-4 border-b border-gray-100" style="background: linear-gradient(90deg, rgba(133, 144, 170, 0.1), rgba(196, 219, 246, 0.08));">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-500/30">
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: linear-gradient(135deg, #8590AA, #C4DBF6); box-shadow: 0 10px 15px -3px rgba(133, 144, 170, 0.3);">
                             <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"/>
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"/>
@@ -561,16 +556,16 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <!-- Recent Tasks -->
             <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in-up">
-                <div class="px-6 py-4 border-b border-gray-100 bg-gradient-to-r from-green-50 to-emerald-50 flex items-center justify-between">
+                <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between" style="background: linear-gradient(90deg, rgba(59, 139, 235, 0.1), rgba(133, 144, 170, 0.08));">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-lg shadow-green-500/30">
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: linear-gradient(135deg, #3B8BEB, #8590AA); box-shadow: 0 10px 15px -3px rgba(59, 139, 235, 0.3);">
                             <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
                             </svg>
                         </div>
                         <h3 class="font-semibold text-gray-900">Mes tâches en cours</h3>
                     </div>
-                    <a href="{{ route('employee.tasks.index') }}" class="text-sm text-green-600 hover:text-green-800 font-medium">Voir tout</a>
+                    <a href="{{ route('employee.tasks.index') }}" class="text-sm font-medium hover:opacity-80" style="color: #3B8BEB;">Voir tout</a>
                 </div>
                 <div class="divide-y divide-gray-50">
                     @forelse($recentTasks as $index => $task)
@@ -586,9 +581,9 @@
                                 <p class="text-xs text-gray-400 mt-2">
                                     Échéance: {{ $task->date_fin->format('d/m/Y') }}
                                     @if($task->date_fin->isPast())
-                                        <span class="text-red-500 font-medium">(En retard)</span>
+                                        <span class="font-medium" style="color: #B23850;">(En retard)</span>
                                     @elseif($task->date_fin->isToday())
-                                        <span class="text-yellow-500 font-medium">(Aujourd'hui)</span>
+                                        <span class="font-medium" style="color: #3B8BEB;">(Aujourd'hui)</span>
                                     @endif
                                 </p>
                             @endif
@@ -614,29 +609,29 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <!-- Pending Surveys -->
             <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in-up">
-                <div class="px-6 py-4 border-b border-gray-100 bg-gradient-to-r from-indigo-50 to-purple-50 flex items-center justify-between">
+                <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between" style="background: linear-gradient(90deg, rgba(133, 144, 170, 0.1), rgba(196, 219, 246, 0.08));">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/30">
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: linear-gradient(135deg, #8590AA, #C4DBF6); box-shadow: 0 10px 15px -3px rgba(133, 144, 170, 0.3);">
                             <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
                             </svg>
                         </div>
                         <h3 class="font-semibold text-gray-900">Sondages à compléter</h3>
                     </div>
-                    <a href="{{ route('employee.surveys.index') }}" class="text-sm text-indigo-600 hover:text-indigo-800 font-medium">Voir tout</a>
+                    <a href="{{ route('employee.surveys.index') }}" class="text-sm font-medium hover:opacity-80" style="color: #8590AA;">Voir tout</a>
                 </div>
                 <div class="divide-y divide-gray-50">
                     @forelse($pendingSurveys as $survey)
                         <a href="{{ route('employee.surveys.show', $survey) }}" class="block p-4 hover:bg-gray-50 transition-colors group">
                             <div class="flex items-center justify-between">
                                 <div class="flex items-center space-x-3">
-                                    <div class="w-10 h-10 bg-indigo-100 rounded-xl flex items-center justify-center group-hover:bg-indigo-200 transition-colors">
-                                        <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <div class="w-10 h-10 rounded-xl flex items-center justify-center group-hover:opacity-80 transition-colors" style="background: rgba(133, 144, 170, 0.15);">
+                                        <svg class="w-5 h-5" style="color: #8590AA;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
                                         </svg>
                                     </div>
                                     <div>
-                                        <p class="font-medium text-gray-900 group-hover:text-indigo-600 transition-colors">{{ $survey->titre }}</p>
+                                        <p class="font-medium text-gray-900 group-hover:opacity-80 transition-colors" style="color: #3B8BEB;">{{ $survey->titre }}</p>
                                         <p class="text-sm text-gray-500">{{ $survey->questions->count() }} question(s)</p>
                                     </div>
                                 </div>
@@ -646,7 +641,7 @@
                                             {{ $survey->date_limite->format('d/m') }}
                                         </span>
                                     @endif
-                                    <svg class="w-5 h-5 text-gray-400 group-hover:text-indigo-600 mt-1 ml-auto transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <svg class="w-5 h-5 text-gray-400 group-hover:opacity-80 mt-1 ml-auto transition-colors" style="color: #8590AA;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                                     </svg>
                                 </div>
@@ -654,8 +649,8 @@
                         </a>
                     @empty
                         <div class="p-8 text-center">
-                            <div class="w-12 h-12 mx-auto bg-emerald-100 rounded-xl flex items-center justify-center mb-3">
-                                <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div class="w-12 h-12 mx-auto rounded-xl flex items-center justify-center mb-3" style="background: rgba(59, 139, 235, 0.15);">
+                                <svg class="w-6 h-6" style="color: #3B8BEB;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                 </svg>
                             </div>
@@ -667,9 +662,9 @@
 
             <!-- Recent Notifications -->
             <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in-up">
-                <div class="px-6 py-4 border-b border-gray-100 bg-gradient-to-r from-rose-50 to-pink-50 flex items-center justify-between">
+                <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between" style="background: linear-gradient(90deg, rgba(133, 144, 170, 0.1), rgba(196, 219, 246, 0.08));">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-rose-500 to-pink-600 flex items-center justify-center shadow-lg shadow-rose-500/30">
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: linear-gradient(135deg, #8590AA, #C4DBF6); box-shadow: 0 10px 15px -3px rgba(133, 144, 170, 0.3);">
                             <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
                             </svg>
@@ -679,7 +674,7 @@
                     @if($recentNotifications->count() > 0)
                         <form action="{{ route('employee.notifications.read-all') }}" method="POST">
                             @csrf
-                            <button type="submit" class="text-sm text-rose-500 hover:text-rose-700 font-medium">Tout marquer comme lu</button>
+                            <button type="submit" class="text-sm font-medium hover:opacity-80" style="color: #8590AA;">Tout marquer comme lu</button>
                         </form>
                     @endif
                 </div>
@@ -743,7 +738,7 @@
                                     <p class="text-xs text-gray-500 mt-1">{{ $notification->created_at->diffForHumans() }}</p>
                                 </div>
                                 @if(!$notification->read_at)
-                                    <div class="flex-shrink-0 w-2 h-2 rounded-full bg-rose-500 animate-pulse"></div>
+                                    <div class="flex-shrink-0 w-2 h-2 rounded-full animate-pulse" style="background: #3B8BEB;"></div>
                                 @endif
                             </div>
                         </a>
@@ -775,10 +770,10 @@
                 datasets: [{
                     label: 'Heures',
                     data: chartData.weekly_hours.data,
-                    backgroundColor: 'rgba(16, 185, 129, 0.8)',
+                    backgroundColor: 'rgba(59, 139, 235, 0.8)',
                     borderRadius: 8,
                     borderSkipped: false,
-                    hoverBackgroundColor: '#10B981'
+                    hoverBackgroundColor: '#3B8BEB'
                 }]
             },
             options: {
@@ -972,7 +967,8 @@
                 if (data.success) {
                     button.textContent = '✓ Confirmé';
                     button.classList.remove('bg-white', 'text-red-600');
-                    button.classList.add('bg-green-500', 'text-white');
+                    button.style.backgroundColor = '#3B8BEB';
+                    button.style.color = '#ffffff';
                     setTimeout(() => {
                         button.closest('.rounded-2xl').remove();
                     }, 1500);

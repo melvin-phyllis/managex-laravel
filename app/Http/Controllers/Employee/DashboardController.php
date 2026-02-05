@@ -213,7 +213,7 @@ class DashboardController extends Controller
                 $user->tasks()->where('statut', 'completed')->count(),
                 $user->tasks()->where('statut', 'validated')->count(),
             ],
-            'colors' => ['#EAB308', '#3B82F6', '#F97316', '#22C55E'],
+            'colors' => ['#E7E3D4', '#8590AA', '#C4DBF6', '#3B8BEB'],
         ];
 
         return [

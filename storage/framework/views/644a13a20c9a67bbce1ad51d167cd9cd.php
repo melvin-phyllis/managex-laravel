@@ -65,16 +65,16 @@ $colorClasses = [
     'indigo' => ['stroke' => 'stroke-indigo-500', 'text' => 'text-indigo-600'],
 ];
 
-// Auto color based on percentage
+// Auto color based on percentage - using new teal/blue palette
 if ($color === 'auto') {
     if ($percentage >= 80) {
-        $colorClasses['auto'] = ['stroke' => 'stroke-green-500', 'text' => 'text-green-600'];
+        $colorClasses['auto'] = ['stroke' => 'stroke-[#31708E]', 'text' => 'text-[#31708E]'];
     } elseif ($percentage >= 50) {
-        $colorClasses['auto'] = ['stroke' => 'stroke-blue-500', 'text' => 'text-blue-600'];
+        $colorClasses['auto'] = ['stroke' => 'stroke-[#5085A5]', 'text' => 'text-[#5085A5]'];
     } elseif ($percentage >= 25) {
-        $colorClasses['auto'] = ['stroke' => 'stroke-yellow-500', 'text' => 'text-yellow-600'];
+        $colorClasses['auto'] = ['stroke' => 'stroke-[#8FC1E3]', 'text' => 'text-[#8FC1E3]'];
     } else {
-        $colorClasses['auto'] = ['stroke' => 'stroke-red-500', 'text' => 'text-red-600'];
+        $colorClasses['auto'] = ['stroke' => 'stroke-[#687864]', 'text' => 'text-[#687864]'];
     }
 }
 

@@ -62,7 +62,7 @@
                 <div class="flex items-center justify-between mb-3">
                     <h2 class="text-lg font-bold text-gray-800">Messages</h2>
                     <button @click="showNewConversation = true"
-                            class="p-2 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-xl hover:shadow-md transition-all">
+                            class="p-2 text-white rounded-xl hover:shadow-md transition-all" style="background-color: #3B8BEB;">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                         </svg>
@@ -74,7 +74,8 @@
                            x-model="searchQuery"
                            @input.debounce.300ms="filterConversations()"
                            placeholder="Rechercher..."
-                           class="w-full pl-10 pr-4 py-2.5 bg-gray-100 border-0 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:bg-white transition-colors">
+                           class="w-full pl-10 pr-4 py-2.5 bg-gray-50 border-0 rounded-xl text-sm focus:ring-2 focus:bg-white transition-colors"
+                           style="--tw-ring-color: #3B8BEB;">
                     <svg class="w-5 h-5 text-gray-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                     </svg>
@@ -84,17 +85,20 @@
             <!-- Tabs -->
             <div class="flex border-b border-gray-200 bg-white px-1">
                 <button @click="activeTab = 'all'"
-                        :class="activeTab === 'all' ? 'bg-blue-50 text-blue-600 border-blue-600' : 'border-transparent text-gray-500 hover:bg-gray-100'"
+                        :class="activeTab === 'all' ? 'text-[#3B8BEB] border-[#3B8BEB]' : 'border-transparent text-gray-500 hover:bg-gray-50'"
+                        :style="activeTab === 'all' ? 'background-color: rgba(59, 139, 235, 0.1);' : ''"
                         class="flex-1 py-2.5 text-sm font-medium rounded-t-lg border-b-2 transition-all">
                     Tous
                 </button>
                 <button @click="activeTab = 'direct'"
-                        :class="activeTab === 'direct' ? 'bg-blue-50 text-blue-600 border-blue-600' : 'border-transparent text-gray-500 hover:bg-gray-100'"
+                        :class="activeTab === 'direct' ? 'text-[#3B8BEB] border-[#3B8BEB]' : 'border-transparent text-gray-500 hover:bg-gray-50'"
+                        :style="activeTab === 'direct' ? 'background-color: rgba(59, 139, 235, 0.1);' : ''"
                         class="flex-1 py-2.5 text-sm font-medium rounded-t-lg border-b-2 transition-all">
                     Directs
                 </button>
                 <button @click="activeTab = 'group'"
-                        :class="activeTab === 'group' ? 'bg-blue-50 text-blue-600 border-blue-600' : 'border-transparent text-gray-500 hover:bg-gray-100'"
+                        :class="activeTab === 'group' ? 'text-[#3B8BEB] border-[#3B8BEB]' : 'border-transparent text-gray-500 hover:bg-gray-50'"
+                        :style="activeTab === 'group' ? 'background-color: rgba(59, 139, 235, 0.1);' : ''"
                         class="flex-1 py-2.5 text-sm font-medium rounded-t-lg border-b-2 transition-all">
                     Groupes
                 </button>
@@ -113,12 +117,13 @@
 
                 <template x-for="conv in filteredConversations" :key="conv.id">
                     <div @click="selectConversation(conv)"
-                         :class="selectedConversation?.id === conv.id ? 'bg-blue-50/80 border-l-4 border-blue-500' : 'hover:bg-white border-l-4 border-transparent'"
+                         :class="selectedConversation?.id === conv.id ? 'border-l-4' : 'hover:bg-white border-l-4 border-transparent'"
+                         :style="selectedConversation?.id === conv.id ? 'background-color: rgba(59, 139, 235, 0.1); border-color: #3B8BEB;' : ''"
                          class="p-4 cursor-pointer transition-all">
                         <div class="flex items-start gap-3">
                             <!-- Avatar -->
                             <div class="relative flex-shrink-0">
-                                <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-semibold shadow-sm">
+                                <div class="w-11 h-11 rounded-xl flex items-center justify-center text-white font-semibold shadow-sm" style="background-color: #3B8BEB;">
                                     <span x-text="(conv.name || 'C').charAt(0).toUpperCase()"></span>
                                 </div>
                                 <template x-if="conv.is_pinned">
@@ -139,7 +144,7 @@
                             </div>
                             <!-- Unread Badge -->
                             <template x-if="conv.unread_count > 0">
-                                <span class="bg-gradient-to-r from-blue-500 to-blue-600 text-white text-xs font-bold px-2 py-0.5 rounded-full shadow-sm flex-shrink-0" x-text="conv.unread_count"></span>
+                                <span class="text-white text-xs font-bold px-2 py-0.5 rounded-full shadow-sm flex-shrink-0" style="background-color: #3B8BEB;" x-text="conv.unread_count"></span>
                             </template>
                         </div>
                     </div>
@@ -190,7 +195,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
                                 </svg>
                             </button>
-                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-semibold flex-shrink-0">
+                            <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold flex-shrink-0" style="background-color: #3B8BEB;">
                                 <span x-text="(selectedConversation?.name || 'C').charAt(0).toUpperCase()"></span>
                             </div>
                             <div class="min-w-0">
@@ -221,12 +226,12 @@
                         <template x-for="(message, index) in messages" :key="message.id">
                             <div :class="(message.sender?.id || message.sender_id) === currentUserId ? 'flex justify-end' : 'flex justify-start'">
                                 <div :class="[
-                                    (message.sender?.id || message.sender_id) === currentUserId ? 'bg-[#dcf8c6] text-gray-900 rounded-tl-xl rounded-tr-xl rounded-bl-xl rounded-br-md' : 'bg-white text-gray-900 rounded-tl-xl rounded-tr-xl rounded-br-xl rounded-bl-md',
-                                    'max-w-[85%] sm:max-w-md px-3 py-2 shadow-md'
-                                ]">
+                                    (message.sender?.id || message.sender_id) === currentUserId ? 'text-white rounded-tl-xl rounded-tr-xl rounded-bl-xl rounded-br-md shadow-[0_2px_8px_rgba(59,139,235,0.25)]' : 'bg-white text-gray-900 rounded-tl-xl rounded-tr-xl rounded-br-xl rounded-bl-md shadow-sm',
+                                    'max-w-[85%] sm:max-w-md px-3 py-2'
+                                ]" :style="(message.sender?.id || message.sender_id) === currentUserId ? 'background-color: #3B8BEB;' : ''">
                                     <!-- Sender name for others -->
                                     <template x-if="(message.sender?.id || message.sender_id) !== currentUserId && message.sender">
-                                        <p class="text-xs font-semibold text-emerald-700 mb-0.5" x-text="message.sender.name"></p>
+                                        <p class="text-xs font-semibold mb-0.5" style="color: #3B8BEB;" x-text="message.sender.name"></p>
                                     </template>
 
                                     <!-- Attachments (images, audio, files) -->
@@ -275,7 +280,7 @@
                                     <div class="text-sm break-words mt-1" x-show="message.content" x-html="message.content_html || message.content"></div>
 
                                     <!-- Footer: time + check (style WhatsApp) -->
-                                    <div class="flex items-center justify-end gap-1 mt-0.5" :class="(message.sender?.id || message.sender_id) === currentUserId ? 'text-emerald-700/80' : 'text-gray-500'">
+                                    <div class="flex items-center justify-end gap-1 mt-0.5" :class="(message.sender?.id || message.sender_id) === currentUserId ? 'text-white/80' : 'text-gray-500'">
                                         <span class="text-[11px]" x-text="message.created_at_human || formatMessageTime(message.created_at)"></span>
                                         <template x-if="(message.sender?.id || message.sender_id) === currentUserId">
                                             <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M18.7 7.3l-6.9 6.9-2.8-2.8-1.4 1.4 4.2 4.2 8.3-8.3zM12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2z"/></svg>
@@ -320,7 +325,8 @@
                             </div>
                             <button type="submit"
                                     :disabled="!canSend()"
-                                    class="p-3 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-xl hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0">
+                                    class="p-3 text-white rounded-xl hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
+                                    style="background-color: #3B8BEB;">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
                                 </svg>
@@ -375,7 +381,7 @@
                     <button type="button" @click="closeNewConversationModal()" class="flex-1 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
                         Annuler
                     </button>
-                    <button type="submit" class="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                    <button type="submit" class="flex-1 px-4 py-2 text-white rounded-lg hover:opacity-90 transition-colors" style="background-color: #3B8BEB;">
                         Créer
                     </button>
                 </div>

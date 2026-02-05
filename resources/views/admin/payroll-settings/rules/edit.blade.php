@@ -1,18 +1,44 @@
 ﻿<x-layouts.admin>
     <div class="space-y-6">
-        <div class="animate-fade-in-up">
-            <nav class="flex items-center text-sm text-gray-500 mb-2">
-                <a href="{{ route('admin.payroll-settings.countries') }}" class="hover:text-red-600">Configuration Paie</a>
-                <svg class="w-4 h-4 mx-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                </svg>
-                <a href="{{ route('admin.payroll-settings.rules', $country) }}" class="hover:text-red-600">{{ $country->name }}</a>
-                <svg class="w-4 h-4 mx-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                </svg>
-                <span class="text-gray-900">Modifier {{ $rule->code }}</span>
-            </nav>
-            <h1 class="text-2xl font-bold text-gray-900">Modifier la Régle - {{ $rule->label }}</h1>
+        <!-- Header comme sur tasks -->
+        <div class="relative overflow-hidden rounded-2xl shadow-xl animate-fade-in-up" style="background: linear-gradient(135deg, #5680E9, #84CEEB) !important;">
+            <div class="absolute inset-0 bg-black/10"></div>
+            <div class="absolute -top-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+            <div class="absolute -bottom-24 -left-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+            
+            <div class="relative p-6 md:p-8">
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                    <div>
+                        <nav class="flex mb-3" aria-label="Breadcrumb">
+                            <ol class="inline-flex items-center space-x-1">
+                                <li><a href="{{ route('admin.dashboard') }}" class="text-white/70 hover:text-white text-sm">Dashboard</a></li>
+                                <li><span class="text-white/50 mx-2">/</span></li>
+                                <li><a href="{{ route('admin.payroll-settings.countries') }}" class="text-white/70 hover:text-white text-sm">Configuration Paie</a></li>
+                                <li><span class="text-white/50 mx-2">/</span></li>
+                                <li><a href="{{ route('admin.payroll-settings.rules', $country) }}" class="text-white/70 hover:text-white text-sm">{{ $country->name }}</a></li>
+                                <li><span class="text-white/50 mx-2">/</span></li>
+                                <li><span class="text-white text-sm font-medium">Modifier {{ $rule->code }}</span></li>
+                            </ol>
+                        </nav>
+                        <h1 class="text-2xl md:text-3xl font-bold text-white flex items-center gap-3">
+                            <div class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
+                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                </svg>
+                            </div>
+                            Modifier la Règle - {{ $rule->label }}
+                        </h1>
+                        <p class="text-white/80 mt-2">Modifiez les paramètres de cette règle de calcul</p>
+                    </div>
+                    <a href="{{ route('admin.payroll-settings.rules', $country) }}" 
+                       class="px-4 py-2.5 bg-white font-semibold rounded-xl hover:bg-purple-50 transition-all shadow-lg flex items-center" style="color: #5680E9;">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                        </svg>
+                        Retour aux Règles
+                    </a>
+                </div>
+            </div>
         </div>
 
         <form action="{{ route('admin.payroll-settings.rules.update', [$country, $rule]) }}" method="POST" class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 animate-fade-in-up animation-delay-100">
@@ -23,19 +49,19 @@
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Code</label>
                     <input type="text" value="{{ $rule->code }}" disabled
-                           class="w-full px-4 py-2 border border-gray-200 rounded-lg bg-gray-50 text-gray-500">
+                           class="w-full px-4 py-2.5 border border-gray-200 rounded-xl bg-gray-50 text-gray-500">
                 </div>
 
                 <div>
                     <label for="label" class="block text-sm font-medium text-gray-700 mb-1">Libellé *</label>
                     <input type="text" name="label" id="label" value="{{ old('label', $rule->label) }}" required
-                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">
+                           class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                 </div>
 
                 <div>
                     <label for="rule_type" class="block text-sm font-medium text-gray-700 mb-1">Type *</label>
                     <select name="rule_type" id="rule_type" required
-                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">
+                            class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                         <option value="tax" {{ old('rule_type', $rule->rule_type) === 'tax' ? 'selected' : '' }}>Taxe</option>
                         <option value="contribution" {{ old('rule_type', $rule->rule_type) === 'contribution' ? 'selected' : '' }}>Cotisation</option>
                         <option value="allowance" {{ old('rule_type', $rule->rule_type) === 'allowance' ? 'selected' : '' }}>Indemnité</option>
@@ -47,7 +73,7 @@
                 <div>
                     <label for="rule_category" class="block text-sm font-medium text-gray-700 mb-1">Catégorie *</label>
                     <select name="rule_category" id="rule_category" required
-                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">
+                            class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                         <option value="employee" {{ old('rule_category', $rule->rule_category) === 'employee' ? 'selected' : '' }}>Employé</option>
                         <option value="employer" {{ old('rule_category', $rule->rule_category) === 'employer' ? 'selected' : '' }}>Employeur</option>
                         <option value="both" {{ old('rule_category', $rule->rule_category) === 'both' ? 'selected' : '' }}>Les deux</option>
@@ -57,18 +83,18 @@
                 <div>
                     <label for="calculation_type" class="block text-sm font-medium text-gray-700 mb-1">Mode de Calcul *</label>
                     <select name="calculation_type" id="calculation_type" required
-                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                            class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                             onchange="toggleCalculationFields()">
                         <option value="percentage" {{ old('calculation_type', $rule->calculation_type) === 'percentage' ? 'selected' : '' }}>Pourcentage</option>
                         <option value="fixed" {{ old('calculation_type', $rule->calculation_type) === 'fixed' ? 'selected' : '' }}>Montant Fixe</option>
-                        <option value="bracket" {{ old('calculation_type', $rule->calculation_type) === 'bracket' ? 'selected' : '' }}>Baréme</option>
+                        <option value="bracket" {{ old('calculation_type', $rule->calculation_type) === 'bracket' ? 'selected' : '' }}>Barème</option>
                     </select>
                 </div>
 
                 <div>
                     <label for="base_field" class="block text-sm font-medium text-gray-700 mb-1">Base de Calcul *</label>
                     <select name="base_field" id="base_field" required
-                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">
+                            class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                         <option value="taxable_gross" {{ old('base_field', $rule->base_field) === 'taxable_gross' ? 'selected' : '' }}>Brut Imposable</option>
                         <option value="gross_salary" {{ old('base_field', $rule->base_field) === 'gross_salary' ? 'selected' : '' }}>Salaire Brut</option>
                         <option value="igr_base" {{ old('base_field', $rule->base_field) === 'igr_base' ? 'selected' : '' }}>Base IGR</option>
@@ -78,71 +104,71 @@
                 <div id="rate_field">
                     <label for="rate" class="block text-sm font-medium text-gray-700 mb-1">Taux (%)</label>
                     <input type="number" name="rate" id="rate" value="{{ old('rate', $rule->rate) }}" step="0.01" min="0" max="100"
-                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">
+                           class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                 </div>
 
                 <div id="fixed_field" style="display: none;">
                     <label for="fixed_amount" class="block text-sm font-medium text-gray-700 mb-1">Montant Fixe</label>
                     <input type="number" name="fixed_amount" id="fixed_amount" value="{{ old('fixed_amount', $rule->fixed_amount) }}" step="0.01" min="0"
-                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">
+                           class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                 </div>
 
                 <div>
                     <label for="ceiling" class="block text-sm font-medium text-gray-700 mb-1">Plafond</label>
                     <input type="number" name="ceiling" id="ceiling" value="{{ old('ceiling', $rule->ceiling) }}" step="0.01" min="0"
-                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">
+                           class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                 </div>
 
                 <div>
                     <label for="display_order" class="block text-sm font-medium text-gray-700 mb-1">Ordre d'Affichage</label>
                     <input type="number" name="display_order" id="display_order" value="{{ old('display_order', $rule->display_order) }}" min="0"
-                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">
+                           class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                 </div>
 
                 <div>
                     <label for="pdf_code" class="block text-sm font-medium text-gray-700 mb-1">Code PDF</label>
                     <input type="text" name="pdf_code" id="pdf_code" value="{{ old('pdf_code', $rule->pdf_code) }}"
-                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">
+                           class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                 </div>
 
                 <div id="brackets_field" class="md:col-span-2" style="display: none;">
-                    <label for="brackets" class="block text-sm font-medium text-gray-700 mb-1">Baréme (JSON)</label>
+                    <label for="brackets" class="block text-sm font-medium text-gray-700 mb-1">Barème (JSON)</label>
                     <textarea name="brackets" id="brackets" rows="5"
-                              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 font-mono text-sm">{{ old('brackets', json_encode($rule->brackets, JSON_PRETTY_PRINT)) }}</textarea>
+                              class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 font-mono text-sm">{{ old('brackets', json_encode($rule->brackets, JSON_PRETTY_PRINT)) }}</textarea>
                 </div>
 
                 <div class="md:col-span-2">
                     <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Description</label>
                     <textarea name="description" id="description" rows="2"
-                              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">{{ old('description', $rule->description) }}</textarea>
+                              class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">{{ old('description', $rule->description) }}</textarea>
                 </div>
 
                 <div class="md:col-span-2 flex flex-wrap gap-6">
-                    <label class="inline-flex items-center">
+                    <label class="inline-flex items-center cursor-pointer">
                         <input type="checkbox" name="is_deductible" value="1" {{ old('is_deductible', $rule->is_deductible) ? 'checked' : '' }}
-                               class="rounded border-gray-300 text-red-600 focus:ring-red-500">
+                               class="rounded border-gray-300 focus:ring-indigo-500" style="color: #5680E9;">
                         <span class="ml-2 text-sm text-gray-700">Déductible de la base IGR</span>
                     </label>
-                    <label class="inline-flex items-center">
+                    <label class="inline-flex items-center cursor-pointer">
                         <input type="checkbox" name="is_mandatory" value="1" {{ old('is_mandatory', $rule->is_mandatory) ? 'checked' : '' }}
-                               class="rounded border-gray-300 text-red-600 focus:ring-red-500">
+                               class="rounded border-gray-300 focus:ring-indigo-500" style="color: #5680E9;">
                         <span class="ml-2 text-sm text-gray-700">Obligatoire</span>
                     </label>
-                    <label class="inline-flex items-center">
+                    <label class="inline-flex items-center cursor-pointer">
                         <input type="checkbox" name="is_visible_on_payslip" value="1" {{ old('is_visible_on_payslip', $rule->is_visible_on_payslip) ? 'checked' : '' }}
-                               class="rounded border-gray-300 text-red-600 focus:ring-red-500">
+                               class="rounded border-gray-300 focus:ring-indigo-500" style="color: #5680E9;">
                         <span class="ml-2 text-sm text-gray-700">Visible sur le bulletin</span>
                     </label>
                 </div>
             </div>
 
-            <div class="flex justify-end gap-4 mt-8 pt-6 border-t border-gray-200">
+            <div class="flex justify-end gap-3 mt-8 pt-6 border-t border-gray-100">
                 <a href="{{ route('admin.payroll-settings.rules', $country) }}" 
-                   class="px-6 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
+                   class="px-6 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors">
                     Annuler
                 </a>
                 <button type="submit" 
-                        class="px-6 py-2 text-sm font-medium text-white bg-gradient-to-r from-red-600 to-red-700 rounded-lg hover:from-red-700 hover:to-red-800 bg-green-500">
+                        class="px-6 py-2.5 text-sm font-semibold text-white rounded-xl shadow-lg transition-all" style="background: linear-gradient(135deg, #5680E9, #5AB9EA);">
                     Enregistrer
                 </button>
             </div>

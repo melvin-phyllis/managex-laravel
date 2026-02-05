@@ -1,14 +1,14 @@
 <x-layouts.employee>
-    <div class="space-y-6">
+    <div class="space-y-4">
         <!-- Header avec gradient -->
-        <div class="bg-blue-50 rounded-2xl p-6 text-black shadow-xl">
+        <div class="rounded-2xl p-6 text-white shadow-xl" style="background-color: #3B8BEB;">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
                     <h1 class="text-2xl font-bold mb-1">Mes Demandes de Documents</h1>
-                    <p class="text-red-200">Demandez une attestation, un certificat ou tout autre document</p>
+                    <p style="color: #C4DBF6;">Demandez une attestation, un certificat ou tout autre document</p>
                 </div>
                 <a href="{{ route('employee.document-requests.create') }}" 
-                   class="inline-flex items-center gap-2 px-5 py-2.5 bg-white text-rose-600 font-semibold rounded-lg hover:bg-rose-50 transition-colors shadow-sm">
+                   class="inline-flex items-center gap-2 px-5 py-2.5 bg-white font-semibold rounded-lg hover:bg-gray-50 transition-colors shadow-sm" style="color: #3B8BEB;">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                     </svg>
@@ -27,7 +27,7 @@
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
             <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-gradient-to-br from-rose-500 to-pink-600 rounded-xl flex items-center justify-center">
+                    <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background-color: #3B8BEB;">
                         <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                         </svg>
@@ -40,39 +40,39 @@
             </div>
             <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-gradient-to-br from-amber-500 to-orange-600 rounded-xl flex items-center justify-center">
-                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background-color: #E7E3D4;">
+                        <svg class="w-5 h-5" style="color: #8590AA;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                         </svg>
                     </div>
                     <div>
-                        <p class="text-2xl font-bold text-amber-600">{{ $pendingCount }}</p>
+                        <p class="text-2xl font-bold" style="color: #8590AA;">{{ $pendingCount }}</p>
                         <p class="text-xs text-gray-500">En attente</p>
                     </div>
                 </div>
             </div>
             <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-gradient-to-br from-emerald-500 to-green-600 rounded-xl flex items-center justify-center">
-                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background-color: rgba(59, 139, 235, 0.15);">
+                        <svg class="w-5 h-5" style="color: #3B8BEB;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                         </svg>
                     </div>
                     <div>
-                        <p class="text-2xl font-bold text-emerald-600">{{ $approvedCount }}</p>
+                        <p class="text-2xl font-bold" style="color: #3B8BEB;">{{ $approvedCount }}</p>
                         <p class="text-xs text-gray-500">Approuvées</p>
                     </div>
                 </div>
             </div>
             <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-gradient-to-br from-red-500 to-rose-600 rounded-xl flex items-center justify-center">
-                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background-color: rgba(178, 56, 80, 0.15);">
+                        <svg class="w-5 h-5" style="color: #B23850;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                         </svg>
                     </div>
                     <div>
-                        <p class="text-2xl font-bold text-red-600">{{ $rejectedCount }}</p>
+                        <p class="text-2xl font-bold" style="color: #B23850;">{{ $rejectedCount }}</p>
                         <p class="text-xs text-gray-500">Refusées</p>
                     </div>
                 </div>
@@ -80,7 +80,7 @@
         </div>
 
         @if(session('success'))
-            <div class="bg-emerald-50 border border-emerald-200 text-emerald-700 px-4 py-3 rounded-xl flex items-center gap-3">
+            <div class="px-4 py-3 rounded-xl flex items-center gap-3" style="background-color: rgba(59, 139, 235, 0.1); border: 1px solid rgba(59, 139, 235, 0.2); color: #3B8BEB;">
                 <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 </svg>
@@ -90,9 +90,9 @@
 
         <!-- Liste des demandes -->
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-            <div class="px-6 py-4 bg-gradient-to-r from-gray-50 to-slate-50 border-b border-gray-100">
+            <div class="px-6 py-4 border-b border-gray-100" style="background-color: rgba(59, 139, 235, 0.03);">
                 <h3 class="font-semibold text-gray-800 flex items-center gap-2">
-                    <svg class="w-5 h-5 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-5 h-5" style="color: #3B8BEB;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
                     </svg>
                     Historique des demandes
@@ -104,17 +104,17 @@
                     @foreach($requests as $request)
                         @php
                             $statusConfig = [
-                                'pending' => ['bg' => 'bg-amber-100', 'text' => 'text-amber-700', 'icon' => 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z', 'gradient' => 'from-amber-500 to-orange-600'],
-                                'approved' => ['bg' => 'bg-emerald-100', 'text' => 'text-emerald-700', 'icon' => 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z', 'gradient' => 'from-emerald-500 to-green-600'],
-                                'rejected' => ['bg' => 'bg-red-100', 'text' => 'text-red-700', 'icon' => 'M6 18L18 6M6 6l12 12', 'gradient' => 'from-red-500 to-rose-600'],
+                                'pending' => ['bg' => 'background-color: rgba(133, 144, 170, 0.15);', 'text' => 'color: #8590AA;', 'icon' => 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z', 'iconBg' => '#E7E3D4', 'iconColor' => '#8590AA'],
+                                'approved' => ['bg' => 'background-color: rgba(59, 139, 235, 0.1);', 'text' => 'color: #3B8BEB;', 'icon' => 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z', 'iconBg' => '#3B8BEB', 'iconColor' => '#fff'],
+                                'rejected' => ['bg' => 'background-color: rgba(178, 56, 80, 0.1);', 'text' => 'color: #B23850;', 'icon' => 'M6 18L18 6M6 6l12 12', 'iconBg' => '#B23850', 'iconColor' => '#fff'],
                             ];
                             $status = $statusConfig[$request->status] ?? $statusConfig['pending'];
                         @endphp
                         <div class="p-5 hover:bg-gray-50 transition-colors">
                             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                                 <div class="flex items-start gap-4">
-                                    <div class="w-12 h-12 bg-gradient-to-br {{ $status['gradient'] }} rounded-xl flex items-center justify-center flex-shrink-0">
-                                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style="background-color: {{ $status['iconBg'] }};">
+                                        <svg class="w-6 h-6" style="color: {{ $status['iconColor'] }};" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $status['icon'] }}"/>
                                         </svg>
                                     </div>
@@ -129,12 +129,12 @@
                                     </div>
                                 </div>
                                 <div class="flex items-center gap-3 ml-16 sm:ml-0">
-                                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-full {{ $status['bg'] }} {{ $status['text'] }}">
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-full" style="{{ $status['bg'] }} {{ $status['text'] }}">
                                         {{ $request->status_label }}
                                     </span>
                                     @if($request->hasDocument())
                                         <a href="{{ route('employee.document-requests.download', $request) }}" 
-                                           class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors shadow-sm">
+                                           class="inline-flex items-center gap-2 px-4 py-2 text-white text-sm font-medium rounded-lg transition-colors shadow-sm" style="background-color: #3B8BEB;">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
                                             </svg>
@@ -166,15 +166,15 @@
                 </div>
             @else
                 <div class="p-12 text-center">
-                    <div class="w-20 h-20 bg-gradient-to-br from-rose-100 to-pink-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                        <svg class="w-10 h-10 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-4" style="background-color: rgba(59, 139, 235, 0.1);">
+                        <svg class="w-10 h-10" style="color: #3B8BEB;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                         </svg>
                     </div>
                     <h3 class="text-lg font-semibold text-gray-900 mb-2">Aucune demande</h3>
                     <p class="text-gray-500 mb-4">Vous n'avez pas encore fait de demande de document</p>
                     <a href="{{ route('employee.document-requests.create') }}" 
-                       class="inline-flex items-center gap-2 px-5 py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-medium rounded-lg transition-colors">
+                       class="inline-flex items-center gap-2 px-5 py-2.5 text-white font-medium rounded-lg transition-colors" style="background-color: #3B8BEB;">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                         </svg>

@@ -61,7 +61,7 @@
                 <div class="flex items-center justify-between mb-3">
                     <h2 class="text-lg font-bold text-gray-900">Messages</h2>
                     <button @click="showNewConversation = true"
-                            class="p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                            class="p-2 text-white rounded-lg transition-colors" style="background: linear-gradient(135deg, #5680E9, #5AB9EA);">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                         </svg>
@@ -73,7 +73,7 @@
                            x-model="searchQuery"
                            @input.debounce.300ms="filterConversations()"
                            placeholder="Rechercher..."
-                           class="w-full pl-10 pr-4 py-2 bg-gray-100 border-0 rounded-lg text-sm focus:ring-2 focus:ring-blue-500">
+                           class="w-full pl-10 pr-4 py-2 bg-gray-100 border-0 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500">
                     <svg class="w-5 h-5 text-gray-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                     </svg>
@@ -83,18 +83,21 @@
             <!-- Tabs -->
             <div class="flex border-b border-gray-200 bg-white">
                 <button @click="activeTab = 'all'"
-                        :class="activeTab === 'all' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500'"
-                        class="flex-1 py-2 text-sm font-medium border-b-2 hover:text-gray-700 transition-colors">
+                        :class="activeTab === 'all' ? 'border-b-2 text-white' : 'border-transparent text-gray-500'"
+                        :style="activeTab === 'all' ? 'border-color: #5680E9; background: linear-gradient(135deg, #5680E9, #84CEEB);' : ''"
+                        class="flex-1 py-2 text-sm font-medium hover:text-gray-700 transition-colors">
                     Tous
                 </button>
                 <button @click="activeTab = 'direct'"
-                        :class="activeTab === 'direct' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500'"
-                        class="flex-1 py-2 text-sm font-medium border-b-2 hover:text-gray-700 transition-colors">
+                        :class="activeTab === 'direct' ? 'border-b-2 text-white' : 'border-transparent text-gray-500'"
+                        :style="activeTab === 'direct' ? 'border-color: #5680E9; background: linear-gradient(135deg, #5680E9, #84CEEB);' : ''"
+                        class="flex-1 py-2 text-sm font-medium hover:text-gray-700 transition-colors">
                     Directs
                 </button>
                 <button @click="activeTab = 'group'"
-                        :class="activeTab === 'group' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500'"
-                        class="flex-1 py-2 text-sm font-medium border-b-2 hover:text-gray-700 transition-colors">
+                        :class="activeTab === 'group' ? 'border-b-2 text-white' : 'border-transparent text-gray-500'"
+                        :style="activeTab === 'group' ? 'border-color: #5680E9; background: linear-gradient(135deg, #5680E9, #84CEEB);' : ''"
+                        class="flex-1 py-2 text-sm font-medium hover:text-gray-700 transition-colors">
                     Groupes
                 </button>
             </div>
@@ -103,7 +106,8 @@
             <div class="flex-1 overflow-y-auto">
                 <template x-for="conv in filteredConversations" :key="conv.id">
                     <div @click="selectConversation(conv)"
-                         :class="selectedConversation?.id === conv.id ? 'bg-blue-50 border-l-4 border-blue-600' : 'hover:bg-gray-100'"
+                         :class="selectedConversation?.id === conv.id ? 'border-l-4' : 'hover:bg-gray-100'"
+                         :style="selectedConversation?.id === conv.id ? 'background: linear-gradient(90deg, #5680E920, transparent); border-color: #5680E9;' : ''"
                          class="p-3 cursor-pointer transition-colors border-b border-gray-100">
                         <div class="flex items-center gap-3">
                             <!-- Avatar -->
@@ -120,7 +124,7 @@
                                     </div>
                                 </template>
                                 <template x-if="conv.type === 'group' || conv.type === 'channel'">
-                                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-blue-600 flex items-center justify-center text-white font-bold">
+                                    <div class="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold" style="background: linear-gradient(135deg, #8860D0, #5680E9);">
                                         <span x-text="conv.type === 'channel' ? '#' : getInitials(conv.name)"></span>
                                     </div>
                                 </template>
@@ -136,7 +140,7 @@
                             </div>
                             <!-- Unread badge -->
                             <template x-if="conv.unread_count > 0">
-                                <span class="bg-blue-600 text-white text-xs font-bold px-2 py-1 rounded-full flex-shrink-0" x-text="conv.unread_count"></span>
+                                <span class="text-white text-xs font-bold px-2 py-1 rounded-full flex-shrink-0" style="background: linear-gradient(135deg, #5680E9, #5AB9EA);" x-text="conv.unread_count"></span>
                             </template>
                         </div>
                     </div>
@@ -183,7 +187,7 @@
                                 </div>
                             </template>
                             <template x-if="selectedConversation.type !== 'direct'">
-                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-blue-600 flex items-center justify-center text-white font-bold">
+                                <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold" style="background: linear-gradient(135deg, #8860D0, #5680E9);">
                                     <span x-text="selectedConversation.type === 'channel' ? '#' : getInitials(selectedConversation.name)"></span>
                                 </div>
                             </template>
@@ -283,10 +287,10 @@
                             <input type="text"
                                    x-model="newMessage"
                                    placeholder="éƒâ€°crivez un message..."
-                                   class="flex-1 px-4 py-2 border border-gray-300 rounded-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm sm:text-base">
+                                   class="flex-1 px-4 py-2 border border-gray-300 rounded-full focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm sm:text-base">
                             <button type="submit"
                                     :disabled="!canSend()"
-                                    class="p-2 sm:px-6 sm:py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex-shrink-0">
+                                    class="p-2 sm:px-6 sm:py-2 text-white rounded-full disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex-shrink-0" style="background: linear-gradient(135deg, #5680E9, #5AB9EA);">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
                                 </svg>
@@ -337,7 +341,7 @@
                         <div class="max-h-48 overflow-y-auto border border-gray-200 rounded-lg">
                             <template x-for="user in availableUsers" :key="user.id">
                                 <label class="flex items-center gap-3 p-2 hover:bg-gray-50 cursor-pointer">
-                                    <input type="checkbox" :value="user.id" x-model="selectedParticipants" class="rounded border-gray-300 text-blue-600">
+                                    <input type="checkbox" :value="user.id" x-model="selectedParticipants" class="rounded border-gray-300 text-indigo-600">
                                     <span x-text="user.name" class="text-sm"></span>
                                 </label>
                             </template>
@@ -347,7 +351,7 @@
 
                 <div class="flex justify-end gap-3 mt-6">
                     <button @click="showNewConversation = false" class="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">Annuler</button>
-                    <button @click="createConversation()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Créer</button>
+                    <button @click="createConversation()" class="px-4 py-2 text-white rounded-lg" style="background: linear-gradient(135deg, #5680E9, #5AB9EA);">Créer</button>
                 </div>
             </div>
         </div>

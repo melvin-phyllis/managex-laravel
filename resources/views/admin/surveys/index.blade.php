@@ -24,12 +24,12 @@
         <!-- Header -->
         <x-table-header title="Sondages Internes" subtitle="Créez et analysez les sondages de votre équipe avec des outils simples" class="animate-fade-in-up animation-delay-100">
             <x-slot:icon>
-                <div class="w-12 h-12 bg-gradient-to-br from-violet-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-violet-500/20">
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg" style="background: linear-gradient(135deg, #5680E9, #5AB9EA); box-shadow: 0 10px 15px -3px rgba(86, 128, 233, 0.2);">
                     <x-icon name="clipboard-list" class="w-6 h-6 text-white" />
                 </div>
             </x-slot:icon>
             <x-slot:actions>
-                <a href="{{ route('admin.surveys.create') }}" class="inline-flex items-center px-4 py-2.5 bg-gradient-to-r from-violet-600 to-purple-600 text-white font-medium rounded-xl hover:from-violet-700 hover:to-purple-700 transition-all shadow-lg shadow-violet-500/25">
+                <a href="{{ route('admin.surveys.create') }}" class="inline-flex items-center px-4 py-2.5 text-white font-medium rounded-xl transition-all shadow-lg" style="background: linear-gradient(135deg, #5680E9, #5AB9EA); box-shadow: 0 10px 15px -3px rgba(86, 128, 233, 0.25);" onmouseover="this.style.filter='brightness(1.1)'" onmouseout="this.style.filter=''">
                     <x-icon name="plus" class="w-5 h-5 mr-2" />
                     Nouveau sondage
                 </a>
@@ -45,7 +45,7 @@
                         <p class="text-sm font-medium text-gray-500">Total Sondages</p>
                         <p class="text-3xl font-bold text-gray-900 mt-1">{{ $stats['total'] ?? 0 }}</p>
                     </div>
-                    <div class="w-12 h-12 bg-gradient-to-br from-violet-500 to-purple-600 rounded-xl flex items-center justify-center">
+                    <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background: linear-gradient(135deg, #5680E9, #5AB9EA);">
                         <x-icon name="clipboard-list" class="w-6 h-6 text-white" />
                     </div>
                 </div>
@@ -62,7 +62,7 @@
                     <div class="p-5 border-b border-gray-100">
                         <div class="flex items-start justify-between">
                             <div class="flex-1 min-w-0 pr-4">
-                                <h3 class="text-lg font-semibold text-gray-900 group-hover:text-violet-600 transition-colors truncate" title="{{ $survey->titre }}">
+                                <h3 class="text-lg font-semibold text-gray-900 transition-colors truncate" style="" onmouseover="this.style.color='#5680E9'" onmouseout="this.style.color=''" title="{{ $survey->titre }}">
                                     {{ $survey->titre }}
                                 </h3>
                                 <p class="mt-1 text-sm text-gray-500 line-clamp-2">{{ $survey->description ?? 'Aucune description disponible.' }}</p>
@@ -104,7 +104,7 @@
                     <!-- Card Actions -->
                     <div class="px-5 py-4 flex items-center justify-between">
                         <div class="flex items-center gap-2">
-                            <a href="{{ route('admin.surveys.show', $survey) }}" class="p-2 text-gray-500 hover:text-violet-600 hover:bg-violet-50 rounded-lg transition-colors" title="Voir les détails">
+                            <a href="{{ route('admin.surveys.show', $survey) }}" class="p-2 text-gray-500 rounded-lg transition-colors" style="" onmouseover="this.style.color='#5680E9'; this.style.backgroundColor='rgba(86, 128, 233, 0.05)'" onmouseout="this.style.color=''; this.style.backgroundColor=''" title="Voir les détails">
                                 <x-icon name="eye" class="w-5 h-5" />
                             </a>
                             <a href="{{ route('admin.surveys.results', $survey) }}" class="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Voir les résultats">
@@ -140,7 +140,7 @@
                         </div>
                         <h3 class="text-lg font-medium text-gray-900">Aucun sondage créé</h3>
                         <p class="mt-2 text-gray-500 max-w-sm mx-auto">Commencez par créer votre premier sondage pour recueillir les avis de votre équipe.</p>
-                        <a href="{{ route('admin.surveys.create') }}" class="mt-6 inline-flex items-center px-4 py-2 bg-violet-600 text-white text-sm font-medium rounded-lg hover:bg-violet-700 transition-colors">
+                        <a href="{{ route('admin.surveys.create') }}" class="mt-6 inline-flex items-center px-4 py-2 text-white text-sm font-medium rounded-lg transition-colors" style="background: linear-gradient(135deg, #5680E9, #5AB9EA);" onmouseover="this.style.filter='brightness(1.1)'" onmouseout="this.style.filter=''">
                             <x-icon name="plus" class="w-4 h-4 mr-2" />
                             Créer un sondage
                         </a>

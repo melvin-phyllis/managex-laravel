@@ -42,8 +42,8 @@
     <div class="min-h-screen bg-gray-50">
         <!-- Decorative Background -->
         <div class="fixed inset-0 overflow-hidden pointer-events-none">
-            <div class="absolute -top-40 -right-40 w-80 h-80 bg-emerald-500/5 rounded-full blur-3xl"></div>
-            <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-teal-500/5 rounded-full blur-3xl"></div>
+            <div class="absolute -top-40 -right-40 w-80 h-80 rounded-full blur-3xl" style="background-color: rgba(59, 139, 235, 0.05);"></div>
+            <div class="absolute -bottom-40 -left-40 w-80 h-80 rounded-full blur-3xl" style="background-color: rgba(178, 56, 80, 0.05);"></div>
         </div>
 
         <!-- Mobile Sidebar Backdrop -->
@@ -51,7 +51,7 @@
 
         <!-- Sidebar -->
         <aside class="fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 transform transition-transform duration-200 ease-in-out lg:translate-x-0 -translate-x-full flex flex-col" id="sidebar">
-            <div class="flex items-center justify-between h-16 px-4 bg-gradient-to-r from-emerald-600 to-teal-600">
+            <div class="flex items-center justify-between h-16 px-4" style="background-color: #3B8BEB;">
                 <span class="text-xl font-bold text-white">ManageX</span>
                 <button class="lg:hidden p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white transition-colors" 
                         onclick="document.getElementById('sidebar').classList.add('-translate-x-full'); document.getElementById('sidebarBackdrop').classList.add('hidden')">

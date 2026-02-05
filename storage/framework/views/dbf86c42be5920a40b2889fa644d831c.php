@@ -16,7 +16,7 @@
                 <p class="text-sm text-gray-500 mt-1">Suivez votre temps de travail et votre ponctualité</p>
             </div>
             <!-- Horloge en temps réel -->
-            <div class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-4 rounded-2xl shadow-lg" x-data="{ time: '' }" x-init="
+            <div class="text-white px-6 py-4 rounded-2xl shadow-lg" style="background: linear-gradient(135deg, #31708E, #5085A5);" x-data="{ time: '' }" x-init="
                 setInterval(() => {
                     time = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
                 }, 1000);
@@ -32,8 +32,8 @@
             <div class="flex flex-wrap items-center justify-between gap-4">
                 <div class="flex items-center gap-6">
                     <div class="flex items-center gap-2">
-                        <div class="bg-blue-100 p-2.5 rounded-xl">
-                            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="p-2.5 rounded-xl" style="background: rgba(49, 112, 142, 0.15);">
+                            <svg class="w-5 h-5" style="color: #31708E;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
                         </div>
@@ -43,8 +43,8 @@
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
-                        <div class="bg-orange-100 p-2.5 rounded-xl">
-                            <svg class="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="p-2.5 rounded-xl" style="background: rgba(80, 133, 165, 0.15);">
+                            <svg class="w-5 h-5" style="color: #5085A5;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707"></path>
                             </svg>
                         </div>
@@ -54,8 +54,8 @@
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
-                        <div class="bg-yellow-100 p-2.5 rounded-xl">
-                            <svg class="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="p-2.5 rounded-xl" style="background: rgba(143, 193, 227, 0.2);">
+                            <svg class="w-5 h-5" style="color: #5085A5;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
                             </svg>
                         </div>
@@ -376,7 +376,7 @@
                         <button type="button" id="checkInBtn" 
                                 <?php echo e(isset($canCheckIn) && !$canCheckIn ? 'disabled' : ''); ?>
 
-                                class="w-full px-6 py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-medium rounded-xl hover:from-green-600 hover:to-emerald-700 transition-all shadow-lg shadow-green-500/30 flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none transform hover:scale-[1.02] active:scale-[0.98] disabled:hover:scale-100">
+                                class="w-full px-6 py-4 text-white font-medium rounded-xl transition-all shadow-lg flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none transform hover:scale-[1.02] active:scale-[0.98] disabled:hover:scale-100" style="background: linear-gradient(135deg, #31708E, #5085A5); box-shadow: 0 10px 15px -3px rgba(49, 112, 142, 0.3);">
                             <svg id="checkInIcon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
                             </svg>
@@ -445,7 +445,7 @@
                             <?php echo csrf_field(); ?>
                             <input type="hidden" name="latitude" id="checkOutLat">
                             <input type="hidden" name="longitude" id="checkOutLng">
-                            <button type="button" id="checkOutBtn" class="w-full px-6 py-4 bg-gradient-to-r from-red-500 to-rose-600 text-white font-medium rounded-xl hover:from-red-600 hover:to-rose-700 transition-all shadow-lg shadow-red-500/30 flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02] active:scale-[0.98]">
+                            <button type="button" id="checkOutBtn" class="w-full px-6 py-4 text-white font-medium rounded-xl transition-all shadow-lg flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02] active:scale-[0.98]" style="background: linear-gradient(135deg, #687864, #5085A5); box-shadow: 0 10px 15px -3px rgba(104, 120, 100, 0.3);">
                                 <svg id="checkOutIcon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
                                 </svg>
@@ -557,7 +557,7 @@
             <!-- Jours pointés -->
             <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-5 hover:shadow-md transition-shadow">
                 <div class="flex items-center justify-between">
-                    <div class="bg-gradient-to-br from-green-500 to-emerald-600 p-2.5 rounded-xl shadow-lg shadow-green-500/30">
+                    <div class="p-2.5 rounded-xl shadow-lg" style="background: linear-gradient(135deg, #31708E, #5085A5); box-shadow: 0 10px 15px -3px rgba(49, 112, 142, 0.3);">
                         <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
@@ -570,7 +570,7 @@
             <!-- Heures totales -->
             <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-5 hover:shadow-md transition-shadow">
                 <div class="flex items-center justify-between">
-                    <div class="bg-gradient-to-br from-blue-500 to-indigo-600 p-2.5 rounded-xl shadow-lg shadow-blue-500/30">
+                    <div class="p-2.5 rounded-xl shadow-lg" style="background: linear-gradient(135deg, #5085A5, #8FC1E3); box-shadow: 0 10px 15px -3px rgba(80, 133, 165, 0.3);">
                         <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
@@ -589,39 +589,39 @@
             <!-- Score de ponctualité -->
             <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-5 hover:shadow-md transition-shadow">
                 <div class="flex items-center justify-between">
-                    <div class="bg-gradient-to-br from-purple-500 to-violet-600 p-2.5 rounded-xl shadow-lg shadow-purple-500/30">
+                    <div class="p-2.5 rounded-xl shadow-lg" style="background: linear-gradient(135deg, #687864, #5085A5); box-shadow: 0 10px 15px -3px rgba(104, 120, 100, 0.3);">
                         <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                         </svg>
                     </div>
                 </div>
-                <p class="text-2xl font-bold <?php echo e($monthlyStats['punctuality_score'] >= 80 ? 'text-green-600' : ($monthlyStats['punctuality_score'] >= 60 ? 'text-yellow-600' : 'text-red-600')); ?> mt-3"><?php echo e($monthlyStats['punctuality_score']); ?>%</p>
+                <p class="text-2xl font-bold mt-3" style="color: <?php echo e($monthlyStats['punctuality_score'] >= 80 ? '#31708E' : ($monthlyStats['punctuality_score'] >= 60 ? '#5085A5' : '#687864')); ?>;"><?php echo e($monthlyStats['punctuality_score']); ?>%</p>
                 <p class="text-xs text-gray-500">Ponctualité</p>
             </div>
 
             <!-- Heures supplémentaires -->
             <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-5 hover:shadow-md transition-shadow">
                 <div class="flex items-center justify-between">
-                    <div class="bg-gradient-to-br from-amber-500 to-orange-600 p-2.5 rounded-xl shadow-lg shadow-amber-500/30">
+                    <div class="p-2.5 rounded-xl shadow-lg" style="background: linear-gradient(135deg, #8FC1E3, #5085A5); box-shadow: 0 10px 15px -3px rgba(143, 193, 227, 0.3);">
                         <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
                     </div>
                 </div>
-                <p class="text-2xl font-bold text-amber-600 mt-3"><?php echo e($monthlyStats['overtime_hours']); ?>h</p>
+                <p class="text-2xl font-bold mt-3" style="color: #5085A5;"><?php echo e($monthlyStats['overtime_hours']); ?>h</p>
                 <p class="text-xs text-gray-500">Heures sup.</p>
             </div>
 
             <!-- Retards -->
             <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-5 hover:shadow-md transition-shadow">
                 <div class="flex items-center justify-between">
-                    <div class="bg-gradient-to-br from-red-500 to-rose-600 p-2.5 rounded-xl shadow-lg shadow-red-500/30">
+                    <div class="p-2.5 rounded-xl shadow-lg" style="background: linear-gradient(135deg, #687864, #31708E); box-shadow: 0 10px 15px -3px rgba(104, 120, 100, 0.3);">
                         <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
                     </div>
                 </div>
-                <p class="text-2xl font-bold text-red-600 mt-3"><?php echo e($monthlyStats['total_late']); ?></p>
+                <p class="text-2xl font-bold mt-3" style="color: #687864;"><?php echo e($monthlyStats['total_late']); ?></p>
                 <p class="text-xs text-gray-500">Retards (<?php echo e($monthlyStats['total_late_minutes']); ?> min)</p>
             </div>
 
@@ -650,7 +650,7 @@
                     $mins = $absBalance % 60;
                     $balanceFormatted = $hours > 0 ? "{$hours}h" . ($mins > 0 ? sprintf('%02d', $mins) : '') : "{$mins}m";
                 ?>
-                <p class="text-2xl font-bold mt-3 <?php echo e($balance > 0 ? 'text-red-600' : ($balance < 0 ? 'text-green-600' : 'text-gray-600')); ?>">
+                <p class="text-2xl font-bold mt-3" style="color: <?php echo e($balance > 0 ? '#687864' : ($balance < 0 ? '#31708E' : '#5085A5')); ?>;">
                     <?php echo e($balance > 0 ? '-' : ($balance < 0 ? '+' : '')); ?><?php echo e($balanceFormatted); ?>
 
                 </p>
@@ -708,22 +708,30 @@
                         <?php $__currentLoopData = $calendarData; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $day): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <?php
                                 $statusClasses = [
-                                    'present' => 'bg-green-100 text-green-800 border-green-200 hover:bg-green-200',
-                                    'late' => 'bg-yellow-100 text-yellow-800 border-yellow-200 hover:bg-yellow-200',
-                                    'absent' => 'bg-red-100 text-red-800 border-red-200 hover:bg-red-200',
-                                    'leave' => 'bg-blue-100 text-blue-800 border-blue-200 hover:bg-blue-200',
+                                    'present' => 'border-[#31708E]/30 hover:bg-[#31708E]/15',
+                                    'late' => 'border-[#687864]/30 hover:bg-[#687864]/15',
+                                    'absent' => 'border-[#5085A5]/30 hover:bg-[#5085A5]/15',
+                                    'leave' => 'border-[#8FC1E3]/40 hover:bg-[#8FC1E3]/20',
                                     'weekend' => 'bg-gray-50 text-gray-400',
                                     'future' => 'bg-gray-50 text-gray-400',
-                                    'recovery' => 'bg-violet-100 text-violet-800 border-violet-200 hover:bg-violet-200',
+                                    'recovery' => 'border-[#5085A5]/40 hover:bg-[#5085A5]/20',
+                                ];
+                                $statusBg = [
+                                    'present' => 'background: rgba(49, 112, 142, 0.12); color: #31708E;',
+                                    'late' => 'background: rgba(104, 120, 100, 0.12); color: #687864;',
+                                    'absent' => 'background: rgba(80, 133, 165, 0.15); color: #5085A5;',
+                                    'leave' => 'background: rgba(143, 193, 227, 0.2); color: #5085A5;',
+                                    'recovery' => 'background: rgba(80, 133, 165, 0.2); color: #31708E;',
                                 ];
                                 $class = $statusClasses[$day['status']] ?? 'bg-gray-50 text-gray-400';
+                                $bgStyle = $statusBg[$day['status']] ?? '';
                                 $isToday = $day['date'] === now()->format('Y-m-d');
                                 $title = $day['hours'] ? $day['hours'].'h travaillées' : '';
                                 if ($day['status'] === 'recovery') {
                                     $title = 'Session de rattrapage' . ($day['hours'] ? ' - '.$day['hours'].'h' : '');
                                 }
                             ?>
-                            <div class="aspect-square flex items-center justify-center text-xs font-medium rounded-lg border transition-colors cursor-default <?php echo e($class); ?> <?php echo e($isToday ? 'ring-2 ring-blue-500 ring-offset-1' : ''); ?>" title="<?php echo e($title); ?>">
+                            <div class="aspect-square flex items-center justify-center text-xs font-medium rounded-lg border transition-colors cursor-default <?php echo e($class); ?>" style="<?php echo e($bgStyle); ?> <?php echo e($isToday ? 'ring: 2px solid #31708E; ring-offset: 1px;' : ''); ?>" title="<?php echo e($title); ?>">
                                 <?php echo e($day['day']); ?>
 
                             </div>
@@ -732,11 +740,11 @@
                     
                     <!-- Légende -->
                     <div class="mt-4 flex flex-wrap justify-center gap-3 text-xs">
-                        <div class="flex items-center gap-1"><span class="w-3 h-3 bg-green-100 border border-green-200 rounded"></span> Présent</div>
-                        <div class="flex items-center gap-1"><span class="w-3 h-3 bg-yellow-100 border border-yellow-200 rounded"></span> Retard</div>
-                        <div class="flex items-center gap-1"><span class="w-3 h-3 bg-red-100 border border-red-200 rounded"></span> Absent</div>
-                        <div class="flex items-center gap-1"><span class="w-3 h-3 bg-blue-100 border border-blue-200 rounded"></span> Congé</div>
-                        <div class="flex items-center gap-1"><span class="w-3 h-3 bg-violet-100 border border-violet-200 rounded"></span> Rattrapage</div>
+                        <div class="flex items-center gap-1"><span class="w-3 h-3 rounded" style="background: rgba(49, 112, 142, 0.15); border: 1px solid rgba(49, 112, 142, 0.3);"></span> Présent</div>
+                        <div class="flex items-center gap-1"><span class="w-3 h-3 rounded" style="background: rgba(104, 120, 100, 0.15); border: 1px solid rgba(104, 120, 100, 0.3);"></span> Retard</div>
+                        <div class="flex items-center gap-1"><span class="w-3 h-3 rounded" style="background: rgba(80, 133, 165, 0.15); border: 1px solid rgba(80, 133, 165, 0.3);"></span> Absent</div>
+                        <div class="flex items-center gap-1"><span class="w-3 h-3 rounded" style="background: rgba(143, 193, 227, 0.2); border: 1px solid rgba(143, 193, 227, 0.4);"></span> Congé</div>
+                        <div class="flex items-center gap-1"><span class="w-3 h-3 rounded" style="background: rgba(80, 133, 165, 0.2); border: 1px solid rgba(80, 133, 165, 0.4);"></span> Rattrapage</div>
                         <div class="flex items-center gap-1"><span class="w-3 h-3 bg-gray-50 border border-gray-200 rounded"></span> Non travaillé</div>
                     </div>
                 </div>
@@ -753,10 +761,10 @@
         
         <?php if($hasLateToRecover): ?>
         <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-            <div class="px-6 py-4 border-b border-gray-100 bg-gradient-to-r from-orange-50 to-amber-50">
+            <div class="px-6 py-4 border-b border-gray-100" style="background: linear-gradient(to right, rgba(80, 133, 165, 0.1), rgba(143, 193, 227, 0.1));">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 bg-gradient-to-br from-orange-500 to-amber-600 rounded-xl flex items-center justify-center shadow-lg shadow-orange-500/30">
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg" style="background: linear-gradient(135deg, #5085A5, #8FC1E3); box-shadow: 0 10px 15px -3px rgba(80, 133, 165, 0.3);">
                             <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
@@ -768,7 +776,7 @@
                     </div>
                     <?php if($totalToRecover > 0): ?>
                     <div class="text-right">
-                        <p class="text-2xl font-bold text-orange-600">
+                        <p class="text-2xl font-bold" style="color: #5085A5;">
                             <?php echo e($totalHours > 0 ? $totalHours . 'h' : ''); ?><?php echo e($totalMins > 0 ? sprintf('%02d', $totalMins) : ($totalHours > 0 ? '00' : '0')); ?>
 
                         </p>
@@ -789,7 +797,7 @@
                     <!-- Retards é  rattraper (compact) -->
                     <div>
                         <h4 class="font-medium text-gray-700 text-sm mb-2 flex items-center gap-2">
-                            <span class="w-1.5 h-1.5 bg-orange-500 rounded-full"></span>
+                            <span class="w-1.5 h-1.5 rounded-full" style="background: #5085A5;"></span>
                             En attente (<?php echo e($lateToRecoverCount); ?>)
                         </h4>
                         
@@ -801,7 +809,7 @@
                                     <?php
                                         $isUrgent = ($late['days_remaining'] ?? 999) <= 2;
                                     ?>
-                                    <div class="p-2 rounded-lg border text-sm <?php echo e($isUrgent ? 'border-red-200 bg-red-50' : 'border-gray-100 bg-gray-50'); ?> flex items-center justify-between">
+                                    <div class="p-2 rounded-lg border text-sm flex items-center justify-between" style="<?php echo e($isUrgent ? 'border-color: rgba(104, 120, 100, 0.3); background: rgba(104, 120, 100, 0.08);' : 'border-color: #e5e7eb; background: #f9fafb;'); ?>">
                                         <div>
                                             <span class="font-medium"><?php echo e($late['date']->format('d/m')); ?></span>
                                             <span class="text-gray-400 mx-1">é‚Â·</span>
@@ -856,13 +864,13 @@
                                 <?php
                                     $penaltyProgress = $threshold > 0 ? min(100, ($totalExpired / $threshold) * 100) : 0;
                                 ?>
-                                <div class="mt-2 p-2 rounded-lg bg-red-100">
-                                    <div class="flex justify-between text-xs text-red-700 mb-1">
+                                <div class="mt-2 p-2 rounded-lg" style="background: rgba(104, 120, 100, 0.1);">
+                                    <div class="flex justify-between text-xs mb-1" style="color: #687864;">
                                         <span>Vers absence pénalité</span>
                                         <span class="font-bold"><?php echo e(round($penaltyProgress)); ?>%</span>
                                     </div>
-                                    <div class="w-full bg-red-200 rounded-full h-1.5">
-                                        <div class="bg-red-600 h-1.5 rounded-full" style="width: <?php echo e($penaltyProgress); ?>%"></div>
+                                    <div class="w-full rounded-full h-1.5" style="background: rgba(104, 120, 100, 0.2);">
+                                        <div class="h-1.5 rounded-full" style="width: <?php echo e($penaltyProgress); ?>%; background: #687864;"></div>
                                     </div>
                                 </div>
                             <?php endif; ?>
@@ -899,7 +907,7 @@
                     <label for="mois" class="block text-sm font-medium text-gray-700 mb-1">Afficher l'historique du mois</label>
                     <input type="month" name="mois" id="mois" value="<?php echo e(request('mois', now()->format('Y-m'))); ?>" class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
                 </div>
-                <button type="submit" class="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg shadow-blue-500/25">
+                <button type="submit" class="px-6 py-2.5 text-white rounded-lg transition-all shadow-lg" style="background: linear-gradient(135deg, #31708E, #5085A5); box-shadow: 0 10px 15px -3px rgba(49, 112, 142, 0.25);">
                     Afficher
                 </button>
             </form>
@@ -931,7 +939,7 @@
                                     <div class="text-xs text-gray-500"><?php echo e($presence->date->translatedFormat('l')); ?></div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium <?php echo e($presence->is_late ? 'bg-orange-100 text-orange-800' : 'bg-green-100 text-green-800'); ?>">
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium" style="<?php echo e($presence->is_late ? 'background: rgba(104, 120, 100, 0.15); color: #687864;' : 'background: rgba(49, 112, 142, 0.15); color: #31708E;'); ?>">
                                         <?php echo e($presence->check_in->format('H:i')); ?>
 
                                         <?php if($presence->is_late): ?>
@@ -941,7 +949,7 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <?php if($presence->check_out): ?>
-                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium <?php echo e($presence->is_early_departure ? 'bg-amber-100 text-amber-800' : 'bg-blue-100 text-blue-800'); ?>">
+                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium" style="<?php echo e($presence->is_early_departure ? 'background: rgba(80, 133, 165, 0.15); color: #5085A5;' : 'background: rgba(143, 193, 227, 0.2); color: #31708E;'); ?>">
                                             <?php echo e($presence->check_out->format('H:i')); ?>
 
                                             <?php if($presence->is_early_departure): ?>
@@ -949,7 +957,7 @@
                                             <?php endif; ?>
                                         </span>
                                     <?php else: ?>
-                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 animate-pulse">
+                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium animate-pulse" style="background: rgba(143, 193, 227, 0.2); color: #5085A5;">
                                             En cours...
                                         </span>
                                     <?php endif; ?>
@@ -959,33 +967,33 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <?php if($presence->is_recovery_session): ?>
-                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-violet-100 text-violet-700">
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium" style="background: rgba(80, 133, 165, 0.2); color: #31708E;">
                                             <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/></svg>
                                             Rattrapage
                                         </span>
                                     <?php elseif($presence->is_late || $presence->is_early_departure): ?>
                                         <div class="flex flex-wrap gap-1">
                                             <?php if($presence->is_late): ?>
-                                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-orange-100 text-orange-700">Retard</span>
+                                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium" style="background: rgba(104, 120, 100, 0.15); color: #687864;">Retard</span>
                                             <?php endif; ?>
                                             <?php if($presence->is_early_departure): ?>
-                                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-amber-100 text-amber-700"><?php echo e($presence->departure_type === 'urgence' ? 'é°Å¸Å¡Â Urgence' : 'Anticipé'); ?></span>
+                                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium" style="background: rgba(80, 133, 165, 0.15); color: #5085A5;"><?php echo e($presence->departure_type === 'urgence' ? '⚠️ Urgence' : 'Anticipé'); ?></span>
                                             <?php endif; ?>
                                         </div>
                                     <?php else: ?>
-                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-700"> OK</span>
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium" style="background: rgba(49, 112, 142, 0.15); color: #31708E;"> OK</span>
                                     <?php endif; ?>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <?php if($presence->overtime_minutes > 0 || $presence->recovery_minutes > 0): ?>
                                         <div class="flex flex-col gap-1">
                                             <?php if($presence->overtime_minutes > 0): ?>
-                                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-700">
+                                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium" style="background: rgba(143, 193, 227, 0.2); color: #31708E;">
                                                     +<?php echo e($presence->overtime_minutes); ?>min sup
                                                 </span>
                                             <?php endif; ?>
                                             <?php if($presence->recovery_minutes > 0): ?>
-                                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-emerald-100 text-emerald-700">
+                                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium" style="background: rgba(80, 133, 165, 0.2); color: #5085A5;">
                                                      <?php echo e($presence->recovery_minutes); ?>min rattrapées
                                                 </span>
                                             <?php endif; ?>
@@ -996,9 +1004,9 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <?php if($presence->check_in_status === 'in_zone'): ?>
-                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800"> Zone</span>
+                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium" style="background: rgba(49, 112, 142, 0.15); color: #31708E;"> Zone</span>
                                     <?php elseif($presence->check_in_status === 'out_of_zone'): ?>
-                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">aÅ¡Â  Hors zone</span>
+                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium" style="background: rgba(104, 120, 100, 0.15); color: #687864;">⚠️ Hors zone</span>
                                     <?php else: ?>
                                         <span class="text-xs text-gray-400">-</span>
                                     <?php endif; ?>
@@ -1042,8 +1050,8 @@
                 datasets: [{
                     label: 'Heures travaillées',
                     data: <?php echo json_encode($weeklyData, 15, 512) ?>,
-                    backgroundColor: 'rgba(99, 102, 241, 0.8)',
-                    borderColor: 'rgba(99, 102, 241, 1)',
+                    backgroundColor: 'rgba(49, 112, 142, 0.8)',
+                    borderColor: '#31708E',
                     borderWidth: 1,
                     borderRadius: 8,
                 }]

@@ -575,7 +575,7 @@ php artisan serve
 npm run dev
 
 # Terminal 3 - Queue Worker (notifications temps réel)
-php artisan queue:work
+ 
 
 # Terminal 4 - WebSockets (optionnel, pour messagerie temps réel)
 php artisan reverb:start

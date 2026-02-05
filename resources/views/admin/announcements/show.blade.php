@@ -1,80 +1,77 @@
 <x-layouts.admin>
     <div class="max-w-5xl mx-auto space-y-6">
-        <!-- Breadcrumb -->
-        <nav class="flex animate-fade-in-up" aria-label="Breadcrumb">
-            <ol class="inline-flex items-center space-x-1 md:space-x-3">
-                <li class="inline-flex items-center">
-                    <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600">
-                        <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+        <!-- Header comme sur tasks -->
+        <div class="relative overflow-hidden rounded-2xl shadow-xl animate-fade-in-up" style="background: linear-gradient(135deg, #5680E9, #84CEEB) !important;">
+            <div class="absolute inset-0 bg-black/10"></div>
+            <div class="absolute -top-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+            <div class="absolute -bottom-24 -left-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+            
+            <div class="relative p-6 md:p-8">
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                    <div>
+                        <nav class="flex mb-3" aria-label="Breadcrumb">
+                            <ol class="inline-flex items-center space-x-1">
+                                <li><a href="{{ route('admin.dashboard') }}" class="text-white/70 hover:text-white text-sm">Dashboard</a></li>
+                                <li><span class="text-white/50 mx-2">/</span></li>
+                                <li><a href="{{ route('admin.announcements.index') }}" class="text-white/70 hover:text-white text-sm">Annonces</a></li>
+                                <li><span class="text-white/50 mx-2">/</span></li>
+                                <li><span class="text-white text-sm font-medium">Détails</span></li>
+                            </ol>
+                        </nav>
+                        <h1 class="text-2xl md:text-3xl font-bold text-white flex items-center gap-3">
+                            <div class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
+                                <span class="text-2xl">{{ $announcement->type_icon }}</span>
+                            </div>
+                            {{ $announcement->title }}
+                        </h1>
+                        <p class="text-white/80 mt-2">Créée {{ $announcement->created_at->diffForHumans() }} par {{ $announcement->creator?->name }}</p>
+                    </div>
+                    <a href="{{ route('admin.announcements.edit', $announcement) }}" 
+                       class="px-4 py-2.5 bg-white font-semibold rounded-xl hover:bg-purple-50 transition-all shadow-lg flex items-center" style="color: #5680E9;">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                         </svg>
-                        Dashboard
+                        Modifier
                     </a>
-                </li>
-                <li>
-                    <div class="flex items-center">
-                        <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
-                        </svg>
-                        <a href="{{ route('admin.announcements.index') }}" class="ml-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ml-2">Annonces</a>
-                    </div>
-                </li>
-                <li aria-current="page">
-                    <div class="flex items-center">
-                        <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
-                        </svg>
-                        <span class="ml-1 text-sm font-medium text-gray-500 md:ml-2">Détails</span>
-                    </div>
-                </li>
-            </ol>
-        </nav>
-        <!-- Header -->
-        <div class="flex items-center justify-between animate-fade-in-up animation-delay-100">
-            <div class="flex items-center gap-4">
-                <a href="{{ route('admin.announcements.index') }}" 
-                   class="p-2 rounded-lg hover:bg-gray-100 transition-colors">
-                    <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-                    </svg>
-                </a>
-                <div>
-                    <div class="flex items-center gap-2">
-                        <span class="text-2xl">{{ $announcement->type_icon }}</span>
-                        <h1 class="text-2xl font-bold text-gray-900">{{ $announcement->title }}</h1>
-                    </div>
-                    <p class="text-gray-500">Créée {{ $announcement->created_at->diffForHumans() }} par {{ $announcement->creator?->name }}</p>
                 </div>
-            </div>
-            <div class="flex items-center gap-2">
-                <a href="{{ route('admin.announcements.edit', $announcement) }}" 
-                   class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-                    </svg>
-                    Modifier
-                </a>
             </div>
         </div>
 
         <!-- Badges -->
-        <div class="flex flex-wrap gap-2">
+        <div class="flex flex-wrap gap-2 animate-fade-in-up animation-delay-100">
             @if($announcement->is_pinned)
-                <span class="px-3 py-1 text-sm font-medium bg-amber-100 text-amber-700 rounded-full">📌 Épinglée</span>
+                <span class="inline-flex items-center gap-1 px-3 py-1.5 text-sm font-medium rounded-full" style="background-color: rgba(245, 158, 11, 0.15); color: #D97706;">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M5 5a2 2 0 012-2h6a2 2 0 012 2v2a2 2 0 01-2 2H7a2 2 0 01-2-2V5zM4 9v6a2 2 0 002 2h8a2 2 0 002-2V9a1 1 0 00-1-1H5a1 1 0 00-1 1z"/>
+                    </svg>
+                    Épinglée
+                </span>
             @endif
             @if($announcement->is_active)
-                <span class="px-3 py-1 text-sm font-medium bg-green-100 text-green-700 rounded-full">✅ Active</span>
+                <span class="inline-flex items-center gap-1 px-3 py-1.5 text-sm font-medium rounded-full" style="background-color: rgba(90, 185, 234, 0.15); color: #5680E9;">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                    </svg>
+                    Active
+                </span>
             @else
-                <span class="px-3 py-1 text-sm font-medium bg-gray-100 text-gray-700 rounded-full">❌ Inactive</span>
+                <span class="inline-flex items-center gap-1 px-3 py-1.5 text-sm font-medium rounded-full bg-gray-100 text-gray-600">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                    </svg>
+                    Inactive
+                </span>
             @endif
-            <span class="px-3 py-1 text-sm font-medium bg-{{ $announcement->type_color }}-100 text-{{ $announcement->type_color }}-700 rounded-full">
+            <span class="px-3 py-1.5 text-sm font-medium rounded-full" style="background-color: rgba(86, 128, 233, 0.15); color: #5680E9;">
                 {{ ucfirst($announcement->type) }}
             </span>
-            <span class="px-3 py-1 text-sm font-medium bg-{{ $announcement->priority_color }}-100 text-{{ $announcement->priority_color }}-700 rounded-full">
+            <span class="px-3 py-1.5 text-sm font-medium rounded-full bg-gray-100 text-gray-700">
                 Priorité {{ $announcement->priority }}
             </span>
             @if($announcement->requires_acknowledgment)
-                <span class="px-3 py-1 text-sm font-medium bg-purple-100 text-purple-700 rounded-full">Accusé requis</span>
+                <span class="px-3 py-1.5 text-sm font-medium rounded-full" style="background-color: rgba(136, 96, 208, 0.15); color: #8860D0;">
+                    Accusé requis
+                </span>
             @endif
         </div>
 
@@ -83,26 +80,38 @@
             <div class="lg:col-span-2 space-y-6">
                 <!-- Announcement Content -->
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                    <h2 class="text-lg font-semibold text-gray-900 mb-4">Contenu</h2>
-                    <div class="prose max-w-none">
+                    <h2 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: rgba(86, 128, 233, 0.15);">
+                            <svg class="w-4 h-4" style="color: #5680E9;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                            </svg>
+                        </div>
+                        Contenu
+                    </h2>
+                    <div class="prose max-w-none text-gray-700">
                         {!! nl2br(e($announcement->content)) !!}
                     </div>
                 </div>
 
                 <!-- Read Users -->
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                    <div class="p-4 border-b border-gray-100">
-                        <h2 class="text-lg font-semibold text-gray-900">✅ Ont lu ({{ $stats['read_count'] }})</h2>
+                    <div class="p-4 border-b border-gray-100 flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: rgba(90, 185, 234, 0.15);">
+                            <svg class="w-4 h-4" style="color: #5AB9EA;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                            </svg>
+                        </div>
+                        <h2 class="text-lg font-semibold text-gray-900">Ont lu ({{ $stats['read_count'] }})</h2>
                     </div>
                     <div class="max-h-80 overflow-y-auto">
                         @forelse($readUsers as $read)
-                            <div class="flex items-center justify-between p-4 border-b border-gray-50 last:border-0">
+                            <div class="flex items-center justify-between p-4 border-b border-gray-50 last:border-0 hover:bg-purple-50/50 transition-colors">
                                 <div class="flex items-center gap-3">
-                                    <div class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center overflow-hidden">
+                                    <div class="w-10 h-10 rounded-xl flex items-center justify-center overflow-hidden" style="background: linear-gradient(135deg, #5680E9, #84CEEB);">
                                         @if($read->user?->avatar)
                                             <img src="{{ avatar_url($read->user->avatar) }}" class="w-full h-full object-cover">
                                         @else
-                                            <span class="text-gray-500 font-medium">{{ substr($read->user?->name ?? '?', 0, 1) }}</span>
+                                            <span class="text-white font-medium">{{ substr($read->user?->name ?? '?', 0, 1) }}</span>
                                         @endif
                                     </div>
                                     <div>
@@ -113,12 +122,17 @@
                                 <div class="text-right text-sm">
                                     <p class="text-gray-500">Lu le {{ $read->read_at->format('d/m/Y H:i') }}</p>
                                     @if($read->acknowledged_at)
-                                        <p class="text-green-600">✓ Accusé {{ $read->acknowledged_at->format('d/m/Y H:i') }}</p>
+                                        <p style="color: #5AB9EA;">✓ Accusé {{ $read->acknowledged_at->format('d/m/Y H:i') }}</p>
                                     @endif
                                 </div>
                             </div>
                         @empty
                             <div class="p-8 text-center text-gray-500">
+                                <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                    <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m9 5.197v-1a6 6 0 00-3-5.197"/>
+                                    </svg>
+                                </div>
                                 Personne n'a encore lu cette annonce.
                             </div>
                         @endforelse
@@ -128,14 +142,19 @@
                 <!-- Unread Users -->
                 @if($unreadUsers->count() > 0)
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                    <div class="p-4 border-b border-gray-100 flex items-center justify-between">
-                        <h2 class="text-lg font-semibold text-gray-900">❌ N'ont pas lu ({{ $unreadUsers->count() }})</h2>
+                    <div class="p-4 border-b border-gray-100 flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: rgba(239, 68, 68, 0.15);">
+                            <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                            </svg>
+                        </div>
+                        <h2 class="text-lg font-semibold text-gray-900">N'ont pas lu ({{ $unreadUsers->count() }})</h2>
                     </div>
                     <div class="max-h-60 overflow-y-auto">
                         @foreach($unreadUsers as $user)
-                            <div class="flex items-center p-4 border-b border-gray-50 last:border-0">
+                            <div class="flex items-center p-4 border-b border-gray-50 last:border-0 hover:bg-purple-50/50 transition-colors">
                                 <div class="flex items-center gap-3">
-                                    <div class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center overflow-hidden">
+                                    <div class="w-10 h-10 bg-gray-200 rounded-xl flex items-center justify-center overflow-hidden">
                                         @if($user->avatar)
                                             <img src="{{ avatar_url($user->avatar) }}" class="w-full h-full object-cover">
                                         @else
@@ -158,18 +177,25 @@
             <div class="space-y-6">
                 <!-- Stats Card -->
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                    <h2 class="text-lg font-semibold text-gray-900 mb-4">📊 Statistiques</h2>
+                    <h2 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: rgba(132, 206, 235, 0.15);">
+                            <svg class="w-4 h-4" style="color: #84CEEB;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                            </svg>
+                        </div>
+                        Statistiques
+                    </h2>
                     
                     <div class="space-y-4">
                         <!-- Read Progress -->
                         <div>
                             <div class="flex items-center justify-between mb-2">
                                 <span class="text-sm text-gray-600">Taux de lecture</span>
-                                <span class="text-sm font-semibold text-gray-900">{{ $stats['read_percentage'] }}%</span>
+                                <span class="text-sm font-semibold" style="color: #5680E9;">{{ $stats['read_percentage'] }}%</span>
                             </div>
                             <div class="h-3 bg-gray-200 rounded-full overflow-hidden">
-                                <div class="h-full bg-green-500 rounded-full transition-all" 
-                                     style="width: {{ $stats['read_percentage'] }}%"></div>
+                                <div class="h-full rounded-full transition-all" 
+                                     style="width: {{ $stats['read_percentage'] }}%; background: linear-gradient(90deg, #5680E9, #5AB9EA);"></div>
                             </div>
                             <p class="text-xs text-gray-500 mt-1">{{ $stats['read_count'] }} / {{ $stats['total_target'] }} personnes</p>
                         </div>
@@ -179,26 +205,26 @@
                         <div>
                             <div class="flex items-center justify-between mb-2">
                                 <span class="text-sm text-gray-600">Accusés de réception</span>
-                                <span class="text-sm font-semibold text-gray-900">{{ $stats['acknowledged_percentage'] }}%</span>
+                                <span class="text-sm font-semibold" style="color: #8860D0;">{{ $stats['acknowledged_percentage'] }}%</span>
                             </div>
                             <div class="h-3 bg-gray-200 rounded-full overflow-hidden">
-                                <div class="h-full bg-purple-500 rounded-full transition-all" 
-                                     style="width: {{ $stats['acknowledged_percentage'] }}%"></div>
+                                <div class="h-full rounded-full transition-all" 
+                                     style="width: {{ $stats['acknowledged_percentage'] }}%; background: linear-gradient(90deg, #8860D0, #C1C8E4);"></div>
                             </div>
                             <p class="text-xs text-gray-500 mt-1">{{ $stats['acknowledged_count'] }} / {{ $stats['total_target'] }} personnes</p>
                         </div>
                         @endif
 
-                        <hr>
+                        <hr class="border-gray-100">
 
                         <!-- Quick Stats -->
                         <div class="grid grid-cols-2 gap-4">
-                            <div class="text-center p-3 bg-gray-50 rounded-lg">
-                                <p class="text-2xl font-bold text-gray-900">{{ $stats['read_count'] }}</p>
+                            <div class="text-center p-3 bg-gray-50 rounded-xl">
+                                <p class="text-2xl font-bold" style="color: #5680E9;">{{ $stats['read_count'] }}</p>
                                 <p class="text-xs text-gray-500">Lecteurs</p>
                             </div>
-                            <div class="text-center p-3 bg-gray-50 rounded-lg">
-                                <p class="text-2xl font-bold text-gray-900">{{ $stats['total_target'] - $stats['read_count'] }}</p>
+                            <div class="text-center p-3 bg-gray-50 rounded-xl">
+                                <p class="text-2xl font-bold" style="color: #8860D0;">{{ $stats['total_target'] - $stats['read_count'] }}</p>
                                 <p class="text-xs text-gray-500">Non lus</p>
                             </div>
                         </div>
@@ -207,7 +233,14 @@
 
                 <!-- Info Card -->
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                    <h2 class="text-lg font-semibold text-gray-900 mb-4">ℹ️ Informations</h2>
+                    <h2 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: rgba(86, 128, 233, 0.15);">
+                            <svg class="w-4 h-4" style="color: #5680E9;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                        Informations
+                    </h2>
                     
                     <div class="space-y-3 text-sm">
                         <div class="flex justify-between">
@@ -236,6 +269,14 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Back Button -->
+                <a href="{{ route('admin.announcements.index') }}" class="flex items-center justify-center px-4 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                    </svg>
+                    Retour aux annonces
+                </a>
             </div>
         </div>
     </div>

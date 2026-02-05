@@ -8,7 +8,7 @@
         <!-- Header -->
         <x-table-header title="Modifier l'évaluation" subtitle="{{ $evaluation->week_label }}">
             <x-slot:icon>
-                <div class="w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-600 rounded-xl flex items-center justify-center shadow-lg shadow-amber-500/20">
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg" style="background-color: #3B8BEB; box-shadow: 0 10px 15px -3px rgba(59, 139, 235, 0.2);">
                     <x-icon name="edit-3" class="w-6 h-6 text-white" />
                 </div>
             </x-slot:icon>
@@ -21,9 +21,9 @@
         </x-table-header>
 
         <!-- Draft Warning -->
-        <div class="bg-amber-50 border border-amber-200 rounded-2xl p-4 flex items-center gap-3">
-            <x-icon name="alert-circle" class="w-5 h-5 text-amber-600" />
-            <p class="text-amber-800 text-sm">
+        <div class="rounded-2xl p-4 flex items-center gap-3" style="background-color: rgba(59, 139, 235, 0.1); border: 1px solid rgba(59, 139, 235, 0.2);">
+            <x-icon name="alert-circle" class="w-5 h-5" style="color: #3B8BEB;" />
+            <p class="text-sm" style="color: #3B8BEB;">
                 Cette évaluation est un brouillon. Modifiez-la et soumettez-la pour qu'elle soit visible par le stagiaire.
             </p>
         </div>
@@ -41,7 +41,7 @@
                                 <h3 class="text-lg font-semibold text-gray-900">{{ $criterion['label'] }}</h3>
                                 <p class="text-sm text-gray-500">{{ $criterion['description'] }}</p>
                             </div>
-                            <div class="text-2xl font-bold text-violet-600" x-text="scores.{{ $key }}.toFixed(1) + '/2.5'"></div>
+                            <div class="text-2xl font-bold" style="color: #3B8BEB;" x-text="scores.{{ $key }}.toFixed(1) + '/2.5'"></div>
                         </div>
 
                         <div class="mb-4">
@@ -52,7 +52,7 @@
                                    step="0.5" 
                                    x-model="scores.{{ $key }}"
                                    value="{{ old($key.'_score', $evaluation->{$key.'_score'}) }}"
-                                   class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-violet-600">
+                                   class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer" style="accent-color: #3B8BEB;">
                             <div class="flex justify-between text-xs text-gray-400 mt-1">
                                 <span>0</span>
                                 <span>0.5</span>
@@ -65,14 +65,14 @@
 
                         <textarea name="{{ $key }}_comment" 
                                   rows="3" 
-                                  class="w-full px-4 py-3 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-violet-500 focus:border-violet-500 resize-none"
+                                  class="w-full px-4 py-3 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-[#3B8BEB] focus:border-[#3B8BEB] resize-none"
                                   placeholder="Commentaire...">{{ old($key.'_comment', $evaluation->{$key.'_comment'}) }}</textarea>
                     </div>
                 @endforeach
             </div>
 
             <!-- Total Score Preview -->
-            <div class="bg-gradient-to-r from-violet-500 to-purple-600 rounded-2xl p-6 text-white">
+            <div class="rounded-2xl p-6 text-white" style="background-color: #3B8BEB;">
                 <div class="flex items-center justify-between">
                     <div>
                         <h3 class="text-lg font-medium opacity-90">Note totale</h3>
@@ -97,14 +97,14 @@
                     <label class="block text-sm font-medium text-gray-700 mb-2">Bilan de la semaine</label>
                     <textarea name="general_comment" 
                               rows="4" 
-                              class="w-full px-4 py-3 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-violet-500 focus:border-violet-500 resize-none">{{ old('general_comment', $evaluation->general_comment) }}</textarea>
+                              class="w-full px-4 py-3 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-[#3B8BEB] focus:border-[#3B8BEB] resize-none">{{ old('general_comment', $evaluation->general_comment) }}</textarea>
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Objectifs pour la semaine prochaine</label>
                     <textarea name="objectives_next_week" 
                               rows="3" 
-                              class="w-full px-4 py-3 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-violet-500 focus:border-violet-500 resize-none">{{ old('objectives_next_week', $evaluation->objectives_next_week) }}</textarea>
+                              class="w-full px-4 py-3 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-[#3B8BEB] focus:border-[#3B8BEB] resize-none">{{ old('objectives_next_week', $evaluation->objectives_next_week) }}</textarea>
                 </div>
             </div>
 
@@ -118,7 +118,7 @@
                     <button type="submit" name="action" value="draft" class="px-6 py-2.5 bg-gray-100 text-gray-700 rounded-xl font-medium hover:bg-gray-200 transition-colors">
                         Sauvegarder brouillon
                     </button>
-                    <button type="submit" name="action" value="submit" class="px-6 py-2.5 bg-violet-600 text-white rounded-xl font-medium hover:bg-violet-700 transition-colors">
+                    <button type="submit" name="action" value="submit" class="px-6 py-2.5 text-white rounded-xl font-medium transition-colors" style="background-color: #3B8BEB;">
                         Soumettre l'évaluation
                     </button>
                 </div>

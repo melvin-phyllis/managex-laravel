@@ -37,7 +37,8 @@
                     <x-icon name="arrow-left" class="w-5 h-5 text-gray-600" />
                 </a>
                 <div class="flex items-center gap-4">
-                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-indigo-500/30">
+                    <div class="w-16 h-16 rounded-2xl flex items-center justify-center text-white font-bold text-xl shadow-lg"
+                         style="background: linear-gradient(135deg, #5680E9, #84CEEB) !important; box-shadow: 0 10px 15px -3px rgba(86, 128, 233, 0.3) !important;">
                         {{ strtoupper(substr($user->name, 0, 2)) }}
                     </div>
                     <div>
@@ -100,7 +101,7 @@
             <div class="col-span-2 lg:col-span-1 bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
                 <div class="flex items-center justify-between mb-4">
                     <span class="text-sm font-medium text-gray-500">Taux de présence</span>
-                    <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center">
+                    <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background: linear-gradient(135deg, #5AB9EA, #5680E9);">
                         <x-icon name="check-circle" class="w-4 h-4 text-white" />
                     </div>
                 </div>
@@ -125,43 +126,47 @@
             </div>
 
             {{-- Jours présent --}}
-            <div class="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl p-6 text-white">
+            {{-- Jours présent --}}
+            <div class="rounded-2xl p-6 text-white shadow-lg" style="background: linear-gradient(135deg, #5AB9EA, #5680E9) !important;">
                 <div class="flex items-center justify-between mb-2">
-                    <span class="text-emerald-100 text-sm font-medium">Jours Présent</span>
-                    <x-icon name="check" class="w-5 h-5 text-emerald-200" />
+                    <span class="text-white/80 text-sm font-medium">Jours Présent</span>
+                    <x-icon name="check" class="w-5 h-5 text-white/60" />
                 </div>
                 <p class="text-4xl font-bold">{{ $stats['total_present'] }}</p>
-                <p class="text-emerald-200 text-sm mt-1">sur {{ $stats['work_days'] }} jours ouvrés</p>
+                <p class="text-white/70 text-sm mt-1">sur {{ $stats['work_days'] }} jours ouvrés</p>
             </div>
 
             {{-- Retards --}}
-            <div class="bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl p-6 text-white">
+            {{-- Retards --}}
+            <div class="rounded-2xl p-6 text-white shadow-lg" style="background: linear-gradient(135deg, #84CEEB, #5AB9EA) !important;">
                 <div class="flex items-center justify-between mb-2">
-                    <span class="text-amber-100 text-sm font-medium">Retards</span>
-                    <x-icon name="clock" class="w-5 h-5 text-amber-200" />
+                    <span class="text-white/80 text-sm font-medium">Retards</span>
+                    <x-icon name="clock" class="w-5 h-5 text-white/60" />
                 </div>
                 <p class="text-4xl font-bold">{{ $stats['total_late'] }}</p>
-                <p class="text-amber-200 text-sm mt-1">jours en retard</p>
+                <p class="text-white/70 text-sm mt-1">jours en retard</p>
             </div>
 
             {{-- Absences --}}
-            <div class="bg-gradient-to-br from-rose-500 to-pink-600 rounded-2xl p-6 text-white">
+            {{-- Absences --}}
+            <div class="rounded-2xl p-6 text-white shadow-lg" style="background: linear-gradient(135deg, #8860D0, #5680E9) !important;">
                 <div class="flex items-center justify-between mb-2">
-                    <span class="text-rose-100 text-sm font-medium">Absences</span>
-                    <x-icon name="x-circle" class="w-5 h-5 text-rose-200" />
+                    <span class="text-white/80 text-sm font-medium">Absences</span>
+                    <x-icon name="x-circle" class="w-5 h-5 text-white/60" />
                 </div>
                 <p class="text-4xl font-bold">{{ $stats['total_absent'] }}</p>
-                <p class="text-rose-200 text-sm mt-1">jours d'absence</p>
+                <p class="text-white/70 text-sm mt-1">jours d'absence</p>
             </div>
 
             {{-- Heures de travail --}}
-            <div class="bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl p-6 text-white">
+            {{-- Heures de travail --}}
+            <div class="rounded-2xl p-6 text-white shadow-lg" style="background: linear-gradient(135deg, #5680E9, #84CEEB) !important;">
                 <div class="flex items-center justify-between mb-2">
-                    <span class="text-blue-100 text-sm font-medium">Heures travaillées</span>
-                    <x-icon name="briefcase" class="w-5 h-5 text-blue-200" />
+                    <span class="text-white/80 text-sm font-medium">Heures travaillées</span>
+                    <x-icon name="briefcase" class="w-5 h-5 text-white/60" />
                 </div>
                 <p class="text-4xl font-bold">{{ floor($stats['total_work_minutes'] / 60) }}h</p>
-                <p class="text-blue-200 text-sm mt-1">{{ $stats['total_work_minutes'] % 60 }} min</p>
+                <p class="text-white/70 text-sm mt-1">{{ $stats['total_work_minutes'] % 60 }} min</p>
             </div>
         </div>
 
@@ -170,8 +175,8 @@
             {{-- Cumul des retards --}}
             <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
                 <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                    <div class="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center">
-                        <x-icon name="clock" class="w-4 h-4 text-amber-600" />
+                    <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: rgba(132, 206, 235, 0.2);">
+                        <x-icon name="clock" class="w-4 h-4 text-[#5680E9]" />
                     </div>
                     Cumul des retards
                 </h3>
@@ -200,8 +205,8 @@
             {{-- Heures supplémentaires --}}
             <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
                 <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                    <div class="w-8 h-8 rounded-lg bg-green-100 flex items-center justify-center">
-                        <x-icon name="trending-up" class="w-4 h-4 text-green-600" />
+                    <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: rgba(90, 185, 234, 0.2);">
+                        <x-icon name="trending-up" class="w-4 h-4 text-[#5680E9]" />
                     </div>
                     Heures supplémentaires
                 </h3>
@@ -221,8 +226,8 @@
             {{-- Résumé --}}
             <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
                 <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                    <div class="w-8 h-8 rounded-lg bg-indigo-100 flex items-center justify-center">
-                        <x-icon name="bar-chart-2" class="w-4 h-4 text-indigo-600" />
+                    <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: rgba(86, 128, 233, 0.2);">
+                        <x-icon name="bar-chart-2" class="w-4 h-4 text-[#5680E9]" />
                     </div>
                     Bilan
                 </h3>
@@ -308,11 +313,11 @@
                             <td class="py-3 px-6 text-center font-medium">{{ $presence['work_hours'] }}h</td>
                             <td class="py-3 px-6 text-center">
                                 @if($presence['is_late'])
-                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-700">
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold text-[#5680E9]" style="background-color: #84CEEB30;">
                                         ⏱ +{{ $presence['late_minutes'] }}min
                                     </span>
                                 @else
-                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700">
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold text-[#5680E9]" style="background-color: #5AB9EA20;">
                                         ✓ À l'heure
                                     </span>
                                 @endif

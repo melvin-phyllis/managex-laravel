@@ -2,7 +2,7 @@
     <div class="space-y-6" x-data="analyticsPage()">
 
         {{-- Header amé©lioré© --}}
-        <div class="relative overflow-hidden bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 rounded-2xl shadow-xl">
+        <div class="relative overflow-hidden bg-gradient-to-r from-[#5680E9] to-[#84CEEB] rounded-2xl shadow-lg">
             <div class="absolute inset-0 bg-black/10"></div>
             <div class="absolute -top-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
             <div class="absolute -bottom-24 -left-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
@@ -182,74 +182,56 @@
         </div>
 
         {{-- KPI Cards - Ligne 2 (Secondaires) --}}
-        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 animate-fade-in-up animation-delay-250">
-            {{-- En congé© --}}
-            <div class="bg-gradient-to-br from-violet-500 to-purple-600 rounded-xl p-4 text-white shadow-lg shadow-violet-500/20">
+        {{-- KPI Cards - Ligne 2 (Secondaires) --}}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 animate-fade-in-up animation-delay-250">
+            {{-- Taches complétées (1) --}}
+            <div class="bg-[#84CEEB] rounded-xl p-4 text-white shadow-lg shadow-[#84CEEB]/20">
+                <div class="flex items-center justify-between">
+                    <x-icon name="check-square" class="w-5 h-5 opacity-80"/>
+                    <span class="text-2xl font-bold" x-text="kpis.tasks?.completed || '0'"></span>
+                </div>
+                <p class="text-xs text-white/80 mt-2">Taches complétées</p>
+                <p class="text-[9px] text-white/60"><span x-text="kpis.tasks?.pending || 0"></span> en attente</p>
+            </div>
+
+            {{-- En congé (2) --}}
+            <div class="bg-[#8860D0] rounded-xl p-4 text-white shadow-lg shadow-[#8860D0]/20">
                 <div class="flex items-center justify-between">
                     <x-icon name="coffee" class="w-5 h-5 opacity-80"/>
                     <span class="text-2xl font-bold" x-text="kpis.en_conge?.value || '0'"></span>
                 </div>
-                <p class="text-xs text-white/80 mt-2">En congé©</p>
+                <p class="text-xs text-white/80 mt-2">En congé</p>
                 <div class="flex gap-1 mt-1">
                     <span class="text-[9px] bg-white/20 px-1 rounded" x-show="kpis.en_conge?.types?.conge > 0" x-text="'CP:' + kpis.en_conge?.types?.conge"></span>
                     <span class="text-[9px] bg-white/20 px-1 rounded" x-show="kpis.en_conge?.types?.maladie > 0" x-text="'Mal:' + kpis.en_conge?.types?.maladie"></span>
                 </div>
             </div>
 
-            {{-- Absents --}}
-            <div class="bg-gradient-to-br from-rose-500 to-pink-600 rounded-xl p-4 text-white shadow-lg shadow-rose-500/20">
-                <div class="flex items-center justify-between">
-                    <x-icon name="alert-circle" class="w-5 h-5 opacity-80"/>
-                    <span class="text-2xl font-bold" x-text="kpis.absents_non_justifies?.value || '0'"></span>
-                </div>
-                <p class="text-xs text-white/80 mt-2">Absents injustifié©s</p>
-            </div>
-
-            {{-- Heures sup --}}
-            <div class="bg-gradient-to-br from-cyan-500 to-blue-600 rounded-xl p-4 text-white shadow-lg shadow-cyan-500/20">
-                <div class="flex items-center justify-between">
-                    <x-icon name="clock" class="w-5 h-5 opacity-80"/>
-                    <span class="text-2xl font-bold" x-text="kpis.heures_supplementaires?.value || '0'"></span>
-                </div>
-                <p class="text-xs text-white/80 mt-2">Heures sup.</p>
-                <p class="text-[9px] text-white/60"><span x-text="kpis.heures_supplementaires?.count || 0"></span> employé©s</p>
-            </div>
-
-            {{-- Taches complé©té©es --}}
-            <div class="bg-gradient-to-br from-emerald-500 to-green-600 rounded-xl p-4 text-white shadow-lg shadow-emerald-500/20">
-                <div class="flex items-center justify-between">
-                    <x-icon name="check-square" class="w-5 h-5 opacity-80"/>
-                    <span class="text-2xl font-bold" x-text="kpis.tasks?.completed || '0'"></span>
-                </div>
-                <p class="text-xs text-white/80 mt-2">Taches complé©té©es</p>
-                <p class="text-[9px] text-white/60"><span x-text="kpis.tasks?.pending || 0"></span> en attente</p>
-            </div>
-
-            {{-- Stagiaires --}}
-            <div class="bg-gradient-to-br from-indigo-500 to-blue-600 rounded-xl p-4 text-white shadow-lg shadow-indigo-500/20">
+            {{-- Stagiaires (3) --}}
+            <div class="bg-[#C1C8E4] rounded-xl p-4 text-slate-700 shadow-lg shadow-[#C1C8E4]/20">
                 <div class="flex items-center justify-between">
                     <x-icon name="user-plus" class="w-5 h-5 opacity-80"/>
                     <span class="text-2xl font-bold" x-text="kpis.interns?.count || '0'"></span>
                 </div>
-                <p class="text-xs text-white/80 mt-2">Stagiaires actifs</p>
-                <p class="text-[9px] text-white/60"><span x-text="kpis.interns?.to_evaluate || 0"></span> é  é©valuer</p>
+                <p class="text-xs text-slate-600 mt-2">Stagiaires actifs</p>
+                <p class="text-[9px] text-slate-500"><span x-text="kpis.interns?.to_evaluate || 0"></span> à évaluer</p>
             </div>
 
-            {{-- Retards é  rattraper --}}
-            <div class="bg-[#3506a2] rounded-xl p-4 text-orange-500 shadow-lg shadow-orange-500/20">
+            {{-- Retards à rattraper (4) --}}
+            <div class="bg-slate-600 rounded-xl p-4 text-white shadow-lg shadow-slate-500/20">
                 <div class="flex items-center justify-between text-white">
                     <x-icon name="alert-triangle" class="w-5 h-5 opacity-80"/>
                     <span class="text-2xl font-bold" x-text="kpis.late_hours?.total || '0'"></span>
                 </div>
                 <p class="text-xs text-white/80 mt-2">Heures de retard</p>
-                <p class="text-[9px] text-white/60"><span x-text="kpis.late_hours?.employees || 0"></span> employé©s concerné©s</p>
+                <p class="text-[9px] text-white/60"><span x-text="kpis.late_hours?.employees || 0"></span> employés concernés</p>
             </div>
         </div>
 
         {{-- Ré©sumé© é‰valuations --}}
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-fade-in-up animation-delay-300">
             {{-- Stats é‰valuations Employé©s --}}
-            <div class="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl shadow-lg p-6 text-white">
+            <div class="bg-gradient-to-br from-[#5680E9] to-[#5AB9EA] rounded-xl shadow-lg p-6 text-white">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="font-semibold flex items-center gap-2">
                         <x-icon name="clipboard-list" class="w-5 h-5"/>
@@ -280,7 +262,7 @@
             </div>
 
             {{-- Stats é‰valuations Stagiaires --}}
-            <div class="bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl shadow-lg p-6 text-white">
+            <div class="bg-gradient-to-br from-[#84CEEB] to-[#8860D0] rounded-xl shadow-lg p-6 text-white">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="font-semibold flex items-center gap-2">
                         <x-icon name="user-check" class="w-5 h-5"/>
@@ -307,122 +289,7 @@
             </div>
         </div>
 
-        {{-- Section é‰valuations & Classements --}}
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-fade-in-up animation-delay-350">
-            {{-- Meilleurs Employé©s (é‰valuations) --}}
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                <div class="p-4 border-b border-gray-100 bg-gradient-to-r from-emerald-50 to-white flex items-center gap-2">
-                    <div class="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center">
-                        <x-icon name="award" class="w-4 h-4 text-emerald-600"/>
-                    </div>
-                    <h3 class="font-semibold text-gray-900"> Top Employé©s (Notes)</h3>
-                </div>
-                <div class="divide-y divide-gray-100 max-h-80 overflow-y-auto">
-                    <template x-for="emp in tables.topPerformers.employees" :key="emp.rank">
-                        <div class="p-3 hover:bg-gray-50 flex items-center gap-3">
-                            <div class="flex-shrink-0">
-                                <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold"
-                                     :class="emp.rank === 1 ? 'bg-yellow-400 text-yellow-900' : emp.rank === 2 ? 'bg-gray-300 text-gray-700' : emp.rank === 3 ? 'bg-amber-600 text-white' : 'bg-gray-100 text-gray-600'"
-                                     x-text="emp.rank"></div>
-                            </div>
-                            <template x-if="emp.avatar">
-                                <img :src="emp.avatar" class="w-10 h-10 rounded-full object-cover">
-                            </template>
-                            <template x-if="!emp.avatar">
-                                <div class="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 font-bold" x-text="emp.name.charAt(0)"></div>
-                            </template>
-                            <div class="flex-1 min-w-0">
-                                <p class="text-sm font-medium text-gray-900 truncate" x-text="emp.name"></p>
-                                <p class="text-xs text-gray-500" x-text="emp.department"></p>
-                            </div>
-                            <div class="text-right">
-                                <p class="text-sm font-bold text-emerald-600" x-text="emp.score + '/' + emp.max_score"></p>
-                                <p class="text-xs text-gray-400" x-text="emp.percentage + '%'"></p>
-                            </div>
-                        </div>
-                    </template>
-                    <div x-show="!tables.topPerformers.employees?.length" class="p-8 text-center text-gray-500">
-                        Aucune é©valuation ce mois
-                    </div>
-                </div>
-            </div>
 
-            {{-- Meilleurs Stagiaires (é‰valuations) --}}
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                <div class="p-4 border-b border-gray-100 bg-gradient-to-r from-purple-50 to-white flex items-center gap-2">
-                    <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
-                        <x-icon name="star" class="w-4 h-4 text-purple-600"/>
-                    </div>
-                    <h3 class="font-semibold text-gray-900"> Top Stagiaires (Notes)</h3>
-                </div>
-                <div class="divide-y divide-gray-100 max-h-80 overflow-y-auto">
-                    <template x-for="intern in tables.topPerformers.interns" :key="intern.rank">
-                        <div class="p-3 hover:bg-gray-50 flex items-center gap-3">
-                            <div class="flex-shrink-0">
-                                <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold"
-                                     :class="intern.rank === 1 ? 'bg-yellow-400 text-yellow-900' : intern.rank === 2 ? 'bg-gray-300 text-gray-700' : intern.rank === 3 ? 'bg-amber-600 text-white' : 'bg-gray-100 text-gray-600'"
-                                     x-text="intern.rank"></div>
-                            </div>
-                            <template x-if="intern.avatar">
-                                <img :src="intern.avatar" class="w-10 h-10 rounded-full object-cover">
-                            </template>
-                            <template x-if="!intern.avatar">
-                                <div class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 font-bold" x-text="intern.name.charAt(0)"></div>
-                            </template>
-                            <div class="flex-1 min-w-0">
-                                <p class="text-sm font-medium text-gray-900 truncate" x-text="intern.name"></p>
-                                <p class="text-xs text-gray-500" x-text="intern.department"></p>
-                            </div>
-                            <div class="text-right">
-                                <p class="text-sm font-bold text-purple-600" x-text="intern.score + '/' + intern.max_score"></p>
-                                <p class="text-xs text-gray-400" x-text="intern.percentage + '%'"></p>
-                            </div>
-                        </div>
-                    </template>
-                    <div x-show="!tables.topPerformers.interns?.length" class="p-8 text-center text-gray-500">
-                        Aucune é©valuation stagiaire
-                    </div>
-                </div>
-            </div>
-
-            {{-- Meilleure Assiduité© --}}
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                <div class="p-4 border-b border-gray-100 bg-gradient-to-r from-blue-50 to-white flex items-center gap-2">
-                    <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                        <x-icon name="check-circle" class="w-4 h-4 text-blue-600"/>
-                    </div>
-                    <h3 class="font-semibold text-gray-900">ðŸ‘ Meilleure Assiduité©</h3>
-                </div>
-                <div class="divide-y divide-gray-100 max-h-80 overflow-y-auto">
-                    <template x-for="att in tables.bestAttendance" :key="att.rank">
-                        <div class="p-3 hover:bg-gray-50 flex items-center gap-3">
-                            <div class="flex-shrink-0">
-                                <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold"
-                                     :class="att.rank === 1 ? 'bg-yellow-400 text-yellow-900' : att.rank === 2 ? 'bg-gray-300 text-gray-700' : att.rank === 3 ? 'bg-amber-600 text-white' : 'bg-gray-100 text-gray-600'"
-                                     x-text="att.rank"></div>
-                            </div>
-                            <template x-if="att.avatar">
-                                <img :src="att.avatar" class="w-10 h-10 rounded-full object-cover">
-                            </template>
-                            <template x-if="!att.avatar">
-                                <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold" x-text="att.name.charAt(0)"></div>
-                            </template>
-                            <div class="flex-1 min-w-0">
-                                <p class="text-sm font-medium text-gray-900 truncate" x-text="att.name"></p>
-                                <p class="text-xs text-gray-500" x-text="att.department"></p>
-                            </div>
-                            <div class="text-right">
-                                <p class="text-sm font-bold text-blue-600" x-text="att.punctuality_rate + '%'"></p>
-                                <p class="text-xs text-gray-400" x-text="att.presence_count + ' jours'"></p>
-                            </div>
-                        </div>
-                    </template>
-                    <div x-show="!tables.bestAttendance?.length" class="p-8 text-center text-gray-500">
-                        Aucune donné©e de pré©sence
-                    </div>
-                </div>
-            </div>
-        </div>
 
         {{-- Graphiques Row 1 --}}
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-fade-in-up animation-delay-400">
@@ -619,154 +486,9 @@
                     </div>
                 </div>
             </div>
-        </div>
 
-        {{-- Tableaux Grid --}}
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-fade-in-up animation-delay-650">
-            {{-- Activité© ré©cente --}}
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                <div class="p-4 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white flex justify-between items-center">
-                    <h3 class="font-semibold text-gray-900 flex items-center gap-2">
-                        <div class="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center">
-                            <x-icon name="activity" class="w-4 h-4 text-indigo-600"/>
-                        </div>
-                        Activité© Ré©cente
-                    </h3>
-                </div>
-                <div class="divide-y divide-gray-100 max-h-80 overflow-y-auto">
-                    <template x-for="(activity, index) in tables.activities" :key="index">
-                        <div class="p-4 hover:bg-gray-50 transition-colors flex gap-3">
-                            <div class="flex-shrink-0">
-                                <template x-if="activity.avatar">
-                                    <img :src="activity.avatar" class="w-8 h-8 rounded-full object-cover">
-                                </template>
-                                <template x-if="!activity.avatar">
-                                    <div class="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 text-xs font-bold" x-text="activity.user.charAt(0)"></div>
-                                </template>
-                            </div>
-                            <div>
-                                <p class="text-sm text-gray-900">
-                                    <span class="font-medium" x-text="activity.user"></span>
-                                    <span class="text-gray-600" x-text="activity.description"></span>
-                                </p>
-                                <p class="text-xs text-gray-400 mt-1" x-text="activity.time"></p>
-                            </div>
-                        </div>
-                    </template>
-                    <div x-show="tables.activities.length === 0" class="p-8 text-center text-gray-500">Aucune activité© ré©cente</div>
-                </div>
-            </div>
+    </div>\n
 
-            {{-- Demandes en attente --}}
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                <div class="p-4 border-b border-gray-100 bg-gradient-to-r from-amber-50 to-white flex justify-between items-center">
-                    <h3 class="font-semibold text-gray-900 flex items-center gap-2">
-                        <div class="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center">
-                            <x-icon name="clock" class="w-4 h-4 text-amber-600"/>
-                        </div>
-                        Demandes en attente
-                    </h3>
-                    <span class="bg-amber-500 text-white text-xs font-bold px-2.5 py-1 rounded-full animate-pulse" x-show="tables.pending.length > 0" x-text="tables.pending.length"></span>
-                </div>
-                <div class="divide-y divide-gray-100 max-h-80 overflow-y-auto">
-                    <template x-for="item in tables.pending" :key="item.id">
-                        <div class="p-4 hover:bg-gray-50 flex justify-between items-center">
-                            <div>
-                                <p class="text-sm font-medium text-gray-900" x-text="item.user"></p>
-                                <p class="text-sm text-gray-500" x-text="item.details"></p>
-                                <p class="text-xs text-gray-400" x-text="item.date"></p>
-                            </div>
-                            <a :href="'/admin/leaves/' + item.id" class="text-blue-600 hover:bg-blue-50 p-2 rounded-lg text-sm">Voir</a>
-                        </div>
-                    </template>
-                    <div x-show="tables.pending.length === 0" class="p-8 text-center text-gray-500">Aucune demande en attente</div>
-                </div>
-            </div>
-
-            {{-- Alertes RH --}}
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                <div class="p-4 border-b border-gray-100 bg-gradient-to-r from-red-50 to-white flex items-center gap-2">
-                    <div class="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center">
-                        <x-icon name="alert-triangle" class="w-4 h-4 text-red-600"/>
-                    </div>
-                    <h3 class="font-semibold text-gray-900">Alertes RH</h3>
-                </div>
-                <div class="p-4 space-y-4">
-                    {{-- Contracts --}}
-                    <div>
-                        <h4 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Contrats expirant bienté´t</h4>
-                        <div class="space-y-2">
-                            <template x-for="contract in tables.alerts.contracts" :key="contract.name">
-                                <div class="flex justify-between items-center text-sm p-2 bg-red-50 rounded-lg text-red-700 border border-red-100">
-                                    <span>
-                                        <span class="font-medium" x-text="contract.name"></span>
-                                        <span class="opacity-75" x-text="' (' + contract.department + ')'"></span>
-                                    </span>
-                                    <span class="font-bold whitespace-nowrap" x-text="'J-' + contract.days"></span>
-                                </div>
-                            </template>
-                            <div x-show="!tables.alerts.contracts?.length" class="text-sm text-gray-400 italic">Aucune alerte contrat</div>
-                        </div>
-                    </div>
-
-                    {{-- Birthdays --}}
-                    <div>
-                        <h4 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Anniversaires é  venir</h4>
-                        <div class="space-y-2">
-                            <template x-for="bd in tables.alerts.birthdays" :key="bd.name">
-                                <div class="flex justify-between items-center text-sm p-2 bg-blue-50 rounded-lg text-blue-700 border border-blue-100">
-                                    <span class="font-medium" x-text="bd.name"></span>
-                                    <span>
-                                        <span x-text="bd.date"></span>
-                                        <span class="ml-1 opacity-75" x-text="'(' + bd.age + ' ans)'"></span>
-                                    </span>
-                                </div>
-                            </template>
-                            <div x-show="!tables.alerts.birthdays?.length" class="text-sm text-gray-400 italic">Aucun anniversaire proche</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {{-- Top Retardataires --}}
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                <div class="p-4 border-b border-gray-100 bg-gradient-to-r from-orange-50 to-white flex items-center gap-2">
-                    <div class="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center">
-                        <x-icon name="clock" class="w-4 h-4 text-orange-600"/>
-                    </div>
-                    <h3 class="font-semibold text-gray-900">Top Retards (Ce mois)</h3>
-                </div>
-                <table class="w-full text-sm">
-                    <thead class="bg-gray-50 text-gray-500">
-                        <tr>
-                            <th class="text-left py-2 px-4 font-medium">Employé©</th>
-                            <th class="text-center py-2 px-4 font-medium">Retards</th>
-                            <th class="text-right py-2 px-4 font-medium">Moyenne</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-100">
-                        <template x-for="user in tables.latecomers" :key="user.user_id">
-                            <tr>
-                                <td class="py-3 px-4">
-                                    <div class="flex items-center gap-2">
-                                        <div class="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 text-xs font-bold" x-text="user.rank"></div>
-                                        <div>
-                                            <div class="font-medium text-gray-900" x-text="user.name"></div>
-                                            <div class="text-xs text-gray-500" x-text="user.department"></div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="py-3 px-4 text-center font-bold text-gray-700" x-text="user.count"></td>
-                                <td class="py-3 px-4 text-right text-red-600" x-text="user.avg_minutes + ' min'"></td>
-                            </tr>
-                        </template>
-                        <tr x-show="!tables.latecomers?.length">
-                            <td colspan="3" class="py-8 text-center text-gray-500">Aucun retard signalé© ce mois-ci </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
 
     </div>
 

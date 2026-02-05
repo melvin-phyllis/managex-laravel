@@ -35,7 +35,7 @@
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
                 <h1 class="text-2xl font-bold text-gray-900 flex items-center gap-3">
-                    <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20">
+                    <div class="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg" style="background: linear-gradient(135deg, #5680E9, #84CEEB) !important; box-shadow: 0 10px 15px -3px rgba(86, 128, 233, 0.3) !important;">
                         <?php if (isset($component)) { $__componentOriginalce262628e3a8d44dc38fd1f3965181bc = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginalce262628e3a8d44dc38fd1f3965181bc = $attributes; } ?>
 <?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.icon','data' => ['name' => 'users','class' => 'w-5 h-5 text-white']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
@@ -232,20 +232,20 @@
 
         
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            <div class="bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl p-4 text-white">
-                <p class="text-blue-100 text-xs font-medium uppercase">Total</p>
+            <div class="rounded-xl p-4 text-white shadow-lg" style="background: linear-gradient(135deg, #5680E9, #84CEEB) !important;">
+                <p class="text-white/80 text-xs font-medium uppercase">Total</p>
                 <p class="text-3xl font-bold mt-1" x-text="data.stats?.total || 0"></p>
             </div>
-            <div class="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl p-4 text-white">
-                <p class="text-emerald-100 text-xs font-medium uppercase" x-text="mode === 'today' ? 'Présents' : 'Performants'"></p>
+            <div class="rounded-xl p-4 text-white shadow-lg" style="background: linear-gradient(135deg, #5AB9EA, #5680E9) !important;">
+                <p class="text-white/80 text-xs font-medium uppercase" x-text="mode === 'today' ? 'Présents' : 'Performants'"></p>
                 <p class="text-3xl font-bold mt-1" x-text="data.stats?.present || 0"></p>
             </div>
-            <div class="bg-gradient-to-br from-amber-500 to-orange-600 rounded-xl p-4 text-white">
-                <p class="text-amber-100 text-xs font-medium uppercase" x-text="mode === 'today' ? 'En retard' : 'é€ surveiller'"></p>
+            <div class="rounded-xl p-4 text-white shadow-lg" style="background: linear-gradient(135deg, #84CEEB, #5AB9EA) !important;">
+                <p class="text-white/80 text-xs font-medium uppercase" x-text="mode === 'today' ? 'En retard' : 'é€ surveiller'"></p>
                 <p class="text-3xl font-bold mt-1" x-text="data.stats?.late || 0"></p>
             </div>
-            <div class="bg-gradient-to-br from-rose-500 to-pink-600 rounded-xl p-4 text-white">
-                <p class="text-rose-100 text-xs font-medium uppercase" x-text="mode === 'today' ? 'Absents' : 'é€ risque'"></p>
+            <div class="rounded-xl p-4 text-white shadow-lg" style="background: linear-gradient(135deg, #8860D0, #5680E9) !important;">
+                <p class="text-white/80 text-xs font-medium uppercase" x-text="mode === 'today' ? 'Absents' : 'é€ risque'"></p>
                 <p class="text-3xl font-bold mt-1" x-text="data.stats?.absent || 0"></p>
             </div>
         </div>
@@ -285,7 +285,8 @@
                                 
                                 <td class="py-4 px-5">
                                     <div class="flex items-center gap-3">
-                                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-sm"
+                                        <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm"
+                                            style="background: linear-gradient(135deg, #5680E9, #84CEEB) !important;"
                                             x-text="emp.name.substring(0,2).toUpperCase()"></div>
                                         <div>
                                             <p class="font-medium text-gray-900" x-text="emp.name"></p>
@@ -312,13 +313,13 @@
                                 
                                 
                                 <td x-show="mode === 'today'" class="py-4 px-5 text-center">
-                                    <span x-show="emp.status === 'present'" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700">
+                                    <span x-show="emp.status === 'present'" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold text-[#5680E9]" style="background-color: #5AB9EA20;">
                                         âœ“ Présent
                                     </span>
-                                    <span x-show="emp.status === 'late'" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-700">
+                                    <span x-show="emp.status === 'late'" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold text-[#5680E9]" style="background-color: #84CEEB30;">
                                         â± En retard
                                     </span>
-                                    <span x-show="emp.status === 'absent'" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-red-100 text-red-700">
+                                    <span x-show="emp.status === 'absent'" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold text-[#8860D0]" style="background-color: #8860D020;">
                                         âœ• Absent
                                     </span>
                                 </td>
@@ -365,13 +366,13 @@
                                 
                                 
                                 <td x-show="mode === 'historical'" class="py-4 px-5 text-center">
-                                    <span x-show="emp.risk_level === 'low'" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700">
+                                    <span x-show="emp.risk_level === 'low'" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold text-[#5680E9]" style="background-color: #5AB9EA20;">
                                         âœ“ OK
                                     </span>
-                                    <span x-show="emp.risk_level === 'medium'" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-700">
+                                    <span x-show="emp.risk_level === 'medium'" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold text-[#5680E9]" style="background-color: #84CEEB30;">
                                         âš  Surveiller
                                     </span>
-                                    <span x-show="emp.risk_level === 'high'" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-red-100 text-red-700">
+                                    <span x-show="emp.risk_level === 'high'" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold text-[#8860D0]" style="background-color: #8860D020;">
                                         âš  Risque
                                     </span>
                                 </td>

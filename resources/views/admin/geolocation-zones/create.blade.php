@@ -1,7 +1,7 @@
 ﻿<x-layouts.admin>
     <x-slot name="header">
         <!-- Header moderne avec gradient -->
-        <div class="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 -mx-4 sm:-mx-6 lg:-mx-8 -mt-4 px-4 sm:px-6 lg:px-8 py-6 mb-4">
+        <div class="-mx-4 sm:-mx-6 lg:-mx-8 -mt-4 px-4 sm:px-6 lg:px-8 py-6 mb-4" style="background: linear-gradient(135deg, #5680E9, #84CEEB);">
             <div class="max-w-7xl mx-auto">
                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div class="flex items-center gap-4">
@@ -35,16 +35,16 @@
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
         <!-- Info box -->
-        <div class="mb-6 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-4">
+        <div class="mb-6 border rounded-xl p-4" style="background: linear-gradient(90deg, #5680E920, #84CEEB10); border-color: #5680E940;">
             <div class="flex items-start gap-3">
-                <div class="p-2 bg-blue-100 rounded-lg flex-shrink-0">
-                    <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="p-2 rounded-lg flex-shrink-0" style="background-color: #5680E920;">
+                    <svg class="w-5 h-5" style="color: #5680E9;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
                 </div>
                 <div>
-                    <h3 class="font-semibold text-blue-900">Comment créer une zone ?</h3>
-                    <p class="text-sm text-blue-700 mt-1">
+                    <h3 class="font-semibold" style="color: #5680E9;">Comment créer une zone ?</h3>
+                    <p class="text-sm mt-1" style="color: #5680E9CC;">
                         Recherchez une adresse, utilisez votre position GPS, ou cliquez directement sur la carte pour définir le centre de la zone. 
                         Ajustez ensuite le rayon pour délimiter la zone de pointage autorisée.
                     </p>
@@ -65,7 +65,7 @@
                     <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
                         <div class="bg-gradient-to-r from-gray-50 to-white px-5 py-4 border-b border-gray-100">
                             <h3 class="font-semibold text-gray-800 flex items-center gap-2">
-                                <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="w-5 h-5" style="color: #5680E9;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                 </svg>
                                 Informations de la zone
@@ -79,7 +79,7 @@
                                     Nom de la zone <span class="text-red-500">*</span>
                                 </label>
                                 <input type="text" name="name" id="name" value="{{ old('name') }}" required
-                                       class="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 transition-colors"
+                                       class="w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 transition-colors"
                                        placeholder="Ex: Siége social, Agence Paris...">
                                 @error('name')
                                     <p class="mt-1.5 text-sm text-red-600 flex items-center gap-1">
@@ -93,7 +93,7 @@
                             <div>
                                 <label for="description" class="block text-sm font-medium text-gray-700 mb-1.5">Description</label>
                                 <textarea name="description" id="description" rows="2"
-                                          class="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 transition-colors"
+                                          class="w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 transition-colors"
                                           placeholder="Description optionnelle de cette zone...">{{ old('description') }}</textarea>
                             </div>
 
@@ -107,10 +107,10 @@
                                 </label>
                                 <div class="flex gap-2">
                                     <input type="text" id="addressSearch"
-                                           class="flex-1 rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 transition-colors"
+                                           class="flex-1 rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 transition-colors"
                                            placeholder="Ex: 15 Rue de la Paix, Paris">
                                     <button type="button" id="searchBtn"
-                                            class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2 flex-shrink-0">
+                                            class="px-4 py-2 text-white rounded-lg transition-colors flex items-center gap-2 flex-shrink-0" style="background: linear-gradient(135deg, #5680E9, #5AB9EA);">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                                         </svg>
@@ -141,7 +141,7 @@
                             <!-- Rayon avec slider -->
                             <div>
                                 <label for="radius" class="block text-sm font-medium text-gray-700 mb-1.5">
-                                    Rayon de la zone : <span id="radiusValue" class="font-bold text-blue-600">100</span> métres
+                                    Rayon de la zone : <span id="radiusValue" class="font-bold" style="color: #5680E9;">100</span> mètres
                                 </label>
                                 <input type="range" name="radius" id="radius" value="{{ old('radius', 100) }}"
                                        min="10" max="1000" step="10"
@@ -157,7 +157,7 @@
                             </div>
 
                             <!-- Coordonnées GPS -->
-                            <div class="p-3 bg-gradient-to-r from-gray-50 to-blue-50 rounded-lg border border-gray-100">
+                            <div class="p-3 rounded-lg border border-gray-100" style="background: linear-gradient(90deg, #5680E910, #84CEEB10);">
                                 <p class="text-xs text-gray-500 mb-1 flex items-center gap-1">
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
@@ -173,7 +173,7 @@
                             <div class="space-y-3 pt-2">
                                 <label class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer">
                                     <input type="checkbox" name="is_active" id="is_active" value="1" checked
-                                           class="h-5 w-5 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                                           class="h-5 w-5 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
                                     <div>
                                         <span class="block text-sm font-medium text-gray-900">Zone active</span>
                                         <span class="text-xs text-gray-500">Les employés pourront pointer dans cette zone</span>
@@ -181,7 +181,7 @@
                                 </label>
                                 <label class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer">
                                     <input type="checkbox" name="is_default" id="is_default" value="1"
-                                           class="h-5 w-5 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                                           class="h-5 w-5 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
                                     <div>
                                         <span class="block text-sm font-medium text-gray-900">Zone par défaut</span>
                                         <span class="text-xs text-gray-500">Cette zone sera proposée en priorité</span>
@@ -198,7 +198,7 @@
                             Annuler
                         </a>
                         <button type="submit"
-                                class="flex-1 px-4 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg text-sm font-semibold hover:from-blue-700 hover:to-indigo-700 transition-all shadow-sm flex items-center justify-center gap-2">
+                                class="flex-1 px-4 py-3 text-white rounded-lg text-sm font-semibold transition-all shadow-sm flex items-center justify-center gap-2" style="background: linear-gradient(135deg, #5680E9, #5AB9EA);">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                             </svg>
@@ -212,7 +212,7 @@
                     <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
                         <div class="bg-gradient-to-r from-gray-50 to-white px-5 py-4 border-b border-gray-100">
                             <h3 class="font-semibold text-gray-800 flex items-center gap-2">
-                                <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="w-5 h-5" style="color: #5680E9;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>
                                 </svg>
                                 Carte interactive
@@ -237,7 +237,7 @@
                                 Annuler
                             </a>
                             <button type="submit"
-                                    class="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg text-sm font-semibold hover:from-blue-700 hover:to-indigo-700 transition-all shadow-sm flex items-center gap-2">
+                                    class="px-6 py-2.5 text-white rounded-lg text-sm font-semibold transition-all shadow-sm flex items-center gap-2" style="background: linear-gradient(135deg, #5680E9, #5AB9EA);">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                                 </svg>
@@ -468,6 +468,20 @@
     </script>
 
     <style>
+        /* Fix z-index pour éviter que la carte passe au-dessus du chatbot */
+        #map {
+            position: relative;
+            z-index: 0;
+        }
+        .leaflet-pane,
+        .leaflet-control {
+            z-index: 1 !important;
+        }
+        .leaflet-top,
+        .leaflet-bottom {
+            z-index: 2 !important;
+        }
+        
         /* Style personnalisé pour le slider */
         input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
@@ -475,7 +489,7 @@
             width: 20px;
             height: 20px;
             border-radius: 50%;
-            background: #3B82F6;
+            background: #5680E9;
             cursor: pointer;
             box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
@@ -483,7 +497,7 @@
             width: 20px;
             height: 20px;
             border-radius: 50%;
-            background: #3B82F6;
+            background: #5680E9;
             cursor: pointer;
             border: none;
             box-shadow: 0 2px 4px rgba(0,0,0,0.2);

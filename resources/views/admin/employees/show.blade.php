@@ -27,7 +27,7 @@
 
     <div class="space-y-6">
         <!-- Header avec profil intégré -->
-        <div class="relative overflow-hidden bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 rounded-2xl shadow-xl">
+        <div class="relative overflow-hidden rounded-2xl shadow-xl" style="background: linear-gradient(135deg, #5680E9, #84CEEB) !important;">
             <div class="absolute inset-0 bg-black/10"></div>
             <div class="absolute -top-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
             <div class="absolute -bottom-24 -left-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
@@ -76,7 +76,7 @@
                     <!-- Actions -->
                     <div class="flex items-center gap-3">
                         <a href="{{ route('admin.employees.edit', $employee) }}" 
-                           class="inline-flex items-center px-5 py-2.5 bg-white text-indigo-700 font-semibold rounded-xl hover:bg-indigo-50 transition-all shadow-lg">
+                           class="inline-flex items-center px-5 py-2.5 bg-white font-semibold rounded-xl hover:bg-purple-50 transition-all shadow-lg" style="color: #5680E9;">
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                             </svg>
@@ -158,7 +158,7 @@
             <div class="lg:col-span-1 space-y-6">
                 <!-- Coordonnées -->
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                    <div class="bg-gradient-to-r from-indigo-500 to-purple-500 px-5 py-3">
+                    <div class="px-5 py-3" style="background: linear-gradient(135deg, #5680E9, #84CEEB);">
                         <h3 class="text-white font-semibold flex items-center gap-2">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
@@ -229,7 +229,7 @@
 
                 <!-- Contrat -->
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                    <div class="bg-gradient-to-r from-purple-500 to-pink-500 px-5 py-3">
+                    <div class="px-5 py-3" style="background: linear-gradient(135deg, #8860D0, #C1C8E4);">
                         <h3 class="text-white font-semibold flex items-center gap-2">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
@@ -330,7 +330,7 @@
 
                 <!-- Solde congés -->
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                    <div class="bg-gradient-to-r from-teal-500 to-emerald-500 px-5 py-3">
+                    <div class="px-5 py-3" style="background: linear-gradient(135deg, #5AB9EA, #84CEEB);">
                         <h3 class="text-white font-semibold flex items-center gap-2">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
@@ -404,7 +404,7 @@
             <div class="lg:col-span-2 space-y-6">
                 <!-- Tâches récentes -->
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                    <div class="bg-gradient-to-r from-violet-500 to-purple-600 px-5 py-4 flex items-center justify-between">
+                    <div class="px-5 py-4 flex items-center justify-between" style="background: linear-gradient(135deg, #8860D0, #5680E9);">
                         <h3 class="text-white font-semibold flex items-center gap-2">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
@@ -464,7 +464,7 @@
 
                 <!-- Congés récents -->
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                    <div class="bg-gradient-to-r from-teal-500 to-cyan-600 px-5 py-4 flex items-center justify-between">
+                    <div class="px-5 py-4 flex items-center justify-between" style="background: linear-gradient(135deg, #5AB9EA, #5680E9);">
                         <h3 class="text-white font-semibold flex items-center gap-2">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
@@ -519,7 +519,7 @@
 
                 <!-- Fiches de paie récentes -->
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                    <div class="bg-gradient-to-r from-emerald-500 to-green-600 px-5 py-4 flex items-center justify-between">
+                    <div class="px-5 py-4 flex items-center justify-between" style="background: linear-gradient(135deg, #84CEEB, #5AB9EA);">
                         <h3 class="text-white font-semibold flex items-center gap-2">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>

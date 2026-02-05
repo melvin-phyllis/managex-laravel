@@ -37,12 +37,12 @@ $defaultActions = [
 $actionsList = !empty($actions) ? $actions : $defaultActions;
 
 $colorClasses = [
-    'blue' => ['bg' => 'bg-blue-50', 'icon' => 'text-blue-600', 'hover' => 'hover:border-blue-300 hover:bg-blue-50'],
-    'green' => ['bg' => 'bg-green-50', 'icon' => 'text-green-600', 'hover' => 'hover:border-green-300 hover:bg-green-50'],
-    'yellow' => ['bg' => 'bg-yellow-50', 'icon' => 'text-yellow-600', 'hover' => 'hover:border-yellow-300 hover:bg-yellow-50'],
-    'red' => ['bg' => 'bg-red-50', 'icon' => 'text-red-600', 'hover' => 'hover:border-red-300 hover:bg-red-50'],
-    'purple' => ['bg' => 'bg-purple-50', 'icon' => 'text-purple-600', 'hover' => 'hover:border-purple-300 hover:bg-purple-50'],
-    'indigo' => ['bg' => 'bg-indigo-50', 'icon' => 'text-indigo-600', 'hover' => 'hover:border-indigo-300 hover:bg-indigo-50'],
+    'blue' => ['bg' => 'bg-[#31708E]/15', 'icon' => 'text-[#31708E]', 'hover' => 'hover:border-[#31708E]/30 hover:bg-[#31708E]/10'],
+    'green' => ['bg' => 'bg-[#5085A5]/15', 'icon' => 'text-[#5085A5]', 'hover' => 'hover:border-[#5085A5]/30 hover:bg-[#5085A5]/10'],
+    'yellow' => ['bg' => 'bg-[#8FC1E3]/20', 'icon' => 'text-[#5085A5]', 'hover' => 'hover:border-[#8FC1E3]/30 hover:bg-[#8FC1E3]/15'],
+    'red' => ['bg' => 'bg-[#687864]/15', 'icon' => 'text-[#687864]', 'hover' => 'hover:border-[#687864]/30 hover:bg-[#687864]/10'],
+    'purple' => ['bg' => 'bg-[#8FC1E3]/20', 'icon' => 'text-[#31708E]', 'hover' => 'hover:border-[#8FC1E3]/30 hover:bg-[#8FC1E3]/15'],
+    'indigo' => ['bg' => 'bg-[#31708E]/10', 'icon' => 'text-[#31708E]', 'hover' => 'hover:border-[#31708E]/30 hover:bg-[#31708E]/15'],
 ];
 @endphp
 

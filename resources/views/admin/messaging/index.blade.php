@@ -3,12 +3,12 @@
         <!-- Header -->
         <x-table-header title="Messagerie & Canaux" subtitle="Gérez les canaux de communication, les groupes et modérez les échanges" class="animate-fade-in-up">
             <x-slot:icon>
-                <div class="w-12 h-12 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-cyan-500/20">
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg" style="background: linear-gradient(135deg, #5680E9, #84CEEB);">
                     <x-icon name="messages-square" class="w-6 h-6 text-white" />
                 </div>
             </x-slot:icon>
             <x-slot:actions>
-                <button @click="showCreateModal = true" class="inline-flex items-center px-4 py-2.5 bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-medium rounded-xl hover:from-cyan-700 hover:to-blue-700 transition-all shadow-lg shadow-cyan-500/25">
+                <button @click="showCreateModal = true" class="inline-flex items-center px-4 py-2.5 text-white font-medium rounded-xl transition-all shadow-lg" style="background: linear-gradient(135deg, #5680E9, #5AB9EA);">
                     <x-icon name="plus" class="w-5 h-5 mr-2" />
                     Nouveau canal
                 </button>
@@ -24,7 +24,7 @@
                         <p class="text-sm font-medium text-gray-500">Total Messages</p>
                         <p class="text-3xl font-bold text-gray-900 mt-1">{{ number_format($stats['total_messages'] ?? 0) }}</p>
                     </div>
-                    <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/30">
+                    <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg" style="background: linear-gradient(135deg, #5680E9, #84CEEB);">
                         <x-icon name="message-circle" class="w-6 h-6 text-white" />
                     </div>
                 </div>
@@ -44,7 +44,7 @@
                         <p class="text-sm font-medium text-gray-500">Conversations</p>
                         <p class="text-3xl font-bold text-gray-900 mt-1">{{ $stats['total_conversations'] ?? 0 }}</p>
                     </div>
-                    <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center shadow-lg shadow-green-500/30">
+                    <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg" style="background: linear-gradient(135deg, #5AB9EA, #84CEEB);">
                         <x-icon name="copy" class="w-6 h-6 text-white" />
                     </div>
                 </div>
@@ -61,7 +61,7 @@
                         <p class="text-sm font-medium text-gray-500">Utilisateurs actifs</p>
                         <p class="text-3xl font-bold text-gray-900 mt-1">{{ $stats['active_users'] ?? 0 }}</p>
                     </div>
-                    <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-fuchsia-600 rounded-xl flex items-center justify-center shadow-lg shadow-purple-500/30">
+                    <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg" style="background: linear-gradient(135deg, #8860D0, #C1C8E4);">
                         <x-icon name="users" class="w-6 h-6 text-white" />
                     </div>
                 </div>
@@ -77,7 +77,7 @@
                         <p class="text-sm font-medium text-gray-500">Cette semaine</p>
                         <p class="text-3xl font-bold text-gray-900 mt-1">{{ number_format($stats['messages_this_week'] ?? 0) }}</p>
                     </div>
-                    <div class="w-12 h-12 bg-gradient-to-br from-orange-400 to-amber-500 rounded-xl flex items-center justify-center shadow-lg shadow-orange-500/30">
+                    <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg" style="background: linear-gradient(135deg, #5680E9, #8860D0);">
                         <x-icon name="bar-chart" class="w-6 h-6 text-white" />
                     </div>
                 </div>
@@ -152,7 +152,7 @@
                         @forelse($recentMessages as $message)
                             <div class="px-5 py-3 hover:bg-gray-50 transition-colors">
                                 <div class="flex items-start gap-3">
-                                    <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white text-xs font-bold flex-shrink-0 shadow-sm">
+                                    <div class="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0 shadow-sm" style="background: linear-gradient(135deg, #5680E9, #84CEEB);">
                                         {{ $message->sender ? strtoupper(substr($message->sender->name, 0, 1)) : 'S' }}
                                     </div>
                                     <div class="flex-1 min-w-0">
@@ -261,8 +261,8 @@
                  
                 <div class="flex items-center justify-between mb-6">
                     <h3 class="text-xl font-bold text-gray-900 flex items-center gap-2">
-                        <div class="p-2 bg-blue-100 rounded-lg">
-                            <x-icon name="plus" class="w-5 h-5 text-blue-600" />
+                        <div class="p-2 rounded-lg" style="background-color: #5680E920;">
+                            <x-icon name="plus" class="w-5 h-5" style="color: #5680E9;" />
                         </div>
                         Nouveau canal
                     </h3>
@@ -277,18 +277,18 @@
                         <label class="block text-sm font-medium text-gray-700 mb-1">Nom du canal</label>
                         <div class="relative">
                             <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 font-bold">#</span>
-                            <input type="text" name="name" required class="w-full pl-7 pr-4 py-2.5 rounded-xl border-gray-300 focus:border-blue-500 focus:ring-blue-500" placeholder="general">
+                            <input type="text" name="name" required class="w-full pl-7 pr-4 py-2.5 rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" placeholder="general">
                         </div>
                     </div>
                     
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                        <textarea name="description" rows="3" class="w-full rounded-xl border-gray-300 focus:border-blue-500 focus:ring-blue-500" placeholder="À quoi sert ce canal ?"></textarea>
+                        <textarea name="description" rows="3" class="w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" placeholder="À quoi sert ce canal ?"></textarea>
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Type de canal</label>
-                        <select name="type" class="w-full rounded-xl border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+                        <select name="type" class="w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-indigo-500">
                             <option value="channel">Canal public (discussion ouverte)</option>
                             <option value="announcement">Annonces (lecture seule pour les membres)</option>
                         </select>
@@ -296,7 +296,7 @@
 
                     <div class="flex items-center pt-2">
                         <label class="inline-flex items-center cursor-pointer">
-                            <input type="checkbox" name="add_all_users" value="1" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500 w-5 h-5">
+                            <input type="checkbox" name="add_all_users" value="1" class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 w-5 h-5">
                             <span class="ml-2 text-sm text-gray-700">Ajouter automatiquement tous les utilisateurs</span>
                         </label>
                     </div>
@@ -305,7 +305,7 @@
                         <button type="button" @click="showCreateModal = false" class="flex-1 px-4 py-2.5 bg-white border border-gray-300 text-gray-700 font-medium rounded-xl hover:bg-gray-50 transition-colors">
                             Annuler
                         </button>
-                        <button type="submit" class="flex-1 px-4 py-2.5 bg-blue-600 text-white font-medium rounded-xl hover:bg-blue-700 transition-colors shadow-lg shadow-blue-500/25">
+                        <button type="submit" class="flex-1 px-4 py-2.5 text-white font-medium rounded-xl transition-colors shadow-lg" style="background: linear-gradient(135deg, #5680E9, #5AB9EA);">
                             Créer le canal
                         </button>
                     </div>

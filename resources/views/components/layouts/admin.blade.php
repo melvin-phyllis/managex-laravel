@@ -20,26 +20,20 @@
 <body class="font-sans antialiased" x-data="{ showLogoutModal: false }">
     <script nonce="{{ $cspNonce ?? '' }}">window.userId = {{ auth()->id() ?? 'null' }};</script>
     <x-realtime-notifications />
-    <div class="min-h-screen bg-gray-50">
+    <div class="min-h-screen bg-slate-50">
         <!-- Decorative Background -->
         <div class="fixed inset-0 overflow-hidden pointer-events-none">
-            <div class="absolute -top-40 -right-40 w-80 h-80 bg-blue-500/5 rounded-full blur-3xl"></div>
-            <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-indigo-500/5 rounded-full blur-3xl"></div>
+            <div class="absolute -top-40 -right-40 w-80 h-80 bg-blue-100 rounded-full blur-3xl opacity-50"></div>
+            <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-sky-100 rounded-full blur-3xl opacity-50"></div>
         </div>
 
         <!-- Mobile Sidebar Backdrop -->
         <div id="sidebarBackdrop" onclick="document.getElementById('sidebar').classList.add('-translate-x-full'); document.getElementById('sidebarBackdrop').classList.add('hidden')" class="fixed inset-0 z-40 bg-gray-900/50 backdrop-blur-sm lg:hidden hidden transition-opacity opacity-100"></div>
 
         <!-- Sidebar -->
-        <aside class="fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 transform transition-transform duration-200 ease-in-out lg:translate-x-0 -translate-x-full flex flex-col" id="sidebar">
-            <div class="flex items-center justify-between h-16 px-4 bg-gradient-to-r from-blue-600 to-indigo-600">
-                <span class="text-xl font-bold text-white">ManageX</span>
-                <button class="lg:hidden p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white transition-colors" 
-                        onclick="document.getElementById('sidebar').classList.add('-translate-x-full'); document.getElementById('sidebarBackdrop').classList.add('hidden')">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                    </svg>
-                </button>
+        <aside class="fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-slate-200 transform transition-transform duration-200 ease-in-out lg:translate-x-0 -translate-x-full flex flex-col items-center" id="sidebar">
+            <div class="flex items-center justify-center h-20 w-full border-b border-slate-100">
+                <span class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-700 to-sky-500">ManageX</span>
             </div>
 
             <nav class="mt-6 flex-1 overflow-y-auto">

@@ -12,7 +12,7 @@ $isAtMilestone = in_array($currentStreak, $milestones);
 @endphp
 
 <div {{ $attributes->merge(['class' => 'w-full rounded-xl shadow-lg p-6 text-white animate-fade-in-up border']) }}
-     style="background: linear-gradient(90deg, rgba(149, 128, 111, 1) 14%, rgba(249, 115, 22, 1) 100%, rgba(200, 55, 55, 1) 67%); border-width: 1px;"
+     style="background: linear-gradient(90deg, #31708E 14%, #5085A5 60%, #8FC1E3 100%); border-width: 1px;"
      x-data="streakCounter({{ $currentStreak }}, {{ $isAtMilestone ? 'true' : 'false' }})"
      x-init="init()">
 

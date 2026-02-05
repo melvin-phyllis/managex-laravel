@@ -1,7 +1,7 @@
 ﻿<x-layouts.admin>
     <x-slot name="header">
         <!-- Header moderne avec gradient -->
-        <div class="bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 -mx-4 sm:-mx-6 lg:-mx-8 -mt-4 px-4 sm:px-6 lg:px-8 py-6 mb-4">
+        <div class="-mx-4 sm:-mx-6 lg:-mx-8 -mt-4 px-4 sm:px-6 lg:px-8 py-6 mb-4" style="background: linear-gradient(135deg, #5680E9, #84CEEB);">
             <div class="max-w-7xl mx-auto">
                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div class="flex items-center gap-4">
@@ -20,7 +20,7 @@
                                 </div>
                                 <div>
                                     <h2 class="text-xl sm:text-2xl font-bold text-white">Modifier la zone</h2>
-                                    <p class="text-orange-100 text-sm mt-0.5">{{ $geolocationZone->name }}</p>
+                                    <p class="text-blue-100 text-sm mt-0.5">{{ $geolocationZone->name }}</p>
                                 </div>
                             </div>
                         </div>
@@ -57,17 +57,17 @@
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
         <!-- Info box -->
-        <div class="mb-6 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-xl p-4">
+        <div class="mb-6 border rounded-xl p-4" style="background: linear-gradient(90deg, #5680E920, #84CEEB10); border-color: #5680E940;">
             <div class="flex items-start gap-3">
-                <div class="p-2 bg-amber-100 rounded-lg flex-shrink-0">
-                    <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="p-2 rounded-lg flex-shrink-0" style="background-color: #5680E920;">
+                    <svg class="w-5 h-5" style="color: #5680E9;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
                 </div>
                 <div>
-                    <h3 class="font-semibold text-amber-900">Modification de zone</h3>
-                    <p class="text-sm text-amber-700 mt-1">
-                        Modifiez les paramétres de la zone. Les changements seront appliqués immédiatement et affecteront le pointage des employés assignés.
+                    <h3 class="font-semibold" style="color: #5680E9;">Modification de zone</h3>
+                    <p class="text-sm mt-1" style="color: #5680E9CC;">
+                        Modifiez les paramètres de la zone. Les changements seront appliqués immédiatement et affecteront le pointage des employés assignés.
                     </p>
                 </div>
             </div>
@@ -87,7 +87,7 @@
                     <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
                         <div class="bg-gradient-to-r from-gray-50 to-white px-5 py-4 border-b border-gray-100">
                             <h3 class="font-semibold text-gray-800 flex items-center gap-2">
-                                <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="w-5 h-5" style="color: #5680E9;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                 </svg>
                                 Informations de la zone
@@ -101,7 +101,7 @@
                                     Nom de la zone <span class="text-red-500">*</span>
                                 </label>
                                 <input type="text" name="name" id="name" value="{{ old('name', $geolocationZone->name) }}" required
-                                       class="w-full rounded-lg border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 transition-colors"
+                                       class="w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 transition-colors"
                                        placeholder="Ex: Siége social, Agence Paris...">
                                 @error('name')
                                     <p class="mt-1.5 text-sm text-red-600 flex items-center gap-1">
@@ -115,7 +115,7 @@
                             <div>
                                 <label for="description" class="block text-sm font-medium text-gray-700 mb-1.5">Description</label>
                                 <textarea name="description" id="description" rows="2"
-                                          class="w-full rounded-lg border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 transition-colors"
+                                          class="w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 transition-colors"
                                           placeholder="Description optionnelle de cette zone...">{{ old('description', $geolocationZone->description) }}</textarea>
                             </div>
 
@@ -129,10 +129,10 @@
                                 </label>
                                 <div class="flex gap-2">
                                     <input type="text" id="addressSearch"
-                                           class="flex-1 rounded-lg border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 transition-colors"
+                                           class="flex-1 rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 transition-colors"
                                            placeholder="Ex: 15 Rue de la Paix, Paris">
                                     <button type="button" id="searchBtn"
-                                            class="px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors flex items-center gap-2 flex-shrink-0">
+                                            class="px-4 py-2 text-white rounded-lg transition-colors flex items-center gap-2 flex-shrink-0" style="background: linear-gradient(135deg, #5680E9, #5AB9EA);">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                                         </svg>
@@ -163,11 +163,11 @@
                             <!-- Rayon avec slider -->
                             <div>
                                 <label for="radius" class="block text-sm font-medium text-gray-700 mb-1.5">
-                                    Rayon de la zone : <span id="radiusValue" class="font-bold text-amber-600">{{ $geolocationZone->radius }}</span> métres
+                                    Rayon de la zone : <span id="radiusValue" class="font-bold" style="color: #5680E9;">{{ $geolocationZone->radius }}</span> mètres
                                 </label>
                                 <input type="range" name="radius" id="radius" value="{{ old('radius', $geolocationZone->radius) }}"
                                        min="10" max="1000" step="10"
-                                       class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-amber-600">
+                                       class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-indigo-600">
                                 <div class="flex justify-between text-xs text-gray-500 mt-1">
                                     <span>10m</span>
                                     <span>500m</span>
@@ -179,7 +179,7 @@
                             </div>
 
                             <!-- Coordonnées GPS -->
-                            <div class="p-3 bg-gradient-to-r from-gray-50 to-amber-50 rounded-lg border border-gray-100">
+                            <div class="p-3 rounded-lg border border-gray-100" style="background: linear-gradient(90deg, #5680E910, #84CEEB10);">
                                 <p class="text-xs text-gray-500 mb-1 flex items-center gap-1">
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
@@ -196,7 +196,7 @@
                                 <label class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer">
                                     <input type="checkbox" name="is_active" id="is_active" value="1"
                                            {{ old('is_active', $geolocationZone->is_active) ? 'checked' : '' }}
-                                           class="h-5 w-5 text-amber-600 focus:ring-amber-500 border-gray-300 rounded">
+                                           class="h-5 w-5 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
                                     <div>
                                         <span class="block text-sm font-medium text-gray-900">Zone active</span>
                                         <span class="text-xs text-gray-500">Les employés pourront pointer dans cette zone</span>
@@ -205,7 +205,7 @@
                                 <label class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer">
                                     <input type="checkbox" name="is_default" id="is_default" value="1"
                                            {{ old('is_default', $geolocationZone->is_default) ? 'checked' : '' }}
-                                           class="h-5 w-5 text-amber-600 focus:ring-amber-500 border-gray-300 rounded">
+                                           class="h-5 w-5 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
                                     <div>
                                         <span class="block text-sm font-medium text-gray-900">Zone par défaut</span>
                                         <span class="text-xs text-gray-500">Cette zone sera proposée en priorité</span>
@@ -222,7 +222,7 @@
                             Annuler
                         </a>
                         <button type="submit"
-                                class="flex-1 px-4 py-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-lg text-sm font-semibold hover:from-amber-600 hover:to-orange-600 transition-all shadow-sm flex items-center justify-center gap-2">
+                                class="flex-1 px-4 py-3 text-white rounded-lg text-sm font-semibold transition-all shadow-sm flex items-center justify-center gap-2" style="background: linear-gradient(135deg, #5680E9, #5AB9EA);">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                             </svg>
@@ -236,7 +236,7 @@
                     <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
                         <div class="bg-gradient-to-r from-gray-50 to-white px-5 py-4 border-b border-gray-100">
                             <h3 class="font-semibold text-gray-800 flex items-center gap-2">
-                                <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="w-5 h-5" style="color: #5680E9;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>
                                 </svg>
                                 Carte interactive
@@ -246,8 +246,8 @@
 
                         <div class="p-4">
                             <div id="map" class="rounded-lg border-2 border-gray-200 shadow-inner" style="height: 400px; min-height: 300px;"></div>
-                            <div class="mt-3 flex items-start gap-2 text-sm text-gray-600 bg-amber-50 p-3 rounded-lg">
-                                <svg class="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                            <div class="mt-3 flex items-start gap-2 text-sm text-gray-600 p-3 rounded-lg" style="background-color: #5680E910;">
+                                <svg class="w-5 h-5 flex-shrink-0 mt-0.5" style="color: #5680E9;" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
                                 </svg>
                                 <span>Le cercle représente la zone dans laquelle les employés pourront pointer leur présence.</span>
@@ -266,7 +266,7 @@
                                     Annuler
                                 </a>
                                 <button type="submit"
-                                        class="px-6 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-lg text-sm font-semibold hover:from-amber-600 hover:to-orange-600 transition-all shadow-sm flex items-center gap-2">
+                                        class="px-6 py-2.5 text-white rounded-lg text-sm font-semibold transition-all shadow-sm flex items-center gap-2" style="background: linear-gradient(135deg, #5680E9, #5AB9EA);">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                                     </svg>
@@ -498,6 +498,20 @@
     </script>
 
     <style>
+        /* Fix z-index pour éviter que la carte passe au-dessus du chatbot */
+        #map {
+            position: relative;
+            z-index: 0;
+        }
+        .leaflet-pane,
+        .leaflet-control {
+            z-index: 1 !important;
+        }
+        .leaflet-top,
+        .leaflet-bottom {
+            z-index: 2 !important;
+        }
+        
         /* Style personnalisé pour le slider */
         input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
@@ -505,7 +519,7 @@
             width: 20px;
             height: 20px;
             border-radius: 50%;
-            background: #F59E0B;
+            background: #5680E9;
             cursor: pointer;
             box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
@@ -513,7 +527,7 @@
             width: 20px;
             height: 20px;
             border-radius: 50%;
-            background: #F59E0B;
+            background: #5680E9;
             cursor: pointer;
             border: none;
             box-shadow: 0 2px 4px rgba(0,0,0,0.2);

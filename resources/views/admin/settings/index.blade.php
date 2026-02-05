@@ -1,7 +1,7 @@
 ﻿<x-layouts.admin>
     <div class="space-y-6" x-data="settingsPage()">
         <!-- Header avec gradient -->
-        <div class="relative overflow-hidden bg-gradient-to-r from-slate-700 via-slate-800 to-slate-900 rounded-2xl shadow-xl">
+        <div class="relative overflow-hidden rounded-2xl shadow-xl" style="background: linear-gradient(135deg, #5680E9, #84CEEB) !important;">
             <div class="absolute inset-0 bg-black/10"></div>
             <div class="absolute -top-24 -right-24 w-64 h-64 bg-white/5 rounded-full blur-3xl"></div>
             <div class="absolute -bottom-24 -left-24 w-64 h-64 bg-white/5 rounded-full blur-3xl"></div>
@@ -23,7 +23,7 @@
                     
                     <!-- Admin info -->
                     <div class="flex items-center gap-3 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20">
-                        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-white font-bold">
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold" style="background: linear-gradient(135deg, #8860D0, #5680E9);">
                             {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
                         </div>
                         <div>
@@ -57,7 +57,8 @@
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-1.5">
             <nav class="flex flex-wrap gap-1" aria-label="Tabs">
                 <button @click="activeTab = 'compte'"
-                        :class="activeTab === 'compte' ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg shadow-indigo-500/30' : 'text-gray-600 hover:bg-gray-100'"
+                        :class="activeTab === 'compte' ? 'text-white shadow-lg' : 'text-gray-600 hover:bg-gray-100'"
+                        :style="activeTab === 'compte' ? 'background: linear-gradient(135deg, #5680E9, #84CEEB)' : ''"
                         class="whitespace-nowrap py-2.5 px-4 font-medium text-sm flex items-center gap-2 transition-all rounded-lg">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
@@ -115,7 +116,7 @@
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <!-- Changer l'email -->
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                    <div class="bg-gradient-to-r from-indigo-500 to-purple-600 px-5 py-4">
+                    <div class="px-5 py-4" style="background: linear-gradient(135deg, #5680E9, #84CEEB);">
                         <h3 class="text-white font-semibold flex items-center gap-2">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
@@ -156,7 +157,7 @@
                         </div>
                         
                         <div class="mt-6">
-                            <button type="submit" class="w-full px-6 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-medium rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all shadow-lg shadow-indigo-500/30">
+                            <button type="submit" class="w-full px-6 py-2.5 text-white font-medium rounded-xl transition-all shadow-lg" style="background: linear-gradient(135deg, #5680E9, #5AB9EA);">
                                 Mettre é  jour l'email
                             </button>
                         </div>
@@ -165,7 +166,7 @@
 
                 <!-- Changer le mot de passe -->
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                    <div class="bg-gradient-to-r from-rose-500 to-pink-600 px-5 py-4">
+                    <div class="px-5 py-4" style="background: linear-gradient(135deg, #8860D0, #C1C8E4);">
                         <h3 class="text-white font-semibold flex items-center gap-2">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
@@ -208,7 +209,7 @@
                         </div>
                         
                         <div class="mt-6">
-                            <button type="submit" class="w-full px-6 py-2.5 bg-gradient-to-r from-rose-600 to-pink-600 text-white font-medium rounded-xl hover:from-rose-700 hover:to-pink-700 transition-all shadow-lg shadow-rose-500/30">
+                            <button type="submit" class="w-full px-6 py-2.5 text-white font-medium rounded-xl transition-all shadow-lg" style="background: linear-gradient(135deg, #8860D0, #5680E9);">
                                 Mettre é  jour le mot de passe
                             </button>
                         </div>

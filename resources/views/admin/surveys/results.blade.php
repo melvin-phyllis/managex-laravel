@@ -48,8 +48,8 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow">
                 <div class="flex items-center">
-                    <div class="bg-blue-100 p-4 rounded-xl">
-                        <x-icon name="users" class="w-8 h-8 text-blue-600" />
+                    <div class="p-4 rounded-xl" style="background-color: rgba(90, 185, 234, 0.15);">
+                        <x-icon name="users" class="w-8 h-8" style="color: #5AB9EA;" />
                     </div>
                     <div class="ml-4">
                         <p class="text-sm font-medium text-gray-500">Total répondants</p>
@@ -60,8 +60,8 @@
 
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow">
                 <div class="flex items-center">
-                    <div class="bg-green-100 p-4 rounded-xl">
-                        <x-icon name="help-circle" class="w-8 h-8 text-green-600" />
+                    <div class="p-4 rounded-xl" style="background-color: rgba(132, 206, 235, 0.15);">
+                        <x-icon name="help-circle" class="w-8 h-8" style="color: #84CEEB;" />
                     </div>
                     <div class="ml-4">
                         <p class="text-sm font-medium text-gray-500">Total Questions</p>
@@ -72,8 +72,8 @@
 
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow">
                 <div class="flex items-center">
-                    <div class="bg-purple-100 p-4 rounded-xl">
-                        <x-icon name="activity" class="w-8 h-8 text-purple-600" />
+                    <div class="p-4 rounded-xl" style="background-color: rgba(86, 128, 233, 0.15);">
+                        <x-icon name="activity" class="w-8 h-8" style="color: #5680E9;" />
                     </div>
                     <div class="ml-4">
                         <p class="text-sm font-medium text-gray-500">Taux de réponse</p>
@@ -95,7 +95,7 @@
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                     <div class="p-6 border-b border-gray-100 bg-gray-50/50">
                         <div class="flex items-start">
-                            <span class="flex-shrink-0 w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-sm font-bold shadow-sm">
+                            <span class="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shadow-sm" style="background-color: rgba(90, 185, 234, 0.15); color: #5AB9EA;">
                                 {{ $index + 1 }}
                             </span>
                             <div class="ml-4">
@@ -124,7 +124,7 @@
                                             <span class="text-gray-500 font-mono">{{ $data['count'] }} ({{ $data['percentage'] }}%)</span>
                                         </div>
                                         <div class="w-full bg-gray-100 rounded-full h-3 overflow-hidden">
-                                            <div class="bg-blue-600 h-3 rounded-full transition-all duration-500" style="width: {{ $data['percentage'] }}%"></div>
+                                            <div class="h-3 rounded-full transition-all duration-500" style="width: {{ $data['percentage'] }}%; background: linear-gradient(90deg, #5680E9, #5AB9EA);"></div>
                                         </div>
                                     </div>
                                 @endforeach
@@ -139,12 +139,12 @@
                                 }
                             @endphp
                             <div class="flex flex-col sm:flex-row gap-8">
-                                <div class="flex flex-col items-center justify-center bg-yellow-50 rounded-xl p-6 min-w-[200px]">
+                                <div class="flex flex-col items-center justify-center rounded-xl p-6 min-w-[200px]" style="background-color: rgba(90, 185, 234, 0.08);">
                                     <div class="text-5xl font-bold text-gray-900">{{ $average }}</div>
                                     <div class="text-sm text-gray-500 mt-1 uppercase tracking-wide font-medium">Moyenne / 5</div>
                                     <div class="mt-3 flex items-center gap-1">
                                         @for($i = 1; $i <= 5; $i++)
-                                            <x-icon name="star" class="w-6 h-6 {{ $i <= round($average) ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300' }}" />
+                                            <x-icon name="star" class="w-6 h-6" style="color: {{ $i <= round($average) ? '#5AB9EA' : '#D1D5DB' }}; fill: {{ $i <= round($average) ? '#5AB9EA' : 'none' }};" />
                                         @endfor
                                     </div>
                                 </div>
@@ -157,10 +157,10 @@
                                         <div class="flex items-center gap-3">
                                             <div class="flex items-center gap-1 w-12 justify-end">
                                                 <span class="text-sm font-medium text-gray-600">{{ $i }}</span>
-                                                <x-icon name="star" class="w-4 h-4 text-yellow-400 fill-yellow-400" />
+                                                <x-icon name="star" class="w-4 h-4" style="color: #5AB9EA; fill: #5AB9EA;" />
                                             </div>
                                             <div class="flex-1 h-2.5 bg-gray-100 rounded-full overflow-hidden">
-                                                <div class="bg-yellow-400 h-2.5 rounded-full transition-all duration-500" style="width: {{ $percentage }}%"></div>
+                                                <div class="h-2.5 rounded-full transition-all duration-500" style="width: {{ $percentage }}%; background: linear-gradient(90deg, #5680E9, #5AB9EA);"></div>
                                             </div>
                                             <span class="w-12 text-sm text-gray-500 text-right font-mono">{{ $count }}</span>
                                         </div>
@@ -174,7 +174,7 @@
                                     <div class="bg-gray-50/80 rounded-xl p-4 border border-gray-100">
                                         <p class="text-gray-800 leading-relaxed">{{ $response->reponse }}</p>
                                         <div class="flex items-center gap-2 mt-3 pt-3 border-t border-gray-100">
-                                            <div class="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 text-xs font-bold">
+                                            <div class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold" style="background-color: rgba(90, 185, 234, 0.15); color: #5AB9EA;">
                                                 {{ strtoupper(substr($response->user->name, 0, 1)) }}
                                             </div>
                                             <p class="text-xs text-gray-500 font-medium">{{ $response->user->name }}</p>

@@ -24,7 +24,7 @@
         <!-- Header -->
         <x-table-header title="Gestion des Employés" subtitle="Gérez et suivez toute votre équipe de maniére centralisée" class="animate-fade-in-up animation-delay-100">
             <x-slot:icon>
-                <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20">
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg transform transition-transform" style="background-image: linear-gradient(135deg, #5680E9, #84CEEB) !important; box-shadow: 0 10px 15px -3px rgba(86, 128, 233, 0.3) !important;">
                     <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
                     </svg>
@@ -57,14 +57,14 @@
                         <p class="text-sm font-medium text-gray-500">Total employés</p>
                         <p class="text-3xl font-bold text-gray-900 mt-1">{{ $stats['total'] }}</p>
                     </div>
-                    <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/30 group-hover:scale-110 transition-transform">
+                    <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform" style="background-image: linear-gradient(135deg, #5680E9, #5AB9EA) !important; box-shadow: 0 10px 15px -3px rgba(86, 128, 233, 0.3) !important;">
                         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
                         </svg>
                     </div>
                 </div>
                 <div class="mt-4 flex items-center text-sm">
-                    <span class="text-green-600 flex items-center bg-green-50 px-2 py-0.5 rounded-full">
+                    <span class="text-[#5AB9EA] flex items-center bg-[#5AB9EA]/10 px-2 py-0.5 rounded-full">
                         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
                         </svg>
@@ -82,7 +82,7 @@
                         <p class="text-sm font-medium text-gray-500">Présents ce jour</p>
                         <p class="text-3xl font-bold text-gray-900 mt-1">{{ $stats['present'] }}</p>
                     </div>
-                    <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center shadow-lg shadow-green-500/30 group-hover:scale-110 transition-transform">
+                    <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform" style="background-image: linear-gradient(135deg, #5AB9EA, #5680E9) !important; box-shadow: 0 10px 15px -3px rgba(90, 185, 234, 0.3) !important;">
                         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                         </svg>
@@ -91,10 +91,10 @@
                 <div class="mt-4">
                     <div class="flex items-center justify-between text-xs mb-1">
                         <span class="text-gray-500">Taux de présence</span>
-                        <span class="text-green-600 font-bold">{{ $stats['total'] > 0 ? round(($stats['present'] / $stats['total']) * 100) : 0 }}%</span>
+                        <span class="text-[#5AB9EA] font-bold">{{ $stats['total'] > 0 ? round(($stats['present'] / $stats['total']) * 100) : 0 }}%</span>
                     </div>
                     <div class="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
-                        <div class="bg-green-500 h-1.5 rounded-full transition-all duration-1000" style="width: {{ $stats['total'] > 0 ? round(($stats['present'] / $stats['total']) * 100) : 0 }}%"></div>
+                        <div class="bg-[#5AB9EA] h-1.5 rounded-full transition-all duration-1000" style="width: {{ $stats['total'] > 0 ? round(($stats['present'] / $stats['total']) * 100) : 0 }}%"></div>
                     </div>
                 </div>
             </div>
@@ -106,14 +106,14 @@
                         <p class="text-sm font-medium text-gray-500">En congé</p>
                         <p class="text-3xl font-bold text-gray-900 mt-1">{{ $stats['on_leave'] }}</p>
                     </div>
-                    <div class="w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-500 rounded-xl flex items-center justify-center shadow-lg shadow-amber-500/30 group-hover:scale-110 transition-transform">
+                    <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform" style="background-image: linear-gradient(135deg, #8860D0, #5680E9) !important; box-shadow: 0 10px 15px -3px rgba(136, 96, 208, 0.3) !important;">
                         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                         </svg>
                     </div>
                 </div>
                 <div class="mt-4 flex items-center text-sm">
-                    <span class="text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full font-medium">
+                    <span class="text-[#8860D0] bg-[#8860D0]/10 px-2 py-0.5 rounded-full font-medium">
                         Planifiés
                     </span>
                     <span class="text-gray-400 mx-2">â€¢</span>
@@ -128,14 +128,14 @@
                         <p class="text-sm font-medium text-gray-500">Nouveaux (Mois)</p>
                         <p class="text-3xl font-bold text-gray-900 mt-1">{{ $stats['new_this_month'] }}</p>
                     </div>
-                    <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-purple-500/30 group-hover:scale-110 transition-transform">
+                    <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform" style="background-image: linear-gradient(135deg, #C1C8E4, #84CEEB) !important; box-shadow: 0 10px 15px -3px rgba(193, 200, 228, 0.3) !important;">
                         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
                         </svg>
                     </div>
                 </div>
                 <div class="mt-4 flex items-center text-sm">
-                    <span class="text-purple-600 bg-purple-50 px-2 py-0.5 rounded-full font-medium">
+                    <span class="text-[#5680E9] bg-[#C1C8E4]/20 px-2 py-0.5 rounded-full font-medium">
                         +{{ $stats['new_this_month'] }}
                     </span>
                     <span class="text-gray-400 mx-2">â€¢</span>
@@ -217,13 +217,13 @@
                 @if(request('department_id'))
                     @php $dept = $departments->find(request('department_id')); @endphp
                     @if($dept)
-                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-indigo-50 text-indigo-700 border border-indigo-100">
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-[#5680E9]/10 text-[#5680E9] border border-[#5680E9]/20">
                             Dépt: {{ $dept->name }}
                         </span>
                     @endif
                 @endif
                 @if(request('status'))
-                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-50 text-green-700 border border-green-100">
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-[#5AB9EA]/10 text-[#5AB9EA] border border-[#5AB9EA]/20">
                         Statut: {{ request('status') }}
                     </span>
                 @endif
@@ -319,10 +319,10 @@
                         <td class="px-6 py-4 whitespace-nowrap">
                             @php
                                 $badges = [
-                                    'cdi' => 'bg-green-100 text-green-700 border-green-200',
-                                    'cdd' => 'bg-blue-100 text-blue-700 border-blue-200',
-                                    'stage' => 'bg-purple-100 text-purple-700 border-purple-200',
-                                    'alternance' => 'bg-cyan-100 text-cyan-700 border-cyan-200',
+                                    'cdi' => 'bg-[#5680E9]/10 text-[#5680E9] border-[#5680E9]/20',
+                                    'cdd' => 'bg-[#84CEEB]/10 text-[#5680E9] border-[#84CEEB]/20',
+                                    'stage' => 'bg-[#C1C8E4]/20 text-[#5680E9] border-[#C1C8E4]/30',
+                                    'alternance' => 'bg-[#5AB9EA]/10 text-[#5AB9EA] border-[#5AB9EA]/20',
                                 ];
                             @endphp
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border {{ $badges[$employee->contract_type] ?? 'bg-gray-100 text-gray-700 border-gray-200' }}">
@@ -334,16 +334,17 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             @if($employee->presence_status === 'present')
-                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-green-50 text-green-700 border border-green-100">
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-[#5AB9EA]/10 text-[#5AB9EA] border border-[#5AB9EA]/20">
                                     <span class="relative flex h-2 w-2">
-                                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                                      <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#5AB9EA] opacity-75"></span>
+                                      <span class="relative inline-flex rounded-full h-2 w-2 bg-[#5AB9EA]"></span>
                                     </span>
                                     Présent
                                 </span>
                             @elseif($employee->presence_status === 'on_leave')
-                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-100">
-                                    <span class="h-2 w-2 bg-amber-500 rounded-full"></span>
+                            @elseif($employee->presence_status === 'on_leave')
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-[#8860D0]/10 text-[#8860D0] border border-[#8860D0]/20">
+                                    <span class="h-2 w-2 bg-[#8860D0] rounded-full"></span>
                                     En congé
                                 </span>
                             @else
@@ -361,7 +362,7 @@
                                     </a>
                                 @endif
                                 @if($employee->telephone)
-                                    <a href="tel:{{ $employee->telephone }}" class="p-1.5 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors" title="{{ $employee->telephone }}">
+                                    <a href="tel:{{ $employee->telephone }}" class="p-1.5 text-gray-400 hover:text-[#5AB9EA] hover:bg-[#5AB9EA]/10 rounded-lg transition-colors" title="{{ $employee->telephone }}">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
                                     </a>
                                 @endif
@@ -372,21 +373,21 @@
                                 <a href="{{ route('admin.employees.show', $employee) }}" class="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Voir">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                                 </a>
-                                <a href="{{ route('admin.employees.edit', $employee) }}" class="p-1.5 text-gray-500 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors" title="éditer">
+                                <a href="{{ route('admin.employees.edit', $employee) }}" class="p-1.5 text-gray-500 hover:text-[#8860D0] hover:bg-[#8860D0]/10 rounded-lg transition-colors" title="éditer">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
                                 </a>
                                 {{-- Bouton Activer/Suspendre --}}
                                 @if($employee->status === 'active')
                                     <button type="button" 
                                             @click="confirmStatusChange('{{ route('admin.employees.toggle-status', $employee) }}', 'suspend', {{ Js::from($employee->name) }})"
-                                            class="p-1.5 text-gray-500 hover:text-orange-600 hover:bg-orange-50 rounded-lg transition-colors" 
+                                            class="p-1.5 text-gray-500 hover:text-[#5680E9] hover:bg-[#5680E9]/10 rounded-lg transition-colors" 
                                             title="Suspendre le compte">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
                                     </button>
                                 @else
                                     <button type="button" 
                                             @click="confirmStatusChange('{{ route('admin.employees.toggle-status', $employee) }}', 'activate', {{ Js::from($employee->name) }})"
-                                            class="p-1.5 text-orange-500 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors" 
+                                            class="p-1.5 text-[#5AB9EA] hover:text-[#5AB9EA] hover:bg-[#5AB9EA]/10 rounded-lg transition-colors" 
                                             title="Activer le compte">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                                     </button>

@@ -3,7 +3,7 @@
         <!-- Header -->
         <x-table-header title="Gestion des Présences" subtitle="Suivi des pointages et heures travaillées" class="animate-fade-in-up">
             <x-slot:icon>
-                <div class="w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-500/20">
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg transform transition-transform" style="background-image: linear-gradient(135deg, #5680E9, #84CEEB) !important; box-shadow: 0 10px 15px -3px rgba(86, 128, 233, 0.3) !important;">
                     <x-icon name="clock" class="w-6 h-6 text-white" />
                 </div>
             </x-slot:icon>
@@ -17,7 +17,7 @@
                         <x-icon name="file-spreadsheet" class="w-4 h-4 mr-2" />
                         Excel
                     </a>
-                    <a href="{{ route('admin.presences.export.pdf', request()->query()) }}" class="inline-flex items-center px-4 py-2.5 bg-red-50 text-red-700 font-medium rounded-xl border border-red-200 hover:bg-red-100 transition-all shadow-sm text-sm">
+                    <a href="{{ route('admin.presences.export.pdf', request()->query()) }}" class="inline-flex items-center px-4 py-2.5 bg-[#8860D0]/10 text-[#8860D0] font-medium rounded-xl border border-[#8860D0]/20 hover:bg-[#8860D0]/20 transition-all shadow-sm text-sm">
                         <x-icon name="file-text" class="w-4 h-4 mr-2" />
                         PDF
                     </a>
@@ -35,7 +35,7 @@
                         <p class="text-sm font-medium text-gray-500">Présents aujourd'hui</p>
                         <p class="text-3xl font-bold text-gray-900 mt-1">{{ $stats['present_today'] ?? 0 }}</p>
                     </div>
-                    <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center shadow-lg shadow-green-500/30">
+                    <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg" style="background-image: linear-gradient(135deg, #5AB9EA, #5680E9) !important; box-shadow: 0 10px 15px -3px rgba(90, 185, 234, 0.3) !important;">
                         <x-icon name="user-check" class="w-6 h-6 text-white" />
                     </div>
                 </div>
@@ -48,7 +48,7 @@
                         <p class="text-sm font-medium text-gray-500">Retards ce mois</p>
                         <p class="text-3xl font-bold text-gray-900 mt-1">{{ $stats['late_month'] ?? 0 }}</p>
                     </div>
-                    <div class="w-12 h-12 bg-gradient-to-br from-amber-400 to-orange-500 rounded-xl flex items-center justify-center shadow-lg shadow-amber-500/30">
+                    <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg" style="background-image: linear-gradient(135deg, #8860D0, #5680E9) !important; box-shadow: 0 10px 15px -3px rgba(136, 96, 208, 0.3) !important;">
                         <x-icon name="clock" class="w-6 h-6 text-white" />
                     </div>
                 </div>
@@ -61,7 +61,7 @@
                         <p class="text-sm font-medium text-gray-500">Absents injustifiés</p>
                         <p class="text-3xl font-bold text-gray-900 mt-1">{{ $stats['absent_month'] ?? 0 }}</p>
                     </div>
-                    <div class="w-12 h-12 bg-gradient-to-br from-red-500 to-rose-600 rounded-xl flex items-center justify-center shadow-lg shadow-red-500/30">
+                    <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg" style="background-image: linear-gradient(135deg, #C1C8E4, #84CEEB) !important; box-shadow: 0 10px 15px -3px rgba(193, 200, 228, 0.3) !important;">
                         <x-icon name="user-x" class="w-6 h-6 text-white" />
                     </div>
                 </div>
@@ -74,7 +74,7 @@
                         <p class="text-sm font-medium text-gray-500">Heures moy. / jour</p>
                         <p class="text-3xl font-bold text-gray-900 mt-1">{{ $stats['avg_hours'] ?? '0h' }}</p>
                     </div>
-                    <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/30">
+                    <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg" style="background-image: linear-gradient(135deg, #5680E9, #5AB9EA) !important; box-shadow: 0 10px 15px -3px rgba(86, 128, 233, 0.3) !important;">
                         <x-icon name="timer" class="w-6 h-6 text-white" />
                     </div>
                 </div>
@@ -138,7 +138,7 @@
                     </span>
                 @endif
                 @if(request('date_fin'))
-                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-50 text-gray-700 border border-gray-100">
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-[#5680E9]/10 text-[#5680E9] border border-[#5680E9]/20">
                         Au: {{ \Carbon\Carbon::parse(request('date_fin'))->format('d/m/Y') }}
                     </span>
                 @endif
@@ -166,7 +166,7 @@
                                     @if($presence->user->avatar)
                                         <img class="h-10 w-10 rounded-full object-cover ring-2 ring-white shadow-sm" src="{{ avatar_url($presence->user->avatar) }}" alt="{{ $presence->user->name }}">
                                     @else
-                                        <div class="h-10 w-10 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center ring-2 ring-white shadow-sm">
+                                        <div class="h-10 w-10 rounded-full flex items-center justify-center ring-2 ring-white shadow-sm" style="background-image: linear-gradient(135deg, #5AB9EA, #5680E9) !important;">
                                             <span class="text-white font-bold text-xs">{{ strtoupper(substr($presence->user->name, 0, 2)) }}</span>
                                         </div>
                                     @endif
@@ -185,14 +185,14 @@
                             <div class="flex flex-col gap-1">
                                 <div class="flex items-center text-xs">
                                     <span class="w-16 text-gray-500">Arrivée:</span>
-                                    <span class="font-medium text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded">{{ $presence->check_in->format('H:i') }}</span>
+                                    <span class="font-medium text-[#5AB9EA] bg-[#5AB9EA]/10 px-1.5 py-0.5 rounded">{{ $presence->check_in->format('H:i') }}</span>
                                 </div>
                                 <div class="flex items-center text-xs">
                                     <span class="w-16 text-gray-500">Départ:</span>
                                     @if($presence->check_out)
-                                        <span class="font-medium text-red-700 bg-red-50 px-1.5 py-0.5 rounded">{{ $presence->check_out->format('H:i') }}</span>
+                                        <span class="font-medium text-[#8860D0] bg-[#8860D0]/10 px-1.5 py-0.5 rounded">{{ $presence->check_out->format('H:i') }}</span>
                                     @else
-                                        <span class="text-xs text-amber-600 italic">En cours...</span>
+                                        <span class="text-xs text-[#5680E9] italic">En cours...</span>
                                     @endif
                                 </div>
                             </div>
@@ -210,8 +210,8 @@
                                     {{ $presence->notes }}
                                 </div>
                             @elseif(!$presence->check_out)
-                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 animate-pulse">
-                                    <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span>
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-[#5AB9EA]/10 text-[#5AB9EA] animate-pulse">
+                                    <span class="w-1.5 h-1.5 bg-[#5AB9EA] rounded-full"></span>
                                     En cours
                                 </span>
                             @else

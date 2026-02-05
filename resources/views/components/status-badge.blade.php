@@ -1,23 +1,24 @@
 @props(['status', 'type' => 'default'])
 
 @php
-$colorClasses = match($status) {
-    'pending' => 'bg-yellow-100 text-yellow-800',
-    'approved' => 'bg-green-100 text-green-800',
-    'rejected' => 'bg-red-100 text-red-800',
-    'completed' => 'bg-amber-100 text-amber-800',
-    'validated' => 'bg-emerald-100 text-emerald-800',
-    'paid' => 'bg-green-100 text-green-800',
-    'active' => 'bg-green-100 text-green-800',
-    'inactive' => 'bg-gray-100 text-gray-800',
-    'low' => 'bg-green-100 text-green-800',
-    'medium' => 'bg-yellow-100 text-yellow-800',
-    'high' => 'bg-red-100 text-red-800',
-    'conge' => 'bg-blue-100 text-blue-800',
-    'maladie' => 'bg-purple-100 text-purple-800',
-    'autre' => 'bg-gray-100 text-gray-800',
-    default => 'bg-gray-100 text-gray-800',
+$colorMap = match($status) {
+    'pending' => ['bg' => 'rgba(231, 227, 212, 0.5)', 'text' => '#8590AA'], // Attente: Beige/Gray
+    'approved' => ['bg' => 'rgba(59, 139, 235, 0.15)', 'text' => '#3B8BEB'], // En cours: Blue
+    'rejected' => ['bg' => 'rgba(178, 56, 80, 0.15)', 'text' => '#B23850'], // Rejeté: Red
+    'completed' => ['bg' => 'rgba(196, 219, 246, 0.5)', 'text' => '#3B8BEB'], // Terminé: Light Blue/Blue
+    'validated' => ['bg' => 'rgba(59, 139, 235, 0.2)', 'text' => '#3B8BEB'], // Validé: Blue
+    'paid' => ['bg' => 'rgba(59, 139, 235, 0.2)', 'text' => '#3B8BEB'], // Payé: Blue
+    'active' => ['bg' => 'rgba(59, 139, 235, 0.15)', 'text' => '#3B8BEB'], // Actif: Blue
+    'inactive' => ['bg' => 'rgba(133, 144, 170, 0.1)', 'text' => '#8590AA'], // Inactif: Gray
+    'low' => ['bg' => 'rgba(133, 144, 170, 0.1)', 'text' => '#8590AA'], // Basse: Gray
+    'medium' => ['bg' => 'rgba(59, 139, 235, 0.15)', 'text' => '#3B8BEB'], // Moyenne: Blue
+    'high' => ['bg' => 'rgba(178, 56, 80, 0.15)', 'text' => '#B23850'], // Haute: Red
+    'conge' => ['bg' => 'rgba(59, 139, 235, 0.15)', 'text' => '#3B8BEB'], // Congé: Blue
+    'maladie' => ['bg' => 'rgba(178, 56, 80, 0.15)', 'text' => '#B23850'], // Maladie: Red
+    'autre' => ['bg' => 'rgba(133, 144, 170, 0.1)', 'text' => '#8590AA'], // Autre: Gray
+    default => ['bg' => 'rgba(133, 144, 170, 0.1)', 'text' => '#8590AA'], // Default: Gray
 };
+
 
 $labels = match($status) {
     'pending' => 'En attente',
@@ -38,6 +39,8 @@ $labels = match($status) {
 };
 @endphp
 
-<span {{ $attributes->merge(['class' => "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium $colorClasses"]) }}>
+<span {{ $attributes->merge(['class' => "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"]) }}
+      style="background-color: {{ $colorMap['bg'] }}; color: {{ $colorMap['text'] }};">
     {{ $slot->isEmpty() ? $labels : $slot }}
 </span>
+

@@ -12,7 +12,7 @@
 
     <div class="space-y-6">
         <!-- Header avec gradient -->
-        <div class="relative overflow-hidden bg-gradient-to-r from-teal-600 via-cyan-600 to-blue-600 rounded-2xl shadow-xl">
+        <div class="relative overflow-hidden rounded-2xl shadow-xl" style="background: linear-gradient(135deg, #5680E9, #84CEEB) !important;">
             <div class="absolute inset-0 bg-black/10"></div>
             <div class="absolute -top-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
             <div class="absolute -bottom-24 -left-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
@@ -57,7 +57,7 @@
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
                 <div class="flex items-center gap-3">
-                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-slate-500 to-slate-700 flex items-center justify-center shadow-lg shadow-slate-500/30">
+                    <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg" style="background: linear-gradient(135deg, #6B7280, #4B5563); box-shadow: 0 10px 15px -3px rgba(107, 114, 128, 0.3);">
                         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                         </svg>
@@ -71,7 +71,7 @@
             
             <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
                 <div class="flex items-center gap-3">
-                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shadow-lg shadow-amber-500/30">
+                    <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg" style="background: linear-gradient(135deg, #5680E9, #5AB9EA); box-shadow: 0 10px 15px -3px rgba(86, 128, 233, 0.3);">
                         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                         </svg>
@@ -85,7 +85,7 @@
             
             <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
                 <div class="flex items-center gap-3">
-                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-lg shadow-emerald-500/30">
+                    <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg" style="background: linear-gradient(135deg, #5AB9EA, #84CEEB); box-shadow: 0 10px 15px -3px rgba(90, 185, 234, 0.3);">
                         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                         </svg>
@@ -99,7 +99,7 @@
             
             <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
                 <div class="flex items-center gap-3">
-                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-red-500 to-rose-600 flex items-center justify-center shadow-lg shadow-red-500/30">
+                    <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg" style="background: linear-gradient(135deg, #8860D0, #9333EA); box-shadow: 0 10px 15px -3px rgba(136, 96, 208, 0.3);">
                         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                         </svg>
@@ -126,7 +126,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                     <div>
                         <label for="employee_id" class="block text-sm font-medium text-gray-700 mb-1">Employé</label>
-                        <select name="employee_id" id="employee_id" class="w-full rounded-xl border-gray-300 focus:border-teal-500 focus:ring-teal-500 text-sm">
+                        <select name="employee_id" id="employee_id" class="w-full rounded-xl border-gray-300 text-sm" style="--tw-ring-color: #5680E9;" onfocus="this.style.borderColor='#5680E9'" onblur="this.style.borderColor=''">
                             <option value="">Tous les employés</option>
                             <?php $__currentLoopData = $employees; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $emp): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <option value="<?php echo e($emp->id); ?>" <?php echo e(request('employee_id') == $emp->id ? 'selected' : ''); ?>><?php echo e($emp->name); ?></option>
@@ -135,7 +135,7 @@
                     </div>
                     <div>
                         <label for="statut" class="block text-sm font-medium text-gray-700 mb-1">Statut</label>
-                        <select name="statut" id="statut" class="w-full rounded-xl border-gray-300 focus:border-teal-500 focus:ring-teal-500 text-sm">
+                        <select name="statut" id="statut" class="w-full rounded-xl border-gray-300 text-sm" style="--tw-ring-color: #5680E9;" onfocus="this.style.borderColor='#5680E9'" onblur="this.style.borderColor=''">
                             <option value="">Tous les statuts</option>
                             <option value="pending" <?php echo e(request('statut') == 'pending' ? 'selected' : ''); ?>>En attente</option>
                             <option value="approved" <?php echo e(request('statut') == 'approved' ? 'selected' : ''); ?>>Approuvé</option>
@@ -144,7 +144,7 @@
                     </div>
                     <div>
                         <label for="type" class="block text-sm font-medium text-gray-700 mb-1">Type</label>
-                        <select name="type" id="type" class="w-full rounded-xl border-gray-300 focus:border-teal-500 focus:ring-teal-500 text-sm">
+                        <select name="type" id="type" class="w-full rounded-xl border-gray-300 text-sm" style="--tw-ring-color: #5680E9;" onfocus="this.style.borderColor='#5680E9'" onblur="this.style.borderColor=''">
                             <option value="">Tous les types</option>
                             <option value="conge" <?php echo e(request('type') == 'conge' ? 'selected' : ''); ?>>Congé payé</option>
                             <option value="maladie" <?php echo e(request('type') == 'maladie' ? 'selected' : ''); ?>>Arrêt maladie</option>
@@ -152,7 +152,7 @@
                         </select>
                     </div>
                     <div class="flex items-end gap-2">
-                        <button type="submit" class="flex-1 px-4 py-2.5 bg-gradient-to-r from-teal-600 to-cyan-600 text-white font-medium rounded-xl hover:from-teal-700 hover:to-cyan-700 transition-all shadow-lg shadow-teal-500/30">
+                        <button type="submit" class="flex-1 px-4 py-2.5 text-white font-medium rounded-xl transition-all shadow-lg" style="background: linear-gradient(135deg, #5680E9, #5AB9EA); box-shadow: 0 10px 15px -3px rgba(86, 128, 233, 0.3);" onmouseover="this.style.filter='brightness(1.1)'" onmouseout="this.style.filter=''">
                             <span class="flex items-center justify-center gap-2">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
@@ -191,9 +191,24 @@
                         <?php $__empty_1 = true; $__currentLoopData = $leaves; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $leave): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                             <?php
                                 $typeConfig = [
-                                    'conge' => ['gradient' => 'from-blue-500 to-indigo-600', 'bg' => 'bg-blue-100', 'text' => 'text-blue-800', 'icon' => 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z'],
-                                    'maladie' => ['gradient' => 'from-red-500 to-rose-600', 'bg' => 'bg-red-100', 'text' => 'text-red-800', 'icon' => 'M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z'],
-                                    'autre' => ['gradient' => 'from-gray-500 to-slate-600', 'bg' => 'bg-gray-100', 'text' => 'text-gray-800', 'icon' => 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z'],
+                                    'conge' => [
+                                        'gradient' => 'linear-gradient(135deg, #5680E9, #5AB9EA)',
+                                        'bg' => 'rgba(90, 185, 234, 0.1)',
+                                        'text' => '#5AB9EA',
+                                        'icon' => 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z'
+                                    ],
+                                    'maladie' => [
+                                        'gradient' => 'linear-gradient(135deg, #8860D0, #9333EA)',
+                                        'bg' => 'rgba(136, 96, 208, 0.1)',
+                                        'text' => '#8860D0',
+                                        'icon' => 'M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z'
+                                    ],
+                                    'autre' => [
+                                        'gradient' => 'linear-gradient(135deg, #6B7280, #4B5563)',
+                                        'bg' => 'rgba(107, 114, 128, 0.1)',
+                                        'text' => '#6B7280',
+                                        'icon' => 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z'
+                                    ],
                                 ];
                                 $config = $typeConfig[$leave->type] ?? $typeConfig['autre'];
                             ?>
@@ -203,7 +218,7 @@
                                         <?php if($leave->user->avatar): ?>
                                             <img class="h-10 w-10 rounded-xl object-cover ring-2 ring-white shadow-md" src="<?php echo e(avatar_url($leave->user->avatar)); ?>" alt="<?php echo e($leave->user->name); ?>">
                                         <?php else: ?>
-                                            <div class="h-10 w-10 rounded-xl bg-gradient-to-br from-teal-500 to-cyan-600 flex items-center justify-center ring-2 ring-white shadow-md">
+                                            <div class="h-10 w-10 rounded-xl flex items-center justify-center ring-2 ring-white shadow-md" style="background: linear-gradient(135deg, #5680E9, #84CEEB);">
                                                 <span class="text-white font-bold text-xs"><?php echo e(strtoupper(substr($leave->user->name, 0, 2))); ?></span>
                                             </div>
                                         <?php endif; ?>
@@ -215,12 +230,12 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="flex items-center gap-2">
-                                        <div class="w-8 h-8 rounded-lg bg-gradient-to-br <?php echo e($config['gradient']); ?> flex items-center justify-center shadow-sm">
+                                        <div class="w-8 h-8 rounded-lg flex items-center justify-center shadow-sm" style="background: <?php echo e($config['gradient']); ?>;">
                                             <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="<?php echo e($config['icon']); ?>"/>
                                             </svg>
                                         </div>
-                                        <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold <?php echo e($config['bg']); ?> <?php echo e($config['text']); ?>">
+                                        <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold" style="background-color: <?php echo e($config['bg']); ?>; color: <?php echo e($config['text']); ?>;">
                                             <?php echo e($leave->type_label); ?>
 
                                         </span>
@@ -237,7 +252,7 @@
                                     </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-bold bg-teal-100 text-teal-800">
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-bold" style="background-color: rgba(90, 185, 234, 0.15); color: #5AB9EA;">
                                         <?php echo e($leave->duree); ?> jour<?php echo e($leave->duree > 1 ? 's' : ''); ?>
 
                                     </span>
