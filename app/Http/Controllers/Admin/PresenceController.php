@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Exports\PresencesExport;
 use App\Http\Controllers\Controller;
 use App\Models\Department;
 use App\Models\Presence;
@@ -10,7 +9,6 @@ use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Maatwebsite\Excel\Facades\Excel;
 
 class PresenceController extends Controller
 {
@@ -476,9 +474,7 @@ class PresenceController extends Controller
 
     public function exportExcel(Request $request)
     {
-        $filters = $request->only(['user_id', 'date_debut', 'date_fin']);
-
-        return Excel::download(new PresencesExport($filters), 'presences_'.now()->format('Y-m-d').'.xlsx');
+        return redirect()->back()->with('error', 'L\'export Excel n\'est pas disponible sur cet hébergement.');
     }
 
     private function getFilteredPresences(Request $request)

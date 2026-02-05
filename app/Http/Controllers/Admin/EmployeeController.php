@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Exports\EmployeesExport;
 use App\Http\Controllers\Controller;
 use App\Models\Department;
 use App\Models\EmployeeWorkDay;
@@ -13,7 +12,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules;
-use Maatwebsite\Excel\Facades\Excel;
 
 class EmployeeController extends Controller
 {
@@ -117,20 +115,11 @@ class EmployeeController extends Controller
     }
 
     /**
-     * Export all employees (personal info, CDI, nom, poste, etc.) to Excel.
+     * Export all employees - Feature disabled (Excel package removed for hosting compatibility)
      */
     public function export(Request $request)
     {
-        $departmentId = $request->get('department_id');
-        $status = $request->get('status');
-        $contractType = $request->get('contract_type');
-
-        $filename = 'employes-'.now()->format('Y-m-d').'.xlsx';
-
-        return Excel::download(
-            new EmployeesExport($departmentId, $status, $contractType),
-            $filename
-        );
+        return redirect()->back()->with('error', 'L\'export Excel n\'est pas disponible sur cet hébergement.');
     }
 
     public function create()

@@ -809,16 +809,11 @@ class AnalyticsController extends Controller
     }
 
     /**
-     * Export analytics data to Excel
+     * Export analytics data to Excel - Feature disabled (Excel package removed for hosting compatibility)
      */
     public function exportExcel(Request $request)
     {
-        $data = $this->getExportData($request);
-
-        return \Maatwebsite\Excel\Facades\Excel::download(
-            new \App\Exports\AnalyticsExport($data),
-            'rapport-analytics-'.now()->format('Y-m-d').'.xlsx'
-        );
+        return redirect()->back()->with('error', 'L\'export Excel n\'est pas disponible sur cet hébergement.');
     }
 
     /**
