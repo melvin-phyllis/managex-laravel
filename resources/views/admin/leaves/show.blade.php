@@ -149,7 +149,7 @@
                         </div>
                     </div>
                     <a href="{{ route('admin.employees.show', $leave->user) }}" class="mt-4 block text-center text-sm text-blue-600 hover:text-blue-800">
-                        Voir le profil complet â†’
+                        Voir le profil complet 
                     </a>
                 </div>
 

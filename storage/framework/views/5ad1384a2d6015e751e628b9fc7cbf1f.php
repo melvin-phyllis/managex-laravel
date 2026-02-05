@@ -16,7 +16,7 @@
 <body class="font-sans antialiased">
     <div class="min-h-screen flex items-center justify-center bg-gray-50 relative overflow-hidden">
         
-        <!-- Motifs dé©coratifs d'arriére-plan -->
+        <!-- Motifs décoratifs d'arriére-plan -->
         <div class="absolute inset-0 overflow-hidden pointer-events-none">
             <div class="absolute -top-24 -left-24 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl"></div>
             <div class="absolute -bottom-24 -right-24 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl"></div>
@@ -28,7 +28,7 @@
             <div class="text-center mb-8">
 
                 <h1 class="text-3xl font-bold text-gray-900">ManageX</h1>
-                <p class="text-gray-500 mt-1">Gestion RH Simplifié©e</p>
+                <p class="text-gray-500 mt-1">Gestion RH Simplifiée</p>
             </div>
 
             <?php echo e($slot); ?>

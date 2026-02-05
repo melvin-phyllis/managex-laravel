@@ -70,7 +70,7 @@
                         </svg>
                         Actifs
                     </span>
-                    <span class="text-gray-400 mx-2">â€¢</span>
+                    <span class="text-gray-400 mx-2"></span>
                     <span class="text-gray-500">Effectif total</span>
                 </div>
             </div>
@@ -116,7 +116,7 @@
                     <span class="text-[#8860D0] bg-[#8860D0]/10 px-2 py-0.5 rounded-full font-medium">
                         Planifiés
                     </span>
-                    <span class="text-gray-400 mx-2">â€¢</span>
+                    <span class="text-gray-400 mx-2"></span>
                     <span class="text-gray-500">Absences validées</span>
                 </div>
             </div>

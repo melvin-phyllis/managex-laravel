@@ -149,7 +149,7 @@
                                 <label for="email_password" class="block text-sm font-medium text-gray-700 mb-1">Mot de passe actuel</label>
                                 <input type="password" name="password" id="email_password" required
                                        class="w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
-                                       placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢">
+                                       placeholder="">
                                 @error('password')
                                     <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                                 @enderror
@@ -183,7 +183,7 @@
                                 <label for="current_password" class="block text-sm font-medium text-gray-700 mb-1">Mot de passe actuel</label>
                                 <input type="password" name="current_password" id="current_password" required
                                        class="w-full rounded-xl border-gray-300 focus:border-rose-500 focus:ring-rose-500"
-                                       placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢">
+                                       placeholder="">
                                 @error('current_password')
                                     <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                                 @enderror
@@ -193,7 +193,7 @@
                                 <label for="new_password" class="block text-sm font-medium text-gray-700 mb-1">Nouveau mot de passe</label>
                                 <input type="password" name="new_password" id="new_password" required minlength="8"
                                        class="w-full rounded-xl border-gray-300 focus:border-rose-500 focus:ring-rose-500"
-                                       placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢">
+                                       placeholder="">
                                 @error('new_password')
                                     <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                                 @enderror
@@ -204,7 +204,7 @@
                                 <label for="new_password_confirmation" class="block text-sm font-medium text-gray-700 mb-1">Confirmer le nouveau mot de passe</label>
                                 <input type="password" name="new_password_confirmation" id="new_password_confirmation" required
                                        class="w-full rounded-xl border-gray-300 focus:border-rose-500 focus:ring-rose-500"
-                                       placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢">
+                                       placeholder="">
                             </div>
                         </div>
                         
@@ -734,14 +734,14 @@
                         <div class="mt-6 p-4 bg-emerald-50 rounded-lg max-w-md">
                             <p class="text-sm text-emerald-800">
                                 <strong>{{ $payrollCountries->count() }} pays configuré(s)</strong> dans le systéme.
-                                <a href="{{ route('admin.payroll-settings.countries') }}" class="underline hover:no-underline">Gérer les pays â†’</a>
+                                <a href="{{ route('admin.payroll-settings.countries') }}" class="underline hover:no-underline">Gérer les pays </a>
                             </p>
                         </div>
                     @else
                         <div class="mt-6 p-4 bg-yellow-50 rounded-lg max-w-md">
                             <p class="text-sm text-yellow-800">
                                 <strong>Aucun pays configuré.</strong>
-                                <a href="{{ route('admin.payroll-settings.countries') }}" class="underline hover:no-underline">Configurer un pays â†’</a>
+                                <a href="{{ route('admin.payroll-settings.countries') }}" class="underline hover:no-underline">Configurer un pays </a>
                             </p>
                         </div>
                     @endif

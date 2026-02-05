@@ -58,7 +58,7 @@
                             </div>
                             <p class="text-gray-600">Cliquez ou glissez votre fichier ici</p>
                             <p class="text-sm text-gray-500 mt-1">
-                                {{ $type->getAllowedExtensionsString() }} â€¢ Max {{ $type->max_size_mb }}MB
+                                {{ $type->getAllowedExtensionsString() }}  Max {{ $type->max_size_mb }}MB
                             </p>
                         </div>
                         <div id="filePreview" class="hidden">

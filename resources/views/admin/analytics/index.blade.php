@@ -1,7 +1,7 @@
 ﻿<x-layouts.admin>
     <div class="space-y-6" x-data="analyticsPage()">
 
-        {{-- Header amé©lioré© --}}
+        {{-- Header amélioré --}}
         <div class="relative overflow-hidden bg-gradient-to-r from-[#5680E9] to-[#84CEEB] rounded-2xl shadow-lg">
             <div class="absolute inset-0 bg-black/10"></div>
             <div class="absolute -top-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
@@ -16,7 +16,7 @@
                             </div>
                             Analytics RH
                         </h1>
-                        <p class="text-white/80 mt-2">Tableau de bord de performance et statistiques en temps ré©el</p>
+                        <p class="text-white/80 mt-2">Tableau de bord de performance et statistiques en temps réel</p>
                         <div class="flex items-center gap-4 mt-3">
                             <span class="px-3 py-1 bg-white/20 backdrop-blur-sm text-white text-xs font-medium rounded-full">
                                 Derniére mise é  jour: <span x-text="lastUpdate">-</span>
@@ -56,16 +56,16 @@
                 <option value="today">Aujourd'hui</option>
                 <option value="week">Cette semaine</option>
                 <option value="month">Ce mois</option>
-                <option value="year">Cette anné©e</option>
-                <option value="custom">Mois spé©cifique...</option>
+                <option value="year">Cette année</option>
+                <option value="custom">Mois spécifique...</option>
             </select>
 
-            {{-- Sé©lecteur de mois spé©cifique --}}
+            {{-- Sélecteur de mois spécifique --}}
             <template x-if="filters.period === 'custom'">
                 <div class="flex gap-2">
                     <select x-model="filters.custom_month" @change="loadData()" class="rounded-lg border-gray-300 text-sm focus:border-indigo-500 focus:ring-indigo-500">
                         <option value="1">Janvier</option>
-                        <option value="2">Fé©vrier</option>
+                        <option value="2">Février</option>
                         <option value="3">Mars</option>
                         <option value="4">Avril</option>
                         <option value="5">Mai</option>
@@ -75,7 +75,7 @@
                         <option value="9">Septembre</option>
                         <option value="10">Octobre</option>
                         <option value="11">Novembre</option>
-                        <option value="12">Dé©cembre</option>
+                        <option value="12">Décembre</option>
                     </select>
                     <select x-model="filters.custom_year" @change="loadData()" class="rounded-lg border-gray-300 text-sm focus:border-indigo-500 focus:ring-indigo-500">
                         <option value="2026">2026</option>
@@ -86,7 +86,7 @@
             </template>
 
             <select x-model="filters.department_id" @change="loadData()" class="rounded-lg border-gray-300 text-sm focus:border-indigo-500 focus:ring-indigo-500">
-                <option value="">Tous les dé©partements</option>
+                <option value="">Tous les départements</option>
                 @foreach($departments as $dept)
                     <option value="{{ $dept->id }}">{{ $dept->name }}</option>
                 @endforeach
@@ -123,7 +123,7 @@
                 </div>
             </div>
 
-            {{-- 2. Taux de pré©sence --}}
+            {{-- 2. Taux de présence --}}
             <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100 relative overflow-hidden group hover:shadow-md transition-all">
                 <div class="absolute right-0 top-0 w-24 h-24 bg-gradient-to-br from-emerald-500/10 to-teal-500/10 rounded-full -mr-8 -mt-8 group-hover:scale-125 transition-transform"></div>
                 <div class="relative z-10">
@@ -134,7 +134,7 @@
                         <span class="text-xs font-medium text-gray-500" x-text="(kpis.presents_today?.value || 0) + '/' + (kpis.presents_today?.expected || 0)"></span>
                     </div>
                     <p class="text-3xl font-bold text-gray-900 mt-4"><span x-text="kpis.presents_today?.percentage || '0'"></span>%</p>
-                    <p class="text-sm text-gray-500 mt-1">Taux de pré©sence</p>
+                    <p class="text-sm text-gray-500 mt-1">Taux de présence</p>
                     <div class="w-full bg-gray-200 rounded-full h-2 mt-3">
                         <div class="bg-gradient-to-r from-emerald-500 to-teal-500 h-2 rounded-full transition-all duration-1000" :style="'width: ' + (kpis.presents_today?.percentage || 0) + '%'"></div>
                     </div>
@@ -151,12 +151,12 @@
                         </div>
                         <span class="text-xs font-medium px-2 py-1 rounded-full" 
                               :class="(kpis.turnover?.rate || 0) > 10 ? 'bg-red-100 text-red-700' : 'bg-emerald-100 text-emerald-700'"
-                              x-text="(kpis.turnover?.rate || 0) > 10 ? 'é‰levé©' : 'Normal'"></span>
+                              x-text="(kpis.turnover?.rate || 0) > 10 ? 'élevé' : 'Normal'"></span>
                     </div>
                     <p class="text-3xl font-bold text-gray-900 mt-4"><span x-text="kpis.turnover?.rate || '0'"></span>%</p>
                     <p class="text-sm text-gray-500 mt-1">Taux de turnover</p>
                     <p class="text-xs text-gray-400 mt-1">
-                        <span class="text-emerald-600" x-text="'+' + (kpis.turnover?.entries || 0)"></span> entré©es / 
+                        <span class="text-emerald-600" x-text="'+' + (kpis.turnover?.entries || 0)"></span> entrées / 
                         <span class="text-red-600" x-text="'-' + (kpis.turnover?.exits || 0)"></span> sorties
                     </p>
                 </div>
@@ -228,27 +228,27 @@
             </div>
         </div>
 
-        {{-- Ré©sumé© é‰valuations --}}
+        {{-- Résumé évaluations --}}
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-fade-in-up animation-delay-300">
-            {{-- Stats é‰valuations Employé©s --}}
+            {{-- Stats évaluations Employés --}}
             <div class="bg-gradient-to-br from-[#5680E9] to-[#5AB9EA] rounded-xl shadow-lg p-6 text-white">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="font-semibold flex items-center gap-2">
                         <x-icon name="clipboard-list" class="w-5 h-5"/>
-                        é‰valuations Employé©s (Ce mois)
+                        évaluations Employés (Ce mois)
                     </h3>
                     <a href="{{ route('admin.employee-evaluations.index') }}" class="text-xs bg-white/20 hover:bg-white/30 px-3 py-1 rounded-full transition">
-                        Voir tout â†’
+                        Voir tout 
                     </a>
                 </div>
                 <div class="grid grid-cols-2 gap-4">
                     <div class="bg-white/10 rounded-lg p-3">
                         <p class="text-2xl font-bold" x-text="tables.evaluationStats.employees?.validated || 0"></p>
-                        <p class="text-xs text-white/80">Validé©es</p>
+                        <p class="text-xs text-white/80">Validées</p>
                     </div>
                     <div class="bg-white/10 rounded-lg p-3">
                         <p class="text-2xl font-bold" x-text="tables.evaluationStats.employees?.not_evaluated || 0"></p>
-                        <p class="text-xs text-white/80">Non é©valué©s</p>
+                        <p class="text-xs text-white/80">Non évalués</p>
                     </div>
                     <div class="bg-white/10 rounded-lg p-3">
                         <p class="text-2xl font-bold" x-text="tables.evaluationStats.employees?.avg_score || '0'"></p>
@@ -261,21 +261,21 @@
                 </div>
             </div>
 
-            {{-- Stats é‰valuations Stagiaires --}}
+            {{-- Stats évaluations Stagiaires --}}
             <div class="bg-gradient-to-br from-[#84CEEB] to-[#8860D0] rounded-xl shadow-lg p-6 text-white">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="font-semibold flex items-center gap-2">
                         <x-icon name="user-check" class="w-5 h-5"/>
-                        é‰valuations Stagiaires (4 sem.)
+                        évaluations Stagiaires (4 sem.)
                     </h3>
                     <a href="{{ route('admin.intern-evaluations.index') }}" class="text-xs bg-white/20 hover:bg-white/30 px-3 py-1 rounded-full transition">
-                        Voir tout â†’
+                        Voir tout 
                     </a>
                 </div>
                 <div class="grid grid-cols-3 gap-4">
                     <div class="bg-white/10 rounded-lg p-3">
                         <p class="text-2xl font-bold" x-text="tables.evaluationStats.interns?.total_evaluations || 0"></p>
-                        <p class="text-xs text-white/80">Total é©valuations</p>
+                        <p class="text-xs text-white/80">Total évaluations</p>
                     </div>
                     <div class="bg-white/10 rounded-lg p-3">
                         <p class="text-2xl font-bold" x-text="tables.evaluationStats.interns?.avg_score || '0'"></p>
@@ -283,7 +283,7 @@
                     </div>
                     <div class="bg-white/10 rounded-lg p-3">
                         <p class="text-2xl font-bold text-amber-300" x-text="tables.evaluationStats.interns?.not_evaluated_this_week || 0"></p>
-                        <p class="text-xs text-white/80">é€ é©valuer cette sem.</p>
+                        <p class="text-xs text-white/80">é€ évaluer cette sem.</p>
                     </div>
                 </div>
             </div>
@@ -300,12 +300,12 @@
                         <div class="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center">
                             <x-icon name="activity" class="w-4 h-4 text-indigo-600"/>
                         </div>
-                        é‰volution des pré©sences
+                        é‰volution des présences
                     </h3>
                     <div class="flex items-center gap-2">
                         <span class="flex items-center text-xs text-gray-500">
                             <span class="w-3 h-3 rounded-full bg-indigo-500 mr-1"></span>
-                            Pré©sences
+                            Présences
                         </span>
                         <span class="flex items-center text-xs text-gray-500">
                             <span class="w-3 h-3 rounded-full bg-emerald-500 mr-1"></span>
@@ -324,7 +324,7 @@
                     <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
                         <x-icon name="pie-chart" class="w-4 h-4 text-purple-600"/>
                     </div>
-                    Ré©partition par dé©partement
+                    Répartition par département
                 </h3>
                 <div class="h-72 relative w-full flex justify-center">
                     <canvas id="departmentChart"></canvas>
@@ -340,14 +340,14 @@
                     <div class="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center">
                         <x-icon name="users" class="w-4 h-4 text-emerald-600"/>
                     </div>
-                    Recrutements vs Dé©parts
+                    Recrutements vs Départs
                 </h3>
                 <div class="h-64 relative w-full">
                     <canvas id="recruitmentChart"></canvas>
                 </div>
             </div>
 
-            {{-- Ré©partition par type de contrat (NOUVEAU) --}}
+            {{-- Répartition par type de contrat (NOUVEAU) --}}
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
                 <h3 class="font-semibold text-gray-900 mb-4 flex items-center gap-2">
                     <div class="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center">
@@ -382,20 +382,20 @@
                     <div class="w-8 h-8 bg-rose-100 rounded-lg flex items-center justify-center">
                         <x-icon name="user-x" class="w-4 h-4 text-rose-600"/>
                     </div>
-                    Taux d'absenté©isme par service
+                    Taux d'absentéisme par service
                 </h3>
                 <div class="h-64 relative w-full">
                     <canvas id="absenteismChart"></canvas>
                 </div>
             </div>
 
-            {{-- Ponctualité© par dé©partement (NOUVEAU) --}}
+            {{-- Ponctualité par département (NOUVEAU) --}}
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
                 <h3 class="font-semibold text-gray-900 mb-4 flex items-center gap-2">
                     <div class="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center">
                         <x-icon name="clock" class="w-4 h-4 text-orange-600"/>
                     </div>
-                    Ponctualité© par dé©partement
+                    Ponctualité par département
                 </h3>
                 <div class="h-64 relative w-full">
                     <canvas id="punctualityChart"></canvas>
@@ -410,7 +410,7 @@
                     <div class="w-8 h-8 bg-cyan-100 rounded-lg flex items-center justify-center">
                         <x-icon name="clock" class="w-4 h-4 text-cyan-600"/>
                     </div>
-                    Heures travaillé©es (5 derniéres semaines)
+                    Heures travaillées (5 derniéres semaines)
                 </h3>
                 <div class="text-sm text-gray-500">
                     Total: <span class="font-bold text-gray-900" x-text="charts.heures_travaillees_semaine?.total || 0"></span>h
@@ -461,23 +461,23 @@
                     <div class="space-y-2">
                         <div class="flex items-center gap-2 text-sm" x-show="kpis.turnover?.rate > 10">
                             <span class="w-2 h-2 rounded-full bg-red-500"></span>
-                            <span class="text-gray-700">Taux de turnover é©levé© (<span x-text="kpis.turnover?.rate"></span>%) - Analyser les causes de dé©part</span>
+                            <span class="text-gray-700">Taux de turnover élevé (<span x-text="kpis.turnover?.rate"></span>%) - Analyser les causes de départ</span>
                         </div>
                         <div class="flex items-center gap-2 text-sm" x-show="kpis.presents_today?.percentage < 80">
                             <span class="w-2 h-2 rounded-full bg-amber-500"></span>
-                            <span class="text-gray-700">Taux de pré©sence faible (<span x-text="kpis.presents_today?.percentage"></span>%) - Vé©rifier les absences non justifié©es</span>
+                            <span class="text-gray-700">Taux de présence faible (<span x-text="kpis.presents_today?.percentage"></span>%) - Vérifier les absences non justifiées</span>
                         </div>
                         <div class="flex items-center gap-2 text-sm" x-show="kpis.interns?.to_evaluate > 0">
                             <span class="w-2 h-2 rounded-full bg-blue-500"></span>
-                            <span class="text-gray-700"><span x-text="kpis.interns?.to_evaluate"></span> stagiaire(s) en attente d'é©valuation cette semaine</span>
+                            <span class="text-gray-700"><span x-text="kpis.interns?.to_evaluate"></span> stagiaire(s) en attente d'évaluation cette semaine</span>
                         </div>
                         <div class="flex items-center gap-2 text-sm" x-show="kpis.late_hours?.total > 10">
                             <span class="w-2 h-2 rounded-full bg-orange-500"></span>
-                            <span class="text-gray-700"><span x-text="kpis.late_hours?.total"></span>h de retard cumulé©es - Planifier des sessions de rattrapage</span>
+                            <span class="text-gray-700"><span x-text="kpis.late_hours?.total"></span>h de retard cumulées - Planifier des sessions de rattrapage</span>
                         </div>
                         <div class="flex items-center gap-2 text-sm" x-show="tables.pending?.length > 5">
                             <span class="w-2 h-2 rounded-full bg-purple-500"></span>
-                            <span class="text-gray-700"><span x-text="tables.pending?.length"></span> demandes de congé©s en attente de validation</span>
+                            <span class="text-gray-700"><span x-text="tables.pending?.length"></span> demandes de congés en attente de validation</span>
                         </div>
                         <div class="flex items-center gap-2 text-sm" x-show="kpis.turnover?.rate <= 10 && kpis.presents_today?.percentage >= 80">
                             <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
@@ -568,7 +568,7 @@
                         type = 'excel';
                     }
                     
-                    // Utiliser l'overlay de té©lé©chargement
+                    // Utiliser l'overlay de téléchargement
                     window.dispatchEvent(new CustomEvent('start-download', {
                         detail: { url, filename, type }
                     }));
@@ -596,7 +596,7 @@
                         data: {
                             labels: this.charts.presence_trend?.labels || [],
                             datasets: [{
-                                label: 'Pré©sences',
+                                label: 'Présences',
                                 data: this.charts.presence_trend?.data || [],
                                 borderColor: '#4F46E5', // Indigo 600
                                 backgroundColor: 'rgba(79, 70, 229, 0.1)',
@@ -664,7 +664,7 @@
                                     borderRadius: 4
                                 },
                                 {
-                                    label: 'Dé©parts',
+                                    label: 'Départs',
                                     data: this.charts.recruitment_turnover?.departs || [],
                                     backgroundColor: '#EF4444',
                                     borderRadius: 4

@@ -185,7 +185,7 @@
                         <template x-if="filters.period === 'custom'">
                             <div class="flex items-center gap-2">
                                 <input type="date" x-model="filters.start_date" @change="loadData()" class="rounded-lg border-gray-300 text-sm">
-                                <span class="text-gray-400">â†’</span>
+                                <span class="text-gray-400"></span>
                                 <input type="date" x-model="filters.end_date" @change="loadData()" class="rounded-lg border-gray-300 text-sm">
                             </div>
                         </template>
@@ -317,7 +317,7 @@
                                         âœ“ Présent
                                     </span>
                                     <span x-show="emp.status === 'late'" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold text-[#5680E9]" style="background-color: #84CEEB30;">
-                                        â± En retard
+                                         En retard
                                     </span>
                                     <span x-show="emp.status === 'absent'" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold text-[#8860D0]" style="background-color: #8860D020;">
                                         âœ• Absent
@@ -381,7 +381,7 @@
                                 <td x-show="mode === 'historical'" class="py-4 px-5 text-center">
                                     <a :href="'/admin/presences/employee/' + emp.id + '?period=' + filters.period + (filters.period === 'custom' ? '&start_date=' + filters.start_date + '&end_date=' + filters.end_date : '')" 
                                        class="inline-flex items-center gap-1 px-3 py-1.5 text-sm font-medium text-indigo-600 hover:text-white bg-indigo-50 hover:bg-indigo-600 rounded-lg transition-colors">
-                                        Détails â†’
+                                        Détails 
                                     </a>
                                 </td>
                             </tr>
