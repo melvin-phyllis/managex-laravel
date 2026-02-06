@@ -62,7 +62,7 @@
             </div>
         </div>
 
-        <!-- Stats Cards (optimisé: données depuis le contré´leur) -->
+        <!-- Stats Cards (optimisé: données depuis le contrôleur) -->
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 animate-fade-in-up animation-delay-100">
             @php
                 $stats = [
@@ -128,7 +128,7 @@
                         <option value="">Tous statuts</option>
                         <option value="pending" {{ request('statut') == 'pending' ? 'selected' : '' }}>En attente</option>
                         <option value="approved" {{ request('statut') == 'approved' ? 'selected' : '' }}>En cours</option>
-                        <option value="completed" {{ request('statut') == 'completed' ? 'selected' : '' }}>Terminée (é  valider)</option>
+                        <option value="completed" {{ request('statut') == 'completed' ? 'selected' : '' }}>Terminée (à valider)</option>
                         <option value="validated" {{ request('statut') == 'validated' ? 'selected' : '' }}>Validée</option>
                         <option value="rejected" {{ request('statut') == 'rejected' ? 'selected' : '' }}>Rejetée</option>
                     </select>
@@ -213,7 +213,7 @@
             </div>
 
             @php
-                // $kanbanTasks passé depuis le contré´leur (optimisé)
+                // $kanbanTasks passé depuis le contrôleur (optimisé)
                 $columns = [
                     'pending' => ['title' => 'En attente', 'color' => 'amber', 'icon' => 'clock'],
                     'approved' => ['title' => 'En cours', 'color' => 'blue', 'icon' => 'play'],
@@ -584,11 +584,11 @@
                         const data = await response.json();
 
                         if (data.success) {
-                            this.showToast('Statut mis é  jour avec succés', 'success');
+                            this.showToast('Statut mis à jour avec succés', 'success');
                         } else {
                             // Revert on error
                             this.revertMove(taskCard, sourceColumn, oldStatus, newStatus);
-                            this.showToast(data.message || 'Erreur lors de la mise é  jour', 'error');
+                            this.showToast(data.message || 'Erreur lors de la mise à jour', 'error');
                         }
                     } catch (error) {
                         console.error('Error updating task:', error);
@@ -664,7 +664,7 @@
                         <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
                             <h3 class="text-base font-semibold leading-6 text-gray-900" id="modal-title">Confirmer la suppression</h3>
                             <div class="mt-2">
-                                <p class="text-sm text-gray-500">éƒÅ tes-vous sé»r de vouloir supprimer cette tache ? Cette action est irréversible.</p>
+                                <p class="text-sm text-gray-500">Êtes-vous sûr de vouloir supprimer cette tache ? Cette action est irréversible.</p>
                             </div>
                         </div>
                     </div>
@@ -758,8 +758,8 @@
                 eventDidMount: function(info) {
                     const props = info.event.extendedProps;
                     let tooltip = info.event.title;
-                    if (props.employee) tooltip += '\né°Å¸â€˜¤ ' + props.employee;
-                    if (props.progression !== undefined) tooltip += '\né°Å¸â€œÅ  ' + props.progression + '%';
+                    if (props.employee) tooltip += '\n👤 ' + props.employee;
+                    if (props.progression !== undefined) tooltip += '\n📊 ' + props.progression + '%';
                     info.el.title = tooltip;
                 },
                 height: 'auto',

@@ -19,7 +19,7 @@
                         <p class="text-white/80 mt-2">Tableau de bord de performance et statistiques en temps réel</p>
                         <div class="flex items-center gap-4 mt-3">
                             <span class="px-3 py-1 bg-white/20 backdrop-blur-sm text-white text-xs font-medium rounded-full">
-                                Derniére mise é  jour: <span x-text="lastUpdate">-</span>
+                                Derniére mise à jour: <span x-text="lastUpdate">-</span>
                             </span>
                             <span class="px-3 py-1 bg-emerald-500/80 text-white text-xs font-medium rounded-full flex items-center gap-1" x-show="!loading">
                                 <span class="w-2 h-2 bg-white rounded-full animate-pulse"></span>
@@ -71,7 +71,7 @@
                         <option value="5">Mai</option>
                         <option value="6">Juin</option>
                         <option value="7">Juillet</option>
-                        <option value="8">Aoé»t</option>
+                        <option value="8">Août</option>
                         <option value="9">Septembre</option>
                         <option value="10">Octobre</option>
                         <option value="11">Novembre</option>

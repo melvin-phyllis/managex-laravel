@@ -96,7 +96,7 @@ class SecurityHeaders
 
         // Scripts: CDNs nécessaires (Chart.js, Alpine.js, jQuery, Lightbox, etc.)
         // NOTE: 'unsafe-eval' est nécessaire pour Alpine.js (évaluation des expressions x-data)
-        $scriptCdns = 'https://cdn.jsdelivr.net https://unpkg.com https://cdnjs.cloudflare.com https://code.jquery.com';
+        $scriptCdns = 'https://cdn.jsdelivr.net https://unpkg.com https://cdnjs.cloudflare.com https://code.jquery.com https://static.cloudflareinsights.com';
         // Alpine.js nécessite 'unsafe-eval' pour évaluer les expressions comme x-data="{ open: false }"
         // C'est un compromis nécessaire pour l'interactivité frontend
         $scriptSrc = "'self' 'unsafe-inline' 'unsafe-eval' {$scriptCdns}";
@@ -116,7 +116,7 @@ class SecurityHeaders
         $fontSrc = "'self' data: https://fonts.gstatic.com https://fonts.bunny.net";
 
         // Connexions: self, WebSockets, CDNs pour source maps, et OpenStreetMap pour géolocalisation
-        $connectSrc = "'self' wss: ws: https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://unpkg.com https://nominatim.openstreetmap.org";
+        $connectSrc = "'self' wss: ws: https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://unpkg.com https://nominatim.openstreetmap.org https://cloudflareinsights.com";
 
         // Frame ancestors: self (clickjacking protection)
         $frameAncestors = "'self'";

@@ -159,12 +159,12 @@
                     <dl class="space-y-4">
                         <div>
                             <dt class="text-sm text-gray-500">Demande créée le</dt>
-                            <dd class="mt-1 text-sm font-medium text-gray-900">{{ $leave->created_at->format('d/m/Y é  H:i') }}</dd>
+                            <dd class="mt-1 text-sm font-medium text-gray-900">{{ $leave->created_at->format('d/m/Y à H:i') }}</dd>
                         </div>
                         @if($leave->updated_at != $leave->created_at)
                             <div>
                                 <dt class="text-sm text-gray-500">Derniére modification</dt>
-                                <dd class="mt-1 text-sm font-medium text-gray-900">{{ $leave->updated_at->format('d/m/Y é  H:i') }}</dd>
+                                <dd class="mt-1 text-sm font-medium text-gray-900">{{ $leave->updated_at->format('d/m/Y à H:i') }}</dd>
                             </div>
                         @endif
                     </dl>

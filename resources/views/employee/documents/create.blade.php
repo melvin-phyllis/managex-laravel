@@ -6,7 +6,7 @@
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
             </svg>
-            Retour é  mes documents
+            Retour à mes documents
         </a>
 
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
@@ -26,7 +26,7 @@
             <!-- Info Box -->
             @if($type->description)
                 <div class="p-4 bg-blue-50 border-b border-blue-100">
-                    <p class="text-sm text-blue-700">â„¹ï¸ {{ $type->description }}</p>
+                    <p class="text-sm text-blue-700">ℹ️ {{ $type->description }}</p>
                 </div>
             @endif
 

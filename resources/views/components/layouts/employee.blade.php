@@ -266,7 +266,7 @@
                         <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
                             <h3 class="text-base font-semibold leading-6 text-gray-900" id="modal-title">Déconnexion</h3>
                             <div class="mt-2">
-                                <p class="text-sm text-gray-500">éŠtes-vous sé»r de vouloir vous déconnecter ?</p>
+                                <p class="text-sm text-gray-500">Êtes-vous sûr de vouloir vous déconnecter ?</p>
                             </div>
                         </div>
                     </div>

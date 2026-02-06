@@ -102,7 +102,7 @@
                         <input type="date" name="date_debut" value="{{ request('date_debut') }}" class="pl-10 pr-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm">
                         <x-icon name="calendar" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                     </div>
-                    <span class="text-gray-400">é </span>
+                    <span class="text-gray-400">à</span>
                     <div class="relative">
                         <input type="date" name="date_fin" value="{{ request('date_fin') }}" class="pl-10 pr-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm">
                         <x-icon name="calendar" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />

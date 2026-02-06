@@ -343,7 +343,7 @@
                                             </svg>
                                         </div>
                                         <p class="text-gray-500 font-medium">Aucun stagiaire enregistré</p>
-                                        <p class="text-gray-400 text-sm mt-1">Les stagiaires apparaé®tront ici une fois ajoutés</p>
+                                        <p class="text-gray-400 text-sm mt-1">Les stagiaires apparaîtront ici une fois ajoutés</p>
                                     </div>
                                 </td>
                             </tr>

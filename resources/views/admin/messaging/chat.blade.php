@@ -268,7 +268,7 @@
                             <template x-for="(file, idx) in pendingImages" :key="idx">
                                 <div class="relative flex-shrink-0">
                                     <img :src="file.preview" class="w-16 h-16 object-cover rounded-lg border border-gray-200"/>
-                                    <button type="button" @click="removePendingImage(idx)" class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center text-xs hover:bg-red-600">éƒâ€”</button>
+                                    <button type="button" @click="removePendingImage(idx)" class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center text-xs hover:bg-red-600">×</button>
                                 </div>
                             </template>
                         </div>
@@ -279,7 +279,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                                 </svg>
                             </button>
-                            <button type="button" @click="toggleVoiceRecord()" :class="isRecording ? 'bg-red-500 hover:bg-red-600 text-white' : 'text-gray-500 hover:text-blue-600 hover:bg-blue-50'" class="p-2 rounded-full transition-colors flex-shrink-0" :title="isRecording ? 'Arréªter et envoyer' : 'Message vocal'">
+                            <button type="button" @click="toggleVoiceRecord()" :class="isRecording ? 'bg-red-500 hover:bg-red-600 text-white' : 'text-gray-500 hover:text-blue-600 hover:bg-blue-50'" class="p-2 rounded-full transition-colors flex-shrink-0" :title="isRecording ? 'Arrêter et envoyer' : 'Message vocal'">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v3m0 0V6a7 7 0 0114 0v3m-7 4a7 7 0 009.5 1.5"/>
                                 </svg>

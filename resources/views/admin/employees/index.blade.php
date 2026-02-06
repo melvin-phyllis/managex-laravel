@@ -138,7 +138,7 @@
                     <span class="text-[#5680E9] bg-[#C1C8E4]/20 px-2 py-0.5 rounded-full font-medium">
                         +{{ $stats['new_this_month'] }}
                     </span>
-                    <span class="text-gray-400 mx-2">â€¢</span>
+                    <span class="text-gray-400 mx-2">•</span>
                     <span class="text-gray-500">Recrutements</span>
                 </div>
             </div>
@@ -517,7 +517,7 @@
                         <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
                             <h3 class="text-base font-semibold leading-6 text-gray-900" id="modal-title">Confirmer la suppression</h3>
                             <div class="mt-2">
-                                <p class="text-sm text-gray-500">éŠtes-vous sé»r de vouloir supprimer cet employé ? Cette action est irréversible.</p>
+                                <p class="text-sm text-gray-500">Êtes-vous sûr de vouloir supprimer cet employé ? Cette action est irréversible.</p>
                             </div>
                         </div>
                     </div>
@@ -572,7 +572,7 @@
                 
                 <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                     <div class="sm:flex sm:items-start">
-                        <!-- Icé´ne dynamique selon l'action -->
+                        <!-- Icône dynamique selon l'action -->
                         <template x-if="statusAction === 'suspend'">
                             <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-orange-100 sm:mx-0 sm:h-10 sm:w-10">
                                 <svg class="h-6 w-6 text-orange-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -594,12 +594,12 @@
                             </h3>
                             <div class="mt-2">
                                 <p class="text-sm text-gray-500" x-show="statusAction === 'suspend'">
-                                    éŠtes-vous sé»r de vouloir suspendre le compte de <span class="font-medium text-gray-700" x-text="statusEmployeeName"></span> ?
-                                    <br><span class="text-orange-600">L'employé ne pourra plus se connecter é  l'application.</span>
+                                    Êtes-vous sûr de vouloir suspendre le compte de <span class="font-medium text-gray-700" x-text="statusEmployeeName"></span> ?
+                                    <br><span class="text-orange-600">L'employé ne pourra plus se connecter à l'application.</span>
                                 </p>
                                 <p class="text-sm text-gray-500" x-show="statusAction === 'activate'">
-                                    éŠtes-vous sé»r de vouloir réactiver le compte de <span class="font-medium text-gray-700" x-text="statusEmployeeName"></span> ?
-                                    <br><span class="text-green-600">L'employé pourra é  nouveau se connecter.</span>
+                                    Êtes-vous sûr de vouloir réactiver le compte de <span class="font-medium text-gray-700" x-text="statusEmployeeName"></span> ?
+                                    <br><span class="text-green-600">L'employé pourra à nouveau se connecter.</span>
                                 </p>
                             </div>
                         </div>

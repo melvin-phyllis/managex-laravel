@@ -158,7 +158,7 @@
                         
                         <div class="mt-6">
                             <button type="submit" class="w-full px-6 py-2.5 text-white font-medium rounded-xl transition-all shadow-lg" style="background: linear-gradient(135deg, #5680E9, #5AB9EA);">
-                                Mettre é  jour l'email
+                                Mettre à jour l'email
                             </button>
                         </div>
                     </form>
@@ -210,7 +210,7 @@
                         
                         <div class="mt-6">
                             <button type="submit" class="w-full px-6 py-2.5 text-white font-medium rounded-xl transition-all shadow-lg" style="background: linear-gradient(135deg, #8860D0, #5680E9);">
-                                Mettre é  jour le mot de passe
+                                Mettre à jour le mot de passe
                             </button>
                         </div>
                     </form>
@@ -284,7 +284,7 @@
                     <div class="mt-6 p-4 bg-green-50 rounded-lg max-w-2xl">
                         <p class="text-sm text-green-800">
                             <strong>Durée de travail :</strong> Les employés travailleront de
-                            <span class="font-mono">{{ $settings['work_start_time'] }}</span> é 
+                            <span class="font-mono">{{ $settings['work_start_time'] }}</span> à
                             <span class="font-mono">{{ $settings['work_end_time'] }}</span>
                         </p>
                     </div>
@@ -347,7 +347,7 @@
                     <div class="mt-6 p-4 bg-orange-50 rounded-lg max-w-2xl">
                         <p class="text-sm text-orange-800">
                             <strong>Durée de pause :</strong> De
-                            <span class="font-mono">{{ $settings['break_start_time'] }}</span> é 
+                            <span class="font-mono">{{ $settings['break_start_time'] }}</span> à
                             <span class="font-mono">{{ $settings['break_end_time'] }}</span>
                             (1 heure déduite automatiquement)
                         </p>
@@ -408,8 +408,8 @@
 
                     <div class="mt-6 p-4 bg-red-50 rounded-lg max-w-md">
                         <p class="text-sm text-red-800">
-                            <strong>Exemple :</strong> Avec une tolérance de {{ $settings['late_tolerance_minutes'] }} min et un début é  {{ $settings['work_start_time'] }},
-                            un employé est en retard é  partir de
+                            <strong>Exemple :</strong> Avec une tolérance de {{ $settings['late_tolerance_minutes'] }} min et un début à {{ $settings['work_start_time'] }},
+                            un employé est en retard à partir de
                             <span class="font-mono font-bold">
                                 @php
                                     $start = \Carbon\Carbon::createFromFormat('H:i', $settings['work_start_time']);

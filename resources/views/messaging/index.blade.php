@@ -293,12 +293,12 @@
 
                     <!-- Message Input -->
                     <div class="p-3 sm:p-4 border-t border-gray-100 bg-white">
-                        <!-- Preview images é  envoyer -->
+                        <!-- Preview images à envoyer -->
                         <div x-show="pendingImages.length > 0" class="flex gap-2 mb-3 overflow-x-auto pb-2">
                             <template x-for="(file, idx) in pendingImages" :key="idx">
                                 <div class="relative flex-shrink-0">
                                     <img :src="file.preview" class="w-16 h-16 object-cover rounded-lg border border-gray-200"/>
-                                    <button type="button" @click="removePendingImage(idx)" class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center text-xs hover:bg-red-600">é—</button>
+                                    <button type="button" @click="removePendingImage(idx)" class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center text-xs hover:bg-red-600">×</button>
                                 </div>
                             </template>
                         </div>

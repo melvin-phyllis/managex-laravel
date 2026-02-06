@@ -185,7 +185,7 @@
                     </a>
                     <a href="{{ route('admin.geolocation-zones.index') }}"
                        class="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors text-center">
-                        Retour é  la liste
+                        Retour à la liste
                     </a>
                 </div>
             </div>
@@ -220,7 +220,7 @@
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                             </svg>
-                            Retour é  la liste
+                            Retour à la liste
                         </a>
                         <div class="flex gap-3">
                             <a href="{{ route('admin.geolocation-zones.edit', $geolocationZone) }}"
@@ -249,7 +249,7 @@
             const map = L.map('map').setView([lat, lng], 15);
 
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: 'é‚ OpenStreetMap contributors'
+                attribution: '© OpenStreetMap contributors'
             }).addTo(map);
 
             // Marqueur avec popup personnalisé

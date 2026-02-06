@@ -72,7 +72,7 @@
                         </label>
                         <select name="type" id="type" required
                                 class="w-full rounded-lg border-gray-300 focus:border-green-500 focus:ring-green-500">
-                            <option value="info" {{ old('type') === 'info' ? 'selected' : '' }}>â„¹ï¸ Information</option>
+                            <option value="info" {{ old('type') === 'info' ? 'selected' : '' }}>ℹ️ Information</option>
                             <option value="success" {{ old('type') === 'success' ? 'selected' : '' }}>… Bonne nouvelle</option>
                             <option value="warning" {{ old('type') === 'warning' ? 'selected' : '' }}> ï¸ Attention</option>
                             <option value="urgent" {{ old('type') === 'urgent' ? 'selected' : '' }}>ðŸš Urgent</option>

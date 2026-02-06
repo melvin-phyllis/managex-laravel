@@ -50,7 +50,7 @@
             </svg>
             <div class="text-sm text-blue-800">
                 <p class="font-medium">Génération automatique du mot de passe</p>
-                <p class="mt-1">Un mot de passe sécurisé sera généré automatiquement et envoyé par email é  l'employé avec ses identifiants de connexion.</p>
+                <p class="mt-1">Un mot de passe sécurisé sera généré automatiquement et envoyé par email à l'employé avec ses identifiants de connexion.</p>
             </div>
         </div>
 
@@ -272,7 +272,7 @@
 
                         <!-- Salaire de base -->
                         <div>
-                            <label for="base_salary" class="block text-sm font-medium text-gray-700 mb-1">Salaire brut mensuel (â‚¬)</label>
+                            <label for="base_salary" class="block text-sm font-medium text-gray-700 mb-1">Salaire brut mensuel (€)</label>
                             <input type="number" name="base_salary" id="base_salary" value="{{ old('base_salary') }}" step="0.01" min="0"
                                    class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                                    placeholder="2500.00">
@@ -358,7 +358,7 @@
                                 <option value="Conjoint(e)" {{ old('emergency_contact_relationship') == 'Conjoint(e)' ? 'selected' : '' }}>Conjoint(e)</option>
                                 <option value="Parent" {{ old('emergency_contact_relationship') == 'Parent' ? 'selected' : '' }}>Parent</option>
                                 <option value="Enfant" {{ old('emergency_contact_relationship') == 'Enfant' ? 'selected' : '' }}>Enfant</option>
-                                <option value="Frére/SÅ“ur" {{ old('emergency_contact_relationship') == 'Frére/SÅ“ur' ? 'selected' : '' }}>Frére/SÅ“ur</option>
+                                <option value="Frére/Sœur" {{ old('emergency_contact_relationship') == 'Frére/Sœur' ? 'selected' : '' }}>Frére/Sœur</option>
                                 <option value="Ami(e)" {{ old('emergency_contact_relationship') == 'Ami(e)' ? 'selected' : '' }}>Ami(e)</option>
                                 <option value="Autre" {{ old('emergency_contact_relationship') == 'Autre' ? 'selected' : '' }}>Autre</option>
                             </select>

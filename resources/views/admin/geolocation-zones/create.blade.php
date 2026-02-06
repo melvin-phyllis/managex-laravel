@@ -274,7 +274,7 @@
             const map = L.map('map').setView([initialLat, initialLng], 15);
 
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: 'é‚ OpenStreetMap'
+                attribution: '© OpenStreetMap'
             }).addTo(map);
 
             // Marqueur et cercle
@@ -295,7 +295,7 @@
                 return div.innerHTML;
             }
 
-            // Mise é  jour de la position
+            // Mise à jour de la position
             function updatePosition(lat, lng, doReverseGeocode = true) {
                 latInput.value = lat.toFixed(8);
                 lngInput.value = lng.toFixed(8);
@@ -308,7 +308,7 @@
                 }
             }
 
-            // Reverse geocoding (coordonnées aâ€ â€™ adresse)
+            // Reverse geocoding (coordonnées à adresse)
             async function reverseGeocode(lat, lng) {
                 try {
                     const response = await fetch(
@@ -324,7 +324,7 @@
                 }
             }
 
-            // Recherche d'adresse (adresse aâ€ â€™ coordonnées)
+            // Recherche d'adresse (adresse à coordonnées)
             async function searchAddress(query) {
                 if (!query.trim()) return;
 
@@ -421,7 +421,7 @@
                     },
                     (error) => {
                         let message = 'Impossible d\'obtenir votre position';
-                        if (error.code === 1) message = 'Accés é  la position refusé';
+                        if (error.code === 1) message = 'Accés à la position refusé';
                         else if (error.code === 2) message = 'Position non disponible';
                         else if (error.code === 3) message = 'Délai d\'attente dépassé';
 
@@ -451,7 +451,7 @@
                 updatePosition(pos.lat, pos.lng);
             });
 
-            // Mise é  jour du rayon
+            // Mise à jour du rayon
             radiusInput.addEventListener('input', function() {
                 const radius = parseInt(this.value) || 100;
                 radiusValue.textContent = radius;
