@@ -274,7 +274,7 @@
             const map = L.map('map').setView([initialLat, initialLng], 15);
 
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: 'é‚Â OpenStreetMap'
+                attribution: 'é‚ OpenStreetMap'
             }).addTo(map);
 
             // Marqueur et cercle
@@ -287,7 +287,7 @@
                 weight: 2
             }).addTo(map);
 
-            // Séƒâ€°CURITéƒâ€°: Fonction d'échappement HTML pour prévenir les XSS
+            // SéCURITé: Fonction d'échappement HTML pour prévenir les XSS
             function escapeHtml(text) {
                 if (!text) return '';
                 const div = document.createElement('div');
@@ -338,7 +338,7 @@
                     const data = await response.json();
 
                     if (data.length > 0) {
-                        // Séƒâ€°CURITéƒâ€°: éƒâ€°chapper les données de l'API externe pour prévenir XSS
+                        // SéCURITé: échapper les données de l'API externe pour prévenir XSS
                         searchResults.innerHTML = data.map((item, index) => `
                             <div class="p-3 hover:bg-blue-50 cursor-pointer border-b last:border-b-0 transition"
                                  data-lat="${escapeHtml(String(item.lat))}" 
@@ -376,7 +376,7 @@
                 searchBtn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg><span class="hidden sm:inline ml-2">Rechercher</span>';
             }
 
-            // éƒâ€°vénements
+            // événements
             searchBtn.addEventListener('click', () => searchAddress(addressSearch.value));
             addressSearch.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') {

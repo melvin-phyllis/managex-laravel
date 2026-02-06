@@ -60,7 +60,7 @@
                 <label class="flex items-center gap-2 cursor-pointer bg-red-50 text-red-700 px-3 py-2 rounded-lg border border-red-200 hover:bg-red-100 transition-colors">
                     <input type="checkbox" name="risk_only" value="true" {{ request('risk_only') === 'true' ? 'checked' : '' }} class="rounded border-red-300 text-red-600 focus:ring-red-500">
                     <x-icon name="alert-triangle" class="w-4 h-4"/>
-                    <span class="text-sm font-medium">é€ risque uniquement</span>
+                    <span class="text-sm font-medium"> risque uniquement</span>
                 </label>
             </div>
 
@@ -101,7 +101,7 @@
                     </div>
                     <div>
                         <p class="text-2xl font-bold text-gray-900">{{ $employees->where('risk_level', 'medium')->count() }}</p>
-                        <p class="text-xs text-gray-500">é€ surveiller</p>
+                        <p class="text-xs text-gray-500"> surveiller</p>
                     </div>
                 </div>
             </div>
@@ -112,7 +112,7 @@
                     </div>
                     <div>
                         <p class="text-2xl font-bold text-gray-900">{{ $employees->where('risk_level', 'high')->count() }}</p>
-                        <p class="text-xs text-gray-500">é€ risque</p>
+                        <p class="text-xs text-gray-500"> risque</p>
                     </div>
                 </div>
             </div>
@@ -229,13 +229,13 @@
                                     @case('high')
                                         <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-red-100 text-red-700">
                                             <x-icon name="alert-triangle" class="w-3 h-3"/>
-                                            é€ risque
+                                             risque
                                         </span>
                                         @break
                                     @case('medium')
                                         <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-yellow-100 text-yellow-700">
                                             <x-icon name="alert-circle" class="w-3 h-3"/>
-                                            é€ surveiller
+                                             surveiller
                                         </span>
                                         @break
                                     @default

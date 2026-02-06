@@ -73,8 +73,8 @@
                         <select name="type" id="type" required
                                 class="w-full rounded-lg border-gray-300 focus:border-green-500 focus:ring-green-500">
                             <option value="info" {{ old('type') === 'info' ? 'selected' : '' }}>â„¹ï¸ Information</option>
-                            <option value="success" {{ old('type') === 'success' ? 'selected' : '' }}>âœ… Bonne nouvelle</option>
-                            <option value="warning" {{ old('type') === 'warning' ? 'selected' : '' }}>âš ï¸ Attention</option>
+                            <option value="success" {{ old('type') === 'success' ? 'selected' : '' }}>… Bonne nouvelle</option>
+                            <option value="warning" {{ old('type') === 'warning' ? 'selected' : '' }}> ï¸ Attention</option>
                             <option value="urgent" {{ old('type') === 'urgent' ? 'selected' : '' }}>ðŸš Urgent</option>
                             <option value="event" {{ old('type') === 'event' ? 'selected' : '' }}>ðŸ“… événement</option>
                         </select>
@@ -228,7 +228,7 @@
 
             <!-- Options Card -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-4 animate-fade-in-up animation-delay-500">
-                <h2 class="text-lg font-semibold text-gray-900 border-b pb-3">âš™ï¸ Options</h2>
+                <h2 class="text-lg font-semibold text-gray-900 border-b pb-3">™ï¸ Options</h2>
 
                 <label class="flex items-center gap-3 cursor-pointer">
                     <input type="checkbox" name="is_pinned" value="1" {{ old('is_pinned') ? 'checked' : '' }}
@@ -243,7 +243,7 @@
                     <input type="checkbox" name="requires_acknowledgment" value="1" {{ old('requires_acknowledgment') ? 'checked' : '' }}
                            class="rounded text-green-600 focus:ring-green-500">
                     <div>
-                        <span class="font-medium text-gray-900">âœ… Exiger un accusé de réception</span>
+                        <span class="font-medium text-gray-900">… Exiger un accusé de réception</span>
                         <p class="text-sm text-gray-500">Les employés devront confirmer avoir lu l'annonce</p>
                     </div>
                 </label>

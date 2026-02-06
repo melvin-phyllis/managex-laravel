@@ -286,7 +286,7 @@
                             </button>
                             <input type="text"
                                    x-model="newMessage"
-                                   placeholder="éƒâ€°crivez un message..."
+                                   placeholder="écrivez un message..."
                                    class="flex-1 px-4 py-2 border border-gray-300 rounded-full focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm sm:text-base">
                             <button type="submit"
                                     :disabled="!canSend()"
@@ -359,6 +359,7 @@
 
     <script nonce="{{ $cspNonce ?? '' }}">
         function messagingApp() {
+            const baseUrl = '{{ url("/") }}';
             return {
                 conversations: @json($conversations ?? []),
                 filteredConversations: [],
@@ -495,7 +496,7 @@
 
                     try {
                         const lastId = this.messages[this.messages.length - 1].id;
-                        const response = await this.fetchWithTimeout(`/admin/messaging/${this.selectedConversation.id}/messages?after=${lastId}`);
+                        const response = await this.fetchWithTimeout(`${baseUrl}/admin/messaging/${this.selectedConversation.id}/messages?after=${lastId}`);
                         const data = await response.json();
 
                         if (data.data && data.data.length > 0) {
@@ -514,7 +515,7 @@
 
                 async loadConversationsData() {
                     try {
-                        const response = await this.fetchWithTimeout('/messaging/api/conversations');
+                        const response = await this.fetchWithTimeout(`${baseUrl}/messaging/api/conversations`);
                         if (response.ok) {
                             const data = await response.json();
                             if (Array.isArray(data)) {
@@ -563,7 +564,7 @@
 
                 async markAsRead(conversationId) {
                     try {
-                        await fetch(`/admin/messaging/${conversationId}/read`, {
+                        await fetch(`${baseUrl}/admin/messaging/${conversationId}/read`, {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -577,7 +578,7 @@
 
                 async loadMessages(conversationId) {
                     try {
-                        const response = await fetch(`/admin/messaging/${conversationId}/messages`);
+                        const response = await fetch(`${baseUrl}/admin/messaging/${conversationId}/messages`);
                         const data = await response.json();
                         this.messages = data.data;
                         this.$nextTick(() => this.scrollToBottom());
@@ -605,7 +606,7 @@
                     if (!this.newMessage.trim() || !this.selectedConversation) return;
 
                     try {
-                        const response = await fetch(`/admin/messaging/${this.selectedConversation.id}/messages`, {
+                        const response = await fetch(`${baseUrl}/admin/messaging/${this.selectedConversation.id}/messages`, {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -646,7 +647,7 @@
                     if (this.newMessage.trim()) formData.append('content', this.newMessage);
                     const csrf = document.querySelector('meta[name="csrf-token"]').content;
                     try {
-                        const response = await fetch(`/messaging/api/conversations/${this.selectedConversation.id}/attachments`, {
+                        const response = await fetch(`${baseUrl}/messaging/api/conversations/${this.selectedConversation.id}/attachments`, {
                             method: 'POST',
                             headers: { 'X-CSRF-TOKEN': csrf },
                             body: formData
@@ -708,7 +709,7 @@
                     formData.append('files[]', blob, 'message-vocal.webm');
                     const csrf = document.querySelector('meta[name="csrf-token"]').content;
                     try {
-                        const response = await fetch(`/messaging/api/conversations/${this.selectedConversation.id}/attachments`, {
+                        const response = await fetch(`${baseUrl}/messaging/api/conversations/${this.selectedConversation.id}/attachments`, {
                             method: 'POST',
                             headers: { 'X-CSRF-TOKEN': csrf },
                             body: formData
@@ -734,7 +735,7 @@
 
                 async createConversation() {
                     try {
-                        const response = await fetch('/admin/messaging', {
+                        const response = await fetch(`${baseUrl}/admin/messaging`, {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',

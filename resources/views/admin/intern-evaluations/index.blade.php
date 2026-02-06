@@ -362,7 +362,7 @@
                 new Chart(ctx, {
                     type: 'doughnut',
                     data: {
-                        labels: ['A (Excellent)', 'B (Bien)', 'C (Satisfaisant)', 'D (é€ améliorer)', 'E (Insuffisant)'],
+                        labels: ['A (Excellent)', 'B (Bien)', 'C (Satisfaisant)', 'D ( améliorer)', 'E (Insuffisant)'],
                         datasets: [{
                             data: [
                                 {{ $scoreDistribution['A'] ?? 0 }},

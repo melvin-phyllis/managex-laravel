@@ -96,12 +96,12 @@
                     @endforeach
                 </select>
 
-                {{-- Filtre é€ risque (mode historique) --}}
+                {{-- Filtre  risque (mode historique) --}}
                 <template x-if="mode === 'historical'">
                     <label class="flex items-center gap-2 cursor-pointer bg-red-50 text-red-700 px-3 py-2 rounded-lg border border-red-200 hover:bg-red-100 transition-colors">
                         <input type="checkbox" x-model="filters.risk_only" @change="loadData()" class="rounded border-red-300 text-red-600">
                         <x-icon name="alert-triangle" class="w-4 h-4"/>
-                        <span class="text-sm font-medium">é€ risque</span>
+                        <span class="text-sm font-medium"> risque</span>
                     </label>
                 </template>
             </div>
@@ -118,11 +118,11 @@
                 <p class="text-3xl font-bold mt-1" x-text="data.stats?.present || 0"></p>
             </div>
             <div class="rounded-xl p-4 text-white shadow-lg" style="background: linear-gradient(135deg, #84CEEB, #5AB9EA) !important;">
-                <p class="text-white/80 text-xs font-medium uppercase" x-text="mode === 'today' ? 'En retard' : 'é€ surveiller'"></p>
+                <p class="text-white/80 text-xs font-medium uppercase" x-text="mode === 'today' ? 'En retard' : ' surveiller'"></p>
                 <p class="text-3xl font-bold mt-1" x-text="data.stats?.late || 0"></p>
             </div>
             <div class="rounded-xl p-4 text-white shadow-lg" style="background: linear-gradient(135deg, #8860D0, #5680E9) !important;">
-                <p class="text-white/80 text-xs font-medium uppercase" x-text="mode === 'today' ? 'Absents' : 'é€ risque'"></p>
+                <p class="text-white/80 text-xs font-medium uppercase" x-text="mode === 'today' ? 'Absents' : ' risque'"></p>
                 <p class="text-3xl font-bold mt-1" x-text="data.stats?.absent || 0"></p>
             </div>
         </div>
@@ -191,13 +191,13 @@
                                 {{-- Mode Aujourd'hui: Statut --}}
                                 <td x-show="mode === 'today'" class="py-4 px-5 text-center">
                                     <span x-show="emp.status === 'present'" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold text-[#5680E9]" style="background-color: #5AB9EA20;">
-                                        âœ“ Présent
+                                        “ Présent
                                     </span>
                                     <span x-show="emp.status === 'late'" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold text-[#5680E9]" style="background-color: #84CEEB30;">
                                          En retard
                                     </span>
                                     <span x-show="emp.status === 'absent'" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold text-[#8860D0]" style="background-color: #8860D020;">
-                                        âœ• Absent
+                                        • Absent
                                     </span>
                                 </td>
                                 
@@ -230,7 +230,7 @@
                                 <td x-show="mode === 'historical'" class="py-4 px-5 text-center">
                                     <span class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-bold"
                                         x-bind:class="emp.late_count === 0 ? 'bg-green-100 text-green-700' : (emp.late_count <= 5 ? 'bg-amber-100 text-amber-700' : 'bg-red-100 text-red-700')">
-                                        â± <span x-text="emp.late_count"></span>
+                                         <span x-text="emp.late_count"></span>
                                     </span>
                                 </td>
                                 
@@ -244,13 +244,13 @@
                                 {{-- Mode Historique: Statut risque --}}
                                 <td x-show="mode === 'historical'" class="py-4 px-5 text-center">
                                     <span x-show="emp.risk_level === 'low'" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold text-[#5680E9]" style="background-color: #5AB9EA20;">
-                                        âœ“ OK
+                                        “ OK
                                     </span>
                                     <span x-show="emp.risk_level === 'medium'" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold text-[#5680E9]" style="background-color: #84CEEB30;">
-                                        âš  Surveiller
+                                          Surveiller
                                     </span>
                                     <span x-show="emp.risk_level === 'high'" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold text-[#8860D0]" style="background-color: #8860D020;">
-                                        âš  Risque
+                                          Risque
                                     </span>
                                 </td>
                                 
@@ -267,7 +267,7 @@
                         {{-- Empty state --}}
                         <tr x-show="!data.employees?.length && !loading">
                             <td colspan="7" class="py-12 text-center text-gray-500">
-                                <p class="text-4xl mb-3">ðŸ‘¥</p>
+                                <p class="text-4xl mb-3">👥</p>
                                 <p>Aucun employé trouvé</p>
                             </td>
                         </tr>

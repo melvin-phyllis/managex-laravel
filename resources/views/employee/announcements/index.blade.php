@@ -275,7 +275,7 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    button.textContent = 'âœ“ Confirmé';
+                    button.textContent = '“ Confirmé';
                     button.classList.remove('from-amber-500', 'to-orange-500');
                     button.classList.add('from-emerald-500', 'to-green-500');
                     

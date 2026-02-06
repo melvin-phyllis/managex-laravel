@@ -381,7 +381,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         <!-- Numéro de sécurité sociale -->
                         <div>
-                            <label for="social_security_number" class="block text-sm font-medium text-gray-700 mb-1">NÂ° Sécurité sociale</label>
+                            <label for="social_security_number" class="block text-sm font-medium text-gray-700 mb-1">N° Sécurité sociale</label>
                             <input type="text" name="social_security_number" id="social_security_number" value="{{ old('social_security_number') }}"
                                    class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                                    placeholder="1 85 12 75 115 001 42">

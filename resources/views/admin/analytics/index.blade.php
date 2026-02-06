@@ -283,7 +283,7 @@
                     </div>
                     <div class="bg-white/10 rounded-lg p-3">
                         <p class="text-2xl font-bold text-amber-300" x-text="tables.evaluationStats.interns?.not_evaluated_this_week || 0"></p>
-                        <p class="text-xs text-white/80">é€ évaluer cette sem.</p>
+                        <p class="text-xs text-white/80"> évaluer cette sem.</p>
                     </div>
                 </div>
             </div>
@@ -300,7 +300,7 @@
                         <div class="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center">
                             <x-icon name="activity" class="w-4 h-4 text-indigo-600"/>
                         </div>
-                        é‰volution des présences
+                        évolution des présences
                     </h3>
                     <div class="flex items-center gap-2">
                         <span class="flex items-center text-xs text-gray-500">
@@ -487,7 +487,7 @@
                 </div>
             </div>
 
-    </div>\n
+    </div>
 
 
     </div>
@@ -827,7 +827,7 @@
                             labels: this.charts.punctuality?.labels || [],
                             datasets: [
                                 {
-                                    label: 'é€ l\'heure',
+                                    label: ' l\'heure',
                                     data: this.charts.punctuality?.on_time || [],
                                     backgroundColor: '#22C55E',
                                     borderRadius: 4,

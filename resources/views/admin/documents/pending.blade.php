@@ -29,7 +29,7 @@
                     <button type="submit" name="action" value="approve" 
                             class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50"
                             id="approveBtn" disabled>
-                        âœ… Approuver la sélection
+                        … Approuver la sélection
                     </button>
                 </div>
             </div>
@@ -86,7 +86,7 @@
                         <div class="flex gap-2">
                             <button onclick="validateDoc({{ $document->id }}, 'approve')" 
                                     class="px-3 py-1 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700">
-                                âœ… Approuver
+                                … Approuver
                             </button>
                             <button onclick="showReject({{ $document->id }})" 
                                     class="px-3 py-1 bg-red-100 text-red-700 text-sm rounded-lg hover:bg-red-200">
@@ -98,7 +98,7 @@
             @empty
                 <div class="col-span-full bg-white rounded-xl shadow-sm border border-gray-100 p-12 text-center">
                     <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <span class="text-3xl">âœ…</span>
+                        <span class="text-3xl">…</span>
                     </div>
                     <h3 class="text-lg font-medium text-gray-900">Aucun document en attente</h3>
                     <p class="text-gray-500 mt-1">Tous les documents ont été traités ! ðŸŽ</p>
@@ -167,8 +167,8 @@
             if (approveBtn) {
                 approveBtn.disabled = checked === 0;
                 approveBtn.textContent = checked > 0 
-                    ? `âœ… Approuver la sélection (${checked})` 
-                    : 'âœ… Approuver la sélection';
+                    ? `… Approuver la sélection (${checked})` 
+                    : '… Approuver la sélection';
             }
         }
 

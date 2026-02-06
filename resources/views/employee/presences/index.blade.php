@@ -74,7 +74,7 @@
                     </svg>
                 </div>
                 <div class="flex-1">
-                    <h4 class="font-semibold text-red-800">aÅ¡Â é¯Â¸Â Attention - Heures de retard é  rattraper</h4>
+                    <h4 class="font-semibold text-red-800">Attention - Heures de retard é  rattraper</h4>
                     
                     @if($expiringLateData['expiring_minutes'] > 0)
                         @php
@@ -106,7 +106,7 @@
 
                     @if(count($expiringLateData['upcoming_penalties']) > 0)
                         <div class="mt-3 pt-3 border-t border-red-200">
-                            <p class="text-sm font-semibold text-red-800">é°Å¸Å¡Â« Absences pénalité programmées :</p>
+                            <p class="text-sm font-semibold text-red-800">é°Å¸Å¡« Absences pénalité programmées :</p>
                             @foreach($expiringLateData['upcoming_penalties'] as $penalty)
                                 <div class="flex items-center gap-2 text-sm text-red-700 mt-1">
                                     <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -220,7 +220,7 @@
                         </h3>
                         <p class="text-sm text-violet-700 mt-1">
                             Arrivée é  <strong>{{ $todayPresence->check_in->format('H:i') }}</strong>
-                            <span class="mx-2">aâ‚¬Â¢</span>
+                            <span class="mx-2">aâ‚¬¢</span>
                             En cours depuis <span id="recoveryDuration" class="font-medium">--</span>
                         </p>
                         <p class="text-xs text-violet-600 mt-2">
@@ -384,10 +384,10 @@
                                      Arrivée pointée é  {{ $todayPresence->check_in->format('H:i') }}
                                 </p>
                                 @if($todayPresence->is_late)
-                                    <p class="text-sm text-orange-600 mt-1">aÅ¡Â é¯Â¸Â Retard de {{ abs($todayPresence->late_minutes) }} minutes</p>
+                                    <p class="text-sm text-orange-600 mt-1">Retard de {{ abs($todayPresence->late_minutes) }} minutes</p>
                                 @endif
                                 @if($todayPresence->check_in_status === 'in_zone')
-                                    <p class="text-sm text-green-600 mt-1">é°Å¸â€œÂ Dans la zone autorisée</p>
+                                    <p class="text-sm text-green-600 mt-1"> Dans la zone autorisée</p>
                                 @endif
                             </div>
                             <!-- Timer de travail en cours -->
@@ -515,13 +515,13 @@
                         @if($todayPresence->is_late || $todayPresence->is_early_departure || $todayPresence->recovery_minutes > 0)
                         <div class="mt-3 flex flex-wrap gap-2">
                             @if($todayPresence->is_late)
-                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-orange-100 text-orange-700">aÅ¡Â é¯Â¸Â Retard: {{ $todayPresence->late_minutes }} min</span>
+                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-orange-100 text-orange-700">Retard: {{ $todayPresence->late_minutes }} min</span>
                             @endif
                             @if($todayPresence->is_early_departure)
-                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-amber-100 text-amber-700">é°Å¸Å¡Â Départ anticipé: {{ $todayPresence->early_departure_minutes }} min</span>
+                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-amber-100 text-amber-700">é°Å¸Å¡ Départ anticipé: {{ $todayPresence->early_departure_minutes }} min</span>
                             @endif
                             @if($todayPresence->overtime_minutes > 0)
-                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-700">aÂÂ±é¯Â¸Â Heures sup: {{ $todayPresence->overtime_minutes }} min</span>
+                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-700">a±é¯¸ Heures sup: {{ $todayPresence->overtime_minutes }} min</span>
                             @endif
                             @if($todayPresence->recovery_minutes > 0)
                                 <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-emerald-100 text-emerald-700"> Rattrapé: {{ $todayPresence->recovery_minutes }} min</span>
@@ -647,7 +647,7 @@
                     @elseif($balance < 0)
                         Surplus
                     @else
-                        éƒâ€°quilibré
+                        équilibré
                     @endif
                 </p>
                 @if($balance != 0)
@@ -797,7 +797,7 @@
                                     <div class="p-2 rounded-lg border text-sm flex items-center justify-between" style="{{ $isUrgent ? 'border-color: rgba(104, 120, 100, 0.3); background: rgba(104, 120, 100, 0.08);' : 'border-color: #e5e7eb; background: #f9fafb;' }}">
                                         <div>
                                             <span class="font-medium">{{ $late['date']->format('d/m') }}</span>
-                                            <span class="text-gray-400 mx-1">é‚Â·</span>
+                                            <span class="text-gray-400 mx-1">é‚·</span>
                                             <span class="text-gray-600">{{ $late['late_minutes'] }}min</span>
                                             @if($late['recovery_minutes'] > 0)
                                                 <span class="text-green-600 text-xs">({{ $late['recovery_minutes'] }} rattrapé)</span>
@@ -806,7 +806,7 @@
                                         <div class="text-right">
                                             <span class="font-semibold {{ $isUrgent ? 'text-red-600' : 'text-orange-600' }}">{{ $late['unrecovered_minutes'] }}min</span>
                                             @if($late['deadline'] && $isUrgent)
-                                                <span class="text-xs text-red-500 block">aÅ¡Â é¯Â¸Â {{ $late['deadline']->format('d/m') }}</span>
+                                                <span class="text-xs text-red-500 block">{{ $late['deadline']->format('d/m') }}</span>
                                             @endif
                                         </div>
                                     </div>
@@ -1090,7 +1090,7 @@
 
             function handlePointage(btn, form, latInput, lngInput, textEl, iconEl, originalText, originalIconHTML) {
                 if (!navigator.geolocation) {
-                    showError('é°Å¸Å¡Â« Navigateur non compatible', 'Votre navigateur ne supporte pas la géolocalisation.');
+                    showError('é°Å¸Å¡« Navigateur non compatible', 'Votre navigateur ne supporte pas la géolocalisation.');
                     return;
                 }
 
@@ -1113,13 +1113,13 @@
 
                         switch(error.code) {
                             case error.PERMISSION_DENIED:
-                                showError('aÅ¡Â é¯Â¸Â Géolocalisation refusée', 'Veuillez autoriser l\'accés é  votre position.');
+                                showError('Géolocalisation refusée', 'Veuillez autoriser l\'accés é  votre position.');
                                 break;
                             case error.POSITION_UNAVAILABLE:
-                                showError('é°Å¸â€œÂ Position indisponible', 'Impossible de déterminer votre position.');
+                                showError(' Position indisponible', 'Impossible de déterminer votre position.');
                                 break;
                             case error.TIMEOUT:
-                                showError('aÂÂ±é¯Â¸Â Délai dépassé', 'La recherche de position a pris trop de temps.');
+                                showError('a±é¯¸ Délai dépassé', 'La recherche de position a pris trop de temps.');
                                 break;
                             default:
                                 showError('Erreur', 'Une erreur inattendue s\'est produite.');
@@ -1156,7 +1156,7 @@
                     e.preventDefault();
 
                     if (!navigator.geolocation) {
-                        showError('é°Å¸Å¡Â« Navigateur non compatible', 'Votre navigateur ne supporte pas la géolocalisation.');
+                        showError('é°Å¸Å¡« Navigateur non compatible', 'Votre navigateur ne supporte pas la géolocalisation.');
                         return;
                     }
 

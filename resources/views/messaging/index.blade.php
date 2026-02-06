@@ -393,6 +393,7 @@
 
     <script nonce="{{ $cspNonce ?? '' }}">
         function messagingApp() {
+            const baseUrl = '{{ url("/") }}';
             return {
                 conversations: [],
                 filteredConversations: [],
@@ -541,7 +542,7 @@
 
                     try {
                         const lastId = this.messages.length > 0 ? this.messages[this.messages.length - 1].id : 0;
-                        const response = await this.fetchWithTimeout(`/messaging/api/conversations/${this.selectedConversation.id}/messages?after=${lastId}`);
+                        const response = await this.fetchWithTimeout(`${baseUrl}/messaging/api/conversations/${this.selectedConversation.id}/messages?after=${lastId}`);
                         const data = await response.json();
 
                         if (data.messages && data.messages.length > 0) {
@@ -553,7 +554,7 @@
                                 this.$nextTick(() => this.scrollToBottom());
 
                                 // Mark as read
-                                await this.fetchWithTimeout(`/messaging/api/conversations/${this.selectedConversation.id}/read`, {
+                                await this.fetchWithTimeout(`${baseUrl}/messaging/api/conversations/${this.selectedConversation.id}/read`, {
                                     method: 'POST',
                                     headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}'}
                                 }, 5000);
@@ -566,7 +567,7 @@
 
                 async pollConversations() {
                     try {
-                        const response = await this.fetchWithTimeout('/messaging/api/conversations');
+                        const response = await this.fetchWithTimeout(`${baseUrl}/messaging/api/conversations`);
                         const newConversations = await response.json();
 
                         const selectedId = this.selectedConversation?.id;
@@ -587,7 +588,7 @@
                 async loadConversations() {
                     this.loading = true;
                     try {
-                        const response = await fetch('/messaging/api/conversations');
+                        const response = await fetch(`${baseUrl}/messaging/api/conversations`);
                         this.conversations = await response.json();
                         this.filterConversations();
                     } catch (error) {
@@ -615,11 +616,11 @@
                     this.selectedConversation = conv;
                     this.loadingMessages = true;
                     try {
-                        const response = await fetch(`/messaging/api/conversations/${conv.id}/messages`);
+                        const response = await fetch(`${baseUrl}/messaging/api/conversations/${conv.id}/messages`);
                         const data = await response.json();
                         this.messages = data.messages;
 
-                        await fetch(`/messaging/api/conversations/${conv.id}/read`, { method: 'POST', headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}'} });
+                        await fetch(`${baseUrl}/messaging/api/conversations/${conv.id}/read`, { method: 'POST', headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}'} });
                         conv.unread_count = 0;
 
                         this.$nextTick(() => this.scrollToBottom());
@@ -648,7 +649,7 @@
                     if (!this.newMessage.trim() || !this.selectedConversation) return;
 
                     try {
-                        const response = await fetch(`/messaging/api/conversations/${this.selectedConversation.id}/messages`, {
+                        const response = await fetch(`${baseUrl}/messaging/api/conversations/${this.selectedConversation.id}/messages`, {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -691,7 +692,7 @@
                     if (this.newMessage.trim()) formData.append('content', this.newMessage);
 
                     try {
-                        const response = await fetch(`/messaging/api/conversations/${this.selectedConversation.id}/attachments`, {
+                        const response = await fetch(`${baseUrl}/messaging/api/conversations/${this.selectedConversation.id}/attachments`, {
                             method: 'POST',
                             headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
                             body: formData
@@ -748,7 +749,7 @@
                     formData.append('files[]', blob, 'message-vocal.webm');
 
                     try {
-                        const response = await fetch(`/messaging/api/conversations/${this.selectedConversation.id}/attachments`, {
+                        const response = await fetch(`${baseUrl}/messaging/api/conversations/${this.selectedConversation.id}/attachments`, {
                             method: 'POST',
                             headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
                             body: formData
@@ -774,7 +775,7 @@
                     }
 
                     try {
-                        const response = await fetch('/messaging/api/conversations', {
+                        const response = await fetch(`${baseUrl}/messaging/api/conversations`, {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -814,7 +815,7 @@
                 async togglePin() {
                     if (!this.selectedConversation) return;
                     try {
-                        const response = await fetch(`/messaging/api/conversations/${this.selectedConversation.id}/pin`, {
+                        const response = await fetch(`${baseUrl}/messaging/api/conversations/${this.selectedConversation.id}/pin`, {
                             method: 'POST',
                             headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' }
                         });

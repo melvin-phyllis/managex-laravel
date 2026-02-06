@@ -291,7 +291,7 @@
                                            class="w-full rounded-lg border-gray-300 focus:border-[#3B8BEB] focus:ring-[#3B8BEB]">
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">NÂ° CNPS</label>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">N° CNPS</label>
                                     <input type="text" name="cnps_number" value="{{ $user->cnps_number }}"
                                            class="w-full rounded-lg border-gray-300 focus:border-[#3B8BEB] focus:ring-[#3B8BEB]">
                                 </div>

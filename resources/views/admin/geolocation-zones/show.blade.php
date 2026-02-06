@@ -249,7 +249,7 @@
             const map = L.map('map').setView([lat, lng], 15);
 
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: 'é‚Â OpenStreetMap contributors'
+                attribution: 'é‚ OpenStreetMap contributors'
             }).addTo(map);
 
             // Marqueur avec popup personnalisé

@@ -337,7 +337,7 @@
                     <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider w-48">Progression</th>
                     <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Priorité</th>
                     <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Statut</th>
-                    <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">éƒâ€°chéance</th>
+                    <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">échéance</th>
                     <th class="px-6 py-4 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">Actions</th>
                 </tr>
             </x-slot:header>
@@ -758,7 +758,7 @@
                 eventDidMount: function(info) {
                     const props = info.event.extendedProps;
                     let tooltip = info.event.title;
-                    if (props.employee) tooltip += '\né°Å¸â€˜Â¤ ' + props.employee;
+                    if (props.employee) tooltip += '\né°Å¸â€˜¤ ' + props.employee;
                     if (props.progression !== undefined) tooltip += '\né°Å¸â€œÅ  ' + props.progression + '%';
                     info.el.title = tooltip;
                 },

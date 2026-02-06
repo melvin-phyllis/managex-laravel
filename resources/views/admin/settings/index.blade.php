@@ -463,7 +463,7 @@
                                     <div>
                                         <h3 class="font-medium text-gray-900">{{ $department->name }}</h3>
                                         <p class="text-sm text-gray-500">
-                                            {{ $department->positions_count }} poste(s) Â· {{ $department->users_count }} employé(s)
+                                            {{ $department->positions_count }} poste(s) · {{ $department->users_count }} employé(s)
                                         </p>
                                     </div>
                                     @if(!$department->is_active)
