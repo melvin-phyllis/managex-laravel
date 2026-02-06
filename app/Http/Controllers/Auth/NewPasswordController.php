@@ -30,7 +30,7 @@ class NewPasswordController extends Controller
                 ->where('email', $email)
                 ->first();
 
-            if (!$record) {
+            if (! $record) {
                 return redirect()->route('login')
                     ->with('error', 'Ce lien a expiré. Veuillez demander un nouveau lien de réinitialisation.');
             }
@@ -48,7 +48,7 @@ class NewPasswordController extends Controller
             }
 
             // Vérifier que le token correspond (hashé en BDD)
-            if (!Hash::check($token, $record->token)) {
+            if (! Hash::check($token, $record->token)) {
                 return redirect()->route('login')
                     ->with('error', 'Ce lien est invalide. Veuillez demander un nouveau lien de réinitialisation.');
             }

@@ -224,7 +224,7 @@ class EmployeeController extends Controller
             $employee->notify(new WelcomeEmployeeNotification($employee->name, null, $password));
         } catch (\Exception $e) {
             $emailSent = false;
-            \Log::warning("Impossible d'envoyer l'email de bienvenue à {$employee->email}: ".$e->getMessage());
+            \Log::warning("Impossible d'envoyer l'email de bienvenue à {$employee->email}: " . $e->getMessage());
         }
 
         $message = $emailSent
