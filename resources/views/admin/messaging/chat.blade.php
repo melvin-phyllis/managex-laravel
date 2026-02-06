@@ -735,7 +735,7 @@
 
                 async createConversation() {
                     try {
-                        const response = await fetch(`${baseUrl}/admin/messaging`, {
+                        const response = await fetch(`${baseUrl}/messaging/api/conversations`, {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -748,7 +748,8 @@
                             })
                         });
 
-                        const conv = await response.json();
+                        const data = await response.json();
+                        const conv = data.conversation || data;
                         this.conversations.unshift(conv);
                         this.filterConversations();
                         this.selectConversation(conv);
