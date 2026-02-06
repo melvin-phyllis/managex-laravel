@@ -1,25 +1,18 @@
-const CACHE_NAME = 'managex-v1';
-const OFFLINE_URL = '/offline.html';
+const CACHE_NAME = 'managex-v2';
 
-// Assets to cache immediately on install
-const PRECACHE_ASSETS = [
-    '/',
-    '/offline.html',
-    '/build/assets/app.css',
-    '/build/assets/app.js',
-    '/icons/icon-192x192.png',
-    '/icons/icon-512x512.png'
-];
+// Use the SW scope as base path (works with any subdirectory)
+const BASE_PATH = self.registration ? self.registration.scope : self.location.href.replace(/sw\.js$/, '');
 
-// Install event - cache core assets
+// Install event - cache only the offline page
 self.addEventListener('install', (event) => {
     event.waitUntil(
         caches.open(CACHE_NAME)
             .then((cache) => {
-                console.log('ManageX: Caching core assets');
-                return cache.addAll(PRECACHE_ASSETS).catch((error) => {
-                    console.log('ManageX: Some assets failed to cache', error);
-                });
+                console.log('ManageX: Caching offline page');
+                return cache.add(new Request(BASE_PATH + 'offline.html'));
+            })
+            .catch((error) => {
+                console.log('ManageX: Cache failed', error);
             })
             .then(() => self.skipWaiting())
     );
@@ -32,7 +25,6 @@ self.addEventListener('activate', (event) => {
             return Promise.all(
                 cacheNames.map((cacheName) => {
                     if (cacheName !== CACHE_NAME) {
-                        console.log('ManageX: Deleting old cache', cacheName);
                         return caches.delete(cacheName);
                     }
                 })
@@ -43,21 +35,14 @@ self.addEventListener('activate', (event) => {
 
 // Fetch event - network first, fallback to cache
 self.addEventListener('fetch', (event) => {
-    // Skip non-GET requests
-    if (event.request.method !== 'GET') {
-        return;
-    }
+    if (event.request.method !== 'GET') return;
+    if (!event.request.url.startsWith(self.location.origin)) return;
 
-    // Skip cross-origin requests
-    if (!event.request.url.startsWith(self.location.origin)) {
-        return;
-    }
-
-    // Skip API requests (don't cache dynamic data)
-    if (event.request.url.includes('/api/') ||
-        event.request.url.includes('/admin/') ||
+    // Skip dynamic routes
+    if (event.request.url.includes('/admin/') ||
         event.request.url.includes('/login') ||
         event.request.url.includes('/logout') ||
+        event.request.url.includes('/api/') ||
         event.request.url.includes('/sanctum/')) {
         return;
     }
@@ -65,72 +50,40 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
         fetch(event.request)
             .then((response) => {
-                // Clone the response before caching
-                const responseClone = response.clone();
-
-                // Cache successful responses
                 if (response.status === 200) {
-                    caches.open(CACHE_NAME).then((cache) => {
-                        cache.put(event.request, responseClone);
-                    });
+                    const clone = response.clone();
+                    caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
                 }
-
                 return response;
             })
             .catch(() => {
-                // Try to get from cache
-                return caches.match(event.request)
-                    .then((cachedResponse) => {
-                        if (cachedResponse) {
-                            return cachedResponse;
-                        }
-
-                        // If it's a navigation request, show offline page
-                        if (event.request.mode === 'navigate') {
-                            return caches.match(OFFLINE_URL);
-                        }
-
-                        return new Response('Offline', {
-                            status: 503,
-                            statusText: 'Service Unavailable'
-                        });
-                    });
+                return caches.match(event.request).then((cached) => {
+                    if (cached) return cached;
+                    if (event.request.mode === 'navigate') {
+                        return caches.match(BASE_PATH + 'offline.html');
+                    }
+                    return new Response('Offline', { status: 503 });
+                });
             })
     );
 });
 
-// Handle background sync for form submissions
-self.addEventListener('sync', (event) => {
-    if (event.tag === 'sync-forms') {
-        console.log('ManageX: Syncing forms in background');
-    }
-});
-
-// Handle push notifications (for future use)
+// Push notifications
 self.addEventListener('push', (event) => {
     if (event.data) {
         const data = event.data.json();
-        const options = {
-            body: data.body || 'Nouvelle notification ManageX',
-            icon: '/icons/icon-192x192.png',
-            badge: '/icons/icon-72x72.png',
-            vibrate: [100, 50, 100],
-            data: {
-                url: data.url || '/'
-            }
-        };
-
         event.waitUntil(
-            self.registration.showNotification(data.title || 'ManageX', options)
+            self.registration.showNotification(data.title || 'ManageX', {
+                body: data.body || 'Nouvelle notification',
+                icon: BASE_PATH + 'icons/icon-192x192.png',
+                badge: BASE_PATH + 'icons/icon-72x72.png',
+                data: { url: data.url || BASE_PATH }
+            })
         );
     }
 });
 
-// Handle notification clicks
 self.addEventListener('notificationclick', (event) => {
     event.notification.close();
-
-    event.waitUntil(
-        clients.openWindow(event.notification.data.url || '/')
-    );
+    event.waitUntil(clients.openWindow(event.notification.data.url || BASE_PATH));
 });
