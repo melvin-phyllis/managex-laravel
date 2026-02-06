@@ -8,9 +8,9 @@
 
     <!-- PWA Meta Tags -->
     <meta name="theme-color" content="#4f46e5">
-    <link rel="manifest" href="{{ asset('manifest.json') }}">
+    <link rel="manifest" href="{{ route('manifest') }}">
     <link rel="apple-touch-icon" href="{{ asset('icons/icon-192x192.png') }}">
-    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="ManageX">
     <script @if(isset($cspNonce)) nonce="{{ $cspNonce }}" @endif>
@@ -381,6 +381,7 @@
             align-items: center;
             justify-content: center;
             overflow: hidden;
+            padding-top: 80px;
         }
 
         .hero-bg {
@@ -1453,6 +1454,18 @@
                 background: rgba(10, 10, 15, 0.95);
             }
 
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .hero-subtitle {
+                font-size: 0.95rem;
+            }
+
+            .hero-content {
+                padding: 0 1.25rem;
+            }
+
             .features-grid,
             .testimonials-grid {
                 grid-template-columns: 1fr;
@@ -1484,6 +1497,10 @@
         }
 
         @media (max-width: 480px) {
+            .hero-title {
+                font-size: 1.75rem;
+            }
+
             .hero-stats {
                 flex-direction: column;
                 gap: 1rem;
@@ -1492,9 +1509,23 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        /* Particles.js container */
+        #particles-js {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 999;
+            pointer-events: none;
+        }
     </style>
 </head>
 <body>
+
+    <!-- Particles.js Background -->
+    <div id="particles-js"></div>
 
     <!-- ==================== NAVIGATION ==================== -->
     <nav class="nav" id="nav">
@@ -1983,33 +2014,37 @@
         }
 
         const chartBarsEl = document.getElementById('chartBars');
-        const barHeights = [45, 60, 55, 70, 65, 80, 75, 85, 90, 70, 60, 80, 95, 75, 85, 90, 65, 70, 80, 85, 60, 75, 90, 70, 80, 85, 95, 70, 75, 80];
-        barHeights.forEach((h, i) => {
-            const bar = document.createElement('div');
-            bar.classList.add('chart-bar');
-            bar.style.height = '8px';
-            bar.style.transitionDelay = `${i * 30}ms`;
-            chartBarsEl.appendChild(bar);
-        });
-        const chartObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.querySelectorAll('.chart-bar').forEach((bar, i) => {
-                        setTimeout(() => { bar.style.height = `${barHeights[i]}%`; }, 100);
-                    });
-                    chartObserver.unobserve(entry.target);
-                }
+        if (chartBarsEl) {
+            const barHeights = [45, 60, 55, 70, 65, 80, 75, 85, 90, 70, 60, 80, 95, 75, 85, 90, 65, 70, 80, 85, 60, 75, 90, 70, 80, 85, 95, 70, 75, 80];
+            barHeights.forEach((h, i) => {
+                const bar = document.createElement('div');
+                bar.classList.add('chart-bar');
+                bar.style.height = '8px';
+                bar.style.transitionDelay = `${i * 30}ms`;
+                chartBarsEl.appendChild(bar);
             });
-        }, { threshold: 0.3 });
-        chartObserver.observe(chartBarsEl);
+            const chartObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.querySelectorAll('.chart-bar').forEach((bar, i) => {
+                            setTimeout(() => { bar.style.height = `${barHeights[i]}%`; }, 100);
+                        });
+                        chartObserver.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.3 });
+            chartObserver.observe(chartBarsEl);
+        }
 
         const ctaForm = document.getElementById('ctaForm');
         const ctaSuccess = document.getElementById('ctaSuccess');
-        ctaForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            ctaForm.style.display = 'none';
-            ctaSuccess.classList.add('show');
-        });
+        if (ctaForm) {
+            ctaForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                ctaForm.style.display = 'none';
+                if (ctaSuccess) ctaSuccess.classList.add('show');
+            });
+        }
 
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
@@ -2021,7 +2056,7 @@
 
         // PWA Service Worker Registration
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/sw.js')
+            navigator.serviceWorker.register('{{ asset("sw.js") }}')
                 .then((registration) => {
                     console.log('ManageX SW registered:', registration.scope);
                 })
@@ -2029,6 +2064,95 @@
                     console.log('ManageX SW registration failed:', error);
                 });
         }
+
+        // PWA Install Prompt
+        window.deferredPrompt = null;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            window.deferredPrompt = e;
+
+            // Show install banner if not dismissed
+            if (localStorage.getItem('pwa-dismissed') !== 'true') {
+                const banner = document.getElementById('pwa-install-banner');
+                if (banner) banner.style.display = 'flex';
+            }
+        });
+
+        async function installPWA() {
+            if (window.deferredPrompt) {
+                window.deferredPrompt.prompt();
+                const { outcome } = await window.deferredPrompt.userChoice;
+                window.deferredPrompt = null;
+                document.getElementById('pwa-install-banner').style.display = 'none';
+            }
+        }
+
+        function closePWABanner() {
+            document.getElementById('pwa-install-banner').style.display = 'none';
+            localStorage.setItem('pwa-dismissed', 'true');
+        }
+    </script>
+
+    <!-- PWA Install Banner -->
+    <div id="pwa-install-banner" style="display:none;position:fixed;bottom:16px;right:16px;max-width:280px;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;padding:12px;border-radius:12px;box-shadow:0 10px 25px rgba(0,0,0,0.2);z-index:9999;align-items:center;gap:10px;">
+        <div style="width:36px;height:36px;background:rgba(255,255,255,0.2);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+        </div>
+        <div style="flex:1;min-width:0;">
+            <p style="font-weight:600;margin:0;font-size:13px;">Installer ManageX</p>
+            <p style="font-size:11px;opacity:0.8;margin:2px 0 0;">Acces rapide</p>
+        </div>
+        <button onclick="installPWA()" style="padding:6px 12px;background:#fff;color:#667eea;font-weight:600;border:none;border-radius:6px;cursor:pointer;font-size:12px;white-space:nowrap;">Installer</button>
+        <button onclick="closePWABanner()" style="padding:4px;background:rgba(255,255,255,0.2);border:none;border-radius:50%;cursor:pointer;color:#fff;flex-shrink:0;">
+            <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+    </div>
+
+    <!-- Particles.js -->
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof particlesJS !== 'undefined') {
+                const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+                const particleColor = isDark ? '#ffffff' : '#6c4cec';
+                const lineColor = isDark ? '#ffffff' : '#6c4cec';
+
+                particlesJS('particles-js', {
+                    particles: {
+                        number: { value: 60, density: { enable: true, value_area: 900 } },
+                        color: { value: particleColor },
+                        shape: { type: 'circle' },
+                        opacity: { value: 0.15, random: true, anim: { enable: true, speed: 0.8, opacity_min: 0.05, sync: false } },
+                        size: { value: 3, random: true, anim: { enable: true, speed: 2, size_min: 0.5, sync: false } },
+                        line_linked: { enable: true, distance: 150, color: lineColor, opacity: 0.08, width: 1 },
+                        move: { enable: true, speed: 1.2, direction: 'none', random: true, straight: false, out_mode: 'out', bounce: false }
+                    },
+                    interactivity: {
+                        detect_on: 'window',
+                        events: { onhover: { enable: true, mode: 'grab' }, onclick: { enable: true, mode: 'push' }, resize: true },
+                        modes: { grab: { distance: 140, line_linked: { opacity: 0.2 } }, push: { particles_nb: 3 } }
+                    },
+                    retina_detect: true
+                });
+
+                // Update particles on theme change
+                const observer = new MutationObserver(function(mutations) {
+                    mutations.forEach(function(mutation) {
+                        if (mutation.attributeName === 'data-theme') {
+                            const newDark = document.documentElement.getAttribute('data-theme') === 'dark';
+                            const newColor = newDark ? '#ffffff' : '#6c4cec';
+                            if (window.pJSDom && window.pJSDom.length > 0) {
+                                const pJS = window.pJSDom[0].pJS;
+                                pJS.particles.color.value = newColor;
+                                pJS.particles.line_linked.color = newColor;
+                                pJS.fn.particlesRefresh();
+                            }
+                        }
+                    });
+                });
+                observer.observe(document.documentElement, { attributes: true });
+            }
+        });
     </script>
 </body>
 </html>

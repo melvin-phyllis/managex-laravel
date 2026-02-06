@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#4f46e5">
     <title>ManageX - Hors ligne</title>
+    <link rel="icon" href="icons/icon-72x72.png" type="image/png">
     <style>
         * {
             margin: 0;
@@ -19,76 +21,228 @@
             justify-content: center;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             padding: 20px;
+            overflow: hidden;
+        }
+
+        /* Animated background circles */
+        .bg-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            animation: float 6s ease-in-out infinite;
+        }
+        .bg-circle:nth-child(1) { width: 300px; height: 300px; top: -100px; left: -100px; animation-delay: 0s; }
+        .bg-circle:nth-child(2) { width: 200px; height: 200px; bottom: -50px; right: -50px; animation-delay: 2s; }
+        .bg-circle:nth-child(3) { width: 150px; height: 150px; top: 50%; left: 10%; animation-delay: 4s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-20px) scale(1.05); }
         }
 
         .offline-container {
             background: white;
-            border-radius: 20px;
-            padding: 40px;
-            max-width: 400px;
+            border-radius: 24px;
+            padding: 48px 40px;
+            max-width: 420px;
+            width: 100%;
             text-align: center;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            position: relative;
+            z-index: 10;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .offline-icon {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 24px;
-            background: #f3f4f6;
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 28px;
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
+            position: relative;
         }
 
         .offline-icon svg {
-            width: 40px;
-            height: 40px;
-            color: #6b7280;
+            width: 50px;
+            height: 50px;
+            color: #dc2626;
+        }
+
+        /* Pulsing ring animation */
+        .offline-icon::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 3px solid #fca5a5;
+            animation: pulse-ring 2s ease-out infinite;
+        }
+
+        @keyframes pulse-ring {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(1.4); opacity: 0; }
         }
 
         h1 {
             color: #1f2937;
-            font-size: 24px;
+            font-size: 26px;
+            font-weight: 700;
             margin-bottom: 12px;
         }
 
-        p {
+        .subtitle {
             color: #6b7280;
             font-size: 16px;
-            line-height: 1.6;
-            margin-bottom: 24px;
+            line-height: 1.7;
+            margin-bottom: 32px;
+        }
+
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #fef2f2;
+            color: #991b1b;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 28px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #dc2626;
+            border-radius: 50%;
+            animation: blink 1.5s ease-in-out infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .status-indicator.online {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-indicator.online .status-dot {
+            background: #22c55e;
+            animation: none;
         }
 
         .retry-btn {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
-            padding: 14px 28px;
-            border-radius: 10px;
+            padding: 16px 36px;
+            border-radius: 12px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            justify-content: center;
         }
 
         .retry-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 15px 30px rgba(102, 126, 234, 0.4);
         }
 
         .retry-btn:active {
             transform: translateY(0);
         }
 
+        .retry-btn.loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        .retry-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .retry-btn.loading svg {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .tips {
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .tips-title {
+            color: #374151;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .tips-list {
+            list-style: none;
+            text-align: left;
+        }
+
+        .tips-list li {
+            color: #6b7280;
+            font-size: 13px;
+            padding: 6px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tips-list li svg {
+            width: 16px;
+            height: 16px;
+            color: #9ca3af;
+            flex-shrink: 0;
+        }
+
         .brand {
-            margin-top: 24px;
+            margin-top: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
             color: #9ca3af;
             font-size: 14px;
+        }
+
+        .brand img {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
         }
     </style>
 </head>
 <body>
+    <div class="bg-circle"></div>
+    <div class="bg-circle"></div>
+    <div class="bg-circle"></div>
+
     <div class="offline-container">
         <div class="offline-icon">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -96,14 +250,102 @@
             </svg>
         </div>
 
-        <h1>Vous etes hors ligne</h1>
-        <p>Impossible de se connecter au serveur. Verifiez votre connexion internet et reessayez.</p>
+        <h1>Pas de connexion</h1>
+        <p class="subtitle">Vous semblez etre hors ligne. Verifiez votre connexion internet pour acceder a ManageX.</p>
 
-        <button class="retry-btn" onclick="window.location.reload()">
-            Reessayer
+        <div class="status-indicator" id="status">
+            <span class="status-dot"></span>
+            <span id="status-text">Hors ligne</span>
+        </div>
+
+        <button class="retry-btn" id="retryBtn" onclick="retryConnection()">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            <span id="btnText">Reessayer</span>
         </button>
 
-        <p class="brand">ManageX - Gestion RH</p>
+        <div class="tips">
+            <p class="tips-title">Conseils de depannage</p>
+            <ul class="tips-list">
+                <li>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.14 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0" />
+                    </svg>
+                    Verifiez que le Wi-Fi est active
+                </li>
+                <li>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                    </svg>
+                    Desactivez le mode avion
+                </li>
+                <li>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                    Redemarrez votre routeur
+                </li>
+            </ul>
+        </div>
+
+        <div class="brand">
+            <img src="icons/icon-72x72.png" alt="ManageX" onerror="this.style.display='none'">
+            ManageX - Gestion RH
+        </div>
     </div>
+
+    <script>
+        // Check connection status periodically
+        function checkConnection() {
+            const status = document.getElementById('status');
+            const statusText = document.getElementById('status-text');
+
+            if (navigator.onLine) {
+                status.classList.add('online');
+                statusText.textContent = 'Connexion detectee!';
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
+            }
+        }
+
+        // Retry button
+        function retryConnection() {
+            const btn = document.getElementById('retryBtn');
+            const btnText = document.getElementById('btnText');
+
+            btn.classList.add('loading');
+            btnText.textContent = 'Verification...';
+
+            setTimeout(() => {
+                if (navigator.onLine) {
+                    window.location.reload();
+                } else {
+                    btn.classList.remove('loading');
+                    btnText.textContent = 'Reessayer';
+                }
+            }, 1500);
+        }
+
+        // Listen for online/offline events
+        window.addEventListener('online', () => {
+            const status = document.getElementById('status');
+            const statusText = document.getElementById('status-text');
+            status.classList.add('online');
+            statusText.textContent = 'Connexion retablie!';
+            setTimeout(() => window.location.reload(), 1000);
+        });
+
+        window.addEventListener('offline', () => {
+            const status = document.getElementById('status');
+            const statusText = document.getElementById('status-text');
+            status.classList.remove('online');
+            statusText.textContent = 'Hors ligne';
+        });
+
+        // Check every 5 seconds
+        setInterval(checkConnection, 5000);
+    </script>
 </body>
 </html>

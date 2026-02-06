@@ -359,6 +359,9 @@
 </head>
 <body>
 
+    <!-- Particles.js Background -->
+    <div id="particles-js" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;"></div>
+
     <!-- Background Decoration -->
     <div class="bg-orb bg-orb-1"></div>
     <div class="bg-orb bg-orb-2"></div>
@@ -495,5 +498,33 @@
         </div>
     </div>
 
+    <!-- Particles.js -->
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof particlesJS !== 'undefined') {
+                const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+                const color = isDark ? '#ffffff' : '#4F46E5';
+
+                particlesJS('particles-js', {
+                    particles: {
+                        number: { value: 50, density: { enable: true, value_area: 800 } },
+                        color: { value: color },
+                        shape: { type: 'circle' },
+                        opacity: { value: 0.12, random: true, anim: { enable: true, speed: 0.6, opacity_min: 0.04, sync: false } },
+                        size: { value: 3, random: true, anim: { enable: true, speed: 2, size_min: 0.5, sync: false } },
+                        line_linked: { enable: true, distance: 130, color: color, opacity: 0.07, width: 1 },
+                        move: { enable: true, speed: 1, direction: 'none', random: true, straight: false, out_mode: 'out', bounce: false }
+                    },
+                    interactivity: {
+                        detect_on: 'window',
+                        events: { onhover: { enable: true, mode: 'grab' }, onclick: { enable: true, mode: 'push' }, resize: true },
+                        modes: { grab: { distance: 140, line_linked: { opacity: 0.2 } }, push: { particles_nb: 3 } }
+                    },
+                    retina_detect: true
+                });
+            }
+        });
+    </script>
 </body>
 </html>

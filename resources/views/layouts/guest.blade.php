@@ -9,9 +9,9 @@
     <!-- PWA Meta Tags -->
     <meta name="theme-color" content="#4f46e5">
     <meta name="description" content="ManageX - Application de gestion des ressources humaines">
-    <link rel="manifest" href="{{ asset('manifest.json') }}">
+    <link rel="manifest" href="{{ route('manifest') }}">
     <link rel="apple-touch-icon" href="{{ asset('icons/icon-192x192.png') }}">
-    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="ManageX">
 
@@ -24,8 +24,11 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="font-sans antialiased">
+    <!-- Particles.js Background -->
+    <div id="particles-js" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;"></div>
+
     <div class="min-h-screen flex items-center justify-center bg-gray-50 relative overflow-hidden">
-        
+
         <!-- Motifs décoratifs d'arriére-plan -->
         <div class="absolute inset-0 overflow-hidden pointer-events-none">
             <div class="absolute -top-24 -left-24 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl"></div>
@@ -112,7 +115,7 @@
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js')
+                navigator.serviceWorker.register('{{ asset("sw.js") }}')
                     .then((registration) => {
                         console.log('ManageX SW registered:', registration.scope);
                     })
@@ -121,6 +124,32 @@
                     });
             });
         }
+    </script>
+
+    <!-- Particles.js -->
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof particlesJS !== 'undefined') {
+                particlesJS('particles-js', {
+                    particles: {
+                        number: { value: 50, density: { enable: true, value_area: 800 } },
+                        color: { value: '#6c4cec' },
+                        shape: { type: 'circle' },
+                        opacity: { value: 0.12, random: true, anim: { enable: true, speed: 0.6, opacity_min: 0.04, sync: false } },
+                        size: { value: 3, random: true, anim: { enable: true, speed: 2, size_min: 0.5, sync: false } },
+                        line_linked: { enable: true, distance: 130, color: '#6c4cec', opacity: 0.07, width: 1 },
+                        move: { enable: true, speed: 1, direction: 'none', random: true, straight: false, out_mode: 'out', bounce: false }
+                    },
+                    interactivity: {
+                        detect_on: 'window',
+                        events: { onhover: { enable: true, mode: 'grab' }, onclick: { enable: true, mode: 'push' }, resize: true },
+                        modes: { grab: { distance: 120, line_linked: { opacity: 0.15 } } }
+                    },
+                    retina_detect: true
+                });
+            }
+        });
     </script>
 </body>
 </html>
