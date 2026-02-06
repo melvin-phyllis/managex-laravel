@@ -5,6 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="ManageX — La plateforme RH nouvelle génération. Gestion des présences, paie, congés, tâches et analytics, propulsée par l'IA.">
     <title>ManageX — Gestion RH Intelligente</title>
+
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#4f46e5">
+    <link rel="manifest" href="{{ asset('manifest.json') }}">
+    <link rel="apple-touch-icon" href="{{ asset('icons/icon-192x192.png') }}">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="ManageX">
     <script @if(isset($cspNonce)) nonce="{{ $cspNonce }}" @endif>
         // Prevent flash of wrong theme on load
         (function() {
@@ -1525,10 +1533,7 @@
         </div>
 
         <div class="hero-content">
-            <div class="hero-badge reveal">
-                <span class="dot"></span>
-                Plateforme RH nouvelle génération
-            </div>
+                                                                                                                                                                                                                                                        
 
             <h1 class="hero-title reveal reveal-delay-1">
                 La gestion RH<br>
@@ -2013,6 +2018,17 @@
                 if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
             });
         });
+
+        // PWA Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js')
+                .then((registration) => {
+                    console.log('ManageX SW registered:', registration.scope);
+                })
+                .catch((error) => {
+                    console.log('ManageX SW registration failed:', error);
+                });
+        }
     </script>
 </body>
 </html>
