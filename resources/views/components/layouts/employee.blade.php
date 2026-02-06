@@ -494,5 +494,105 @@
     </script>
 
     @stack('scripts')
+
+    {{-- Modale obligatoire d'acceptation du contrat de travail --}}
+    @if(isset($needsContractAcceptance) && $needsContractAcceptance && isset($pendingContract))
+    <div x-data="{ loading: false }"
+         class="fixed inset-0 flex items-center justify-center p-4"
+         style="z-index: 99999; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);">
+
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[95vh] flex flex-col overflow-hidden">
+
+            {{-- Header --}}
+            <div class="px-6 py-5 border-b border-gray-200 flex-shrink-0"
+                 style="background: linear-gradient(135deg, rgba(59, 139, 235, 0.08), rgba(196, 219, 246, 0.15));">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
+                         style="background: linear-gradient(135deg, #3B8BEB, #2563eb);">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold text-gray-900">Action Requise : Contrat de Travail</h2>
+                        <p class="text-sm text-gray-500 mt-0.5">Veuillez lire attentivement votre contrat avant de continuer</p>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Contract Actions --}}
+            <div class="flex-1 min-h-0 bg-gray-100 p-6 flex flex-col items-center justify-center">
+                <div class="bg-white rounded-xl border border-gray-200 p-8 max-w-md w-full text-center shadow-sm">
+                    <div class="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center" style="background-color: rgba(59, 139, 235, 0.1);">
+                        <svg class="w-8 h-8" style="color: #3B8BEB;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Votre Contrat de Travail</h3>
+                    <p class="text-sm text-gray-500 mb-6">Téléchargez ou consultez votre contrat avant de l'accepter.</p>
+                    
+                    <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                        <a href="{{ route('employee.contract.view-pdf') }}" 
+                           target="_blank"
+                           class="inline-flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-medium rounded-xl border border-gray-300 text-gray-700 bg-white hover:bg-gray-50 transition-all">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                            </svg>
+                            Lire le contrat
+                        </a>
+                        <a href="{{ route('employee.documents.download-contract') }}" 
+                           class="inline-flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-medium rounded-xl text-white transition-all"
+                           style="background: linear-gradient(135deg, #3B8BEB, #2563eb);">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                            </svg>
+                            Télécharger
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Footer --}}
+            <div class="px-6 py-4 border-t border-gray-200 bg-gray-50 flex-shrink-0">
+                <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
+                    <p class="text-xs text-gray-400 text-center sm:text-left">
+                        En cliquant "Lu et Accepté", vous confirmez avoir lu et accepté les termes du contrat.
+                    </p>
+                    <div class="flex items-center gap-3 flex-shrink-0">
+                        <form method="POST" action="{{ route('employee.contract.refuse') }}">
+                            @csrf
+                            <button type="submit"
+                                    :disabled="loading"
+                                    class="px-5 py-2.5 text-sm font-medium rounded-xl border border-gray-300 text-gray-700 bg-white hover:bg-red-50 hover:text-red-600 hover:border-red-300 transition-all disabled:opacity-50">
+                                Refuser et Se Déconnecter
+                            </button>
+                        </form>
+
+                        <form method="POST" action="{{ route('employee.contract.accept') }}" @submit="loading = true">
+                            @csrf
+                            <button type="submit"
+                                    :disabled="loading"
+                                    class="px-6 py-2.5 text-sm font-medium rounded-xl text-white transition-all disabled:opacity-50"
+                                    style="background: linear-gradient(135deg, #3B8BEB, #2563eb); box-shadow: 0 4px 14px rgba(59, 139, 235, 0.4);">
+                                <span x-show="!loading">Lu et Accepté</span>
+                                <span x-show="loading" x-cloak class="flex items-center gap-2">
+                                    <svg class="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
+                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+                                    </svg>
+                                    Traitement...
+                                </span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    @endif
+
 </body>
 </html>

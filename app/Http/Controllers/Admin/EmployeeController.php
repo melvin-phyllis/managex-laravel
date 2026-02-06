@@ -418,6 +418,7 @@ class EmployeeController extends Controller
             'document_original_name' => $file->getClientOriginalName(),
             'document_uploaded_at' => now(),
             'document_uploaded_by' => auth()->id(),
+            'contract_accepted_at' => null,
         ]);
 
         return back()->with('success', 'Contrat de travail uploadé avec succès.');

@@ -23,6 +23,7 @@ class Contract extends Model
         'document_original_name',
         'document_uploaded_at',
         'document_uploaded_by',
+        'contract_accepted_at',
     ];
 
     protected $casts = [
@@ -31,6 +32,7 @@ class Contract extends Model
         'end_date' => 'date',
         'is_current' => 'boolean',
         'document_uploaded_at' => 'datetime',
+        'contract_accepted_at' => 'datetime',
     ];
 
     /**
@@ -71,6 +73,30 @@ class Contract extends Model
     /**
      * Get formatted salary.
      */
+    /**
+     * Vérifie si le contrat nécessite une acceptation de l'employé.
+     */
+    public function needsAcceptance(): bool
+    {
+        if (! $this->document_path) {
+            return false;
+        }
+
+        if (! str_ends_with(strtolower($this->document_path), '.pdf')) {
+            return false;
+        }
+
+        if (! $this->contract_accepted_at) {
+            return true;
+        }
+
+        if ($this->document_uploaded_at && $this->contract_accepted_at < $this->document_uploaded_at) {
+            return true;
+        }
+
+        return false;
+    }
+
     public function getFormattedSalaryAttribute(): string
     {
         return number_format($this->base_salary, 0, ',', ' ').' FCFA';

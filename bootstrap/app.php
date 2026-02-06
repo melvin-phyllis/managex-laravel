@@ -15,6 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // Alias pour le middleware de rôle
         $middleware->alias([
             'role' => \App\Http\Middleware\RoleMiddleware::class,
+            'contract.accepted' => \App\Http\Middleware\EnsureContractAccepted::class,
         ]);
 
         // Ajouter les en-têtes de sécurité à toutes les requêtes web

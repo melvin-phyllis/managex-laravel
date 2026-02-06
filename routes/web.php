@@ -17,6 +17,7 @@ use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\SurveyController as AdminSurveyController;
 use App\Http\Controllers\Admin\TaskController as AdminTaskController;
 use App\Http\Controllers\Employee\AIAssistantController;
+use App\Http\Controllers\Employee\ContractAcceptanceController;
 use App\Http\Controllers\Employee\AnnouncementController as EmployeeAnnouncementController;
 use App\Http\Controllers\Employee\DashboardController as EmployeeDashboardController;
 use App\Http\Controllers\Employee\DocumentController as EmployeeDocumentController;
@@ -426,7 +427,12 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 });
 
 // Routes Employee
-Route::middleware(['auth', 'role:employee'])->prefix('employee')->name('employee.')->group(function () {
+Route::middleware(['auth', 'role:employee', 'contract.accepted'])->prefix('employee')->name('employee.')->group(function () {
+    // Acceptation du contrat de travail
+    Route::get('/contract/view-pdf', [ContractAcceptanceController::class, 'viewPdf'])->name('contract.view-pdf');
+    Route::post('/contract/accept', [ContractAcceptanceController::class, 'accept'])->name('contract.accept');
+    Route::post('/contract/refuse', [ContractAcceptanceController::class, 'refuse'])->name('contract.refuse');
+
     // Dashboard
     Route::get('/dashboard', [EmployeeDashboardController::class, 'index'])->name('dashboard');
     Route::get('/dashboard/chart-data', [EmployeeDashboardController::class, 'getChartDataApi'])->name('dashboard.chart-data');
