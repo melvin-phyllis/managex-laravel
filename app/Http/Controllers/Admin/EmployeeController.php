@@ -224,12 +224,12 @@ class EmployeeController extends Controller
             $employee->notify(new WelcomeEmployeeNotification($employee->name, null, $password));
         } catch (\Exception $e) {
             $emailSent = false;
-            \Log::warning("Impossible d'envoyer l'email de bienvenue à {$employee->email}: " . $e->getMessage());
+            \Log::warning("Impossible d'envoyer l'email de bienvenue à {$employee->email}: ".$e->getMessage());
         }
 
         $message = $emailSent
             ? 'Employé créé avec succès. Un email avec les identifiants de connexion a été envoyé.'
-            : 'Employé créé avec succès. ⚠️ L\'email de bienvenue n\'a pas pu être envoyé (vérifiez la configuration SMTP). Mot de passe temporaire : ' . $password;
+            : 'Employé créé avec succès. ⚠️ L\'email de bienvenue n\'a pas pu être envoyé (vérifiez la configuration SMTP). Mot de passe temporaire : '.$password;
 
         return redirect()->route('admin.employees.index')
             ->with($emailSent ? 'success' : 'warning', $message);
