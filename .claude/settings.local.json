@@ -13,7 +13,8 @@
       "Bash(findstr:*)",
       "Bash(git add:*)",
       "Bash(vendor/bin/pint:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(dir:*)"
     ]
   }
 }

@@ -112,6 +112,9 @@ jobs:
           echo "DB_USERNAME=root" >> .env
           echo "DB_PASSWORD=password" >> .env
 
+      - name: Prepare storage directories
+        run: mkdir -p storage/framework/{cache,sessions,testing,views}
+
       - name: Run migrations
         run: php artisan migrate --force
 
