@@ -217,20 +217,19 @@ class EmployeeController extends Controller
             ]);
         }
 
-        // Envoyer l'email de bienvenue avec lien de réinitialisation sécurisé
-        // Le mot de passe n'est plus envoyé en clair pour des raisons de sécurité
-        // Note: Enveloppé dans try-catch car certains hébergeurs (Railway) bloquent SMTP
+        // Envoyer l'email de bienvenue avec mot de passe temporaire + lien de réinitialisation
+        // Note: Enveloppé dans try-catch car certains hébergeurs bloquent SMTP
         $emailSent = true;
         try {
-            $employee->notify(new WelcomeEmployeeNotification($employee->name));
+            $employee->notify(new WelcomeEmployeeNotification($employee->name, null, $password));
         } catch (\Exception $e) {
             $emailSent = false;
             \Log::warning("Impossible d'envoyer l'email de bienvenue à {$employee->email}: ".$e->getMessage());
         }
 
         $message = $emailSent
-            ? 'Employé créé avec succès. Un email avec un lien d\'activation a été envoyé.'
-            : 'Employé créé avec succès. ⚠️ L\'email de bienvenue n\'a pas pu être envoyé (vérifiez la configuration SMTP).';
+            ? 'Employé créé avec succès. Un email avec les identifiants de connexion a été envoyé.'
+            : 'Employé créé avec succès. ⚠️ L\'email de bienvenue n\'a pas pu être envoyé (vérifiez la configuration SMTP). Mot de passe temporaire : ' . $password;
 
         return redirect()->route('admin.employees.index')
             ->with($emailSent ? 'success' : 'warning', $message);

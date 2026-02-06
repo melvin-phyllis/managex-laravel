@@ -109,8 +109,8 @@ class SecurityHeaders
         // car de nombreux composants utilisent des attributs style="" inline
         $styleSrc = "'self' 'unsafe-inline' {$styleCdns}";
 
-        // Images: self, data URIs, et HTTPS pour les images externes
-        $imgSrc = "'self' data: https:";
+        // Images: self, data URIs, blob URIs (image previews), et HTTPS pour les images externes
+        $imgSrc = "'self' data: blob: https:";
 
         // Fonts: Google Fonts, Bunny Fonts
         $fontSrc = "'self' data: https://fonts.gstatic.com https://fonts.bunny.net";
