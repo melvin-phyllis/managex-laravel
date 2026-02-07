@@ -84,7 +84,7 @@ img {
     -premailer-cellpadding: 0;
     -premailer-cellspacing: 0;
     -premailer-width: 100%;
-    background: linear-gradient(135deg, #5680E9 0%, #8860D0 100%);
+    background-color: #f4f7fa;
     margin: 0;
     padding: 0;
     width: 100%;
@@ -107,11 +107,11 @@ img {
 }
 
 .header a {
-    color: #ffffff;
+    color: #2d3748;
     font-size: 24px;
     font-weight: 700;
     text-decoration: none;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    text-shadow: none;
 }
 
 /* Logo */
@@ -128,7 +128,7 @@ img {
     -premailer-cellpadding: 0;
     -premailer-cellspacing: 0;
     -premailer-width: 100%;
-    background: linear-gradient(135deg, #5680E9 0%, #8860D0 100%);
+    background-color: #f4f7fa;
     border-bottom: none;
     border-top: none;
     margin: 0;
@@ -142,9 +142,9 @@ img {
     -premailer-width: 570px;
     background-color: #ffffff;
     border-color: transparent;
-    border-radius: 16px;
+    border-radius: 12px;
     border-width: 0;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 10px 15px rgba(0, 0, 0, 0.03);
     margin: 0 auto;
     padding: 0;
     width: 570px;
@@ -180,13 +180,13 @@ img {
 }
 
 .footer p {
-    color: rgba(255, 255, 255, 0.8);
+    color: #718096;
     font-size: 12px;
     text-align: center;
 }
 
 .footer a {
-    color: rgba(255, 255, 255, 0.9);
+    color: #718096;
     text-decoration: underline;
 }
 
