@@ -248,17 +248,29 @@ class EmployeeController extends Controller
     {
         $prefix = 'EMP';
         $year = date('Y');
-        $lastEmployee = User::where('employee_id', 'like', "{$prefix}{$year}%")
-            ->orderBy('employee_id', 'desc')
+        $prefixWithYear = $prefix.$year;
+        $prefixLen = strlen($prefixWithYear);
+
+        $lastEmployee = User::where('employee_id', 'like', "{$prefixWithYear}%")
+            ->orderByRaw('CAST(SUBSTRING(employee_id, '.($prefixLen + 1).') AS UNSIGNED) DESC')
             ->first();
 
-        if ($lastEmployee && preg_match('/(\d+)$/', $lastEmployee->employee_id, $matches)) {
-            $nextNumber = intval($matches[1]) + 1;
+        if ($lastEmployee) {
+            $lastNumber = intval(substr($lastEmployee->employee_id, $prefixLen));
+            $nextNumber = $lastNumber + 1;
         } else {
             $nextNumber = 1;
         }
 
-        return $prefix.$year.str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
+        $employeeId = $prefixWithYear.str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
+
+        // Verifier l'unicite (securite anti-doublon)
+        while (User::where('employee_id', $employeeId)->exists()) {
+            $nextNumber++;
+            $employeeId = $prefixWithYear.str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
+        }
+
+        return $employeeId;
     }
 
     public function show(User $employee)
