@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Contract;
 use App\Models\Department;
 use App\Models\EmployeeWorkDay;
 use App\Models\Position;
@@ -390,17 +391,32 @@ class EmployeeController extends Controller
     public function uploadContract(Request $request, User $employee)
     {
         $request->validate([
-            'contract_document' => 'required|file|mimes:pdf,doc,docx|max:10240',
+            'contract_document' => 'required|file|max:10240',
         ], [
             'contract_document.required' => 'Veuillez sélectionner un fichier.',
-            'contract_document.mimes' => 'Le fichier doit être au format PDF, DOC ou DOCX.',
             'contract_document.max' => 'Le fichier ne doit pas dépasser 10 Mo.',
         ]);
 
-        $contract = $employee->currentContract;
+        $ext = strtolower($request->file('contract_document')->getClientOriginalExtension());
+        if (! in_array($ext, ['pdf', 'doc', 'docx'])) {
+            return back()->withErrors(['contract_document' => 'Le fichier doit être au format PDF, DOC ou DOCX.']);
+        }
+
+        $contract = $employee->currentContract
+            ?? $employee->contracts()->latest()->first();
 
         if (! $contract) {
-            return back()->withErrors(['error' => 'Cet employé n\'a pas de contrat actif.']);
+            // Creer automatiquement un contrat a partir des infos de l'employe
+            $contract = Contract::create([
+                'user_id' => $employee->id,
+                'contract_type' => $employee->contract_type ?? 'cdi',
+                'base_salary' => $employee->base_salary ?? 0,
+                'start_date' => $employee->hire_date ?? now(),
+                'end_date' => $employee->contract_end_date,
+                'is_current' => true,
+            ]);
+        } elseif (! $contract->is_current) {
+            $contract->update(['is_current' => true]);
         }
 
         // Delete old file if exists

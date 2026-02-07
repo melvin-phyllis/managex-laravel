@@ -49,7 +49,7 @@
 
             <!-- Main Content Card -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-6 animate-fade-in-up animation-delay-200">
-                <h2 class="text-lg font-semibold text-gray-900 border-b pb-3">ðŸ“ Contenu</h2>
+                <h2 class="text-lg font-semibold text-gray-900 border-b pb-3"> Contenu</h2>
 
                 <!-- Title -->
                 <div>
