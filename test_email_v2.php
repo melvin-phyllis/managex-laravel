@@ -8,7 +8,7 @@ $app->make(\Illuminate\Contracts\Console\Kernel::class)->bootstrap();
 // Créer ou trouver l'utilisateur test
 $user = \App\Models\User::where('email', 'phyllismelvin000@gmail.com')->first();
 
-if (!$user) {
+if (! $user) {
     echo "❌ Utilisateur non trouvé. Veuillez le créer d'abord.\n";
     exit;
 }
@@ -19,5 +19,5 @@ try {
     $user->notify(new \App\Notifications\WelcomeEmployeeNotification($user->name, null, 'NouveauPass123!'));
     echo "✅ Email envoyé avec succès !\n";
 } catch (\Exception $e) {
-    echo "❌ Erreur : " . $e->getMessage() . "\n";
+    echo '❌ Erreur : '.$e->getMessage()."\n";
 }
