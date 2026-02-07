@@ -514,7 +514,7 @@
                     }
 
                     try {
-                        const response = await fetch(`/admin/departments/${this.departmentId}/positions`);
+                        const response = await fetch(`{{ url('/admin/departments') }}/${this.departmentId}/positions`);
                         this.positions = await response.json();
                     } catch (error) {
                         console.error('Erreur lors du chargement des positions:', error);

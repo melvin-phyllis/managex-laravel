@@ -174,7 +174,7 @@
 
         // Single validation
         function validateDoc(id, action) {
-            fetch(`/admin/documents/${id}/validate`, {
+            fetch(`{{ url('/admin/documents') }}/${id}/validate`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

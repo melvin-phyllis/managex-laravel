@@ -571,7 +571,7 @@
 
                     // Send to server
                     try {
-                        const response = await fetch(`/admin/tasks/${taskId}/update-status`, {
+                        const response = await fetch(`{{ url('/admin/tasks') }}/${taskId}/update-status`, {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',

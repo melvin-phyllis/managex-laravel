@@ -368,7 +368,7 @@
                         });
 
                         try {
-                            const response = await fetch(`/admin/presences/employee/${employeeId}/details?${params}`);
+                            const response = await fetch(`{{ url('/admin/presences/employee') }}/${employeeId}/details?${params}`);
                             this.employeeDetails[employeeId] = await response.json();
                         } catch (error) {
                             console.error('Error loading details:', error);

@@ -331,7 +331,7 @@
         }
 
         function toggleAnnouncement(id) {
-            fetch(`/admin/announcements/${id}/toggle`, {
+            fetch(`{{ url('/admin/announcements') }}/${id}/toggle`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -347,7 +347,7 @@
         }
 
         function togglePin(id) {
-            fetch(`/admin/announcements/${id}/pin`, {
+            fetch(`{{ url('/admin/announcements') }}/${id}/pin`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

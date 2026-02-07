@@ -942,7 +942,7 @@
 
         // Announcement functions
         function markAnnouncementRead(id) {
-            fetch(`/employee/announcements/${id}/read`, {
+            fetch(`{{ url('/employee/announcements') }}/${id}/read`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -955,7 +955,7 @@
             button.disabled = true;
             button.textContent = 'Envoi...';
 
-            fetch(`/employee/announcements/${id}/acknowledge`, {
+            fetch(`{{ url('/employee/announcements') }}/${id}/acknowledge`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

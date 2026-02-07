@@ -265,7 +265,7 @@
             button.disabled = true;
             button.textContent = 'Envoi...';
 
-            fetch(`/employee/announcements/${id}/acknowledge`, {
+            fetch(`{{ url('/employee/announcements') }}/${id}/acknowledge`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
