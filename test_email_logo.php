@@ -8,7 +8,7 @@ $app->make(\Illuminate\Contracts\Console\Kernel::class)->bootstrap();
 // Créer ou trouver l'utilisateur test
 $user = \App\Models\User::where('email', 'phyllismelvin000@gmail.com')->first();
 
-if (!$user) {
+if (! $user) {
     echo '❌ Utilisateur non trouvé. Veuillez le créer d\'abord.'."\n";
     exit;
 }
