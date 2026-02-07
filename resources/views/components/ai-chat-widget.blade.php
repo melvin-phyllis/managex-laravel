@@ -18,7 +18,7 @@
          class="absolute w-[350px] h-[500px] bg-white rounded-2xl shadow-2xl border border-gray-200 flex flex-col overflow-hidden">
 
         {{-- Header --}}
-        <div class="px-4 py-3 flex items-center justify-between flex-shrink-0 {{ $isAdminUser ? 'bg-gradient-to-r from-violet-600 to-indigo-600' : 'bg-gradient-to-r from-emerald-600 to-teal-600' }}">
+        <div class="px-4 py-3 flex items-center justify-between flex-shrink-0 {{ $isAdminUser ? 'bg-gradient-to-r from-[#8860D0] to-[#5680E9]' : 'bg-gradient-to-r from-[#5680E9] to-[#5AB9EA]' }}">
             <div class="flex items-center gap-3">
                 <div class="w-8 h-8 bg-white/20 backdrop-blur rounded-lg flex items-center justify-center">
                     <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -42,8 +42,8 @@
             {{-- Welcome message --}}
             <template x-if="messages.length === 0">
                 <div class="text-center py-8">
-                    <div class="w-14 h-14 bg-gradient-to-br from-emerald-100 to-teal-100 rounded-2xl flex items-center justify-center mx-auto mb-3">
-                        <svg class="w-7 h-7 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="w-14 h-14 bg-gradient-to-br {{ $isAdminUser ? 'from-[#8860D0]/10 to-[#5680E9]/10' : 'from-[#5680E9]/10 to-[#5AB9EA]/10' }} rounded-2xl flex items-center justify-center mx-auto mb-3">
+                        <svg class="w-7 h-7 {{ $isAdminUser ? 'text-[#8860D0]' : 'text-[#5680E9]' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
                         </svg>
                     </div>
@@ -51,23 +51,23 @@
                     <p class="text-xs text-gray-500 mt-1">Comment puis-je vous aider ?</p>
                     <div class="mt-4 space-y-2">
                         @if($isAdminUser)
-                            <button @click="sendQuickMessage('Quel est le taux de présence aujourd\'hui ?')" class="block w-full text-left text-xs bg-gray-50 hover:bg-violet-50 border border-gray-200 hover:border-violet-200 rounded-lg px-3 py-2 text-gray-600 hover:text-violet-700 transition-colors">
+                            <button @click="sendQuickMessage('Quel est le taux de présence aujourd\'hui ?')" class="block w-full text-left text-xs bg-gray-50 hover:bg-[#8860D0]/5 border border-gray-200 hover:border-[#8860D0]/30 rounded-lg px-3 py-2 text-gray-600 hover:text-[#8860D0] transition-colors">
                                 Quel est le taux de présence aujourd'hui ?
                             </button>
-                            <button @click="sendQuickMessage('Quels départements ont le plus de retards ?')" class="block w-full text-left text-xs bg-gray-50 hover:bg-violet-50 border border-gray-200 hover:border-violet-200 rounded-lg px-3 py-2 text-gray-600 hover:text-violet-700 transition-colors">
+                            <button @click="sendQuickMessage('Quels départements ont le plus de retards ?')" class="block w-full text-left text-xs bg-gray-50 hover:bg-[#8860D0]/5 border border-gray-200 hover:border-[#8860D0]/30 rounded-lg px-3 py-2 text-gray-600 hover:text-[#8860D0] transition-colors">
                                 Quels départements ont le plus de retards ?
                             </button>
-                            <button @click="sendQuickMessage('Résume la situation RH de l\'entreprise')" class="block w-full text-left text-xs bg-gray-50 hover:bg-violet-50 border border-gray-200 hover:border-violet-200 rounded-lg px-3 py-2 text-gray-600 hover:text-violet-700 transition-colors">
+                            <button @click="sendQuickMessage('Résume la situation RH de l\'entreprise')" class="block w-full text-left text-xs bg-gray-50 hover:bg-[#8860D0]/5 border border-gray-200 hover:border-[#8860D0]/30 rounded-lg px-3 py-2 text-gray-600 hover:text-[#8860D0] transition-colors">
                                 Résume la situation RH de l'entreprise
                             </button>
                         @else
-                            <button @click="sendQuickMessage('Combien de jours de congé me reste-t-il ?')" class="block w-full text-left text-xs bg-gray-50 hover:bg-emerald-50 border border-gray-200 hover:border-emerald-200 rounded-lg px-3 py-2 text-gray-600 hover:text-emerald-700 transition-colors">
+                            <button @click="sendQuickMessage('Combien de jours de congé me reste-t-il ?')" class="block w-full text-left text-xs bg-gray-50 hover:bg-[#5680E9]/5 border border-gray-200 hover:border-[#5680E9]/30 rounded-lg px-3 py-2 text-gray-600 hover:text-[#5680E9] transition-colors">
                                 Combien de jours de congé me reste-t-il ?
                             </button>
-                            <button @click="sendQuickMessage('Quel est mon solde de retard ce mois ?')" class="block w-full text-left text-xs bg-gray-50 hover:bg-emerald-50 border border-gray-200 hover:border-emerald-200 rounded-lg px-3 py-2 text-gray-600 hover:text-emerald-700 transition-colors">
+                            <button @click="sendQuickMessage('Quel est mon solde de retard ce mois ?')" class="block w-full text-left text-xs bg-gray-50 hover:bg-[#5680E9]/5 border border-gray-200 hover:border-[#5680E9]/30 rounded-lg px-3 py-2 text-gray-600 hover:text-[#5680E9] transition-colors">
                                 Quel est mon solde de retard ce mois ?
                             </button>
-                            <button @click="sendQuickMessage('Comment faire une demande de congé ?')" class="block w-full text-left text-xs bg-gray-50 hover:bg-emerald-50 border border-gray-200 hover:border-emerald-200 rounded-lg px-3 py-2 text-gray-600 hover:text-emerald-700 transition-colors">
+                            <button @click="sendQuickMessage('Comment faire une demande de congé ?')" class="block w-full text-left text-xs bg-gray-50 hover:bg-[#5680E9]/5 border border-gray-200 hover:border-[#5680E9]/30 rounded-lg px-3 py-2 text-gray-600 hover:text-[#5680E9] transition-colors">
                                 Comment faire une demande de congé ?
                             </button>
                         @endif
@@ -79,7 +79,7 @@
             <template x-for="(msg, index) in messages" :key="index">
                 <div :class="msg.role === 'user' ? 'flex justify-end' : 'flex justify-start'">
                     <div :class="msg.role === 'user'
-                        ? '{{ $isAdminUser ? "bg-gradient-to-br from-violet-500 to-indigo-600" : "bg-gradient-to-br from-emerald-500 to-teal-600" }} text-white rounded-2xl rounded-br-md'
+                        ? '{{ $isAdminUser ? "bg-gradient-to-br from-[#8860D0] to-[#5680E9]" : "bg-gradient-to-br from-[#5680E9] to-[#5AB9EA]" }} text-white rounded-2xl rounded-br-md'
                         : 'bg-gray-100 text-gray-800 rounded-2xl rounded-bl-md'"
                          class="max-w-[85%] px-3.5 py-2.5 text-sm leading-relaxed">
                         <div x-html="msg.role === 'assistant' ? formatMarkdown(msg.content) : escapeHtml(msg.content)"></div>
@@ -108,11 +108,11 @@
                        placeholder="Posez votre question..."
                        maxlength="500"
                        :disabled="loading"
-                       class="flex-1 text-sm border border-gray-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 {{ $isAdminUser ? 'focus:ring-violet-500 focus:border-violet-500' : 'focus:ring-emerald-500 focus:border-emerald-500' }} disabled:opacity-50 disabled:bg-gray-50"
+                       class="flex-1 text-sm border border-gray-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 {{ $isAdminUser ? 'focus:ring-[#8860D0] focus:border-[#8860D0]' : 'focus:ring-[#5680E9] focus:border-[#5680E9]' }} disabled:opacity-50 disabled:bg-gray-50"
                        @keydown.enter.prevent="sendMessage">
                 <button type="submit"
                         :disabled="loading || !input.trim()"
-                        class="w-10 h-10 text-white rounded-xl flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed transition-all flex-shrink-0 {{ $isAdminUser ? 'bg-gradient-to-r from-violet-500 to-indigo-600 hover:from-violet-600 hover:to-indigo-700' : 'bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700' }}">
+                        class="w-10 h-10 text-white rounded-xl flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed transition-all flex-shrink-0 {{ $isAdminUser ? 'bg-gradient-to-r from-[#8860D0] to-[#5680E9] hover:from-[#764eba] hover:to-[#4a72d4]' : 'bg-gradient-to-r from-[#5680E9] to-[#5AB9EA] hover:from-[#4a72d4] hover:to-[#4aa8d9]' }}">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
                     </svg>
@@ -126,9 +126,9 @@
             @mousedown.prevent="startDrag($event)"
             @touchstart.passive="startDrag($event)"
             :class="isDragging ? 'cursor-grabbing scale-110 shadow-2xl' : 'hover:shadow-xl hover:scale-105 cursor-grab'"
-            class="w-14 h-14 text-white rounded-full shadow-lg flex items-center justify-center transition-all duration-200 group relative {{ $isAdminUser ? 'bg-gradient-to-r from-violet-500 to-indigo-600' : 'bg-gradient-to-r from-emerald-500 to-teal-600' }}">
+            class="w-14 h-14 text-white rounded-full shadow-lg flex items-center justify-center transition-all duration-200 group relative {{ $isAdminUser ? 'bg-gradient-to-r from-[#8860D0] to-[#5680E9]' : 'bg-gradient-to-r from-[#5680E9] to-[#5AB9EA]' }}">
         {{-- Pulse animation when closed --}}
-        <span x-show="!open" class="absolute inset-0 rounded-full {{ $isAdminUser ? 'bg-violet-400' : 'bg-emerald-400' }} animate-ping opacity-20"></span>
+        <span x-show="!open" class="absolute inset-0 rounded-full {{ $isAdminUser ? 'bg-[#8860D0]' : 'bg-[#5680E9]' }} animate-ping opacity-20"></span>
         {{-- Icon --}}
         <svg x-show="!open" class="w-6 h-6 relative" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
