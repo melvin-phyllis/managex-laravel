@@ -4,15 +4,15 @@
 # {{ $greeting }}
 @else
 @if ($level === 'error')
-# @lang('Whoops!')
+# @lang('Oups !')
 @else
-# @lang('Hello!')
+# @lang('Bonjour !')
 @endif
 @endif
 
 {{-- Intro Lines --}}
 @foreach ($introLines as $line)
-{{ $line }}
+{!! $line !!}
 
 @endforeach
 
@@ -31,24 +31,23 @@
 
 {{-- Outro Lines --}}
 @foreach ($outroLines as $line)
-{{ $line }}
+{!! $line !!}
 
 @endforeach
 
 {{-- Salutation --}}
 @if (! empty($salutation))
-{{ $salutation }}
+{!! $salutation !!}
 @else
-@lang('Regards,')<br>
-{{ config('app.name') }}
+@lang('Cordialement,')<br>
+L'équipe {{ config('app.name') }}
 @endif
 
 {{-- Subcopy --}}
 @isset($actionText)
 <x-slot:subcopy>
 @lang(
-    "If you're having trouble clicking the \":actionText\" button, copy and paste the URL below\n".
-    'into your web browser:',
+    "Si vous rencontrez des difficultés pour cliquer sur le bouton \":actionText\", copiez et collez l'URL ci-dessous dans votre navigateur web :",
     [
         'actionText' => $actionText,
     ]
