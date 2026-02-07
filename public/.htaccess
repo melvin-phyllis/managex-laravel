@@ -4,10 +4,7 @@
     </IfModule>
 
     RewriteEngine On
-
-    # --- IMPORTANT : COMMENTEZ CETTE LIGNE ---
-    # RewriteBase /managexV1/
-    # -----------------------------------------
+    RewriteBase /managexV1/public/
 
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
