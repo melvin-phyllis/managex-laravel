@@ -1,8 +1,9 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
-    RewriteBase /managexV1/
-
-    # Rediriger tout vers public/
-    RewriteRule ^$ public/ [L]
-    RewriteRule ^((?!public/).*)$ public/$1 [L,NC]
+    # Rediriger tout vers public/index.php
+    RewriteCond %{REQUEST_URI} !^/managexV1/public/
+    RewriteRule ^(.*)$ public/$1 [L]
 </IfModule>
+
+
+
