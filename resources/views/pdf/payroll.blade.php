@@ -200,27 +200,27 @@
             <tr>
                 <td>Salaire de base</td>
                 <td>151.67 h</td>
-                <td class="amount">{{ number_format($payroll->montant * 0.85, 2, ',', ' ') }} €</td>
+                <td class="amount">{{ number_format($payroll->montant * 0.85, 2, ',', ' ') }} FCFA</td>
             </tr>
             <tr>
                 <td>Prime d'ancienneté</td>
                 <td>-</td>
-                <td class="amount">{{ number_format($payroll->montant * 0.05, 2, ',', ' ') }} €</td>
+                <td class="amount">{{ number_format($payroll->montant * 0.05, 2, ',', ' ') }} FCFA</td>
             </tr>
             <tr>
                 <td>Prime de transport</td>
                 <td>-</td>
-                <td class="amount">{{ number_format($payroll->montant * 0.03, 2, ',', ' ') }} €</td>
+                <td class="amount">{{ number_format($payroll->montant * 0.03, 2, ',', ' ') }} FCFA</td>
             </tr>
             <tr>
                 <td>Tickets restaurant</td>
                 <td>20 jours</td>
-                <td class="amount">{{ number_format($payroll->montant * 0.04, 2, ',', ' ') }} €</td>
+                <td class="amount">{{ number_format($payroll->montant * 0.04, 2, ',', ' ') }} FCFA</td>
             </tr>
             <tr>
                 <td>Indemnités diverses</td>
                 <td>-</td>
-                <td class="amount">{{ number_format($payroll->montant * 0.03, 2, ',', ' ') }} €</td>
+                <td class="amount">{{ number_format($payroll->montant * 0.03, 2, ',', ' ') }} FCFA</td>
             </tr>
         </tbody>
     </table>

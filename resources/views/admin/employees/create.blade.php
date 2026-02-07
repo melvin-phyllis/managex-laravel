@@ -55,7 +55,7 @@
         </div>
 
         <!-- Form -->
-        <form action="{{ route('admin.employees.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6 animate-fade-in-up animation-delay-300">
+        <form action="{{ route('admin.employees.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6 animate-fade-in-up animation-delay-300" @submit="sessionStorage.removeItem(DRAFT_KEY)">
             @csrf
 
             <!-- Section 1: Informations de base -->
@@ -115,8 +115,8 @@
 
                         <!-- Genre -->
                         <div>
-                            <label for="gender" class="block text-sm font-medium text-gray-700 mb-1">Genre</label>
-                            <select name="gender" id="gender" class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+                            <label for="gender" class="block text-sm font-medium text-gray-700 mb-1">Genre <span class="text-red-500">*</span></label>
+                            <select name="gender" id="gender" required class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
                                 <option value="">Sélectionner</option>
                                 <option value="male" {{ old('gender') == 'male' ? 'selected' : '' }}>Homme</option>
                                 <option value="female" {{ old('gender') == 'female' ? 'selected' : '' }}>Femme</option>
@@ -180,8 +180,9 @@
                         <!-- Pays -->
                         <div>
                             <label for="country" class="block text-sm font-medium text-gray-700 mb-1">Pays</label>
-                            <input type="text" name="country" id="country" value="{{ old('country', 'France') }}"
-                                   class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+                            <select name="country" id="country" class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+                                @include('partials.country-options', ['selected' => old('country', 'CI')])
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -199,19 +200,10 @@
                 </div>
                 <div class="p-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <!-- Matricule -->
-                        <div>
-                            <label for="employee_id" class="block text-sm font-medium text-gray-700 mb-1">Matricule</label>
-                            <input type="text" name="employee_id" id="employee_id" value="{{ old('employee_id') }}"
-                                   class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                                   placeholder="Généré automatiquement si vide">
-                            <p class="mt-1 text-xs text-gray-500">Laissez vide pour génération automatique</p>
-                        </div>
-
                         <!-- Département -->
                         <div>
-                            <label for="department_id" class="block text-sm font-medium text-gray-700 mb-1">Département</label>
-                            <select name="department_id" id="department_id" x-model="departmentId" @change="loadPositions()"
+                            <label for="department_id" class="block text-sm font-medium text-gray-700 mb-1">Département <span class="text-red-500">*</span></label>
+                            <select name="department_id" id="department_id" required x-model="departmentId" @change="loadPositions()"
                                     class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
                                 <option value="">Sélectionner un département</option>
                                 @foreach($departments as $department)
@@ -220,6 +212,13 @@
                                     </option>
                                 @endforeach
                             </select>
+                            <a href="{{ route('admin.settings.index', ['tab' => 'organisation', 'from' => 'employee-create']) }}"
+                               class="mt-1.5 inline-flex items-center gap-1 text-xs text-blue-600 hover:text-blue-800 font-medium transition-colors">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                                </svg>
+                                Ajouter un département
+                            </a>
                         </div>
 
                         <!-- Position -->
@@ -232,27 +231,34 @@
                                     <option :value="position.id" x-text="position.name"></option>
                                 </template>
                             </select>
+                            <a href="{{ route('admin.settings.index', ['tab' => 'organisation', 'from' => 'employee-create']) }}"
+                               class="mt-1.5 inline-flex items-center gap-1 text-xs text-blue-600 hover:text-blue-800 font-medium transition-colors">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                                </svg>
+                                Ajouter une position
+                            </a>
                         </div>
 
                         <!-- Poste (libre) -->
                         <div>
-                            <label for="poste" class="block text-sm font-medium text-gray-700 mb-1">Intitulé du poste</label>
-                            <input type="text" name="poste" id="poste" value="{{ old('poste') }}"
+                            <label for="poste" class="block text-sm font-medium text-gray-700 mb-1">Intitulé du poste <span class="text-red-500">*</span></label>
+                            <input type="text" name="poste" id="poste" value="{{ old('poste') }}" required
                                    class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                                    placeholder="Développeur Full Stack">
                         </div>
 
                         <!-- Date d'embauche -->
                         <div>
-                            <label for="hire_date" class="block text-sm font-medium text-gray-700 mb-1">Date d'embauche</label>
-                            <input type="date" name="hire_date" id="hire_date" value="{{ old('hire_date', date('Y-m-d')) }}"
+                            <label for="hire_date" class="block text-sm font-medium text-gray-700 mb-1">Date d'embauche <span class="text-red-500">*</span></label>
+                            <input type="date" name="hire_date" id="hire_date" value="{{ old('hire_date', date('Y-m-d')) }}" required
                                    class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
                         </div>
 
                         <!-- Type de contrat -->
                         <div>
-                            <label for="contract_type" class="block text-sm font-medium text-gray-700 mb-1">Type de contrat</label>
-                            <select name="contract_type" id="contract_type" x-model="contractType"
+                            <label for="contract_type" class="block text-sm font-medium text-gray-700 mb-1">Type de contrat <span class="text-red-500">*</span></label>
+                            <select name="contract_type" id="contract_type" required x-model="contractType"
                                     class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
                                 <option value="cdi" {{ old('contract_type', 'cdi') == 'cdi' ? 'selected' : '' }}>CDI</option>
                                 <option value="cdd" {{ old('contract_type') == 'cdd' ? 'selected' : '' }}>CDD</option>
@@ -272,7 +278,7 @@
 
                         <!-- Salaire de base -->
                         <div>
-                            <label for="base_salary" class="block text-sm font-medium text-gray-700 mb-1">Salaire brut mensuel (€)</label>
+                            <label for="base_salary" class="block text-sm font-medium text-gray-700 mb-1">Salaire brut mensuel (FCFA)</label>
                             <input type="number" name="base_salary" id="base_salary" value="{{ old('base_salary') }}" step="0.01" min="0"
                                    class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                                    placeholder="2500.00">
@@ -420,6 +426,8 @@
     </div>
 
     <script nonce="{{ $cspNonce ?? '' }}">
+        const DRAFT_KEY = 'employee_create_draft';
+
         function employeeForm() {
             return {
                 departmentId: '{{ old('department_id', '') }}',
@@ -428,8 +436,73 @@
                 positions: [],
 
                 init() {
+                    this.restoreDraft();
+
                     if (this.departmentId) {
                         this.loadPositions();
+                    }
+
+                    // Sauvegarder le brouillon quand on clique sur les liens d'ajout
+                    document.querySelectorAll('a[href*="from=employee-create"]').forEach(link => {
+                        link.addEventListener('click', () => this.saveDraft());
+                    });
+                },
+
+                saveDraft() {
+                    const form = document.querySelector('form[action*="employees"]');
+                    const data = {};
+                    const formData = new FormData(form);
+                    for (const [key, value] of formData.entries()) {
+                        if (key === '_token') continue;
+                        if (key === 'avatar') continue;
+                        if (key === 'work_days[]') {
+                            if (!data.work_days) data.work_days = [];
+                            data.work_days.push(value);
+                            continue;
+                        }
+                        data[key] = value;
+                    }
+                    sessionStorage.setItem(DRAFT_KEY, JSON.stringify(data));
+                },
+
+                restoreDraft() {
+                    const saved = sessionStorage.getItem(DRAFT_KEY);
+                    if (!saved) return;
+
+                    // Ne restaurer que si on revient des paramètres (pas après un POST échoué avec old())
+                    const hasOldInput = {{ count(old()) > 0 ? 'true' : 'false' }};
+                    if (hasOldInput) {
+                        sessionStorage.removeItem(DRAFT_KEY);
+                        return;
+                    }
+
+                    try {
+                        const data = JSON.parse(saved);
+                        sessionStorage.removeItem(DRAFT_KEY);
+
+                        // Remplir les champs texte, email, date, number
+                        const form = document.querySelector('form[action*="employees"]');
+                        Object.keys(data).forEach(key => {
+                            if (key === 'work_days') return;
+                            const input = form.querySelector(`[name="${key}"]`);
+                            if (input) {
+                                input.value = data[key];
+                                // Mettre à jour les données Alpine.js
+                                if (key === 'department_id') this.departmentId = data[key];
+                                if (key === 'position_id') this.positionId = data[key];
+                                if (key === 'contract_type') this.contractType = data[key];
+                            }
+                        });
+
+                        // Restaurer les jours de travail (checkboxes)
+                        if (data.work_days) {
+                            form.querySelectorAll('input[name="work_days[]"]').forEach(cb => {
+                                cb.checked = data.work_days.includes(cb.value);
+                            });
+                        }
+                    } catch (e) {
+                        console.error('Erreur restauration brouillon:', e);
+                        sessionStorage.removeItem(DRAFT_KEY);
                     }
                 },
 

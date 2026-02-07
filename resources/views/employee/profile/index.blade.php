@@ -269,8 +269,9 @@
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Pays</label>
-                        <input type="text" name="country" value="{{ $user->country ?? 'France' }}"
-                               class="w-full rounded-lg border-gray-300 focus:border-[#3B8BEB] focus:ring-[#3B8BEB]">
+                        <select name="country" class="w-full rounded-lg border-gray-300 focus:border-[#3B8BEB] focus:ring-[#3B8BEB]">
+                            @include('partials.country-options', ['selected' => $user->country ?? 'CI'])
+                        </select>
                     </div>
                     <div class="pt-4 border-t border-gray-100">
                         <h4 class="font-medium text-gray-900 mb-3">Informations Fiscales</h4>

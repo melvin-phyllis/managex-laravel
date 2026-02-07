@@ -211,8 +211,9 @@
 
                         <div>
                             <label for="country" class="block text-sm font-medium text-gray-700 mb-1">Pays</label>
-                            <input type="text" name="country" id="country" value="{{ old('country', $employee->country ?? 'France') }}"
-                                   class="w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-indigo-500">
+                            <select name="country" id="country" class="w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-indigo-500">
+                                @include('partials.country-options', ['selected' => old('country', $employee->country ?? 'CI')])
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -292,7 +293,7 @@
                         </div>
 
                         <div>
-                            <label for="base_salary" class="block text-sm font-medium text-gray-700 mb-1">Salaire brut mensuel (€)</label>
+                            <label for="base_salary" class="block text-sm font-medium text-gray-700 mb-1">Salaire brut mensuel (FCFA)</label>
                             <input type="number" name="base_salary" id="base_salary" value="{{ old('base_salary', $employee->base_salary) }}" step="0.01" min="0"
                                    class="w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-indigo-500">
                         </div>

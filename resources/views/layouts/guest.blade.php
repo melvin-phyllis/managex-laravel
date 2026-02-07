@@ -9,8 +9,9 @@
     <!-- PWA Meta Tags -->
     <meta name="theme-color" content="#4f46e5">
     <meta name="description" content="ManageX - Application de gestion des ressources humaines">
+    <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
     <link rel="manifest" href="{{ route('manifest') }}">
-    <link rel="apple-touch-icon" href="{{ asset('icons/icon-192x192.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('favicon.png') }}">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="ManageX">
@@ -38,10 +39,11 @@
         <!-- Conteneur Formulaire -->
         <div class="w-full max-w-md p-6 relative z-10">
             <!-- Logo -->
-            <div class="text-center mb-8">
-
-                <h1 class="text-3xl font-bold text-gray-900">ManageX</h1>
-                <p class="text-gray-500 mt-1">Gestion RH Simplifiée</p>
+            <div class="flex flex-row items-center justify-center mb-8 gap-4">
+                <a href="/">
+                    <x-application-logo class="w-16 h-16 rounded-full object-cover shadow-md" />
+                </a>
+                <span class="text-3xl font-bold text-gray-900 tracking-tight">ManageX</span>
             </div>
 
             {{ $slot }}

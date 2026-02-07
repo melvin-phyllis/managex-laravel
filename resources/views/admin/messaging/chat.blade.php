@@ -200,7 +200,19 @@
                     </div>
 
                     <!-- Messages -->
-                    <div class="flex-1 overflow-y-auto p-4 space-y-3 chat-messages-area" id="messagesContainer" x-ref="messagesContainer">
+                    <div class="flex-1 overflow-y-auto p-4 chat-messages-area" id="messagesContainer" x-ref="messagesContainer">
+                        <!-- Loading spinner -->
+                        <div x-show="isLoadingMessages" x-transition.opacity class="flex items-center justify-center h-full">
+                            <div class="text-center">
+                                <svg class="w-10 h-10 mx-auto animate-spin text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                                <p class="text-sm text-gray-500 mt-2">Chargement des messages...</p>
+                            </div>
+                        </div>
+                        <!-- Messages list -->
+                        <div x-show="!isLoadingMessages" class="space-y-3">
                         <template x-for="message in messages" :key="message.id">
                             <div :class="(message.sender_id || message.user_id) == currentUserId ? 'flex justify-end' : 'flex justify-start'">
                                 <div :class="[
@@ -260,6 +272,7 @@
                                 </div>
                             </div>
                         </template>
+                        </div>
                     </div>
 
                     <!-- Input -->
@@ -388,6 +401,11 @@
                 currentUserId: {{ auth()->id() }},
                 pollingInterval: null,
                 conversationPollingInterval: null,
+                isPolling: false,
+                isLoadingMessages: false,
+                isLoadingConversations: false,
+                pollAbortController: null,
+                loadMessagesRequestId: 0,
 
                 voiceAudio: null,
                 voicePlayingId: null,
@@ -447,6 +465,19 @@
                                 this.loadConversationsData();
                             });
                     }
+
+                    // Cleanup on page leave
+                    window.addEventListener('beforeunload', () => this.stopPolling());
+                },
+
+                destroy() {
+                    this.stopPolling();
+                },
+
+                stopPolling() {
+                    if (this.pollingInterval) { clearInterval(this.pollingInterval); this.pollingInterval = null; }
+                    if (this.conversationPollingInterval) { clearInterval(this.conversationPollingInterval); this.conversationPollingInterval = null; }
+                    if (this.pollAbortController) { this.pollAbortController.abort(); this.pollAbortController = null; }
                 },
 
                 checkDesktop() {
@@ -482,25 +513,34 @@
                 fetchWithTimeout(url, options = {}, timeoutMs = 15000) {
                     const controller = new AbortController();
                     const id = setTimeout(() => controller.abort(), timeoutMs);
+                    // Also abort if the shared poll controller fires
+                    if (this.pollAbortController) {
+                        this.pollAbortController.signal.addEventListener('abort', () => controller.abort(), { once: true });
+                    }
                     return fetch(url, { ...options, signal: controller.signal }).finally(() => clearTimeout(id));
                 },
 
                 startPolling() {
+                    this.pollAbortController = new AbortController();
+
                     // Poll for new messages every 3 seconds
                     this.pollingInterval = setInterval(() => {
-                        if (this.selectedConversation) {
+                        if (this.selectedConversation && !this.isPolling) {
                             this.pollNewMessages();
                         }
                     }, 3000);
 
                     // Poll for conversation updates every 10 seconds
                     this.conversationPollingInterval = setInterval(() => {
-                        this.loadConversationsData();
+                        if (!this.isLoadingConversations) {
+                            this.loadConversationsData();
+                        }
                     }, 10000);
                 },
 
                 async pollNewMessages() {
-                    if (!this.selectedConversation || this.messages.length === 0) return;
+                    if (!this.selectedConversation || this.messages.length === 0 || this.isPolling) return;
+                    this.isPolling = true;
 
                     try {
                         const lastId = this.messages[this.messages.length - 1].id;
@@ -517,11 +557,18 @@
                             }
                         }
                     } catch (error) {
-                        console.error('Polling error:', error);
+                        if (error.name !== 'AbortError') {
+                            console.error('Polling error:', error);
+                        }
+                    } finally {
+                        this.isPolling = false;
                     }
                 },
 
                 async loadConversationsData() {
+                    if (this.isLoadingConversations) return;
+                    this.isLoadingConversations = true;
+
                     try {
                         const response = await this.fetchWithTimeout(`${baseUrl}/messaging/api/conversations`);
                         if (response.ok) {
@@ -538,7 +585,11 @@
                             }
                         }
                     } catch (error) {
-                        console.error('Error loading conversations:', error);
+                        if (error.name !== 'AbortError') {
+                            console.error('Error loading conversations:', error);
+                        }
+                    } finally {
+                        this.isLoadingConversations = false;
                     }
                 },
 
@@ -563,7 +614,16 @@
                 },
 
                 async selectConversation(conv) {
+                    // Abort any in-flight polling requests before switching
+                    if (this.pollAbortController) {
+                        this.pollAbortController.abort();
+                    }
+                    this.pollAbortController = new AbortController();
+                    this.isPolling = false;
+
                     this.selectedConversation = conv;
+                    this.messages = [];
+                    this.isLoadingMessages = true;
                     await this.loadMessages(conv.id);
                     await this.markAsRead(conv.id);
                     // Reset unread count for this conversation
@@ -585,13 +645,23 @@
                 },
 
                 async loadMessages(conversationId) {
+                    const requestId = ++this.loadMessagesRequestId;
                     try {
-                        const response = await fetch(`${baseUrl}/admin/messaging/${conversationId}/messages`);
+                        const response = await this.fetchWithTimeout(`${baseUrl}/admin/messaging/${conversationId}/messages`);
+                        // Ignorer si l'utilisateur a changé de conversation entre-temps
+                        if (requestId !== this.loadMessagesRequestId) return;
                         const data = await response.json();
+                        if (requestId !== this.loadMessagesRequestId) return;
                         this.messages = data.data;
                         this.$nextTick(() => this.scrollToBottom());
                     } catch (error) {
-                        console.error('Error loading messages:', error);
+                        if (error.name !== 'AbortError') {
+                            console.error('Error loading messages:', error);
+                        }
+                    } finally {
+                        if (requestId === this.loadMessagesRequestId) {
+                            this.isLoadingMessages = false;
+                        }
                     }
                 },
 

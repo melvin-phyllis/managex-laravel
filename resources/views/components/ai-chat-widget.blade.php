@@ -5,7 +5,7 @@
     $isAdminUser = $isAdmin || auth()->user()?->role === 'admin';
 @endphp
 
-<div x-data="aiChatWidget()" class="fixed bottom-6 right-6 z-50" @keydown.escape.window="open = false">
+<div x-data="aiChatWidget()" class="fixed z-50" :style="'bottom:' + posY + 'px; right:' + posX + 'px'" @keydown.escape.window="open = false">
     {{-- Chat Panel --}}
     <div x-show="open"
          x-transition:enter="transition ease-out duration-200"
@@ -14,7 +14,8 @@
          x-transition:leave="transition ease-in duration-150"
          x-transition:leave-start="opacity-100 translate-y-0 scale-100"
          x-transition:leave-end="opacity-0 translate-y-4 scale-95"
-         class="absolute bottom-16 right-0 w-[350px] h-[500px] bg-white rounded-2xl shadow-2xl border border-gray-200 flex flex-col overflow-hidden">
+         :style="getPanelPosition()"
+         class="absolute w-[350px] h-[500px] bg-white rounded-2xl shadow-2xl border border-gray-200 flex flex-col overflow-hidden">
 
         {{-- Header --}}
         <div class="px-4 py-3 flex items-center justify-between flex-shrink-0 {{ $isAdminUser ? 'bg-gradient-to-r from-violet-600 to-indigo-600' : 'bg-gradient-to-r from-emerald-600 to-teal-600' }}">
@@ -121,8 +122,11 @@
     </div>
 
     {{-- Floating Button --}}
-    <button @click="toggleChat"
-            class="w-14 h-14 text-white rounded-full shadow-lg hover:shadow-xl hover:scale-105 flex items-center justify-center transition-all duration-200 group relative {{ $isAdminUser ? 'bg-gradient-to-r from-violet-500 to-indigo-600' : 'bg-gradient-to-r from-emerald-500 to-teal-600' }}">
+    <button @click="handleClick()"
+            @mousedown.prevent="startDrag($event)"
+            @touchstart.passive="startDrag($event)"
+            :class="isDragging ? 'cursor-grabbing scale-110 shadow-2xl' : 'hover:shadow-xl hover:scale-105 cursor-grab'"
+            class="w-14 h-14 text-white rounded-full shadow-lg flex items-center justify-center transition-all duration-200 group relative {{ $isAdminUser ? 'bg-gradient-to-r from-violet-500 to-indigo-600' : 'bg-gradient-to-r from-emerald-500 to-teal-600' }}">
         {{-- Pulse animation when closed --}}
         <span x-show="!open" class="absolute inset-0 rounded-full {{ $isAdminUser ? 'bg-violet-400' : 'bg-emerald-400' }} animate-ping opacity-20"></span>
         {{-- Icon --}}
@@ -142,6 +146,88 @@ function aiChatWidget() {
         loading: false,
         input: '',
         messages: [],
+
+        // Drag
+        isDragging: false,
+        hasDragged: false,
+        dragStartX: 0,
+        dragStartY: 0,
+        posX: 24,
+        posY: 24,
+
+        init() {
+            // Restore saved position
+            const saved = localStorage.getItem('ai_widget_pos');
+            if (saved) {
+                try {
+                    const pos = JSON.parse(saved);
+                    this.posX = pos.x;
+                    this.posY = pos.y;
+                } catch (e) {}
+            }
+
+            // Mouse/touch move & up listeners
+            const onMove = (e) => this.onDrag(e);
+            const onEnd = () => this.stopDrag();
+            document.addEventListener('mousemove', onMove);
+            document.addEventListener('mouseup', onEnd);
+            document.addEventListener('touchmove', onMove, { passive: false });
+            document.addEventListener('touchend', onEnd);
+        },
+
+        startDrag(e) {
+            this.hasDragged = false;
+            const point = e.touches ? e.touches[0] : e;
+            this.dragStartX = point.clientX;
+            this.dragStartY = point.clientY;
+            this.isDragging = true;
+        },
+
+        onDrag(e) {
+            if (!this.isDragging) return;
+            const point = e.touches ? e.touches[0] : e;
+            const dx = point.clientX - this.dragStartX;
+            const dy = point.clientY - this.dragStartY;
+
+            // Only start moving after 5px to distinguish from click
+            if (!this.hasDragged && Math.abs(dx) < 5 && Math.abs(dy) < 5) return;
+            this.hasDragged = true;
+
+            if (e.cancelable) e.preventDefault();
+
+            // right/bottom based: moving mouse right = decrease posX
+            this.posX = Math.max(8, Math.min(window.innerWidth - 64, this.posX - dx));
+            this.posY = Math.max(8, Math.min(window.innerHeight - 64, this.posY - dy));
+
+            this.dragStartX = point.clientX;
+            this.dragStartY = point.clientY;
+        },
+
+        stopDrag() {
+            if (!this.isDragging) return;
+            this.isDragging = false;
+            if (this.hasDragged) {
+                localStorage.setItem('ai_widget_pos', JSON.stringify({ x: this.posX, y: this.posY }));
+            }
+        },
+
+        getPanelPosition() {
+            const vw = window.innerWidth;
+            const vh = window.innerHeight;
+            // Horizontal : si le bouton est trop à gauche (loin du bord droit), ouvrir vers la droite
+            const canOpenLeft = (vw - this.posX) >= 370;
+            // Vertical : si le bouton est trop en haut, ouvrir vers le bas
+            const canOpenUp = (this.posY + 570) <= vh;
+            let style = canOpenLeft ? 'right: 0;' : 'left: 0;';
+            style += canOpenUp ? ' bottom: 4rem;' : ' top: 4rem;';
+            return style;
+        },
+
+        handleClick() {
+            // Ne pas toggler le chat si on vient de drag
+            if (this.hasDragged) return;
+            this.toggleChat();
+        },
 
         toggleChat() {
             this.open = !this.open;

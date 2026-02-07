@@ -134,15 +134,15 @@ class EmployeeController extends Controller
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'poste' => ['nullable', 'string', 'max:255'],
+            'poste' => ['required', 'string', 'max:255'],
             'telephone' => ['nullable', 'string', 'max:20'],
-            'department_id' => ['nullable', 'exists:departments,id'],
+            'department_id' => ['required', 'exists:departments,id'],
             'position_id' => ['nullable', 'exists:positions,id'],
             'work_days' => ['required', 'array', 'min:1'],
             'work_days.*' => ['integer', 'between:1,7'],
             // Champs RH personnels
             'date_of_birth' => ['nullable', 'date', 'before:today'],
-            'gender' => ['nullable', 'in:male,female,other'],
+            'gender' => ['required', 'in:male,female,other'],
             'address' => ['nullable', 'string', 'max:500'],
             'city' => ['nullable', 'string', 'max:100'],
             'postal_code' => ['nullable', 'string', 'max:20'],
@@ -152,9 +152,9 @@ class EmployeeController extends Controller
             'emergency_contact_phone' => ['nullable', 'string', 'max:20'],
             'emergency_contact_relationship' => ['nullable', 'string', 'max:50'],
             // Informations professionnelles
-            'hire_date' => ['nullable', 'date'],
+            'hire_date' => ['required', 'date'],
             'contract_end_date' => ['nullable', 'date', 'after:hire_date'],
-            'contract_type' => ['nullable', 'in:cdi,cdd,stage,alternance,freelance,interim'],
+            'contract_type' => ['required', 'in:cdi,cdd,stage,alternance,freelance,interim'],
             'base_salary' => ['nullable', 'numeric', 'min:0'],
             'employee_id' => ['nullable', 'string', 'max:50', 'unique:users,employee_id'],
             // Informations administratives
@@ -168,6 +168,11 @@ class EmployeeController extends Controller
             'work_days.required' => 'Veuillez sélectionner au moins un jour de travail.',
             'work_days.min' => 'Veuillez sélectionner au moins un jour de travail.',
             'contract_end_date.after' => 'La date de fin de contrat doit être postérieure à la date d\'embauche.',
+            'poste.required' => 'L\'intitulé du poste est obligatoire.',
+            'department_id.required' => 'Le département est obligatoire.',
+            'gender.required' => 'Le genre est obligatoire.',
+            'hire_date.required' => 'La date d\'embauche est obligatoire.',
+            'contract_type.required' => 'Le type de contrat est obligatoire.',
         ]);
 
         // Générer un mot de passe aléatoire
@@ -187,7 +192,7 @@ class EmployeeController extends Controller
             'address' => $request->address,
             'city' => $request->city,
             'postal_code' => $request->postal_code,
-            'country' => $request->country ?? 'France',
+            'country' => $request->country ?? 'CI',
             'emergency_contact_name' => $request->emergency_contact_name,
             'emergency_contact_phone' => $request->emergency_contact_phone,
             'emergency_contact_relationship' => $request->emergency_contact_relationship,

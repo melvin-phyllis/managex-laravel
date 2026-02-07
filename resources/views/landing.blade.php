@@ -1531,7 +1531,7 @@
     <nav class="nav" id="nav">
         <div class="container">
             <a href="{{ url('/') }}" class="nav-logo">
-                <div class="logo-icon">M</div>
+                <img src="{{ asset('images/managex_logo.png') }}" alt="ManageX Logo" style="height: 48px; width: 48px; border-radius: 50%; object-fit: cover;">
                 ManageX
             </a>
             <ul class="nav-links" id="navLinks">
@@ -1631,7 +1631,7 @@
                             <div class="metric-label">Assistant IA disponible</div>
                         </div>
                         <div class="metric-card reveal reveal-delay-4">
-                            <div class="metric-value">0€</div>
+                            <div class="metric-value">0 FCFA</div>
                             <div class="metric-label">Coût d'intégration</div>
                         </div>
                     </div>

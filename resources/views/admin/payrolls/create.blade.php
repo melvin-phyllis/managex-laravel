@@ -66,7 +66,7 @@
 
                     <!-- Montant -->
                     <div>
-                        <label for="montant" class="block text-sm font-medium text-gray-700 mb-1">Montant (€) *</label>
+                        <label for="montant" class="block text-sm font-medium text-gray-700 mb-1">Montant (FCFA) *</label>
                         <input type="number" name="montant" id="montant" value="{{ old('montant') }}" step="0.01" min="0" required class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 @error('montant') border-red-500 @enderror">
                         @error('montant')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>

@@ -18,11 +18,13 @@ class PageController extends Controller
 
     public function dashboard()
     {
+        $welcome = 'Bienvenue, '.auth()->user()->name.' !';
+
         if (auth()->user()->isAdmin()) {
-            return redirect()->route('admin.dashboard');
+            return redirect()->route('admin.dashboard')->with('success', $welcome);
         }
 
-        return redirect()->route('employee.dashboard');
+        return redirect()->route('employee.dashboard')->with('success', $welcome);
     }
 
     public function demoRequest()
