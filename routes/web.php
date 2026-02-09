@@ -229,6 +229,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::post('/tasks/{task}/validate', [AdminTaskController::class, 'validate'])->name('tasks.validate');
     Route::post('/tasks/{task}/update-status', [AdminTaskController::class, 'updateStatus'])->name('tasks.update-status');
     Route::delete('/tasks/{task}', [AdminTaskController::class, 'destroy'])->name('tasks.destroy');
+    Route::get('/task-documents/{document}/download', [AdminTaskController::class, 'downloadDocument'])->name('tasks.document.download');
+    Route::delete('/task-documents/{document}', [AdminTaskController::class, 'deleteDocument'])->name('tasks.document.delete');
 
     // Gestion des congés
     Route::get('/leaves', [AdminLeaveController::class, 'index'])->name('leaves.index');
@@ -461,6 +463,7 @@ Route::middleware(['auth', 'role:employee', 'contract.accepted'])->prefix('emplo
     Route::get('/tasks', [EmployeeTaskController::class, 'index'])->name('tasks.index');
     Route::get('/tasks/{task}', [EmployeeTaskController::class, 'show'])->name('tasks.show');
     Route::patch('/tasks/{task}/progress', [EmployeeTaskController::class, 'updateProgress'])->name('tasks.progress');
+    Route::get('/task-documents/{document}/download', [AdminTaskController::class, 'downloadDocument'])->name('tasks.document.download');
 
     // Congés (rate limiting sur la création)
     Route::get('/leaves', [EmployeeLeaveController::class, 'index'])->name('leaves.index');

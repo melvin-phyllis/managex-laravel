@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\DocumentRequest;
+use App\Notifications\DocumentRequestStatusNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -82,6 +83,12 @@ class DocumentRequestController extends Controller
             'responded_at' => now(),
         ]);
 
+        try {
+            $documentRequest->user->notify(new DocumentRequestStatusNotification($documentRequest, 'approved'));
+        } catch (\Throwable $e) {
+            \Log::warning('Echec envoi notification demande document: '.$e->getMessage());
+        }
+
         return redirect()->route('admin.document-requests.index')
             ->with('success', 'Demande approuvée et document envoyé à l\'employé.');
     }
@@ -103,6 +110,12 @@ class DocumentRequestController extends Controller
             'admin_response' => $request->admin_response,
             'responded_at' => now(),
         ]);
+
+        try {
+            $documentRequest->user->notify(new DocumentRequestStatusNotification($documentRequest, 'rejected'));
+        } catch (\Throwable $e) {
+            \Log::warning('Echec envoi notification demande document: '.$e->getMessage());
+        }
 
         return redirect()->route('admin.document-requests.index')
             ->with('success', 'Demande refusée.');

@@ -60,6 +60,65 @@
                     </div>
                 </div>
 
+                <!-- Documents joints -->
+                @if($task->documents->count() > 0)
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                            <svg class="w-5 h-5 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
+                            </svg>
+                            Documents joints ({{ $task->documents->count() }})
+                        </h3>
+                        <div class="space-y-3">
+                            @foreach($task->documents as $doc)
+                                @php
+                                    $iconColors = [
+                                        'pdf' => ['bg' => 'bg-red-100', 'text' => 'text-red-600'],
+                                        'doc' => ['bg' => 'bg-blue-100', 'text' => 'text-blue-600'],
+                                        'docx' => ['bg' => 'bg-blue-100', 'text' => 'text-blue-600'],
+                                        'xls' => ['bg' => 'bg-green-100', 'text' => 'text-green-600'],
+                                        'xlsx' => ['bg' => 'bg-green-100', 'text' => 'text-green-600'],
+                                        'ppt' => ['bg' => 'bg-orange-100', 'text' => 'text-orange-600'],
+                                        'pptx' => ['bg' => 'bg-orange-100', 'text' => 'text-orange-600'],
+                                        'jpg' => ['bg' => 'bg-purple-100', 'text' => 'text-purple-600'],
+                                        'jpeg' => ['bg' => 'bg-purple-100', 'text' => 'text-purple-600'],
+                                        'png' => ['bg' => 'bg-purple-100', 'text' => 'text-purple-600'],
+                                    ];
+                                    $ext = $doc->file_extension;
+                                    $color = $iconColors[$ext] ?? ['bg' => 'bg-gray-100', 'text' => 'text-gray-600'];
+                                @endphp
+                                <div class="flex items-center justify-between p-3 rounded-lg border border-gray-100 hover:bg-gray-50 transition-colors">
+                                    <div class="flex items-center min-w-0">
+                                        <div class="w-10 h-10 rounded-lg {{ $color['bg'] }} flex items-center justify-center flex-shrink-0">
+                                            <span class="{{ $color['text'] }} text-xs font-bold uppercase">{{ $ext }}</span>
+                                        </div>
+                                        <div class="ml-3 min-w-0">
+                                            <p class="text-sm font-medium text-gray-900 truncate">{{ $doc->original_name }}</p>
+                                            <p class="text-xs text-gray-500">{{ $doc->file_size_formatted }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center space-x-2 flex-shrink-0 ml-3">
+                                        <a href="{{ route('admin.tasks.document.download', $doc) }}" class="p-2 text-gray-400 hover:text-blue-600 transition-colors" title="Télécharger">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                            </svg>
+                                        </a>
+                                        <form action="{{ route('admin.tasks.document.delete', $doc) }}" method="POST" onsubmit="return confirm('Supprimer ce document ?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="p-2 text-gray-400 hover:text-red-600 transition-colors" title="Supprimer">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                                </svg>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
+
                 <!-- Actions -->
                 @if($task->statut === 'pending')
                     <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">

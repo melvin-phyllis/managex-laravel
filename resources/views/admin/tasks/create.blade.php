@@ -45,7 +45,7 @@
 
         <!-- Form -->
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 animate-fade-in-up animation-delay-200">
-            <form action="{{ route('admin.tasks.store') }}" method="POST" class="p-6 space-y-6">
+            <form action="{{ route('admin.tasks.store') }}" method="POST" enctype="multipart/form-data" class="p-6 space-y-6">
                 @csrf
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -113,6 +113,22 @@
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
+                </div>
+
+                <!-- Documents joints -->
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Documents joints</label>
+                    <div class="p-4 border-2 border-dashed border-gray-200 rounded-xl hover:border-blue-400 transition-colors">
+                        <input type="file" name="documents[]" multiple accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.jpg,.jpeg,.png"
+                               class="w-full text-sm text-gray-600 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 cursor-pointer">
+                        <p class="text-xs text-gray-500 mt-2">PDF, Word, Excel, PowerPoint, images - Max 10 Mo par fichier, 5 fichiers max</p>
+                    </div>
+                    @error('documents')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                    @error('documents.*')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <!-- Submit -->

@@ -351,7 +351,7 @@ class EmployeeController extends Controller
             'address' => $request->address,
             'city' => $request->city,
             'postal_code' => $request->postal_code,
-            'country' => $request->country,
+            'country' => $request->country ?? 'CI',
             'emergency_contact_name' => $request->emergency_contact_name,
             'emergency_contact_phone' => $request->emergency_contact_phone,
             'emergency_contact_relationship' => $request->emergency_contact_relationship,

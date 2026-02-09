@@ -16,66 +16,103 @@ class TaskStatusNotification extends Notification implements ShouldQueue
 
     protected string $status;
 
-    /**
-     * Create a new notification instance.
-     */
     public function __construct(Task $task, string $status)
     {
         $this->task = $task;
         $this->status = $status;
     }
 
-    /**
-     * Get the notification's delivery channels.
-     *
-     * @return array<int, string>
-     */
     public function via(object $notifiable): array
     {
         return ['mail', 'database'];
     }
 
-    /**
-     * Get the mail representation of the notification.
-     */
     public function toMail(object $notifiable): MailMessage
     {
-        $statusLabel = match ($this->status) {
-            'approved' => 'approuvée',
-            'rejected' => 'rejetée',
-            'completed' => 'marquée comme terminée',
-            default => 'mise à jour',
-        };
+        $config = $this->getStatusConfig();
 
-        return (new MailMessage)
-            ->subject('Mise à jour de votre tâche - ManageX')
+        $mail = (new MailMessage)
+            ->subject($config['subject'])
             ->greeting('Bonjour '.$notifiable->name.',')
-            ->line('Votre tâche "'.$this->task->titre.'" a été '.$statusLabel.'.')
-            ->action('Voir mes tâches', route('employee.tasks.index'))
-            ->line('Merci d\'utiliser ManageX !');
+            ->line($config['intro'])
+            ->line('**Tache :** '.$this->task->titre);
+
+        if ($this->task->date_fin) {
+            $mail->line('**Date limite :** '.$this->task->date_fin->format('d/m/Y'));
+        }
+
+        if ($config['extra']) {
+            $mail->line($config['extra']);
+        }
+
+        return $mail
+            ->action('Voir la tache', route('employee.tasks.show', $this->task))
+            ->line($config['closing']);
     }
 
-    /**
-     * Get the array representation of the notification.
-     *
-     * @return array<string, mixed>
-     */
     public function toArray(object $notifiable): array
     {
-        $statusLabel = match ($this->status) {
-            'approved' => 'approuvée',
-            'rejected' => 'rejetée',
-            'completed' => 'terminée',
-            default => 'mise à jour',
-        };
+        $config = $this->getStatusConfig();
 
         return [
             'type' => 'task_status',
             'task_id' => $this->task->id,
             'task_titre' => $this->task->titre,
             'status' => $this->status,
-            'message' => 'Votre tâche "'.$this->task->titre.'" a été '.$statusLabel.'.',
-            'url' => route('employee.tasks.index'),
+            'message' => $config['notification'],
+            'url' => route('employee.tasks.show', $this->task),
         ];
+    }
+
+    protected function getStatusConfig(): array
+    {
+        return match ($this->status) {
+            'approved' => [
+                'subject' => 'Votre tache a ete approuvee - ManageX',
+                'intro' => 'Votre tache **"'.$this->task->titre.'"** a ete **approuvee** par l\'administration.',
+                'extra' => 'Vous pouvez maintenant la marquer comme terminee une fois le travail effectue.',
+                'closing' => 'Bon travail !',
+                'notification' => 'Votre tache "'.$this->task->titre.'" a ete approuvee.',
+            ],
+            'rejected' => [
+                'subject' => 'Votre tache a ete rejetee - ManageX',
+                'intro' => 'Votre tache **"'.$this->task->titre.'"** a ete **rejetee** par l\'administration.',
+                'extra' => $this->task->commentaire_admin
+                    ? '**Motif :** '.$this->task->commentaire_admin
+                    : 'Veuillez consulter les details et apporter les corrections necessaires.',
+                'closing' => 'N\'hesitez pas a contacter l\'administration pour plus d\'informations.',
+                'notification' => 'Votre tache "'.$this->task->titre.'" a ete rejetee.',
+            ],
+            'completed' => [
+                'subject' => 'Tache terminee avec succes - ManageX',
+                'intro' => 'La tache **"'.$this->task->titre.'"** a ete **validee et terminee**.',
+                'extra' => null,
+                'closing' => 'Merci pour votre travail !',
+                'notification' => 'La tache "'.$this->task->titre.'" est terminee.',
+            ],
+            'assigned' => [
+                'subject' => 'Nouvelle tache assignee - ManageX',
+                'intro' => 'Une nouvelle tache vous a ete assignee : **"'.$this->task->titre.'"**.',
+                'extra' => $this->task->priorite
+                    ? '**Priorite :** '.ucfirst($this->task->priorite)
+                    : null,
+                'closing' => 'Merci de traiter cette tache dans les delais impartis.',
+                'notification' => 'Nouvelle tache assignee : "'.$this->task->titre.'".',
+            ],
+            'in_progress' => [
+                'subject' => 'Tache en cours de traitement - ManageX',
+                'intro' => 'Votre tache **"'.$this->task->titre.'"** est maintenant **en cours de traitement**.',
+                'extra' => null,
+                'closing' => 'Continuez votre bon travail !',
+                'notification' => 'La tache "'.$this->task->titre.'" est en cours.',
+            ],
+            default => [
+                'subject' => 'Mise a jour de votre tache - ManageX',
+                'intro' => 'Le statut de votre tache **"'.$this->task->titre.'"** a ete mis a jour.',
+                'extra' => '**Nouveau statut :** '.ucfirst(str_replace('_', ' ', $this->status)),
+                'closing' => 'Merci d\'utiliser ManageX !',
+                'notification' => 'La tache "'.$this->task->titre.'" a ete mise a jour.',
+            ],
+        };
     }
 }

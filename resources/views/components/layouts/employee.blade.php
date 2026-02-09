@@ -493,6 +493,38 @@
         });
     </script>
 
+    {{-- Protection anti-double-clic sur tous les formulaires --}}
+    <script nonce="{{ $cspNonce ?? '' }}">
+    document.addEventListener('DOMContentLoaded', function() {
+        document.body.addEventListener('submit', function(e) {
+            const form = e.target;
+            if (form.tagName !== 'FORM' || form.dataset.noSubmitGuard) return;
+
+            const btn = form.querySelector('button[type="submit"], input[type="submit"]');
+            if (!btn || btn.dataset.submitting) {
+                e.preventDefault();
+                return;
+            }
+
+            btn.dataset.submitting = '1';
+            const originalHTML = btn.innerHTML;
+            const originalWidth = btn.offsetWidth;
+            btn.style.minWidth = originalWidth + 'px';
+            btn.disabled = true;
+            btn.innerHTML = '<svg class="animate-spin h-5 w-5 inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg> <span class="ml-1">Envoi...</span>';
+            btn.classList.add('opacity-75', 'cursor-not-allowed');
+
+            // Restaurer apres 8s en cas d'erreur reseau
+            setTimeout(function() {
+                btn.disabled = false;
+                btn.innerHTML = originalHTML;
+                btn.classList.remove('opacity-75', 'cursor-not-allowed');
+                delete btn.dataset.submitting;
+            }, 8000);
+        });
+    });
+    </script>
+
     @stack('scripts')
 
     {{-- Modale obligatoire d'acceptation du contrat de travail --}}

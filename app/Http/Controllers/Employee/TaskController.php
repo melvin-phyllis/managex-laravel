@@ -66,6 +66,7 @@ class TaskController extends Controller
     public function show(Task $task)
     {
         $this->authorize('view', $task);
+        $task->load('documents');
 
         return view('employee.tasks.show', compact('task'));
     }

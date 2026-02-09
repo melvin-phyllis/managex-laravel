@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Task;
+use App\Models\TaskDocument;
 use App\Models\User;
 use App\Notifications\TaskStatusNotification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class TaskController extends Controller
 {
@@ -85,6 +87,11 @@ class TaskController extends Controller
             'priorite' => ['required', 'in:low,medium,high'],
             'date_debut' => ['nullable', 'date'],
             'date_fin' => ['nullable', 'date', 'after_or_equal:date_debut'],
+            'documents' => ['nullable', 'array', 'max:5'],
+            'documents.*' => ['file', 'max:10240'],
+        ], [
+            'documents.max' => 'Vous ne pouvez pas joindre plus de 5 fichiers.',
+            'documents.*.max' => 'Chaque fichier ne doit pas depasser 10 Mo.',
         ]);
 
         $task = Task::create([
@@ -94,9 +101,11 @@ class TaskController extends Controller
             'priorite' => $request->priorite,
             'date_debut' => $request->date_debut,
             'date_fin' => $request->date_fin,
-            'statut' => 'approved', // Directement approuvée car assignée par l'admin
+            'statut' => 'approved',
             'progression' => 0,
         ]);
+
+        $this->handleDocumentUpload($request, $task);
 
         // Notifier l'employé
         $task->user->notify(new TaskStatusNotification($task, 'assigned'));
@@ -107,13 +116,14 @@ class TaskController extends Controller
 
     public function show(Task $task)
     {
-        $task->load('user');
+        $task->load(['user', 'documents']);
 
         return view('admin.tasks.show', compact('task'));
     }
 
     public function edit(Task $task)
     {
+        $task->load('documents');
         $employees = User::where('role', 'employee')->orderBy('name')->get();
 
         return view('admin.tasks.edit', compact('task', 'employees'));
@@ -129,11 +139,29 @@ class TaskController extends Controller
             'date_debut' => ['nullable', 'date'],
             'date_fin' => ['nullable', 'date', 'after_or_equal:date_debut'],
             'statut' => ['required', 'in:pending,approved,rejected,completed,validated'],
+            'documents' => ['nullable', 'array', 'max:5'],
+            'documents.*' => ['file', 'max:10240'],
+        ], [
+            'documents.max' => 'Vous ne pouvez pas joindre plus de 5 fichiers.',
+            'documents.*.max' => 'Chaque fichier ne doit pas depasser 10 Mo.',
         ]);
 
         $task->update($request->only([
             'user_id', 'titre', 'description', 'priorite', 'date_debut', 'date_fin', 'statut',
         ]));
+
+        // Supprimer les documents coches
+        if ($request->filled('delete_documents')) {
+            $docsToDelete = TaskDocument::whereIn('id', $request->delete_documents)
+                ->where('task_id', $task->id)
+                ->get();
+            foreach ($docsToDelete as $doc) {
+                \Storage::disk('documents')->delete($doc->file_path);
+                $doc->delete();
+            }
+        }
+
+        $this->handleDocumentUpload($request, $task);
 
         return redirect()->route('admin.tasks.index')
             ->with('success', 'Tâche mise à jour avec succès.');
@@ -222,9 +250,62 @@ class TaskController extends Controller
 
     public function destroy(Task $task)
     {
+        // Supprimer les fichiers associes
+        foreach ($task->documents as $doc) {
+            \Storage::disk('documents')->delete($doc->file_path);
+        }
+
         $task->delete();
 
         return redirect()->route('admin.tasks.index')
             ->with('success', 'Tâche supprimée avec succès.');
+    }
+
+    public function downloadDocument(TaskDocument $document)
+    {
+        if (! \Storage::disk('documents')->exists($document->file_path)) {
+            abort(404, 'Fichier introuvable');
+        }
+
+        return \Storage::disk('documents')->download($document->file_path, $document->original_name);
+    }
+
+    public function deleteDocument(TaskDocument $document)
+    {
+        \Storage::disk('documents')->delete($document->file_path);
+        $taskId = $document->task_id;
+        $document->delete();
+
+        return redirect()->back()->with('success', 'Document supprime.');
+    }
+
+    protected function handleDocumentUpload(Request $request, Task $task): void
+    {
+        if (! $request->hasFile('documents')) {
+            return;
+        }
+
+        $allowedExtensions = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'txt', 'csv', 'jpg', 'jpeg', 'png'];
+
+        foreach ($request->file('documents') as $file) {
+            $ext = strtolower($file->getClientOriginalExtension());
+            if (! in_array($ext, $allowedExtensions)) {
+                continue;
+            }
+
+            $filename = Str::uuid().'.'.$ext;
+            $path = 'tasks/'.$task->id.'/'.$filename;
+
+            \Storage::disk('documents')->putFileAs('tasks/'.$task->id, $file, $filename);
+
+            TaskDocument::create([
+                'task_id' => $task->id,
+                'file_path' => $path,
+                'original_name' => $file->getClientOriginalName(),
+                'mime_type' => $file->getMimeType(),
+                'file_size' => $file->getSize(),
+                'uploaded_by' => auth()->id(),
+            ]);
+        }
     }
 }

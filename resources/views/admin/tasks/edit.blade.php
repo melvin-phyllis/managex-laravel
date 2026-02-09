@@ -45,7 +45,7 @@
 
         <!-- Form -->
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 animate-fade-in-up animation-delay-200">
-            <form action="{{ route('admin.tasks.update', $task) }}" method="POST" class="p-6 space-y-6">
+            <form action="{{ route('admin.tasks.update', $task) }}" method="POST" enctype="multipart/form-data" class="p-6 space-y-6">
                 @csrf
                 @method('PUT')
 
@@ -141,6 +141,55 @@
                         </div>
                         <p class="mt-1 text-xs text-gray-500">La progression est mise à jour par l'employé.</p>
                     </div>
+                </div>
+
+                <!-- Documents existants -->
+                @if($task->documents->count())
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Documents actuels</label>
+                    <div class="space-y-2">
+                        @foreach($task->documents as $doc)
+                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center">
+                                    <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-medium text-gray-900">{{ $doc->original_name }}</p>
+                                    <p class="text-xs text-gray-500">{{ $doc->file_size_formatted }}</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <a href="{{ route('admin.tasks.document.download', $doc) }}" class="p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg transition" title="Telecharger">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                                </a>
+                                <label class="flex items-center gap-1 text-xs text-red-600 cursor-pointer hover:bg-red-50 rounded-lg p-1.5 transition">
+                                    <input type="checkbox" name="delete_documents[]" value="{{ $doc->id }}" class="rounded border-gray-300 text-red-600 focus:ring-red-500 w-3.5 h-3.5">
+                                    Suppr.
+                                </label>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
+                @endif
+
+                <!-- Ajouter des documents -->
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Ajouter des documents</label>
+                    <div class="p-4 border-2 border-dashed border-gray-200 rounded-xl hover:border-blue-400 transition-colors">
+                        <input type="file" name="documents[]" multiple accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.jpg,.jpeg,.png"
+                               class="w-full text-sm text-gray-600 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 cursor-pointer">
+                        <p class="text-xs text-gray-500 mt-2">PDF, Word, Excel, PowerPoint, images - Max 10 Mo par fichier, 5 fichiers max</p>
+                    </div>
+                    @error('documents')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                    @error('documents.*')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <!-- Submit -->
