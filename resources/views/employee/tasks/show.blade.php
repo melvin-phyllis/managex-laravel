@@ -119,9 +119,9 @@
                             <button
                                 :disabled="saving"
                                 @click="saving = true; fetch('{{ route('employee.tasks.progress', $task) }}', {
-                                    method: 'PATCH',
+                                    method: 'POST',
                                     headers: {'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}'},
-                                    body: JSON.stringify({progression: parseInt(progress)})
+                                    body: JSON.stringify({_method: 'PATCH', progression: parseInt(progress)})
                                 }).then(r => r.json()).then(data => {
                                     saving = false;
                                     if(data.success) {
