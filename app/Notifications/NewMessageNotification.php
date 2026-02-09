@@ -5,11 +5,12 @@ namespace App\Notifications;
 use App\Models\Messaging\Message;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use App\Notifications\Traits\SendsWebPush;
 use Illuminate\Notifications\Notification;
 
 class NewMessageNotification extends Notification implements ShouldQueue
 {
-    use Queueable;
+    use Queueable, SendsWebPush;
 
     public function __construct(
         public Message $message
@@ -17,7 +18,13 @@ class NewMessageNotification extends Notification implements ShouldQueue
 
     public function via(object $notifiable): array
     {
-        return ['database'];
+        $channels = ['database'];
+
+        if ($this->shouldSendWebPush($notifiable)) {
+            $channels[] = 'webpush';
+        }
+
+        return $channels;
     }
 
     public function toDatabase(object $notifiable): array

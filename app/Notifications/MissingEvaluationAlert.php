@@ -6,12 +6,13 @@ use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+use App\Notifications\Traits\SendsWebPush;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Collection;
 
 class MissingEvaluationAlert extends Notification implements ShouldQueue
 {
-    use Queueable;
+    use Queueable, SendsWebPush;
 
     protected Collection $missingInterns;
 
@@ -40,7 +41,13 @@ class MissingEvaluationAlert extends Notification implements ShouldQueue
      */
     public function via(object $notifiable): array
     {
-        return ['mail', 'database'];
+        $channels = ['mail', 'database'];
+
+        if ($this->shouldSendWebPush($notifiable)) {
+            $channels[] = 'webpush';
+        }
+
+        return $channels;
     }
 
     /**

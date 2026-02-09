@@ -29,6 +29,7 @@ use App\Http\Controllers\Employee\SurveyController as EmployeeSurveyController;
 use App\Http\Controllers\Employee\TaskController as EmployeeTaskController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PushSubscriptionController;
 use App\Http\Controllers\Tutor\InternEvaluationController as TutorInternEvaluationController;
 use Illuminate\Support\Facades\Route;
 
@@ -187,6 +188,13 @@ Route::post('/demo', [PageController::class, 'storeDemoRequest'])->name('demo-re
 
 // Redirection après login selon le rôle
 Route::get('/dashboard', [PageController::class, 'dashboard'])->middleware(['auth', 'verified'])->name('dashboard');
+
+// Push notifications subscription (accessible à tous les utilisateurs authentifiés)
+Route::middleware('auth')->prefix('push')->name('push.')->group(function () {
+    Route::get('/key', [PushSubscriptionController::class, 'vapidPublicKey'])->name('key');
+    Route::post('/subscribe', [PushSubscriptionController::class, 'store'])->name('subscribe');
+    Route::post('/unsubscribe', [PushSubscriptionController::class, 'destroy'])->name('unsubscribe');
+});
 
 // Routes Admin
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {

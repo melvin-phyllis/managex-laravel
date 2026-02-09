@@ -7,11 +7,12 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Messages\MailMessage;
+use App\Notifications\Traits\SendsWebPush;
 use Illuminate\Notifications\Notification;
 
 class LeaveStatusNotification extends Notification implements ShouldQueue
 {
-    use Queueable;
+    use Queueable, SendsWebPush;
 
     public function __construct(
         public Leave $leave,
@@ -20,7 +21,13 @@ class LeaveStatusNotification extends Notification implements ShouldQueue
 
     public function via(object $notifiable): array
     {
-        return ['mail', 'database', 'broadcast'];
+        $channels = ['mail', 'database', 'broadcast'];
+
+        if ($this->shouldSendWebPush($notifiable)) {
+            $channels[] = 'webpush';
+        }
+
+        return $channels;
     }
 
     public function toMail(object $notifiable): MailMessage

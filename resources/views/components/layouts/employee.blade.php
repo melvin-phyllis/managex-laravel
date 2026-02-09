@@ -634,6 +634,8 @@
     </div>
     @endif
 
+    <x-push-subscription />
+
     <script>
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('{{ asset("sw.js") }}')

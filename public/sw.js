@@ -1,4 +1,4 @@
-const CACHE_NAME = 'managex-v2';
+const CACHE_NAME = 'managex-v3';
 
 // Use the SW scope as base path (works with any subdirectory)
 const BASE_PATH = self.registration ? self.registration.scope : self.location.href.replace(/sw\.js$/, '');
@@ -72,12 +72,13 @@ self.addEventListener('fetch', (event) => {
 self.addEventListener('push', (event) => {
     if (event.data) {
         const data = event.data.json();
+        const url = (data.data && data.data.url) ? data.data.url : (data.url || BASE_PATH);
         event.waitUntil(
             self.registration.showNotification(data.title || 'ManageX', {
                 body: data.body || 'Nouvelle notification',
                 icon: BASE_PATH + 'icons/icon-192x192.png',
                 badge: BASE_PATH + 'icons/icon-72x72.png',
-                data: { url: data.url || BASE_PATH }
+                data: { url: url }
             })
         );
     }

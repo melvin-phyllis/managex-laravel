@@ -6,11 +6,12 @@ use App\Models\Task;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\BroadcastMessage;
+use App\Notifications\Traits\SendsWebPush;
 use Illuminate\Notifications\Notification;
 
 class TaskReminderNotification extends Notification implements ShouldQueue
 {
-    use Queueable;
+    use Queueable, SendsWebPush;
 
     public function __construct(
         public Task $task,
@@ -19,7 +20,13 @@ class TaskReminderNotification extends Notification implements ShouldQueue
 
     public function via(object $notifiable): array
     {
-        return ['database', 'broadcast'];
+        $channels = ['database', 'broadcast'];
+
+        if ($this->shouldSendWebPush($notifiable)) {
+            $channels[] = 'webpush';
+        }
+
+        return $channels;
     }
 
     public function toDatabase(object $notifiable): array

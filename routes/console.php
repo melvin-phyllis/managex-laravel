@@ -27,6 +27,15 @@ Schedule::command('evaluations:check-missing')
     ->onOneServer();
 
 // ==========================================
+// Queue Worker (push notifications + other queued jobs)
+// ==========================================
+
+Schedule::command('queue:work --stop-when-empty --max-time=55')
+    ->everyMinute()
+    ->withoutOverlapping()
+    ->runInBackground();
+
+// ==========================================
 // Late Hours Recovery Scheduler
 // ==========================================
 
