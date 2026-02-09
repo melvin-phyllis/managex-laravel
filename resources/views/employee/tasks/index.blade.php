@@ -233,8 +233,8 @@
                                     :disabled="saving"
                                     @click="saving = true; fetch('{{ route('employee.tasks.progress', $task) }}', {
                                         method: 'POST',
-                                        headers: {'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}'},
-                                        body: JSON.stringify({progression: parseInt(progress)})
+                                        headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Accept': 'application/json'},
+                                        body: new URLSearchParams({progression: parseInt(progress)})
                                     }).then(r => r.json()).then(data => {
                                         saving = false;
                                         if(data.success) {
