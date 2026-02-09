@@ -23,6 +23,7 @@ class Task extends Model
     ];
 
     protected $casts = [
+        'user_id' => 'integer',
         'date_debut' => 'date',
         'date_fin' => 'date',
         'progression' => 'integer',
