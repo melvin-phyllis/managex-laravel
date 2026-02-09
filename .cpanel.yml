@@ -1,0 +1,6 @@
+---
+deployment:
+  tasks:
+    - /bin/php artisan migrate --force
+    - /bin/php artisan optimize:clear
+    - /bin/php artisan optimize
