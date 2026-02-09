@@ -129,7 +129,7 @@ class TaskTest extends TestCase
             'progression' => 50,
         ]);
 
-        $response = $this->actingAs($this->employee)->patch(route('employee.tasks.progress', $task), [
+        $response = $this->actingAs($this->employee)->post(route('employee.tasks.progress', $task), [
             'progression' => 75,
         ]);
 
@@ -151,7 +151,7 @@ class TaskTest extends TestCase
             'progression' => 90,
         ]);
 
-        $response = $this->actingAs($this->employee)->patch(route('employee.tasks.progress', $task), [
+        $response = $this->actingAs($this->employee)->post(route('employee.tasks.progress', $task), [
             'progression' => 100,
         ]);
 
