@@ -462,7 +462,7 @@ Route::middleware(['auth', 'role:employee', 'contract.accepted'])->prefix('emplo
     // Tâches (assignées par l'admin, l'employé peut seulement voir et mettre à jour la progression)
     Route::get('/tasks', [EmployeeTaskController::class, 'index'])->name('tasks.index');
     Route::get('/tasks/{task}', [EmployeeTaskController::class, 'show'])->name('tasks.show');
-    Route::post('/tasks/{task}/progress', [EmployeeTaskController::class, 'updateProgress'])->name('tasks.progress');
+    Route::post('/tasks/{task}/update-level', [EmployeeTaskController::class, 'updateProgress'])->name('tasks.progress');
     Route::get('/task-documents/{document}/download', [AdminTaskController::class, 'downloadDocument'])->name('tasks.document.download');
 
     // Congés (rate limiting sur la création)
