@@ -1,15 +1,6 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
-
-    # Handle Authorization Header
-    RewriteCond %{HTTP:Authorization} .
-    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
-
-    # Si le fichier existe dans public/, le servir directement (CSS, JS, images)
-    RewriteCond %{DOCUMENT_ROOT}/managex/public/$1 -f
+    RewriteCond %{REQUEST_URI} !^/managex/public/
     RewriteRule ^(.*)$ public/$1 [L]
-
-    # Tout le reste va vers le front controller Laravel
-    RewriteRule ^ public/index.php [QSA,L]
 </IfModule>
 
