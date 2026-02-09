@@ -107,10 +107,14 @@ class TaskController extends Controller
 
     public function updateProgress(Request $request, Task $task)
     {
-        $this->authorize('update', $task);
+        try {
+            $this->authorize('update', $task);
+        } catch (\Illuminate\Auth\Access\AuthorizationException $e) {
+            return response()->json(['success' => false, 'error' => 'Non autorisé : Cette tâche ne vous appartient pas.'], 403);
+        }
 
         if (! in_array($task->statut, ['approved', 'completed'])) {
-            return response()->json(['error' => 'Action non autorisée'], 403);
+            return response()->json(['success' => false, 'error' => 'Action non autorisée : Statut incorrect (' . $task->statut . ')'], 403);
         }
 
         $request->validate([

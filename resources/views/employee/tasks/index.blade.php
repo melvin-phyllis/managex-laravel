@@ -233,8 +233,12 @@
                                     :disabled="saving"
                                     @click="saving = true; fetch('{{ route('employee.tasks.progress', $task) }}', {
                                         method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/x-www-form-urlencoded',
+                                            'X-Requested-With': 'XMLHttpRequest'
+                                        },
                                         body: new URLSearchParams({progression: parseInt(progress), _token: '{{ csrf_token() }}'})
-                                    }).then(r => r.json()).then(data => {
+                                    }).then(r => r.json().then(data => ({status: r.status, ...data}))).then(data => {
                                         saving = false;
                                         if(data.success) {
                                             if(data.statut === 'completed') {
@@ -243,8 +247,13 @@
                                                 saved = true;
                                                 setTimeout(() => saved = false, 2000);
                                             }
+                                        } else {
+                                            alert('Erreur: ' + (data.error || 'Une erreur est survenue'));
                                         }
-                                    }).catch(() => { saving = false; alert('Erreur lors de la sauvegarde'); })"
+                                    }).catch(error => { 
+                                        saving = false; 
+                                        alert('Erreur réseau ou serveur: ' + error); 
+                                    })"
                                     class="w-full px-4 py-2 text-white text-sm font-medium rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
                                     style="background-color: #3B8BEB;">
                                     <span x-show="!saving && !saved">Sauvegarder</span>
