@@ -11,6 +11,14 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
     
+    <!-- PWA -->
+    <meta name="theme-color" content="#3B8BEB">
+    <link rel="manifest" href="{{ route('manifest') }}">
+    <link rel="apple-touch-icon" href="{{ asset('icons/icon-192x192.png') }}">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -626,5 +634,12 @@
     </div>
     @endif
 
+    <script>
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('{{ asset("sw.js") }}')
+            .then(r => console.log('ManageX SW registered:', r.scope))
+            .catch(e => console.log('ManageX SW failed:', e));
+    }
+    </script>
 </body>
 </html>
