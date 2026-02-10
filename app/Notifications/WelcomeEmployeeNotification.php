@@ -3,13 +3,15 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+use App\Notifications\Traits\SendsWebPush;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Password;
 
-class WelcomeEmployeeNotification extends Notification
+class WelcomeEmployeeNotification extends Notification implements ShouldQueue
 {
-    use Queueable;
+    use Queueable, SendsWebPush;
 
     public string $employeeName;
 
@@ -38,7 +40,15 @@ class WelcomeEmployeeNotification extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['mail', 'database'];
+        $channels = ['database'];
+
+        if ($this->shouldSendWebPush($notifiable)) {
+            $channels[] = 'webpush';
+        }
+
+        $channels[] = 'mail';
+
+        return $channels;
     }
 
     /**
@@ -88,6 +98,7 @@ class WelcomeEmployeeNotification extends Notification
             'message' => 'Votre compte a été créé. Vérifiez votre email pour vos identifiants de connexion.',
             'icon' => 'user-plus',
             'color' => 'green',
+            'url' => route('dashboard'),
         ];
     }
 }

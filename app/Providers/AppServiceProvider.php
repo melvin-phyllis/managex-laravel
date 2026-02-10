@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Notifications\ChannelManager;
+use NotificationChannels\WebPush\WebPushChannel;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -47,6 +49,11 @@ class AppServiceProvider extends ServiceProvider
         // Enregistrement des observers pour les notifications
         Task::observe(\App\Observers\TaskObserver::class);
         \App\Models\Leave::observe(\App\Observers\LeaveObserver::class);
+
+        // Enregistrement du canal de notification WebPush
+        $this->app->make(ChannelManager::class)->extend('webpush', function ($app) {
+            return $app->make(WebPushChannel::class);
+        });
 
         // Configuration du Rate Limiting
         $this->configureRateLimiting();

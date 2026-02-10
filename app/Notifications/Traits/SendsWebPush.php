@@ -12,6 +12,7 @@ trait SendsWebPush
             ? $this->toDatabase($notifiable)
             : $this->toArray($notifiable);
 
+        $type = $data['type'] ?? 'notification';
         $title = $data['title'] ?? $this->getWebPushTitle($data);
         $body = $data['message'] ?? 'Nouvelle notification ManageX';
         $url = $data['url'] ?? '/';
@@ -20,8 +21,16 @@ trait SendsWebPush
             ->title($title)
             ->body($body)
             ->action('Voir', 'open_url')
-            ->options(['TTL' => 86400])
-            ->data(['url' => $url]);
+            ->options([
+                'TTL' => 86400,
+                'urgency' => $this->getWebPushUrgency($type),
+            ])
+            ->data([
+                'url' => $url,
+                'type' => $type,
+            ])
+            ->tag($type)
+            ->renotify();
     }
 
     protected function getWebPushTitle(array $data): string
@@ -46,6 +55,22 @@ trait SendsWebPush
         ];
 
         return $titles[$type] ?? 'ManageX';
+    }
+
+    protected function getWebPushUrgency(string $type): string
+    {
+        $highUrgency = ['task_assigned', 'late_arrival', 'missing_evaluation_alert', 'leave_request'];
+        $normalUrgency = ['payroll_added', 'new_message', 'task_status', 'leave_status'];
+
+        if (in_array($type, $highUrgency)) {
+            return 'high';
+        }
+
+        if (in_array($type, $normalUrgency)) {
+            return 'normal';
+        }
+
+        return 'normal';
     }
 
     protected function shouldSendWebPush(object $notifiable): bool

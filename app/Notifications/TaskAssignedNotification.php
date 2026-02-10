@@ -20,11 +20,13 @@ class TaskAssignedNotification extends Notification implements ShouldQueue
 
     public function via(object $notifiable): array
     {
-        $channels = ['mail', 'database', 'broadcast'];
+        $channels = ['database', 'broadcast'];
 
         if ($this->shouldSendWebPush($notifiable)) {
             $channels[] = 'webpush';
         }
+
+        $channels[] = 'mail';
 
         return $channels;
     }

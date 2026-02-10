@@ -191,12 +191,15 @@
                 </div>
 
                 <div class="p-6">
-                    @if($todayPresence)
+                    @if($todayPresence && $todayPresence->check_in)
                         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                             <div class="flex items-center space-x-6">
                                 <div class="text-center">
                                     <p class="text-xs text-gray-500 uppercase tracking-wide">Arrivée</p>
                                     <p class="text-2xl font-bold text-emerald-600 mt-1">{{ $todayPresence->check_in->format('H:i') }}</p>
+                                    @if($todayPresence->is_early_arrival && $todayPresence->pre_check_in)
+                                        <p class="text-xs text-indigo-500 mt-0.5">🌅 arrivé(e) à {{ $todayPresence->pre_check_in->format('H:i') }}</p>
+                                    @endif
                                 </div>
                                 @if($todayPresence->check_out)
                                     <div class="text-center">
@@ -230,6 +233,24 @@
                                     </button>
                                 </form>
                             @endif
+                        </div>
+                    @elseif($todayPresence && $todayPresence->pre_check_in && !$todayPresence->check_in)
+                        {{-- Pré-pointage en cours --}}
+                        <div class="bg-gradient-to-r from-indigo-50 via-purple-50 to-blue-50 border border-indigo-200 rounded-xl p-5">
+                            <div class="flex items-center gap-3 mb-2">
+                                <div class="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center">
+                                    <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="font-semibold text-indigo-900">🌅 Arrivée anticipée enregistrée</p>
+                                    <p class="text-sm text-indigo-600">Arrivé(e) à {{ $todayPresence->pre_check_in->format('H:i') }} — En attente de confirmation</p>
+                                </div>
+                            </div>
+                            <a href="{{ route('employee.presences.index') }}" class="text-sm text-indigo-600 hover:text-indigo-800 font-medium">
+                                Voir les détails →
+                            </a>
                         </div>
                     @else
                         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">

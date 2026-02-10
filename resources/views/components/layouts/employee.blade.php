@@ -636,11 +636,316 @@
 
     <x-push-subscription />
 
+    {{-- 🔔 Alarme globale pré-pointage - fonctionne sur toutes les pages --}}
+    <script nonce="{{ $cspNonce ?? '' }}">
+    (function() {
+        let alarmPlaying = false;
+        let bannerShown = false;
+        let permBannerShown = false;
+
+        // ===== 1. NOTIFICATION PERMISSION =====
+        function showNotifPermissionBanner() {
+            if (permBannerShown) return;
+            if (!('Notification' in window)) return;
+            if (Notification.permission !== 'default') return;
+
+            permBannerShown = true;
+            const bar = document.createElement('div');
+            bar.id = 'notif-permission-bar';
+            bar.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:100001;';
+            bar.innerHTML = `
+                <div style="background:linear-gradient(135deg,#3B8BEB,#2563eb);padding:10px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;box-shadow:0 4px 15px rgba(59,139,235,0.4);">
+                    <div style="display:flex;align-items:center;gap:10px;color:white;">
+                        <span style="font-size:20px;">🔔</span>
+                        <p style="font-size:13px;margin:0;font-weight:500;">Activez les notifications pour recevoir les alertes de pointage sur votre bureau</p>
+                    </div>
+                    <div style="display:flex;gap:8px;flex-shrink:0;">
+                        <button id="notif-perm-btn" style="background:white;color:#2563eb;padding:6px 16px;border-radius:8px;font-weight:600;font-size:12px;border:none;cursor:pointer;white-space:nowrap;">
+                            ✅ Activer
+                        </button>
+                        <button id="notif-perm-dismiss" style="background:rgba(255,255,255,0.2);color:white;padding:6px 12px;border-radius:8px;font-size:12px;border:none;cursor:pointer;">
+                            ✕
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.body.prepend(bar);
+
+            document.getElementById('notif-perm-btn').addEventListener('click', function() {
+                Notification.requestPermission().then(function(perm) {
+                    console.log('[ManageX] Notification permission result:', perm);
+                    bar.remove();
+                    if (perm === 'granted') {
+                        if (typeof showToast === 'function') {
+                            showToast('success', 'Notifications activées ! Vous recevrez les alertes de pointage.', 5000);
+                        }
+                        // Tester immédiatement
+                        new Notification('✅ Notifications ManageX activées', {
+                            body: 'Vous recevrez les alertes de pointage directement sur votre bureau.',
+                            icon: '{{ asset("icons/icon-192x192.png") }}'
+                        });
+                    } else if (perm === 'denied') {
+                        if (typeof showToast === 'function') {
+                            showToast('warning', 'Notifications bloquées. Pour les activer : cliquez sur l\'icône 🔒 dans la barre d\'adresse → Notifications → Autoriser.', 10000);
+                        }
+                    }
+                });
+            });
+
+            document.getElementById('notif-perm-dismiss').addEventListener('click', function() {
+                bar.remove();
+            });
+        }
+
+        // ===== 2. PRÉ-CHECK-IN STATUS =====
+        async function checkPreCheckInStatus() {
+            try {
+                const resp = await fetch('{{ route("employee.presences.pre-check-in-status") }}', {
+                    headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' }
+                });
+                if (!resp.ok) { console.log('[ManageX Alarm] API error:', resp.status); return; }
+                const data = await resp.json();
+                console.log('[ManageX Alarm] Status:', JSON.stringify(data));
+
+                if (!data.has_pre_checkin) {
+                    stopAlarm();
+                    removeBanner();
+                    return;
+                }
+
+                // Afficher le banner de permission si pas encore accordée
+                if ('Notification' in window && Notification.permission === 'default') {
+                    showNotifPermissionBanner();
+                }
+
+                if (data.is_past_start && !alarmPlaying) {
+                    triggerAlarm(data);
+                } else if (!data.is_past_start && !bannerShown) {
+                    showWaitingBanner(data);
+                }
+            } catch (e) {
+                console.log('[ManageX Alarm] Check failed:', e);
+            }
+        }
+
+        // ===== 3. ALARM TRIGGER =====
+        function triggerAlarm(data) {
+            alarmPlaying = true;
+            console.log('[ManageX Alarm] 🔔 TRIGGERING ALARM!');
+
+            // Son
+            playAlarmSound();
+
+            // Notification bureau
+            sendDesktopNotification(data);
+
+            // Banner visuel
+            showAlarmBanner(data);
+
+            // Toast comme backup supplémentaire
+            if (typeof showToast === 'function') {
+                showToast('warning', '⏰ Il est ' + data.work_start_time + ' — Confirmez votre présence ! Arrivé(e) à ' + data.pre_check_in_time, 15000);
+            }
+
+            // Relancer le son toutes les 60 secondes
+            window._alarmRepeat = setInterval(function() {
+                playAlarmSound();
+                sendDesktopNotification(data);
+            }, 60000);
+        }
+
+        function playAlarmSound() {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                let i = 0;
+                function beep() {
+                    if (i >= 5) return;
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.frequency.value = i % 2 === 0 ? 880 : 660;
+                    gain.gain.setValueAtTime(0.4, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
+                    osc.start(ctx.currentTime);
+                    osc.stop(ctx.currentTime + 0.4);
+                    i++;
+                    if (i < 5) setTimeout(beep, 500);
+                }
+                beep();
+            } catch(e) {
+                console.log('[ManageX Alarm] Audio error:', e);
+            }
+        }
+
+        // ===== 4. DESKTOP NOTIFICATION =====
+        function sendDesktopNotification(data) {
+            if (!('Notification' in window)) {
+                console.log('[ManageX Alarm] Notification API not available');
+                return;
+            }
+            console.log('[ManageX Alarm] Notification.permission =', Notification.permission);
+
+            if (Notification.permission !== 'granted') {
+                console.log('[ManageX Alarm] Permission not granted, skipping notification');
+                return;
+            }
+
+            try {
+                // Service Worker method (best for background)
+                if ('serviceWorker' in navigator) {
+                    navigator.serviceWorker.ready.then(function(reg) {
+                        console.log('[ManageX Alarm] Sending SW notification');
+                        reg.showNotification('⏰ ManageX — Confirmez votre présence !', {
+                            body: 'Il est ' + data.work_start_time + '. Vous êtes arrivé(e) à ' + data.pre_check_in_time + '. Cliquez pour confirmer.',
+                            icon: '{{ asset("icons/icon-192x192.png") }}',
+                            badge: '{{ asset("icons/icon-72x72.png") }}',
+                            tag: 'pre-checkin-confirm',
+                            renotify: true,
+                            requireInteraction: true,
+                            vibrate: [300, 100, 300, 100, 300],
+                            data: { url: data.confirm_url }
+                        }).then(function() {
+                            console.log('[ManageX Alarm] SW notification sent!');
+                        }).catch(function(e) {
+                            console.log('[ManageX Alarm] SW notification failed, using fallback:', e);
+                            sendFallbackNotification(data);
+                        });
+                    }).catch(function(e) {
+                        console.log('[ManageX Alarm] SW not ready:', e);
+                        sendFallbackNotification(data);
+                    });
+                } else {
+                    sendFallbackNotification(data);
+                }
+            } catch(e) {
+                console.log('[ManageX Alarm] Notification error:', e);
+                sendFallbackNotification(data);
+            }
+        }
+
+        function sendFallbackNotification(data) {
+            try {
+                console.log('[ManageX Alarm] Sending fallback Notification');
+                const n = new Notification('⏰ ManageX — Confirmez votre présence !', {
+                    body: 'Il est ' + data.work_start_time + '. Arrivé(e) à ' + data.pre_check_in_time + '.',
+                    icon: '{{ asset("icons/icon-192x192.png") }}',
+                    tag: 'pre-checkin-confirm',
+                    requireInteraction: true
+                });
+                n.onclick = function() { window.focus(); window.location.href = data.confirm_url; n.close(); };
+                console.log('[ManageX Alarm] Fallback notification sent!');
+            } catch(e) {
+                console.log('[ManageX Alarm] Fallback also failed:', e);
+            }
+        }
+
+        // ===== 5. BANNERS =====
+        function showAlarmBanner(data) {
+            removeBanner();
+            bannerShown = true;
+            const b = document.createElement('div');
+            b.id = 'global-precheckin-alarm';
+            b.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:100000;';
+            b.innerHTML = `
+                <div style="background:linear-gradient(135deg,#059669,#10b981);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;box-shadow:0 4px 20px rgba(5,150,105,0.4);">
+                    <div style="display:flex;align-items:center;gap:12px;color:white;">
+                        <span style="font-size:28px;animation:pulse 1s infinite;">⏰</span>
+                        <div>
+                            <p style="font-weight:700;font-size:15px;margin:0;">Il est ${data.work_start_time} — Confirmez votre présence !</p>
+                            <p style="font-size:12px;opacity:0.9;margin:3px 0 0;">Arrivé(e) à ${data.pre_check_in_time} · Cliquez pour confirmer votre pointage</p>
+                        </div>
+                    </div>
+                    <a href="${data.confirm_url}" style="background:white;color:#059669;padding:10px 24px;border-radius:12px;font-weight:700;font-size:14px;text-decoration:none;white-space:nowrap;box-shadow:0 2px 10px rgba(0,0,0,0.2);">
+                        ✅ Confirmer
+                    </a>
+                </div>
+            `;
+            document.body.prepend(b);
+        }
+
+        function showWaitingBanner(data) {
+            if (bannerShown) return;
+            bannerShown = true;
+            const b = document.createElement('div');
+            b.id = 'global-precheckin-waiting';
+            b.style.cssText = 'position:fixed;bottom:20px;right:20px;z-index:100000;';
+            b.innerHTML = `
+                <div style="background:linear-gradient(135deg,#6366f1,#8b5cf6);padding:12px 16px;border-radius:14px;display:flex;align-items:center;gap:10px;color:white;box-shadow:0 8px 30px rgba(99,102,241,0.4);max-width:320px;">
+                    <span style="font-size:20px;">🌅</span>
+                    <div style="flex:1;">
+                        <p style="font-weight:600;font-size:12px;margin:0;">Pré-pointage actif</p>
+                        <p style="font-size:11px;opacity:0.85;margin:2px 0 0;">Arrivé(e) à ${data.pre_check_in_time} · Alarme à ${data.work_start_time}</p>
+                    </div>
+                    <button onclick="this.closest('#global-precheckin-waiting').remove()" style="background:rgba(255,255,255,0.2);border:none;color:white;width:24px;height:24px;border-radius:6px;cursor:pointer;font-size:14px;">✕</button>
+                </div>
+            `;
+            document.body.appendChild(b);
+        }
+
+        function stopAlarm() {
+            alarmPlaying = false;
+            if (window._alarmRepeat) { clearInterval(window._alarmRepeat); window._alarmRepeat = null; }
+        }
+
+        function removeBanner() {
+            bannerShown = false;
+            ['global-precheckin-alarm', 'global-precheckin-waiting', 'notif-permission-bar'].forEach(function(id) {
+                const el = document.getElementById(id);
+                if (el) el.remove();
+            });
+        }
+
+        // ===== 6. INIT =====
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('[ManageX Alarm] Init. Notification support:', 'Notification' in window,
+                        'Permission:', ('Notification' in window) ? Notification.permission : 'N/A');
+            checkPreCheckInStatus();
+            setInterval(checkPreCheckInStatus, 30000);
+        });
+
+        // Pulse animation
+        const s = document.createElement('style');
+        s.textContent = '@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.6;transform:scale(1.1)}}';
+        document.head.appendChild(s);
+    })();
+    </script>
+
     <script>
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('{{ asset("sw.js") }}')
             .then(r => console.log('ManageX SW registered:', r.scope))
             .catch(e => console.log('ManageX SW failed:', e));
+
+        // Écouter les messages du SW pour jouer des sons d'alarme
+        navigator.serviceWorker.addEventListener('message', function(event) {
+            if (event.data && event.data.type === 'PLAY_ALARM_SOUND') {
+                console.log('[ManageX] SW demande de jouer le son:', event.data.soundType);
+                try {
+                    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                    const isUrgent = event.data.soundType === 'urgent';
+                    let i = 0;
+                    const max = isUrgent ? 8 : 5;
+                    function beep() {
+                        if (i >= max) return;
+                        const osc = ctx.createOscillator();
+                        const gain = ctx.createGain();
+                        osc.connect(gain);
+                        gain.connect(ctx.destination);
+                        osc.frequency.value = i % 2 === 0 ? (isUrgent ? 1000 : 880) : (isUrgent ? 750 : 660);
+                        gain.gain.setValueAtTime(isUrgent ? 0.5 : 0.4, ctx.currentTime);
+                        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
+                        osc.start(ctx.currentTime);
+                        osc.stop(ctx.currentTime + 0.4);
+                        i++;
+                        if (i < max) setTimeout(beep, isUrgent ? 400 : 500);
+                    }
+                    beep();
+                } catch(e) {
+                    console.log('[ManageX] Erreur son SW:', e);
+                }
+            }
+        });
     }
     </script>
 </body>

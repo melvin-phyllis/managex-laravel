@@ -34,6 +34,11 @@ class Presence extends Model
         'late_recovery_deadline',
         'is_late_expired',
         'expired_late_minutes',
+        // Early arrival tracking
+        'pre_check_in',
+        'pre_check_in_latitude',
+        'pre_check_in_longitude',
+        'is_early_arrival',
     ];
 
     protected $casts = [
@@ -50,6 +55,9 @@ class Presence extends Model
         'late_recovery_deadline' => 'date',
         'is_late_expired' => 'boolean',
         'expired_late_minutes' => 'integer',
+        // Early arrival
+        'pre_check_in' => 'datetime',
+        'is_early_arrival' => 'boolean',
     ];
 
     /**

@@ -92,17 +92,28 @@ function pushManager() {
 
         async ensureSubscription() {
             try {
+                console.log('[Push] ensureSubscription started');
                 const registration = await navigator.serviceWorker.ready;
-                const subscription = await registration.pushManager.getSubscription();
-                if (subscription) {
-                    await this.saveSubscription(subscription);
+                console.log('[Push] SW ready');
+                let subscription = await registration.pushManager.getSubscription();
+                console.log('[Push] Existing subscription:', subscription);
+                if (!subscription) {
+                    const vapidKey = await this.getVapidKey();
+                    console.log('[Push] Got VAPID key:', vapidKey ? 'OK' : 'MISSING');
+                    subscription = await registration.pushManager.subscribe({
+                        userVisibleOnly: true,
+                        applicationServerKey: this.urlBase64ToUint8Array(vapidKey)
+                    });
+                    console.log('[Push] New subscription created:', subscription);
                 }
+                await this.saveSubscription(subscription);
             } catch (err) {
-                console.error('Push re-sync failed:', err);
+                console.error('[Push] ensureSubscription failed:', err);
             }
         },
 
         async saveSubscription(subscription) {
+            console.log('[Push] saveSubscription called');
             const key = subscription.getKey('p256dh');
             const auth = subscription.getKey('auth');
             const body = new URLSearchParams({
@@ -112,10 +123,14 @@ function pushManager() {
                 content_encoding: (PushManager.supportedContentEncodings || ['aesgcm'])[0],
                 _token: document.querySelector('meta[name="csrf-token"]').content
             });
-            await fetch('{{ route("push.subscribe") }}', {
+            console.log('[Push] Sending to /push/subscribe');
+            const resp = await fetch('{{ route("push.subscribe") }}', {
                 method: 'POST',
                 body: body
             });
+            console.log('[Push] Response status:', resp.status);
+            const text = await resp.text();
+            console.log('[Push] Response body:', text);
         },
 
         dismiss() {

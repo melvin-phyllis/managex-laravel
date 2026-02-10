@@ -21,11 +21,13 @@ class DocumentRequestStatusNotification extends Notification implements ShouldQu
 
     public function via(object $notifiable): array
     {
-        $channels = ['mail', 'database', 'broadcast'];
+        $channels = ['database', 'broadcast'];
 
         if ($this->shouldSendWebPush($notifiable)) {
             $channels[] = 'webpush';
         }
+
+        $channels[] = 'mail';
 
         return $channels;
     }

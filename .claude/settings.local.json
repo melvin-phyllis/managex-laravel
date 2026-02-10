@@ -14,7 +14,9 @@
       "Bash(git add:*)",
       "Bash(vendor/bin/pint:*)",
       "Bash(git commit:*)",
-      "Bash(dir:*)"
+      "Bash(dir:*)",
+      "Bash(OPENSSL_CONF=\"C:/xampp/php/extras/ssl/openssl.cnf\")",
+      "Bash(export OPENSSL_CONF)"
     ]
   }
 }

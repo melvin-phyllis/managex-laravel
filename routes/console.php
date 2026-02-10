@@ -30,7 +30,7 @@ Schedule::command('evaluations:check-missing')
 // Queue Worker (push notifications + other queued jobs)
 // ==========================================
 
-Schedule::command('queue:work --stop-when-empty --max-time=55')
+Schedule::command('queue:work --stop-when-empty --max-time=55 --tries=1')
     ->everyMinute()
     ->withoutOverlapping()
     ->runInBackground();
@@ -46,3 +46,20 @@ Schedule::command('presence:check-expired-late')
     ->withoutOverlapping()
     ->onOneServer()
     ->appendOutputTo(storage_path('logs/late-hours-check.log'));
+
+// ==========================================
+// Check-in Reminders (Early Arrival System)
+// ==========================================
+
+// At work start time - Send push reminder to employees who haven't checked in
+$workStartTime = '08:00';
+try {
+    $workStartTime = \App\Models\Setting::getWorkStartTime();
+} catch (\Exception $e) {
+    // Fallback to default if DB not available (e.g., during migration)
+}
+
+Schedule::job(new \App\Jobs\SendCheckInRemindersJob('reminder'))
+    ->dailyAt($workStartTime)
+    ->timezone('Europe/Paris')
+    ->onOneServer();

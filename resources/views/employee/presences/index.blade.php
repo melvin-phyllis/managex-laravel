@@ -358,23 +358,144 @@
             @endif
 
             <div class="flex flex-col sm:flex-row gap-4">
-                @if(!$todayPresence)
-                    <!-- Formulaire d'arrivée amélioré -->
-                    <form id="checkInForm" action="{{ route('employee.presences.check-in') }}" method="POST" class="flex-1">
-                        @csrf
-                        <input type="hidden" name="latitude" id="checkInLat">
-                        <input type="hidden" name="longitude" id="checkInLng">
-                        <button type="button" id="checkInBtn" 
-                                {{ isset($canCheckIn) && !$canCheckIn ? 'disabled' : '' }}
-                                class="w-full px-6 py-4 text-white font-medium rounded-xl transition-all shadow-lg flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none transform hover:scale-[1.02] active:scale-[0.98] disabled:hover:scale-100" style="background: linear-gradient(135deg, #31708E, #5085A5); box-shadow: 0 10px 15px -3px rgba(49, 112, 142, 0.3);">
-                            <svg id="checkInIcon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
-                            </svg>
-                            <span id="checkInText" class="text-lg">
-                                {{ (isset($canCheckIn) && !$canCheckIn) ? 'Pointage non disponible' : "Pointer l'arrivée" }}
-                            </span>
-                        </button>
-                    </form>
+                @if(!$todayPresence || ($preCheckIn && !$preCheckIn->check_in))
+                    @if($preCheckIn && !$preCheckIn->check_in)
+                        {{-- Pré-pointage en cours - Compteur à rebours --}}
+                        <div class="flex-1" x-data="{
+                            countdown: '',
+                            canConfirm: {{ $isBeforeWorkStart ? 'false' : 'true' }},
+                            init() {
+                                const workStart = '{{ $workSettings['work_start'] }}';
+                                const [h, m] = workStart.split(':').map(Number);
+                                const target = new Date();
+                                target.setHours(h, m, 0, 0);
+                                
+                                const update = () => {
+                                    const now = new Date();
+                                    const diff = target - now;
+                                    if (diff <= 0) {
+                                        this.countdown = '00:00';
+                                        this.canConfirm = true;
+                                        // Play notification sound
+                                        this.playSound();
+                                        return;
+                                    }
+                                    const hours = Math.floor(diff / 3600000);
+                                    const mins = Math.floor((diff % 3600000) / 60000);
+                                    const secs = Math.floor((diff % 60000) / 1000);
+                                    this.countdown = (hours > 0 ? hours + 'h' : '') + 
+                                        String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
+                                };
+                                update();
+                                setInterval(update, 1000);
+                            },
+                            playSound() {
+                                try {
+                                    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                                    const notes = [523.25, 659.25, 783.99, 1046.50];
+                                    notes.forEach((freq, i) => {
+                                        const osc = ctx.createOscillator();
+                                        const gain = ctx.createGain();
+                                        osc.connect(gain);
+                                        gain.connect(ctx.destination);
+                                        osc.frequency.value = freq;
+                                        osc.type = 'sine';
+                                        gain.gain.setValueAtTime(0.3, ctx.currentTime + i * 0.15);
+                                        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + i * 0.15 + 0.3);
+                                        osc.start(ctx.currentTime + i * 0.15);
+                                        osc.stop(ctx.currentTime + i * 0.15 + 0.3);
+                                    });
+                                } catch(e) {}
+                            }
+                        }">
+                            {{-- Banner d'arrivée anticipée --}}
+                            <div class="bg-gradient-to-r from-indigo-50 via-purple-50 to-blue-50 border border-indigo-200 rounded-xl p-5 mb-3">
+                                <div class="flex items-center gap-3 mb-3">
+                                    <div class="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center">
+                                        <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <p class="font-semibold text-indigo-900">🌅 Arrivée anticipée enregistrée</p>
+                                        <p class="text-sm text-indigo-600">
+                                            Arrivé(e) à {{ $preCheckIn->pre_check_in->format('H:i') }} — 
+                                            En attente de {{ $workSettings['work_start'] }}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                {{-- Countdown --}}
+                                <div class="text-center py-4" x-show="!canConfirm">
+                                    <p class="text-sm text-gray-500 mb-2">Votre présence sera confirmée dans</p>
+                                    <div class="text-4xl font-bold text-indigo-700 font-mono tracking-wider" x-text="countdown"></div>
+                                    <p class="text-xs text-gray-400 mt-2">Une notification vous sera envoyée à {{ $workSettings['work_start'] }}</p>
+                                </div>
+
+                                {{-- Bouton confirmer (visible à l'heure) --}}
+                                <div x-show="canConfirm" class="mt-2">
+                                    <form action="{{ route('employee.presences.check-in') }}" method="POST">
+                                        @csrf
+                                        <input type="hidden" name="latitude" value="{{ $preCheckIn->pre_check_in_latitude }}">
+                                        <input type="hidden" name="longitude" value="{{ $preCheckIn->pre_check_in_longitude }}">
+                                        <button type="submit" 
+                                                class="w-full px-6 py-4 text-white font-medium rounded-xl transition-all shadow-lg flex items-center justify-center gap-3 transform hover:scale-[1.02] active:scale-[0.98] animate-pulse" 
+                                                style="background: linear-gradient(135deg, #059669, #10b981); box-shadow: 0 10px 15px -3px rgba(5, 150, 105, 0.3);">
+                                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                            </svg>
+                                            <span class="text-lg">✅ Confirmer ma présence maintenant</span>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    @elseif($canPreCheckIn)
+                        {{-- Bouton Pré-pointage (avant l'heure de début) --}}
+                        <div class="flex-1">
+                            <div class="mb-3 bg-indigo-50 border-l-4 border-indigo-400 p-3 rounded-r-lg">
+                                <p class="text-sm text-indigo-700">
+                                    <strong>⏰ Arrivée anticipée :</strong> Il est {{ now()->format('H:i') }}, le pointage officiel commence à {{ $workSettings['work_start'] }}.
+                                    Vous pouvez signaler votre arrivée maintenant !
+                                </p>
+                            </div>
+                            <form id="preCheckInForm" action="{{ route('employee.presences.pre-check-in') }}" method="POST">
+                                @csrf
+                                <input type="hidden" name="latitude" id="preCheckInLat">
+                                <input type="hidden" name="longitude" id="preCheckInLng">
+                                <button type="button" id="preCheckInBtn"
+                                        class="w-full px-6 py-4 text-white font-medium rounded-xl transition-all shadow-lg flex items-center justify-center gap-3 transform hover:scale-[1.02] active:scale-[0.98]" 
+                                        style="background: linear-gradient(135deg, #6366f1, #8b5cf6); box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.3);">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    <span class="text-lg">🌅 Je suis arrivé(e) — Pré-pointage</span>
+                                </button>
+                            </form>
+
+                            {{-- Ou pointer normalement quand l'heure sera arrivée --}}
+                            <p class="text-xs text-center text-gray-400 mt-2">
+                                Ou attendez {{ $workSettings['work_start'] }} pour pointer normalement
+                            </p>
+                        </div>
+                    @else
+                        {{-- Formulaire d'arrivée normal --}}
+                        <form id="checkInForm" action="{{ route('employee.presences.check-in') }}" method="POST" class="flex-1">
+                            @csrf
+                            <input type="hidden" name="latitude" id="checkInLat">
+                            <input type="hidden" name="longitude" id="checkInLng">
+                            <button type="button" id="checkInBtn" 
+                                    {{ isset($canCheckIn) && !$canCheckIn ? 'disabled' : '' }}
+                                    class="w-full px-6 py-4 text-white font-medium rounded-xl transition-all shadow-lg flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none transform hover:scale-[1.02] active:scale-[0.98] disabled:hover:scale-100" style="background: linear-gradient(135deg, #31708E, #5085A5); box-shadow: 0 10px 15px -3px rgba(49, 112, 142, 0.3);">
+                                <svg id="checkInIcon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
+                                </svg>
+                                <span id="checkInText" class="text-lg">
+                                    {{ (isset($canCheckIn) && !$canCheckIn) ? 'Pointage non disponible' : "Pointer l'arrivée" }}
+                                </span>
+                            </button>
+                        </form>
+                    @endif
                 @elseif(!$todayPresence->check_out)
                     <!-- Arrivée pointée + Timer -->
                     <div class="flex-1 px-6 py-4 {{ $todayPresence->is_late ? 'bg-gradient-to-r from-orange-50 to-amber-50 border-orange-200' : 'bg-gradient-to-r from-green-50 to-emerald-50 border-green-200' }} border rounded-xl">
@@ -924,12 +1045,20 @@
                                     <div class="text-xs text-gray-500">{{ $presence->date->translatedFormat('l') }}</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
+                                    @if($presence->check_in)
                                     <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium" style="{{ $presence->is_late ? 'background: rgba(104, 120, 100, 0.15); color: #687864;' : 'background: rgba(49, 112, 142, 0.15); color: #31708E;' }}">
                                         {{ $presence->check_in->format('H:i') }}
                                         @if($presence->is_late)
                                             <span class="ml-1">(+{{ $presence->late_minutes }}min)</span>
                                         @endif
                                     </span>
+                                    @elseif($presence->pre_check_in)
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium animate-pulse" style="background: rgba(99, 102, 241, 0.15); color: #6366f1;">
+                                        🌅 {{ $presence->pre_check_in->format('H:i') }} <span class="ml-1">(pré-pointage)</span>
+                                    </span>
+                                    @else
+                                    <span class="text-xs text-gray-400">-</span>
+                                    @endif
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     @if($presence->check_out)
@@ -1136,6 +1265,41 @@
                 checkInBtn.addEventListener('click', function(e) {
                     e.preventDefault();
                     handlePointage(checkInBtn, checkInForm, checkInLat, checkInLng, checkInText, checkInIcon, 'Pointer l\'arrivée', checkInOriginalIcon);
+                });
+            }
+
+            // ===== Pré-pointage (arrivée anticipée) =====
+            const preCheckInBtn = document.getElementById('preCheckInBtn');
+            const preCheckInForm = document.getElementById('preCheckInForm');
+            const preCheckInLat = document.getElementById('preCheckInLat');
+            const preCheckInLng = document.getElementById('preCheckInLng');
+
+            if (preCheckInBtn) {
+                preCheckInBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if (!navigator.geolocation) {
+                        showError('⚠️ Navigateur non compatible', 'Votre navigateur ne supporte pas la géolocalisation.');
+                        return;
+                    }
+
+                    preCheckInBtn.disabled = true;
+                    preCheckInBtn.querySelector('span').textContent = 'Recherche de position...';
+                    hideError();
+
+                    navigator.geolocation.getCurrentPosition(
+                        function(position) {
+                            preCheckInLat.value = position.coords.latitude;
+                            preCheckInLng.value = position.coords.longitude;
+                            preCheckInBtn.querySelector('span').textContent = 'Envoi en cours...';
+                            preCheckInForm.submit();
+                        },
+                        function(error) {
+                            preCheckInBtn.disabled = false;
+                            preCheckInBtn.querySelector('span').textContent = '🌅 Je suis arrivé(e) — Pré-pointage';
+                            showError('Erreur de géolocalisation', 'Veuillez autoriser l\'accès à votre position.');
+                        },
+                        { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+                    );
                 });
             }
 

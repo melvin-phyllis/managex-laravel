@@ -459,6 +459,12 @@ Route::middleware(['auth', 'role:employee', 'contract.accepted'])->prefix('emplo
     Route::post('/presences/check-out', [EmployeePresenceController::class, 'checkOut'])
         ->middleware('throttle:5,1')
         ->name('presences.check-out');
+    // Pré-pointage (arrivée anticipée)
+    Route::post('/presences/pre-check-in', [EmployeePresenceController::class, 'preCheckIn'])
+        ->middleware('throttle:5,1')
+        ->name('presences.pre-check-in');
+    Route::get('/presences/pre-check-in-status', [EmployeePresenceController::class, 'preCheckInStatus'])
+        ->name('presences.pre-check-in-status');
     // Sessions de rattrapage (jours non travaillés)
     Route::post('/presences/recovery/start', [EmployeePresenceController::class, 'startRecoverySession'])
         ->middleware('throttle:5,1')

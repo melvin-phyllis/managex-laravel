@@ -256,8 +256,22 @@ class PresenceController extends Controller
         $lastCheckInTime = Carbon::today()->setHour(17)->setMinute(0);
         $isAfterHours = now()->gt($lastCheckInTime);
 
-        // 2. Flags pour l'UI
+        // 2. Détection pré-pointage (arrivée anticipée)
+        $preCheckIn = $user->presences()
+            ->whereDate('date', today())
+            ->whereNotNull('pre_check_in')
+            ->whereNull('check_in')
+            ->first();
+
+        // 3. Déterminer si c'est avant l'heure de début
+        $workStartTime = $workSettings['work_start'];
+        $scheduledStart = Carbon::createFromFormat('H:i', $workStartTime)
+            ->setDate(now()->year, now()->month, now()->day);
+        $isBeforeWorkStart = now()->lt($scheduledStart);
+
+        // 4. Flags pour l'UI
         $canCheckIn = true;
+        $canPreCheckIn = false;
         $checkInRestriction = null;
 
         if (! $isWorkingDay) {
@@ -269,9 +283,16 @@ class PresenceController extends Controller
         } elseif ($isAfterHours) {
             $canCheckIn = false;
             $checkInRestriction = 'after_hours'; // Après 17h
+        } elseif ($preCheckIn) {
+            // Pré-pointage en cours, attente de l'heure officielle
+            $canCheckIn = ! $isBeforeWorkStart; // Peut confirmer si l'heure est arrivée
+            $checkInRestriction = $isBeforeWorkStart ? 'pre_checkin_waiting' : null;
         } elseif ($user->hasCheckedInToday()) {
             $canCheckIn = false;
             // Déjà pointé (géré ailleurs)
+        } elseif ($isBeforeWorkStart && $isWorkingDay && $geolocationEnabled) {
+            // Peut faire un pré-pointage
+            $canPreCheckIn = true;
         }
 
         // 3. Flag pour le départ
@@ -321,8 +342,11 @@ class PresenceController extends Controller
             'calendarData',
             'canCheckIn',
             'canCheckOut',
+            'canPreCheckIn',
             'checkInRestriction',
             'isAfterHours',
+            'isBeforeWorkStart',
+            'preCheckIn',
             'canStartRecoverySession',
             'recoverySessionInfo',
             'isRecoverySessionToday'
@@ -528,6 +552,134 @@ class PresenceController extends Controller
         return redirect()->back()->with('success', $message);
     }
 
+    /**
+     * Pré-pointage : l'employé arrive tôt et signale sa présence
+     * Le check-in officiel sera confirmé à l'heure de début
+     */
+    public function preCheckIn(Request $request)
+    {
+        $user = auth()->user();
+
+        // Vérifier si c'est un jour de travail
+        if (! $user->isWorkingDay()) {
+            return redirect()->back()->with('error', "Le pré-pointage n'est pas disponible les jours non travaillés.");
+        }
+
+        // Vérifier si déjà pointé ou pré-pointé
+        if ($user->hasCheckedInToday()) {
+            return redirect()->back()->with('error', 'Vous avez déjà pointé votre arrivée aujourd\'hui.');
+        }
+
+        $existingPreCheckIn = $user->presences()
+            ->whereDate('date', today())
+            ->whereNotNull('pre_check_in')
+            ->first();
+
+        if ($existingPreCheckIn) {
+            return redirect()->back()->with('error', 'Vous avez déjà signalé votre arrivée anticipée.');
+        }
+
+        // Vérifier que c'est bien avant l'heure de début
+        $workStartTime = Setting::getWorkStartTime();
+        $scheduledStart = Carbon::createFromFormat('H:i', $workStartTime)
+            ->setDate(now()->year, now()->month, now()->day);
+
+        if (now()->gte($scheduledStart)) {
+            return redirect()->back()->with('info', 'L\'heure de début est déjà passée. Utilisez le pointage normal.');
+        }
+
+        // Restriction horaire : pas après 17h
+        $limitTime = Carbon::today()->setHour(17)->setMinute(0);
+        if (now()->gt($limitTime)) {
+            return redirect()->back()->with('error', 'Il est trop tard pour pointer.');
+        }
+
+        // Vérifier la géolocalisation
+        $zones = GeolocationZone::where('is_active', true)->get();
+        if ($zones->isEmpty()) {
+            return redirect()->back()->with('error', "Le pointage est désactivé car aucune zone de travail n'est configurée.");
+        }
+
+        $latitude = $request->input('latitude');
+        $longitude = $request->input('longitude');
+
+        if (! $latitude || ! $longitude) {
+            return redirect()->back()->with('error', 'La géolocalisation est obligatoire. Veuillez autoriser l\'accès à votre position.');
+        }
+
+        // Vérifier la zone
+        $checkInStatus = 'unknown';
+        $geolocationZoneId = null;
+
+        foreach ($zones as $zone) {
+            if ($zone->isWithinZone((float) $latitude, (float) $longitude)) {
+                $checkInStatus = 'in_zone';
+                $geolocationZoneId = $zone->id;
+                break;
+            }
+        }
+
+        if ($checkInStatus !== 'in_zone') {
+            $defaultZone = GeolocationZone::getDefault();
+            $zoneName = $defaultZone ? $defaultZone->name : 'la zone autorisée';
+            return redirect()->back()->with('error', "Pré-pointage refusé : vous n'êtes pas dans $zoneName.");
+        }
+
+        $workEndTime = Setting::getWorkEndTime();
+
+        // Créer la présence avec pré-check-in (check_in reste null)
+        Presence::create([
+            'user_id' => $user->id,
+            'check_in' => null, // Sera rempli à l'heure officielle
+            'pre_check_in' => now(),
+            'pre_check_in_latitude' => $latitude,
+            'pre_check_in_longitude' => $longitude,
+            'date' => today(),
+            'check_in_latitude' => $latitude,
+            'check_in_longitude' => $longitude,
+            'check_in_status' => $checkInStatus,
+            'geolocation_zone_id' => $geolocationZoneId,
+            'is_early_arrival' => true,
+            'is_late' => false,
+            'scheduled_start' => $workStartTime,
+            'scheduled_end' => $workEndTime,
+        ]);
+
+        $timeUntilStart = now()->diffForHumans($scheduledStart, ['parts' => 2, 'syntax' => Carbon::DIFF_ABSOLUTE]);
+
+        return redirect()->back()->with('success', "✅ Arrivée anticipée enregistrée ! Votre présence sera confirmée automatiquement à {$workStartTime}. (dans $timeUntilStart)");
+    }
+
+    /**
+     * API: Retourne le statut du pré-check-in en JSON (pour alarme globale)
+     */
+    public function preCheckInStatus()
+    {
+        $user = auth()->user();
+        $preCheckIn = $user->presences()
+            ->whereDate('date', today())
+            ->whereNotNull('pre_check_in')
+            ->whereNull('check_in')
+            ->first();
+
+        if (!$preCheckIn) {
+            return response()->json(['has_pre_checkin' => false]);
+        }
+
+        $workStartTime = Setting::getWorkStartTime();
+        $parts = explode(':', $workStartTime);
+        $scheduledStart = Carbon::today()->setHour((int)$parts[0])->setMinute((int)($parts[1] ?? 0));
+
+        return response()->json([
+            'has_pre_checkin' => true,
+            'pre_check_in_time' => $preCheckIn->pre_check_in->format('H:i'),
+            'work_start_time' => $workStartTime,
+            'scheduled_start_timestamp' => $scheduledStart->timestamp * 1000,
+            'is_past_start' => now()->gte($scheduledStart),
+            'confirm_url' => route('employee.presences.index'),
+        ]);
+    }
+
     public function checkIn(Request $request)
     {
         $user = auth()->user();
@@ -537,6 +689,31 @@ class PresenceController extends Controller
             $workDays = $user->work_day_names ?: 'Aucun jour configuré';
 
             return redirect()->back()->with('error', "Aujourd'hui n'est pas un jour de travail pour vous. Vos jours de travail : $workDays");
+        }
+
+        // Vérifier si un pré-check-in existe (confirmer le pré-pointage)
+        $preCheckIn = $user->presences()
+            ->whereDate('date', today())
+            ->whereNotNull('pre_check_in')
+            ->whereNull('check_in')
+            ->first();
+
+        if ($preCheckIn) {
+            // Confirmer le pré-pointage
+            $workStartTime = Setting::getWorkStartTime();
+            $lateTolerance = Setting::getLateTolerance();
+            $scheduledStart = Carbon::createFromFormat('H:i', $workStartTime)
+                ->setDate(now()->year, now()->month, now()->day);
+
+            // Pas besoin de re-vérifier la géoloc, elle a été vérifiée au pré-check-in
+            $preCheckIn->update([
+                'check_in' => $scheduledStart, // Check-in à l'heure officielle
+                'is_early_arrival' => true,
+                'is_late' => false,
+                'late_minutes' => null,
+            ]);
+
+            return redirect()->back()->with('success', "✅ Présence confirmée ! Arrivée réelle : {$preCheckIn->pre_check_in->format('H:i')} - Check-in officiel : {$workStartTime}");
         }
 
         if ($user->hasCheckedInToday()) {

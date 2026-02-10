@@ -30,11 +30,13 @@ class PayrollAddedNotification extends Notification implements ShouldQueue
      */
     public function via(object $notifiable): array
     {
-        $channels = ['mail', 'database'];
+        $channels = ['database'];
 
         if ($this->shouldSendWebPush($notifiable)) {
             $channels[] = 'webpush';
         }
+
+        $channels[] = 'mail';
 
         return $channels;
     }
