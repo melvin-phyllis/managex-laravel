@@ -63,11 +63,13 @@ class SendCheckInRemindersJob implements ShouldQueue
                         );
                         $notifiedCount++;
                     }
+
                     continue;
                 } elseif ($this->reminderType === 'second_reminder') {
                     // 5 minutes after start: auto-confirm + send confirmation
                     $this->confirmPreCheckIn($todayPresence, $employee, $workStartTime);
                     $notifiedCount++;
+
                     continue;
                 }
             }

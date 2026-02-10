@@ -622,6 +622,7 @@ class PresenceController extends Controller
         if ($checkInStatus !== 'in_zone') {
             $defaultZone = GeolocationZone::getDefault();
             $zoneName = $defaultZone ? $defaultZone->name : 'la zone autorisée';
+
             return redirect()->back()->with('error', "Pré-pointage refusé : vous n'êtes pas dans $zoneName.");
         }
 
@@ -662,13 +663,13 @@ class PresenceController extends Controller
             ->whereNull('check_in')
             ->first();
 
-        if (!$preCheckIn) {
+        if (! $preCheckIn) {
             return response()->json(['has_pre_checkin' => false]);
         }
 
         $workStartTime = Setting::getWorkStartTime();
         $parts = explode(':', $workStartTime);
-        $scheduledStart = Carbon::today()->setHour((int)$parts[0])->setMinute((int)($parts[1] ?? 0));
+        $scheduledStart = Carbon::today()->setHour((int) $parts[0])->setMinute((int) ($parts[1] ?? 0));
 
         return response()->json([
             'has_pre_checkin' => true,

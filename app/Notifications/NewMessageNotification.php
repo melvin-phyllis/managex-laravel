@@ -3,9 +3,9 @@
 namespace App\Notifications;
 
 use App\Models\Messaging\Message;
+use App\Notifications\Traits\SendsWebPush;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use App\Notifications\Traits\SendsWebPush;
 use Illuminate\Notifications\Notification;
 
 class NewMessageNotification extends Notification implements ShouldQueue

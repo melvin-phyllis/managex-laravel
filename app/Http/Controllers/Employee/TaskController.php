@@ -114,7 +114,7 @@ class TaskController extends Controller
         }
 
         if (! in_array($task->statut, ['approved', 'completed'])) {
-            return response()->json(['success' => false, 'error' => 'Action non autorisée : Statut incorrect (' . $task->statut . ')'], 403);
+            return response()->json(['success' => false, 'error' => 'Action non autorisée : Statut incorrect ('.$task->statut.')'], 403);
         }
 
         $request->validate([

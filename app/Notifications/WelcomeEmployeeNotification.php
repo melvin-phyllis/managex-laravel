@@ -2,10 +2,10 @@
 
 namespace App\Notifications;
 
+use App\Notifications\Traits\SendsWebPush;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
-use App\Notifications\Traits\SendsWebPush;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Password;
 
