@@ -63,3 +63,26 @@ Schedule::job(new \App\Jobs\SendCheckInRemindersJob('reminder'))
     ->dailyAt($workStartTime)
     ->timezone('Europe/Paris')
     ->onOneServer();
+
+// ==========================================
+// Check-out Reminders (Auto Check-Out System)
+// ==========================================
+
+// 10 min before work end time - Remind employees to check out
+$workEndTime = '17:00';
+try {
+    $workEndTime = \App\Models\Setting::getWorkEndTime();
+} catch (\Exception $e) {
+    // Fallback to default if DB not available
+}
+
+// Calculate 10 minutes before end time
+$endTimeParts = explode(':', $workEndTime);
+$checkoutReminderTime = \Carbon\Carbon::createFromTime((int) $endTimeParts[0], (int) $endTimeParts[1])
+    ->subMinutes(10)
+    ->format('H:i');
+
+Schedule::job(new \App\Jobs\SendCheckOutRemindersJob('reminder'))
+    ->dailyAt($checkoutReminderTime)
+    ->timezone('Europe/Paris')
+    ->onOneServer();

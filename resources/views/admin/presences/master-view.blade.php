@@ -185,7 +185,10 @@
                                 
                                 {{-- Mode Aujourd'hui: Départ --}}
                                 <td x-show="mode === 'today'" class="py-4 px-5 text-center">
-                                    <span class="font-mono text-sm" x-bind:class="emp.check_out ? 'text-gray-900' : 'text-gray-400'" x-text="emp.check_out || '-'"></span>
+                                    <div class="flex items-center justify-center gap-1">
+                                        <span class="font-mono text-sm" x-bind:class="emp.check_out ? 'text-gray-900' : 'text-gray-400'" x-text="emp.check_out || '-'"></span>
+                                        <span x-show="emp.is_auto_checkout" class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold text-amber-700 bg-amber-100" title="Départ enregistré automatiquement">Auto</span>
+                                    </div>
                                 </td>
                                 
                                 {{-- Mode Aujourd'hui: Statut --}}

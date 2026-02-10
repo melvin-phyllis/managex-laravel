@@ -48,23 +48,26 @@ class CheckInReminderNotification extends Notification implements ShouldQueue
     {
         $messages = $this->getMessages();
         $isAlarm = in_array($this->type, ['pre_checkin_alarm', 'warning']);
+        $isCheckout = in_array($this->type, ['checkout_reminder', 'auto_checkout']);
+        $actionLabel = $isCheckout ? 'Voir mes présences' : 'Pointer maintenant';
+        $topic = $isCheckout ? 'check-out-reminder' : 'check-in-reminder';
 
         return (new WebPushMessage)
             ->title($messages['title'])
             ->body($messages['body'])
             ->icon('/icons/icon-192x192.png')
             ->badge('/icons/icon-72x72.png')
-            ->action('Pointer maintenant', 'check_in')
+            ->action($actionLabel, 'check_in')
             ->options([
                 'TTL' => 300,
                 'urgency' => $isAlarm ? 'high' : 'normal',
-                'topic' => 'check-in-reminder',
+                'topic' => $topic,
             ])
             ->data([
                 'url' => route('employee.presences.index'),
-                'type' => 'check_in_reminder',
+                'type' => $isCheckout ? 'check_out_reminder' : 'check_in_reminder',
                 'reminder_type' => $this->type,
-                'play_sound' => true,
+                'play_sound' => ! $isCheckout || $this->type === 'checkout_reminder',
                 'sound_type' => $isAlarm ? 'urgent' : 'notification',
             ]);
     }
@@ -87,6 +90,14 @@ class CheckInReminderNotification extends Notification implements ShouldQueue
             'second_reminder' => [
                 'title' => "🔔 N'oubliez pas de pointer !",
                 'body' => "Il est {$this->workStartTime} passé. Marquez votre présence rapidement.",
+            ],
+            'checkout_reminder' => [
+                'title' => "🏠 N'oubliez pas de pointer votre départ !",
+                'body' => "Il est bientôt {$this->workStartTime}. Pensez à pointer votre départ avant de partir.",
+            ],
+            'auto_checkout' => [
+                'title' => '✅ Départ enregistré automatiquement',
+                'body' => "Votre départ a été automatiquement enregistré à {$this->workStartTime}.",
             ],
             default => [
                 'title' => "⏰ Il est {$this->workStartTime} !",

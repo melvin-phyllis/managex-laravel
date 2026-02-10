@@ -72,12 +72,14 @@ class PresenceController extends Controller
                 $employee->check_out = null;
                 $employee->is_late = false;
                 $employee->late_minutes = 0;
+                $employee->is_auto_checkout = false;
             } else {
                 $employee->status = $presence->is_late ? 'late' : 'present';
                 $employee->check_in = $presence->check_in ? Carbon::parse($presence->check_in)->format('H:i') : null;
                 $employee->check_out = $presence->check_out ? Carbon::parse($presence->check_out)->format('H:i') : null;
                 $employee->is_late = $presence->is_late;
                 $employee->late_minutes = $presence->late_minutes ?? 0;
+                $employee->is_auto_checkout = $presence->is_auto_checkout ?? false;
             }
 
             return $employee;
@@ -107,6 +109,7 @@ class PresenceController extends Controller
                 'check_out' => $e->check_out,
                 'is_late' => $e->is_late,
                 'late_minutes' => $e->late_minutes,
+                'is_auto_checkout' => $e->is_auto_checkout,
             ]),
         ]);
     }
@@ -375,6 +378,7 @@ class PresenceController extends Controller
             'is_late' => $p->is_late,
             'late_minutes' => $p->late_minutes,
             'overtime_minutes' => $p->overtime_minutes ?? 0,
+            'is_auto_checkout' => $p->is_auto_checkout ?? false,
             'work_hours' => $p->check_in && $p->check_out
                 ? round(Carbon::parse($p->check_in)->diffInMinutes(Carbon::parse($p->check_out)) / 60, 1)
                 : 0,

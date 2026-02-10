@@ -39,6 +39,7 @@ class Presence extends Model
         'pre_check_in_latitude',
         'pre_check_in_longitude',
         'is_early_arrival',
+        'is_auto_checkout',
     ];
 
     protected $casts = [
@@ -58,6 +59,7 @@ class Presence extends Model
         // Early arrival
         'pre_check_in' => 'datetime',
         'is_early_arrival' => 'boolean',
+        'is_auto_checkout' => 'boolean',
     ];
 
     /**
