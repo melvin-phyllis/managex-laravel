@@ -1,4 +1,4 @@
-﻿<x-layouts.admin>
+<x-layouts.admin>
     <div class="space-y-6" x-data="masterViewPage()" x-init="init()">
         <!-- Breadcrumbs -->
         <nav class="flex" aria-label="Breadcrumb">
@@ -256,7 +256,7 @@
                                 
                                 {{-- Mode Historique: Bouton détails --}}
                                 <td x-show="mode === 'historical'" class="py-4 px-5 text-center">
-                                    <a :href="'/admin/presences/employee/' + emp.id + '?period=' + filters.period + (filters.period === 'custom' ? '&start_date=' + filters.start_date + '&end_date=' + filters.end_date : '')" 
+                                    <a :href="'{{ url('/admin/presences/employee') }}/' + emp.id + '?period=' + filters.period + (filters.period === 'custom' ? '&start_date=' + filters.start_date + '&end_date=' + filters.end_date : '')" 
                                        class="inline-flex items-center gap-1 px-3 py-1.5 text-sm font-medium text-indigo-600 hover:text-white bg-indigo-50 hover:bg-indigo-600 rounded-lg transition-colors">
                                         Détails 
                                     </a>

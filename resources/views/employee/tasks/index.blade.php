@@ -1,4 +1,4 @@
-﻿<x-layouts.employee>
+<x-layouts.employee>
     <div class="space-y-6" x-data="{ viewMode: localStorage.getItem('employeeTaskView') || 'cards' }" x-init="$watch('viewMode', v => localStorage.setItem('employeeTaskView', v))">
         <!-- Header avec Tolia Blue -->
         <div class="relative overflow-hidden rounded-2xl p-6 text-white shadow-xl" style="background-color: #3B8BEB;">
@@ -398,7 +398,7 @@
                 },
                 events: events,
                 eventClick: function(info) {
-                    window.location.href = '/employee/tasks/' + info.event.id;
+                    window.location.href = '{{ url('/employee/tasks') }}/' + info.event.id;
                 },
                 eventDidMount: function(info) {
                     const props = info.event.extendedProps;

@@ -1,4 +1,4 @@
-﻿<x-layouts.admin>
+<x-layouts.admin>
     <div class="space-y-6" x-data="taskManager()">
         <!-- Header amélioré -->
         <div class="relative overflow-hidden rounded-2xl shadow-xl animate-fade-in-up" style="background: linear-gradient(135deg, #5680E9, #84CEEB) !important;">
@@ -753,7 +753,7 @@
                 },
                 events: events,
                 eventClick: function(info) {
-                    window.location.href = '/admin/tasks/' + info.event.id;
+                    window.location.href = '{{ url('/admin/tasks') }}/' + info.event.id;
                 },
                 eventDidMount: function(info) {
                     const props = info.event.extendedProps;
