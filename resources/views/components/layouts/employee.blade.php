@@ -24,6 +24,22 @@
 
     <!-- Chart.js -->
     <script nonce="{{ $cspNonce ?? '' }}" src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- OneSignal Push Notifications -->
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+    <script>
+    window.OneSignalDeferred = window.OneSignalDeferred || [];
+    OneSignalDeferred.push(async function(OneSignal) {
+        await OneSignal.init({
+            appId: "bd7969c6-0b7c-4bf4-8ad4-6209607959cd",
+            serviceWorkerParam: { scope: "{{ asset('') }}" },
+        });
+        // Associate this browser with the authenticated user
+        @auth
+        await OneSignal.login("{{ auth()->id() }}");
+        @endauth
+    });
+    </script>
 </head>
 <body class="font-sans antialiased" x-data="{ showLogoutModal: false }">
     <script nonce="{{ $cspNonce ?? '' }}">window.userId = {{ auth()->id() ?? 'null' }};</script>

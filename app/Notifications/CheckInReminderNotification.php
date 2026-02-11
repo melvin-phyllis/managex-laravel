@@ -2,9 +2,11 @@
 
 namespace App\Notifications;
 
+use App\Services\OneSignalService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\Log;
 use NotificationChannels\WebPush\WebPushMessage;
 
 class CheckInReminderNotification extends Notification implements ShouldQueue
@@ -33,6 +35,9 @@ class CheckInReminderNotification extends Notification implements ShouldQueue
     public function toDatabase(object $notifiable): array
     {
         $messages = $this->getMessages();
+
+        // Also send via OneSignal (fire-and-forget)
+        $this->sendViaOneSignal($notifiable);
 
         return [
             'type' => 'check_in_reminder',
@@ -70,6 +75,31 @@ class CheckInReminderNotification extends Notification implements ShouldQueue
                 'play_sound' => ! $isCheckout || $this->type === 'checkout_reminder',
                 'sound_type' => $isAlarm ? 'urgent' : 'notification',
             ]);
+    }
+
+    /**
+     * Send notification via OneSignal REST API.
+     * This reaches the user even when the browser is closed.
+     */
+    protected function sendViaOneSignal(object $notifiable): void
+    {
+        try {
+            $messages = $this->getMessages();
+            $onesignal = app(OneSignalService::class);
+
+            $onesignal->sendToUser(
+                userId: $notifiable->id,
+                title: $messages['title'],
+                body: $messages['body'],
+                data: [
+                    'type' => 'check_in_reminder',
+                    'reminder_type' => $this->type,
+                ],
+                url: route('employee.presences.index')
+            );
+        } catch (\Exception $e) {
+            Log::error('[OneSignal] Failed in notification: '.$e->getMessage());
+        }
     }
 
     private function getMessages(): array
