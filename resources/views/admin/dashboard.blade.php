@@ -180,8 +180,8 @@
             </div>
 
             <!-- Alert Center -->
-            <div style="max-height: 350px;" class="overflow-hidden flex flex-col">
-                <x-alert-center :alerts="$alerts" :apiUrl="route('admin.dashboard.alerts')" />
+            <div class="flex flex-col min-h-0" style="max-height: 350px;">
+                <x-alert-center :alerts="$alerts" :apiUrl="route('admin.dashboard.alerts')" class="flex flex-col min-h-0 max-h-full" />
             </div>
 
             <!-- Activity Feed -->
