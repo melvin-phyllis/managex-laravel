@@ -234,8 +234,12 @@ class TaskController extends Controller
         $task->update(['statut' => $newStatus]);
 
         // Notifier l'employé du changement de statut
-        if ($oldStatus !== $newStatus) {
-            $task->user->notify(new TaskStatusNotification($task, $newStatus));
+        if ($oldStatus !== $newStatus && $task->user) {
+            try {
+                $task->user->notify(new TaskStatusNotification($task, $newStatus));
+            } catch (\Exception $e) {
+                \Log::warning('Task status notification failed: ' . $e->getMessage());
+            }
         }
 
         return response()->json([
