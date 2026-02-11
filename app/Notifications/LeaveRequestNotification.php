@@ -3,6 +3,7 @@
 namespace App\Notifications;
 
 use App\Models\Leave;
+use App\Notifications\Traits\SendsOneSignal;
 use App\Notifications\Traits\SendsWebPush;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -11,7 +12,7 @@ use Illuminate\Notifications\Notification;
 
 class LeaveRequestNotification extends Notification implements ShouldQueue
 {
-    use Queueable, SendsWebPush;
+    use Queueable, SendsWebPush, SendsOneSignal;
 
     public function __construct(
         public Leave $leave
@@ -30,6 +31,8 @@ class LeaveRequestNotification extends Notification implements ShouldQueue
 
     public function toDatabase(object $notifiable): array
     {
+        $this->sendViaOneSignal($notifiable);
+
         return [
             'type' => 'leave_request',
             'leave_id' => $this->leave->id,

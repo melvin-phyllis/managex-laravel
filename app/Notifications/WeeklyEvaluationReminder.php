@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Notifications\Traits\SendsOneSignal;
 use App\Notifications\Traits\SendsWebPush;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -11,7 +12,7 @@ use Illuminate\Support\Collection;
 
 class WeeklyEvaluationReminder extends Notification implements ShouldQueue
 {
-    use Queueable, SendsWebPush;
+    use Queueable, SendsWebPush, SendsOneSignal;
 
     protected Collection $interns;
 
@@ -76,6 +77,8 @@ class WeeklyEvaluationReminder extends Notification implements ShouldQueue
      */
     public function toArray(object $notifiable): array
     {
+        $this->sendViaOneSignal($notifiable);
+
         $count = $this->interns->count();
 
         return [

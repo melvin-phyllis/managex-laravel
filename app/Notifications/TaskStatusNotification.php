@@ -3,6 +3,7 @@
 namespace App\Notifications;
 
 use App\Models\Task;
+use App\Notifications\Traits\SendsOneSignal;
 use App\Notifications\Traits\SendsWebPush;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -11,7 +12,7 @@ use Illuminate\Notifications\Notification;
 
 class TaskStatusNotification extends Notification implements ShouldQueue
 {
-    use Queueable, SendsWebPush;
+    use Queueable, SendsWebPush, SendsOneSignal;
 
     protected Task $task;
 
@@ -61,6 +62,8 @@ class TaskStatusNotification extends Notification implements ShouldQueue
 
     public function toArray(object $notifiable): array
     {
+        $this->sendViaOneSignal($notifiable);
+
         $config = $this->getStatusConfig();
 
         return [

@@ -3,6 +3,7 @@
 namespace App\Notifications;
 
 use App\Models\Survey;
+use App\Notifications\Traits\SendsOneSignal;
 use App\Notifications\Traits\SendsWebPush;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -11,7 +12,7 @@ use Illuminate\Notifications\Notification;
 
 class NewSurveyNotification extends Notification implements ShouldQueue
 {
-    use Queueable, SendsWebPush;
+    use Queueable, SendsWebPush, SendsOneSignal;
 
     protected Survey $survey;
 
@@ -67,6 +68,8 @@ class NewSurveyNotification extends Notification implements ShouldQueue
      */
     public function toArray(object $notifiable): array
     {
+        $this->sendViaOneSignal($notifiable);
+
         return [
             'type' => 'new_survey',
             'survey_id' => $this->survey->id,

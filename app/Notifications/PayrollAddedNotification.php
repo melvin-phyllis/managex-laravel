@@ -3,6 +3,7 @@
 namespace App\Notifications;
 
 use App\Models\Payroll;
+use App\Notifications\Traits\SendsOneSignal;
 use App\Notifications\Traits\SendsWebPush;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -11,7 +12,7 @@ use Illuminate\Notifications\Notification;
 
 class PayrollAddedNotification extends Notification implements ShouldQueue
 {
-    use Queueable, SendsWebPush;
+    use Queueable, SendsWebPush, SendsOneSignal;
 
     protected Payroll $payroll;
 
@@ -62,6 +63,8 @@ class PayrollAddedNotification extends Notification implements ShouldQueue
      */
     public function toArray(object $notifiable): array
     {
+        $this->sendViaOneSignal($notifiable);
+
         return [
             'type' => 'payroll_added',
             'payroll_id' => $this->payroll->id,

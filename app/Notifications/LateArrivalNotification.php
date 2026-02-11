@@ -4,6 +4,7 @@ namespace App\Notifications;
 
 use App\Models\Presence;
 use App\Models\User;
+use App\Notifications\Traits\SendsOneSignal;
 use App\Notifications\Traits\SendsWebPush;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -12,7 +13,7 @@ use Illuminate\Notifications\Notification;
 
 class LateArrivalNotification extends Notification implements ShouldQueue
 {
-    use Queueable, SendsWebPush;
+    use Queueable, SendsWebPush, SendsOneSignal;
 
     public function __construct(
         public User $employee,
@@ -33,6 +34,8 @@ class LateArrivalNotification extends Notification implements ShouldQueue
 
     public function toDatabase(object $notifiable): array
     {
+        $this->sendViaOneSignal($notifiable);
+
         return [
             'type' => 'late_arrival',
             'employee_id' => $this->employee->id,

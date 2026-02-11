@@ -3,6 +3,7 @@
 namespace App\Notifications;
 
 use App\Models\Task;
+use App\Notifications\Traits\SendsOneSignal;
 use App\Notifications\Traits\SendsWebPush;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -11,7 +12,7 @@ use Illuminate\Notifications\Notification;
 
 class TaskReminderNotification extends Notification implements ShouldQueue
 {
-    use Queueable, SendsWebPush;
+    use Queueable, SendsWebPush, SendsOneSignal;
 
     public function __construct(
         public Task $task,
@@ -31,6 +32,8 @@ class TaskReminderNotification extends Notification implements ShouldQueue
 
     public function toDatabase(object $notifiable): array
     {
+        $this->sendViaOneSignal($notifiable);
+
         $messages = [
             '24h' => "Rappel : La tâche \"{$this->task->titre}\" est due demain",
             'overdue' => "⚠️ La tâche \"{$this->task->titre}\" est en retard !",

@@ -2,16 +2,16 @@
 
 namespace App\Notifications;
 
-use App\Services\OneSignalService;
+use App\Notifications\Traits\SendsOneSignal;
+use App\Notifications\Traits\SendsWebPush;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
-use Illuminate\Support\Facades\Log;
 use NotificationChannels\WebPush\WebPushMessage;
 
 class CheckInReminderNotification extends Notification implements ShouldQueue
 {
-    use Queueable;
+    use Queueable, SendsOneSignal;
 
     public function __construct(
         public string $type = 'reminder', // 'reminder', 'warning', 'pre_checkin_confirm'
@@ -36,8 +36,13 @@ class CheckInReminderNotification extends Notification implements ShouldQueue
     {
         $messages = $this->getMessages();
 
-        // Also send via OneSignal (fire-and-forget)
-        $this->sendViaOneSignal($notifiable);
+        // Send via OneSignal (works even when browser is closed)
+        $this->sendViaOneSignal($notifiable, [
+            'type' => 'check_in_reminder',
+            'title' => $messages['title'],
+            'message' => $messages['body'],
+            'url' => route('employee.presences.index'),
+        ]);
 
         return [
             'type' => 'check_in_reminder',
@@ -75,31 +80,6 @@ class CheckInReminderNotification extends Notification implements ShouldQueue
                 'play_sound' => ! $isCheckout || $this->type === 'checkout_reminder',
                 'sound_type' => $isAlarm ? 'urgent' : 'notification',
             ]);
-    }
-
-    /**
-     * Send notification via OneSignal REST API.
-     * This reaches the user even when the browser is closed.
-     */
-    protected function sendViaOneSignal(object $notifiable): void
-    {
-        try {
-            $messages = $this->getMessages();
-            $onesignal = app(OneSignalService::class);
-
-            $onesignal->sendToUser(
-                userId: $notifiable->id,
-                title: $messages['title'],
-                body: $messages['body'],
-                data: [
-                    'type' => 'check_in_reminder',
-                    'reminder_type' => $this->type,
-                ],
-                url: route('employee.presences.index')
-            );
-        } catch (\Exception $e) {
-            Log::error('[OneSignal] Failed in notification: '.$e->getMessage());
-        }
     }
 
     private function getMessages(): array

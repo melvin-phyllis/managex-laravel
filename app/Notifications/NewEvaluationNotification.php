@@ -3,6 +3,7 @@
 namespace App\Notifications;
 
 use App\Models\InternEvaluation;
+use App\Notifications\Traits\SendsOneSignal;
 use App\Notifications\Traits\SendsWebPush;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -11,7 +12,7 @@ use Illuminate\Notifications\Notification;
 
 class NewEvaluationNotification extends Notification implements ShouldQueue
 {
-    use Queueable, SendsWebPush;
+    use Queueable, SendsWebPush, SendsOneSignal;
 
     protected InternEvaluation $evaluation;
 
@@ -75,6 +76,8 @@ class NewEvaluationNotification extends Notification implements ShouldQueue
      */
     public function toArray(object $notifiable): array
     {
+        $this->sendViaOneSignal($notifiable);
+
         return [
             'type' => 'new_evaluation',
             'evaluation_id' => $this->evaluation->id,

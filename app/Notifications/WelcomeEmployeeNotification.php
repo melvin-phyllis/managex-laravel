@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Notifications\Traits\SendsOneSignal;
 use App\Notifications\Traits\SendsWebPush;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -11,7 +12,7 @@ use Illuminate\Support\Facades\Password;
 
 class WelcomeEmployeeNotification extends Notification implements ShouldQueue
 {
-    use Queueable, SendsWebPush;
+    use Queueable, SendsWebPush, SendsOneSignal;
 
     public string $employeeName;
 
@@ -92,6 +93,8 @@ class WelcomeEmployeeNotification extends Notification implements ShouldQueue
      */
     public function toArray(object $notifiable): array
     {
+        $this->sendViaOneSignal($notifiable);
+
         return [
             'type' => 'welcome',
             'title' => 'Bienvenue !',
