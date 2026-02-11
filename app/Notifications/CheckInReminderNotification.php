@@ -109,6 +109,14 @@ class CheckInReminderNotification extends Notification implements ShouldQueue
                 'title' => '✅ Départ enregistré automatiquement',
                 'body' => "Votre départ a été automatiquement enregistré à {$this->workStartTime}.",
             ],
+            'break_start' => [
+                'title' => '☕ C\'est l\'heure de la pause !',
+                'body' => "Il est {$this->workStartTime}. Profitez de votre pause, vous l'avez bien mérité !",
+            ],
+            'break_end' => [
+                'title' => '🔔 Fin de pause !',
+                'body' => "Il est {$this->workStartTime}. La pause est terminée, il est temps de reprendre le travail.",
+            ],
             default => [
                 'title' => "⏰ Il est {$this->workStartTime} !",
                 'body' => 'Marquez votre présence SVP. Cliquez ici pour pointer.',

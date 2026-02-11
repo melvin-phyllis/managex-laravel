@@ -86,3 +86,33 @@ Schedule::job(new \App\Jobs\SendCheckOutRemindersJob('reminder'))
     ->dailyAt($checkoutReminderTime)
     ->timezone('Europe/Paris')
     ->onOneServer();
+
+// ==========================================
+// Break Reminders
+// ==========================================
+
+// At break start time - Remind employees to take their break
+$breakStartTime = '12:00';
+try {
+    $breakStartTime = \App\Models\Setting::getBreakStartTime();
+} catch (\Exception $e) {
+    // Fallback to default if DB not available
+}
+
+Schedule::job(new \App\Jobs\SendBreakReminderJob('break_start'))
+    ->dailyAt($breakStartTime)
+    ->timezone('Europe/Paris')
+    ->onOneServer();
+
+// At break end time - Remind employees break is over
+$breakEndTime = '13:00';
+try {
+    $breakEndTime = \App\Models\Setting::getBreakEndTime();
+} catch (\Exception $e) {
+    // Fallback to default if DB not available
+}
+
+Schedule::job(new \App\Jobs\SendBreakReminderJob('break_end'))
+    ->dailyAt($breakEndTime)
+    ->timezone('Europe/Paris')
+    ->onOneServer();
