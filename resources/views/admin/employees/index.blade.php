@@ -342,7 +342,6 @@
                                     Présent
                                 </span>
                             @elseif($employee->presence_status === 'on_leave')
-                            @elseif($employee->presence_status === 'on_leave')
                                 <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-[#8860D0]/10 text-[#8860D0] border border-[#8860D0]/20">
                                     <span class="h-2 w-2 bg-[#8860D0] rounded-full"></span>
                                     En congé
