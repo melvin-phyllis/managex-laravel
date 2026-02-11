@@ -36,26 +36,90 @@
             serviceWorkerParam: { scope: "/managex/public/" },
             autoPrompt: false,
             notifyButton: { enable: false },
+            safari_web_id: "{{ config('services.onesignal.safari_web_id', '') }}",
         });
         @auth
         await OneSignal.login("{{ auth()->id() }}");
         @endauth
 
-        // Show custom modal if not subscribed
-        const permission = OneSignal.Notifications.permission;
+        // Check if we should show the notification prompt
+        showNotificationPromptIfNeeded(OneSignal);
+    });
+
+    function showNotificationPromptIfNeeded(OneSignal) {
+        // Don't show if user previously dismissed (respect for 7 days)
+        const dismissed = localStorage.getItem('managex-notif-dismissed');
+        if (dismissed && (Date.now() - parseInt(dismissed)) < 7 * 24 * 60 * 60 * 1000) {
+            return;
+        }
+
+        // Detect iOS Safari (not in standalone PWA mode)
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+        const isStandalone = window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
+        const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
+        // On iOS Safari (not PWA), show a special "add to home screen" message instead
+        if (isIOS && !isStandalone) {
+            setTimeout(() => {
+                const modal = document.getElementById('onesignal-custom-prompt');
+                const iosMsg = document.getElementById('ios-pwa-message');
+                const defaultMsg = document.getElementById('default-notif-message');
+                if (modal) {
+                    if (iosMsg) iosMsg.classList.remove('hidden');
+                    if (defaultMsg) defaultMsg.classList.add('hidden');
+                    modal.classList.remove('hidden');
+                }
+            }, 3000);
+            return;
+        }
+
+        // Check if browser supports notifications
+        if (!('Notification' in window) && !('safari' in window)) {
+            return; // Browser doesn't support notifications at all
+        }
+
+        // Check permission status - use native API as fallback
+        let permission;
+        try {
+            permission = OneSignal.Notifications.permission;
+        } catch (e) {
+            permission = ('Notification' in window) ? Notification.permission === 'granted' : false;
+        }
+
         if (!permission) {
             setTimeout(() => {
                 const modal = document.getElementById('onesignal-custom-prompt');
                 if (modal) modal.classList.remove('hidden');
             }, 3000);
         }
-    });
+    }
 
     function acceptNotifications() {
         const modal = document.getElementById('onesignal-custom-prompt');
         if (modal) modal.classList.add('hidden');
+
+        // Detect iOS - prompt to add to home screen
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+        const isStandalone = window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
+        if (isIOS && !isStandalone) {
+            // Can't request permission on iOS Safari, just dismiss
+            return;
+        }
+
         OneSignalDeferred.push(async function(OneSignal) {
-            await OneSignal.Notifications.requestPermission();
+            try {
+                await OneSignal.Notifications.requestPermission();
+            } catch (e) {
+                console.warn('Notification permission request failed:', e);
+                // Fallback for Safari macOS
+                if ('Notification' in window && Notification.permission === 'default') {
+                    try {
+                        await Notification.requestPermission();
+                    } catch (e2) {
+                        console.warn('Native notification permission failed:', e2);
+                    }
+                }
+            }
         });
     }
 
@@ -148,11 +212,23 @@
                     <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
                 </svg>
             </div>
-            <h3>🔔 Restez informé !</h3>
-            <p>Activez les notifications pour ne rien manquer : pointage, tâches, congés et messages importants.</p>
-            <button class="btn-accept" onclick="acceptNotifications()">
-                ✓ Activer les notifications
-            </button>
+            <!-- Default message (Chrome, Firefox, Safari macOS, PWA) -->
+            <div id="default-notif-message">
+                <h3>🔔 Restez informé !</h3>
+                <p>Activez les notifications pour ne rien manquer : pointage, tâches, congés et messages importants.</p>
+                <button class="btn-accept" onclick="acceptNotifications()">
+                    ✓ Activer les notifications
+                </button>
+            </div>
+            <!-- iOS Safari message (not in PWA mode) -->
+            <div id="ios-pwa-message" class="hidden">
+                <h3>📱 Installer ManageX</h3>
+                <p>Pour recevoir les notifications sur iPhone/iPad, ajoutez ManageX à votre écran d'accueil :<br>
+                <strong>Appuyez sur</strong> <span style="font-size:18px">⬆️</span> <strong>puis "Sur l'écran d'accueil"</strong></p>
+                <button class="btn-accept" onclick="dismissNotifications()">
+                    ✓ J'ai compris
+                </button>
+            </div>
             <button class="btn-dismiss" onclick="dismissNotifications()">
                 Plus tard
             </button>
