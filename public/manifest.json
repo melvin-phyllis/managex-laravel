@@ -3,7 +3,7 @@
     "name": "ManageX - Gestion des Ressources Humaines",
     "short_name": "ManageX",
     "description": "Application complète de gestion RH : pointage, congés, tâches, paie, évaluations, messagerie interne et sondages. Simplifiez la gestion de vos employés depuis votre mobile ou ordinateur.",
-    "start_url": "/managex/public/",
+    "start_url": "/managex/public/login",
     "display": "standalone",
     "display_override": [
         "standalone",
