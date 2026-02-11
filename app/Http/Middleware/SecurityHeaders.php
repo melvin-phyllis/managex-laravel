@@ -96,7 +96,7 @@ class SecurityHeaders
 
         // Scripts: CDNs nécessaires (Chart.js, Alpine.js, jQuery, Lightbox, etc.)
         // NOTE: 'unsafe-eval' est nécessaire pour Alpine.js (évaluation des expressions x-data)
-        $scriptCdns = 'https://cdn.jsdelivr.net https://unpkg.com https://cdnjs.cloudflare.com https://code.jquery.com https://static.cloudflareinsights.com https://*.onesignal.com';
+        $scriptCdns = 'https://cdn.jsdelivr.net https://unpkg.com https://cdnjs.cloudflare.com https://code.jquery.com https://static.cloudflareinsights.com https://onesignal.com https://*.onesignal.com';
         // Alpine.js nécessite 'unsafe-eval' pour évaluer les expressions comme x-data="{ open: false }"
         // C'est un compromis nécessaire pour l'interactivité frontend
         $scriptSrc = "'self' 'unsafe-inline' 'unsafe-eval' {$scriptCdns}";
@@ -104,7 +104,7 @@ class SecurityHeaders
         // Styles: fonts + CDNs (Lightbox CSS, FullCalendar CSS, Leaflet CSS, etc.)
         // NOTE: 'unsafe-inline' est nécessaire pour les attributs style="" inline
         // Le nonce seul ne couvre pas les style attributes selon la spec CSP
-        $styleCdns = 'https://fonts.googleapis.com https://fonts.bunny.net https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://unpkg.com https://*.onesignal.com';
+        $styleCdns = 'https://fonts.googleapis.com https://fonts.bunny.net https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://unpkg.com https://onesignal.com https://*.onesignal.com';
         // En production ET en dev, on a besoin de unsafe-inline pour les styles
         // car de nombreux composants utilisent des attributs style="" inline
         $styleSrc = "'self' 'unsafe-inline' {$styleCdns}";
