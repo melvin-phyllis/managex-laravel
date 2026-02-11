@@ -11,6 +11,7 @@ use App\Models\User;
 use App\Notifications\WelcomeEmployeeNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules;
 
@@ -340,10 +341,13 @@ class EmployeeController extends Controller
             'leave_balance' => ['nullable', 'numeric', 'min:0'],
             'rtt_balance' => ['nullable', 'numeric', 'min:0'],
             'status' => ['nullable', 'in:active,on_leave,suspended,terminated'],
+            'avatar' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:2048'],
         ], [
             'work_days.required' => 'Veuillez sélectionner au moins un jour de travail.',
             'work_days.min' => 'Veuillez sélectionner au moins un jour de travail.',
             'contract_end_date.after' => 'La date de fin de contrat doit être postérieure à la date d\'embauche.',
+            'avatar.image' => 'Le fichier doit être une image.',
+            'avatar.max' => 'La photo ne doit pas dépasser 2 Mo.',
         ]);
 
         $data = [
@@ -382,6 +386,17 @@ class EmployeeController extends Controller
             $employee->saveQuietly();
         }
         unset($data['password']);
+
+        // Gestion de l'avatar
+        if ($request->hasFile('avatar')) {
+            // Supprimer l'ancien avatar si existant
+            if ($employee->avatar && Storage::disk('public')->exists($employee->avatar)) {
+                Storage::disk('public')->delete($employee->avatar);
+            }
+            // Stocker le nouvel avatar
+            $data['avatar'] = $request->file('avatar')->store('avatars', 'public');
+        }
+
         $employee->update($data);
 
         // Mettre à jour les jours de travail
