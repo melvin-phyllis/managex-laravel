@@ -816,22 +816,22 @@
                         @foreach($calendarData as $day)
                             @php
                                 $statusClasses = [
-                                    'present' => 'border-[#31708E]/30 hover:bg-[#31708E]/15',
-                                    'late' => 'border-[#687864]/30 hover:bg-[#687864]/15',
-                                    'absent' => 'border-[#5085A5]/30 hover:bg-[#5085A5]/15',
-                                    'leave' => 'border-[#8FC1E3]/40 hover:bg-[#8FC1E3]/20',
-                                    'weekend' => 'bg-gray-50 text-gray-400',
-                                    'future' => 'bg-gray-50 text-gray-400',
-                                    'recovery' => 'border-[#5085A5]/40 hover:bg-[#5085A5]/20',
+                                    'present' => 'border-emerald-400 hover:bg-emerald-100',
+                                    'late' => 'border-orange-400 hover:bg-orange-100',
+                                    'absent' => 'border-red-400 hover:bg-red-100',
+                                    'leave' => 'border-purple-400 hover:bg-purple-100',
+                                    'weekend' => 'bg-gray-50 text-gray-400 border-gray-200',
+                                    'future' => 'bg-gray-50 text-gray-400 border-gray-200',
+                                    'recovery' => 'border-cyan-400 hover:bg-cyan-100',
                                 ];
                                 $statusBg = [
-                                    'present' => 'background: rgba(49, 112, 142, 0.12); color: #31708E;',
-                                    'late' => 'background: rgba(104, 120, 100, 0.12); color: #687864;',
-                                    'absent' => 'background: rgba(80, 133, 165, 0.15); color: #5085A5;',
-                                    'leave' => 'background: rgba(143, 193, 227, 0.2); color: #5085A5;',
-                                    'recovery' => 'background: rgba(80, 133, 165, 0.2); color: #31708E;',
+                                    'present' => 'background: #d1fae5; color: #065f46;',
+                                    'late' => 'background: #ffedd5; color: #9a3412;',
+                                    'absent' => 'background: #fee2e2; color: #991b1b;',
+                                    'leave' => 'background: #ede9fe; color: #5b21b6;',
+                                    'recovery' => 'background: #cffafe; color: #155e75;',
                                 ];
-                                $class = $statusClasses[$day['status']] ?? 'bg-gray-50 text-gray-400';
+                                $class = $statusClasses[$day['status']] ?? 'bg-gray-50 text-gray-400 border-gray-200';
                                 $bgStyle = $statusBg[$day['status']] ?? '';
                                 $isToday = $day['date'] === now()->format('Y-m-d');
                                 $title = $day['hours'] ? $day['hours'].'h travaillées' : '';
@@ -839,7 +839,7 @@
                                     $title = 'Session de rattrapage' . ($day['hours'] ? ' - '.$day['hours'].'h' : '');
                                 }
                             @endphp
-                            <div class="aspect-square flex items-center justify-center text-xs font-medium rounded-lg border transition-colors cursor-default {{ $class }}" style="{{ $bgStyle }} {{ $isToday ? 'ring: 2px solid #31708E; ring-offset: 1px;' : '' }}" title="{{ $title }}">
+                            <div class="aspect-square flex items-center justify-center text-xs font-semibold rounded-lg border-2 transition-all cursor-default {{ $class }} {{ $isToday ? 'ring-2 ring-blue-500 ring-offset-1' : '' }}" style="{{ $bgStyle }}" title="{{ $title }}">
                                 {{ $day['day'] }}
                             </div>
                         @endforeach
@@ -847,12 +847,12 @@
                     
                     <!-- Légende -->
                     <div class="mt-4 flex flex-wrap justify-center gap-3 text-xs">
-                        <div class="flex items-center gap-1"><span class="w-3 h-3 rounded" style="background: rgba(49, 112, 142, 0.15); border: 1px solid rgba(49, 112, 142, 0.3);"></span> Présent</div>
-                        <div class="flex items-center gap-1"><span class="w-3 h-3 rounded" style="background: rgba(104, 120, 100, 0.15); border: 1px solid rgba(104, 120, 100, 0.3);"></span> Retard</div>
-                        <div class="flex items-center gap-1"><span class="w-3 h-3 rounded" style="background: rgba(80, 133, 165, 0.15); border: 1px solid rgba(80, 133, 165, 0.3);"></span> Absent</div>
-                        <div class="flex items-center gap-1"><span class="w-3 h-3 rounded" style="background: rgba(143, 193, 227, 0.2); border: 1px solid rgba(143, 193, 227, 0.4);"></span> Congé</div>
-                        <div class="flex items-center gap-1"><span class="w-3 h-3 rounded" style="background: rgba(80, 133, 165, 0.2); border: 1px solid rgba(80, 133, 165, 0.4);"></span> Rattrapage</div>
-                        <div class="flex items-center gap-1"><span class="w-3 h-3 bg-gray-50 border border-gray-200 rounded"></span> Non travaillé</div>
+                        <div class="flex items-center gap-1.5"><span class="w-3.5 h-3.5 rounded" style="background: #d1fae5; border: 2px solid #34d399;"></span> <span class="text-gray-700 font-medium">Présent</span></div>
+                        <div class="flex items-center gap-1.5"><span class="w-3.5 h-3.5 rounded" style="background: #ffedd5; border: 2px solid #fb923c;"></span> <span class="text-gray-700 font-medium">Retard</span></div>
+                        <div class="flex items-center gap-1.5"><span class="w-3.5 h-3.5 rounded" style="background: #fee2e2; border: 2px solid #f87171;"></span> <span class="text-gray-700 font-medium">Absent</span></div>
+                        <div class="flex items-center gap-1.5"><span class="w-3.5 h-3.5 rounded" style="background: #ede9fe; border: 2px solid #a78bfa;"></span> <span class="text-gray-700 font-medium">Congé</span></div>
+                        <div class="flex items-center gap-1.5"><span class="w-3.5 h-3.5 rounded" style="background: #cffafe; border: 2px solid #22d3ee;"></span> <span class="text-gray-700 font-medium">Rattrapage</span></div>
+                        <div class="flex items-center gap-1.5"><span class="w-3.5 h-3.5 bg-gray-50 border-2 border-gray-300 rounded"></span> <span class="text-gray-700 font-medium">Non travaillé</span></div>
                     </div>
                 </div>
             </div>
