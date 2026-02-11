@@ -31,7 +31,7 @@ class SendCheckInRemindersJob implements ShouldQueue
 
         // Get all active employees
         $employees = User::where('role', 'employee')
-            ->where('is_active', true)
+            ->whereIn('status', ['active', 'on_leave'])
             ->get();
 
         $notifiedCount = 0;
@@ -56,13 +56,10 @@ class SendCheckInRemindersJob implements ShouldQueue
                 if ($this->reminderType === 'reminder') {
                     // At work start time: send alarm notification (push + sound)
                     // Do NOT auto-confirm yet — let the user confirm manually
-                    if (method_exists($employee, 'pushSubscriptions')
-                        && $employee->pushSubscriptions()->exists()) {
-                        $employee->notify(
-                            new CheckInReminderNotification('pre_checkin_alarm', $workStartTime)
-                        );
-                        $notifiedCount++;
-                    }
+                    $employee->notify(
+                        new CheckInReminderNotification('pre_checkin_alarm', $workStartTime)
+                    );
+                    $notifiedCount++;
 
                     continue;
                 } elseif ($this->reminderType === 'second_reminder') {
@@ -76,13 +73,10 @@ class SendCheckInRemindersJob implements ShouldQueue
 
             // No presence at all → send reminder
             if (! $todayPresence) {
-                if (method_exists($employee, 'pushSubscriptions')
-                    && $employee->pushSubscriptions()->exists()) {
-                    $employee->notify(
-                        new CheckInReminderNotification($this->reminderType, $workStartTime)
-                    );
-                    $notifiedCount++;
-                }
+                $employee->notify(
+                    new CheckInReminderNotification($this->reminderType, $workStartTime)
+                );
+                $notifiedCount++;
             }
         }
 
@@ -114,12 +108,9 @@ class SendCheckInRemindersJob implements ShouldQueue
         ]);
 
         // Send confirmation notification
-        if (method_exists($employee, 'pushSubscriptions')
-            && $employee->pushSubscriptions()->exists()) {
-            $employee->notify(
-                new CheckInReminderNotification('pre_checkin_confirm', $workStartTime)
-            );
-        }
+        $employee->notify(
+            new CheckInReminderNotification('pre_checkin_confirm', $workStartTime)
+        );
 
         Log::info("[CheckInReminder] Auto-confirmed pre-check-in for {$employee->name}");
     }

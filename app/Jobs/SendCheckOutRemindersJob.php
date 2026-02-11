@@ -31,7 +31,7 @@ class SendCheckOutRemindersJob implements ShouldQueue
 
         // Get all active employees
         $employees = User::where('role', 'employee')
-            ->where('is_active', true)
+            ->whereIn('status', ['active', 'on_leave'])
             ->get();
 
         $processedCount = 0;
@@ -58,13 +58,10 @@ class SendCheckOutRemindersJob implements ShouldQueue
 
             if ($this->reminderType === 'reminder') {
                 // Send reminder notification
-                if (method_exists($employee, 'pushSubscriptions')
-                    && $employee->pushSubscriptions()->exists()) {
-                    $employee->notify(
-                        new CheckInReminderNotification('checkout_reminder', $workEndTime)
-                    );
-                    $processedCount++;
-                }
+                $employee->notify(
+                    new CheckInReminderNotification('checkout_reminder', $workEndTime)
+                );
+                $processedCount++;
             } elseif ($this->reminderType === 'auto_checkout') {
                 // Auto check-out at official end time
                 $this->autoCheckOut($todayPresence, $employee, $workEndTime);
@@ -99,12 +96,9 @@ class SendCheckOutRemindersJob implements ShouldQueue
         }
 
         // Send confirmation notification
-        if (method_exists($employee, 'pushSubscriptions')
-            && $employee->pushSubscriptions()->exists()) {
-            $employee->notify(
-                new CheckInReminderNotification('auto_checkout', $workEndTime)
-            );
-        }
+        $employee->notify(
+            new CheckInReminderNotification('auto_checkout', $workEndTime)
+        );
 
         Log::info("[CheckOutReminder] Auto check-out for {$employee->name} at {$workEndTime}");
     }
