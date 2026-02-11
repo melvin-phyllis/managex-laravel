@@ -1,4 +1,8 @@
 User-agent: *
-Disallow:
+Disallow: /admin
+Disallow: /employee
+Disallow: /api
 
-Sitemap: https://managex.alfreed.app/sitemap.xml
+Allow: /
+Allow: /login
+Allow: /demo-request
