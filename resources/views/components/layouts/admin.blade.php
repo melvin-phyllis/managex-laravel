@@ -565,14 +565,6 @@
 
     @stack('scripts')
 
-    <x-push-subscription />
-
-    <script>
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('{{ asset("sw.js") }}')
-            .then(r => console.log('ManageX SW registered:', r.scope))
-            .catch(e => console.log('ManageX SW failed:', e));
-    }
-    </script>
+    {{-- OneSignal handles push notifications and service worker --}}
 </body>
 </html>

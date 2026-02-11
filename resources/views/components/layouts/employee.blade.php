@@ -650,7 +650,7 @@
     </div>
     @endif
 
-    <x-push-subscription />
+    {{-- OneSignal handles push notifications and service worker --}}
 
     {{-- 🔔 Alarme globale pré-pointage - fonctionne sur toutes les pages --}}
     <script nonce="{{ $cspNonce ?? '' }}">
@@ -929,10 +929,6 @@
 
     <script>
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('{{ asset("sw.js") }}')
-            .then(r => console.log('ManageX SW registered:', r.scope))
-            .catch(e => console.log('ManageX SW failed:', e));
-
         // Écouter les messages du SW pour jouer des sons d'alarme
         navigator.serviceWorker.addEventListener('message', function(event) {
             if (event.data && event.data.type === 'PLAY_ALARM_SOUND') {
