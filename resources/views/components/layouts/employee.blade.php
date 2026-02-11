@@ -32,7 +32,8 @@
     OneSignalDeferred.push(async function(OneSignal) {
         await OneSignal.init({
             appId: "bd7969c6-0b7c-4bf4-8ad4-6209607959cd",
-            serviceWorkerParam: { scope: "{{ asset('') }}" },
+            path: "/managex/public/",
+            serviceWorkerParam: { scope: "/managex/public/" },
         });
         // Associate this browser with the authenticated user
         @auth
