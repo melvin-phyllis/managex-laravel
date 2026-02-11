@@ -176,69 +176,77 @@ class EmployeeController extends Controller
             'contract_type.required' => 'Le type de contrat est obligatoire.',
         ]);
 
-        // Générer un mot de passe aléatoire
-        $password = Str::random(12);
-
-        // Créer l'instance User (password et role sont hors $fillable pour sécurité)
-        $employee = new User([
-            'name' => $request->name,
-            'email' => $request->email,
-            'poste' => $request->poste,
-            'telephone' => $request->telephone,
-            'department_id' => $request->department_id,
-            'position_id' => $request->position_id,
-            // Champs RH
-            'date_of_birth' => $request->date_of_birth,
-            'gender' => $request->gender,
-            'address' => $request->address,
-            'city' => $request->city,
-            'postal_code' => $request->postal_code,
-            'country' => $request->country ?? 'CI',
-            'emergency_contact_name' => $request->emergency_contact_name,
-            'emergency_contact_phone' => $request->emergency_contact_phone,
-            'emergency_contact_relationship' => $request->emergency_contact_relationship,
-            'hire_date' => $request->hire_date ?? now(),
-            'contract_end_date' => $request->contract_end_date,
-            'contract_type' => $request->contract_type ?? 'cdi',
-            'base_salary' => $request->base_salary,
-            'employee_id' => $request->employee_id ?? $this->generateEmployeeId(),
-            'social_security_number' => $request->social_security_number,
-            'bank_iban' => $request->bank_iban,
-            'bank_bic' => $request->bank_bic,
-            'leave_balance' => $request->leave_balance ?? 25,
-            'rtt_balance' => $request->rtt_balance ?? 0,
-            'status' => 'active',
-        ]);
-
-        // Définir password et role explicitement (hors mass assignment)
-        $employee->password = Hash::make($password);
-        $employee->role = 'employee';
-        $employee->save();
-
-        // Enregistrer les jours de travail
-        foreach ($request->work_days as $day) {
-            EmployeeWorkDay::create([
-                'user_id' => $employee->id,
-                'day_of_week' => $day,
-            ]);
-        }
-
-        // Envoyer l'email de bienvenue avec mot de passe temporaire + lien de réinitialisation
-        // Note: Enveloppé dans try-catch car certains hébergeurs bloquent SMTP
-        $emailSent = true;
         try {
-            $employee->notify(new WelcomeEmployeeNotification($employee->name, null, $password));
+            // Générer un mot de passe aléatoire
+            $password = Str::random(12);
+
+            // Créer l'instance User (password et role sont hors $fillable pour sécurité)
+            $employee = new User([
+                'name' => $request->name,
+                'email' => $request->email,
+                'poste' => $request->poste,
+                'telephone' => $request->telephone,
+                'department_id' => $request->department_id,
+                'position_id' => $request->position_id,
+                // Champs RH
+                'date_of_birth' => $request->date_of_birth,
+                'gender' => $request->gender,
+                'address' => $request->address,
+                'city' => $request->city,
+                'postal_code' => $request->postal_code,
+                'country' => $request->country ?? 'CI',
+                'emergency_contact_name' => $request->emergency_contact_name,
+                'emergency_contact_phone' => $request->emergency_contact_phone,
+                'emergency_contact_relationship' => $request->emergency_contact_relationship,
+                'hire_date' => $request->hire_date ?? now(),
+                'contract_end_date' => $request->contract_end_date,
+                'contract_type' => $request->contract_type ?? 'cdi',
+                'base_salary' => $request->base_salary,
+                'employee_id' => $request->employee_id ?? $this->generateEmployeeId(),
+                'social_security_number' => $request->social_security_number,
+                'bank_iban' => $request->bank_iban,
+                'bank_bic' => $request->bank_bic,
+                'leave_balance' => $request->leave_balance ?? 25,
+                'rtt_balance' => $request->rtt_balance ?? 0,
+                'status' => 'active',
+            ]);
+
+            // Définir password et role explicitement (hors mass assignment)
+            $employee->password = Hash::make($password);
+            $employee->role = 'employee';
+            $employee->save();
+
+            // Enregistrer les jours de travail
+            foreach ($request->work_days as $day) {
+                EmployeeWorkDay::create([
+                    'user_id' => $employee->id,
+                    'day_of_week' => $day,
+                ]);
+            }
+
+            // Envoyer l'email de bienvenue avec mot de passe temporaire + lien de réinitialisation
+            // Note: Enveloppé dans try-catch car certains hébergeurs bloquent SMTP
+            $emailSent = true;
+            try {
+                $employee->notify(new WelcomeEmployeeNotification($employee->name, null, $password));
+            } catch (\Exception $e) {
+                $emailSent = false;
+                \Log::warning("Impossible d'envoyer l'email de bienvenue à {$employee->email}: ".$e->getMessage());
+            }
+
+            $message = $emailSent
+                ? 'Employé créé avec succès. Un email avec les identifiants de connexion a été envoyé.'
+                : 'Employé créé avec succès. ⚠️ L\'email de bienvenue n\'a pas pu être envoyé (vérifiez la configuration SMTP). Mot de passe temporaire : '.$password;
+
+            return redirect()->route('admin.employees.index')
+                ->with($emailSent ? 'success' : 'warning', $message);
         } catch (\Exception $e) {
-            $emailSent = false;
-            \Log::warning("Impossible d'envoyer l'email de bienvenue à {$employee->email}: ".$e->getMessage());
+            \Log::error('Erreur création employé: '.$e->getMessage().' | File: '.$e->getFile().':'.$e->getLine());
+
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Erreur lors de la création : '.$e->getMessage());
         }
-
-        $message = $emailSent
-            ? 'Employé créé avec succès. Un email avec les identifiants de connexion a été envoyé.'
-            : 'Employé créé avec succès. ⚠️ L\'email de bienvenue n\'a pas pu être envoyé (vérifiez la configuration SMTP). Mot de passe temporaire : '.$password;
-
-        return redirect()->route('admin.employees.index')
-            ->with($emailSent ? 'success' : 'warning', $message);
     }
 
     /**
