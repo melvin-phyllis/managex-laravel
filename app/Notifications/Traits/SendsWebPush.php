@@ -6,11 +6,22 @@ use NotificationChannels\WebPush\WebPushMessage;
 
 trait SendsWebPush
 {
+    /**
+     * Guard flag to prevent infinite recursion when toArray calls sendViaOneSignal
+     */
+    private bool $buildingWebPush = false;
+
     public function toWebPush(object $notifiable, $notification): WebPushMessage
     {
-        $data = method_exists($this, 'toDatabase')
-            ? $this->toDatabase($notifiable)
-            : $this->toArray($notifiable);
+        $this->buildingWebPush = true;
+
+        try {
+            $data = method_exists($this, 'toDatabase')
+                ? $this->toDatabase($notifiable)
+                : $this->toArray($notifiable);
+        } finally {
+            $this->buildingWebPush = false;
+        }
 
         $type = $data['type'] ?? 'notification';
         $title = $data['title'] ?? $this->getWebPushTitle($data);

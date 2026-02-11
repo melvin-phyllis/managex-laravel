@@ -93,9 +93,7 @@ class WelcomeEmployeeNotification extends Notification implements ShouldQueue
      */
     public function toArray(object $notifiable): array
     {
-        $this->sendViaOneSignal($notifiable);
-
-        return [
+        $data = [
             'type' => 'welcome',
             'title' => 'Bienvenue !',
             'message' => 'Votre compte a été créé. Vérifiez votre email pour vos identifiants de connexion.',
@@ -103,5 +101,10 @@ class WelcomeEmployeeNotification extends Notification implements ShouldQueue
             'color' => 'green',
             'url' => route('dashboard'),
         ];
+
+        // Passer $data directement pour éviter la récursion infinie (toArray → sendViaOneSignal → toArray)
+        $this->sendViaOneSignal($notifiable, $data);
+
+        return $data;
     }
 }

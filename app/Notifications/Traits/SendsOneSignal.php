@@ -15,12 +15,24 @@ use Illuminate\Support\Facades\Log;
 trait SendsOneSignal
 {
     /**
+     * Guard flag to prevent infinite recursion (toArray → sendViaOneSignal → toArray)
+     */
+    private bool $sendingOneSignal = false;
+
+    /**
      * Send notification via OneSignal REST API.
-     * Call this from toDatabase() to piggyback on existing notification flow.
+     * Call this from toDatabase() or toArray() to piggyback on existing notification flow.
      */
     protected function sendViaOneSignal(object $notifiable, ?array $data = null): void
     {
+        // Prevent infinite recursion: toArray() → sendViaOneSignal() → toArray()
+        if ($this->sendingOneSignal) {
+            return;
+        }
+
         try {
+            $this->sendingOneSignal = true;
+
             // Get the notification data
             if ($data === null) {
                 $data = method_exists($this, 'toDatabase')
@@ -44,6 +56,8 @@ trait SendsOneSignal
             );
         } catch (\Exception $e) {
             Log::error('[OneSignal] Failed in notification: '.$e->getMessage());
+        } finally {
+            $this->sendingOneSignal = false;
         }
     }
 

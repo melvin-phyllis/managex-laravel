@@ -236,13 +236,17 @@ class DashboardController extends Controller
     {
         $activities = [];
 
-        // Pointages récents
+        // Pointages récents (exclure les entrées sans check_in)
         $recentPresences = Presence::with('user')
+            ->whereNotNull('check_in')
             ->orderBy('created_at', 'desc')
             ->take(10)
             ->get();
 
         foreach ($recentPresences as $presence) {
+            if (! $presence->user || ! $presence->check_in) {
+                continue;
+            }
             $isCheckOut = $presence->check_out && $presence->check_out->isToday();
             $activities[] = [
                 'id' => 'presence_'.$presence->id.($isCheckOut ? '_out' : '_in'),
