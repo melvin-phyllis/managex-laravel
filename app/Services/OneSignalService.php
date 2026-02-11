@@ -88,6 +88,17 @@ class OneSignalService
 
         $payload['app_id'] = $this->appId;
 
+        // Remove null/empty values to avoid JSON serialization issues
+        // Empty PHP arrays serialize as [] but OneSignal expects {} for data
+        if (empty($payload['data'])) {
+            unset($payload['data']);
+        } else {
+            $payload['data'] = (object) $payload['data'];
+        }
+        if ($payload['url'] === null) {
+            unset($payload['url']);
+        }
+
         try {
             $response = Http::withHeaders([
                 'Authorization' => "Key {$this->apiKey}",
