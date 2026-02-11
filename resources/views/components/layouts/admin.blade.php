@@ -34,13 +34,130 @@
             appId: "bd7969c6-0b7c-4bf4-8ad4-6209607959cd",
             path: "/managex/public/",
             serviceWorkerParam: { scope: "/managex/public/" },
+            autoPrompt: false,
+            notifyButton: { enable: false },
         });
-        // Associate this browser with the authenticated user
         @auth
         await OneSignal.login("{{ auth()->id() }}");
         @endauth
+
+        // Show custom modal if not subscribed
+        const permission = OneSignal.Notifications.permission;
+        if (!permission) {
+            setTimeout(() => {
+                const modal = document.getElementById('onesignal-custom-prompt');
+                if (modal) modal.classList.remove('hidden');
+            }, 3000);
+        }
     });
+
+    function acceptNotifications() {
+        const modal = document.getElementById('onesignal-custom-prompt');
+        if (modal) modal.classList.add('hidden');
+        OneSignalDeferred.push(async function(OneSignal) {
+            await OneSignal.Notifications.requestPermission();
+        });
+    }
+
+    function dismissNotifications() {
+        const modal = document.getElementById('onesignal-custom-prompt');
+        if (modal) modal.classList.add('hidden');
+        localStorage.setItem('managex-notif-dismissed', Date.now());
+    }
     </script>
+
+    <!-- Custom OneSignal Notification Prompt Modal -->
+    <style>
+    #onesignal-custom-prompt {
+        position: fixed; bottom: 24px; right: 24px; z-index: 99999;
+        max-width: 380px; width: calc(100% - 32px);
+        animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes slideUp {
+        from { opacity: 0; transform: translateY(40px) scale(0.95); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    #onesignal-custom-prompt .notif-card {
+        background: linear-gradient(135deg, #312e81 0%, #4338ca 50%, #6366f1 100%);
+        border-radius: 20px; padding: 28px 24px; color: white;
+        box-shadow: 0 25px 60px -12px rgba(67, 56, 202, 0.5), 0 0 0 1px rgba(255,255,255,0.1) inset;
+        backdrop-filter: blur(10px); position: relative; overflow: hidden;
+    }
+    #onesignal-custom-prompt .notif-card::before {
+        content: ''; position: absolute; top: -50%; right: -50%;
+        width: 200%; height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 60%);
+        pointer-events: none;
+    }
+    #onesignal-custom-prompt .bell-icon {
+        width: 56px; height: 56px; border-radius: 16px;
+        background: rgba(255,255,255,0.15); backdrop-filter: blur(8px);
+        display: flex; align-items: center; justify-content: center;
+        margin-bottom: 16px; animation: bellRing 2s ease-in-out infinite;
+        border: 1px solid rgba(255,255,255,0.2);
+    }
+    @keyframes bellRing {
+        0%, 100% { transform: rotate(0deg); }
+        10%, 30% { transform: rotate(8deg); }
+        20% { transform: rotate(-8deg); }
+        40% { transform: rotate(0deg); }
+    }
+    #onesignal-custom-prompt h3 {
+        font-size: 18px; font-weight: 700; margin-bottom: 8px;
+        letter-spacing: -0.02em;
+    }
+    #onesignal-custom-prompt p {
+        font-size: 14px; color: rgba(255,255,255,0.8); line-height: 1.5;
+        margin-bottom: 20px;
+    }
+    #onesignal-custom-prompt .btn-accept {
+        width: 100%; padding: 12px 20px; border-radius: 12px;
+        background: white; color: #4338ca; font-weight: 600;
+        font-size: 15px; border: none; cursor: pointer;
+        transition: all 0.2s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    #onesignal-custom-prompt .btn-accept:hover {
+        transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+    }
+    #onesignal-custom-prompt .btn-dismiss {
+        width: 100%; padding: 10px; margin-top: 8px;
+        background: transparent; border: none; color: rgba(255,255,255,0.6);
+        font-size: 13px; cursor: pointer; transition: color 0.2s;
+    }
+    #onesignal-custom-prompt .btn-dismiss:hover { color: rgba(255,255,255,0.9); }
+    #onesignal-custom-prompt .close-btn {
+        position: absolute; top: 12px; right: 12px;
+        background: rgba(255,255,255,0.1); border: none; color: rgba(255,255,255,0.6);
+        width: 28px; height: 28px; border-radius: 8px; cursor: pointer;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 16px; transition: all 0.2s;
+    }
+    #onesignal-custom-prompt .close-btn:hover {
+        background: rgba(255,255,255,0.2); color: white;
+    }
+    @media (max-width: 480px) {
+        #onesignal-custom-prompt { bottom: 16px; right: 16px; left: 16px; width: auto; }
+    }
+    </style>
+    <div id="onesignal-custom-prompt" class="hidden">
+        <div class="notif-card">
+            <button class="close-btn" onclick="dismissNotifications()">✕</button>
+            <div class="bell-icon">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                </svg>
+            </div>
+            <h3>🔔 Restez informé !</h3>
+            <p>Activez les notifications pour ne rien manquer : pointage, tâches, congés et messages importants.</p>
+            <button class="btn-accept" onclick="acceptNotifications()">
+                ✓ Activer les notifications
+            </button>
+            <button class="btn-dismiss" onclick="dismissNotifications()">
+                Plus tard
+            </button>
+        </div>
+    </div>
 </head>
 <body class="font-sans antialiased" x-data="{ showLogoutModal: false }">
     <script nonce="{{ $cspNonce ?? '' }}">window.userId = {{ auth()->id() ?? 'null' }};</script>
