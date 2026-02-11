@@ -1,0 +1,14 @@
+[
+    {
+        "relation": [
+            "delegate_permission/common.handle_all_urls"
+        ],
+        "target": {
+            "namespace": "android_app",
+            "package_name": "com.ya_consulting.twa",
+            "sha256_cert_fingerprints": [
+                "19:51:EA:C4:C5:18:8A:16:CD:F4:CC:C9:20:77:9C:83:A3:8A:2F:E7:68:BE:DA:A6:78:C7:C3:57:77:F2:B0:03"
+            ]
+        }
+    }
+]
