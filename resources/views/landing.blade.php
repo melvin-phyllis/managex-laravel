@@ -1342,14 +1342,14 @@
         }
 
         .footer-brand p {
-            color: var(--gray-500);
+            color: var(--gray-300);
             font-size: 0.9rem;
             line-height: 1.7;
             margin-top: 1rem;
             max-width: 300px;
         }
 
-        .footer-col h4 {
+        .footer-col h3 {
             font-size: 0.8rem;
             font-weight: 600;
             text-transform: uppercase;
@@ -1368,7 +1368,7 @@
 
         .footer-col ul a {
             font-size: 0.875rem;
-            color: var(--gray-500);
+            color: var(--gray-300);
             transition: color 0.3s;
         }
 
@@ -1386,7 +1386,7 @@
 
         .footer-copy {
             font-size: 0.8rem;
-            color: var(--gray-500);
+            color: var(--gray-300);
         }
 
         .footer-socials {
@@ -1789,7 +1789,7 @@
                         </div>
                         <div class="ai-chat-input">
                             <input type="text" placeholder="Posez votre question..." disabled>
-                            <button disabled>
+                            <button disabled aria-label="Envoyer un message">
                                 <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
                             </button>
                         </div>
@@ -1876,7 +1876,7 @@
                     <p>La plateforme RH nouvelle génération propulsée par l'IA. Conçue pour les entreprises ambitieuses d'Afrique et du monde.</p>
                 </div>
                 <div class="footer-col">
-                    <h4>Produit</h4>
+                    <h3>Produit</h3>
                     <ul>
                         <li><a href="#features">Fonctionnalités</a></li>
                         <li><a href="#ai">Intelligence IA</a></li>
@@ -1885,7 +1885,7 @@
                     </ul>
                 </div>
                 <div class="footer-col">
-                    <h4>Ressources</h4>
+                    <h3>Ressources</h3>
                     <ul>
                         <li><a href="#">Documentation</a></li>
                         <li><a href="#">Guide utilisateur</a></li>
@@ -1894,7 +1894,7 @@
                     </ul>
                 </div>
                 <div class="footer-col">
-                    <h4>Entreprise</h4>
+                    <h3>Entreprise</h3>
                     <ul>
                         <li><a href="#">À propos</a></li>
                         <li><a href="#contact">Contact</a></li>
