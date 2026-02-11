@@ -60,11 +60,6 @@
     /* Gradient text */
     .text-gradient{background:var(--gradient-logo);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 
-    /* Logo - from demo request */
-    .logo-new{font-weight:800;font-size:1.5rem;color:var(--fg);text-decoration:none;display:flex;align-items:center;gap:0.5rem;font-family:Figtree,sans-serif}
-    .logo-mark{width:40px;height:40px;background:linear-gradient(135deg,#4F46E5 0%,#7C3AED 100%);border-radius:12px;color:white;display:flex;align-items:center;justify-content:center;font-size:1.25rem}
-    .logo-text{font-size:1.25rem;font-weight:800;color:var(--fg)}
-
     /* Nav */
     .nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.82);backdrop-filter:blur(16px);border-bottom:1px solid rgba(193,200,228,.5);transition:all .3s}
     .nav-inner{display:flex;align-items:center;justify-content:space-between;height:64px}
@@ -246,9 +241,11 @@
   <!-- NAV -->
   <header class="nav" id="nav">
     <div class="container nav-inner">
-      <a href="{{ url('/') }}" class="logo-new">
-        <div class="logo-mark">M</div>
-        <span class="logo-text">ManageX</span>
+      <a href="{{ url('/') }}" class="nav-logo">
+        <span class="nav-logo-icon">
+          <img src="{{ asset('images/managex_logo.png') }}" alt="" style="width:28px;height:28px;border-radius:50%;object-fit:cover">
+        </span>
+        <span class="text-gradient">ManageX</span>
       </a>
       <nav class="nav-links">
         <a class="link-hover" href="#about">Plateforme</a>

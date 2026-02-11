@@ -367,10 +367,12 @@
     <div class="bg-orb bg-orb-2"></div>
 
     <nav class="nav">
-        <a href="{{ url('/') }}" class="logo">
-            <div class="logo-mark">M</div>
-            <span>ManageX</span>
-        </a>
+       <a href="{{ url('/') }}" class="nav-logo">
+        <span class="nav-logo-icon">
+          <img src="{{ asset('images/managex_logo.png') }}" alt="" style="width:28px;height:28px;border-radius:50%;object-fit:cover">
+        </span>
+        <span class="text-gradient">ManageX</span>
+      </a>
         <div style="display: flex; align-items: center; gap: 1rem;">
             <a href="{{ url('/') }}" style="color: var(--text-muted); text-decoration: none; font-weight: 500; display: none; @media(min-width:768px){display:block;}">Retour</a>
             <a href="{{ route('login') }}" class="cta-button">Connexion</a>
