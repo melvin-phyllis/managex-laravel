@@ -765,9 +765,7 @@
                             }
                         });
                     }
-                renderEmployeeCharts() {
-                    // ... existing code ...
-                },
+                }, // End renderEmployeeCharts
 
                 async loadAiInsights() {
                     // Placeholder function to prevent error
