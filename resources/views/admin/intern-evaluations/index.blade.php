@@ -24,15 +24,7 @@
                     
                     <!-- Actions -->
                     <div class="flex flex-wrap items-center gap-2">
-                        @if(auth()->user()->supervisees()->interns()->exists())
-                        <a href="{{ route('admin.tutor.evaluations.index') }}" 
-                           class="inline-flex items-center px-4 py-2.5 bg-white font-semibold rounded-xl transition-all shadow-lg" style="color: #5680E9;" onmouseover="this.style.backgroundColor='rgba(86, 128, 233, 0.05)'" onmouseout="this.style.backgroundColor='white'">
-                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-                            </svg>
-                            évaluer mes stagiaires
-                        </a>
-                        @endif
+
                         @if(($stats['pending_evaluations'] ?? 0) > 0)
                         <a href="{{ route('admin.intern-evaluations.missing') }}" 
                            class="inline-flex items-center px-4 py-2.5 bg-amber-500 text-white font-semibold rounded-xl hover:bg-amber-600 transition-all shadow-lg">
@@ -71,20 +63,7 @@
                 </div>
             </div>
 
-            <!-- Avec tuteur -->
-            <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-                <div class="flex items-center gap-3">
-                    <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg" style="background: linear-gradient(135deg, #5AB9EA, #84CEEB); box-shadow: 0 10px 15px -3px rgba(90, 185, 234, 0.3);">
-                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <p class="text-2xl font-bold text-gray-900">{{ $stats['interns_with_supervisor'] ?? 0 }}</p>
-                        <p class="text-xs text-gray-500">Avec tuteur</p>
-                    </div>
-                </div>
-            </div>
+
 
             <!-- évaluations cette semaine -->
             <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
@@ -232,7 +211,7 @@
                         <tr>
                             <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Stagiaire</th>
                             <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Département</th>
-                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Tuteur</th>
+
                             <th class="px-6 py-4 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">évaluations</th>
                             <th class="px-6 py-4 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">Derniére note</th>
                             <th class="px-6 py-4 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">Actions</th>
@@ -264,23 +243,7 @@
                                         <span class="text-xs text-gray-400">Non assigné</span>
                                     @endif
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    @if($intern->supervisor)
-                                        <div class="flex items-center gap-2">
-                                            <div class="w-7 h-7 rounded-lg flex items-center justify-center text-white font-bold text-xs" style="background: linear-gradient(135deg, #5AB9EA, #84CEEB);">
-                                                {{ strtoupper(substr($intern->supervisor->name, 0, 1)) }}
-                                            </div>
-                                            <span class="text-sm font-medium text-gray-700">{{ $intern->supervisor->name }}</span>
-                                        </div>
-                                    @else
-                                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium" style="background-color: rgba(136, 96, 208, 0.1); color: #8860D0;">
-                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
-                                            </svg>
-                                            Non assigné
-                                        </span>
-                                    @endif
-                                </td>
+
                                 <td class="px-6 py-4 text-center">
                                     <span class="inline-flex items-center justify-center w-8 h-8 rounded-lg font-bold text-sm" style="background-color: rgba(90, 185, 234, 0.15); color: #5AB9EA;">
                                         {{ $intern->internEvaluations->count() }}
@@ -323,6 +286,11 @@
                                     @endif
                                 </td>
                                 <td class="px-6 py-4 text-right">
+                                    <a href="{{ route('admin.intern-evaluations.create', $intern) }}" 
+                                       class="inline-flex items-center px-3 py-2 text-sm font-medium text-white rounded-lg transition-all shadow-md mr-2" style="background: linear-gradient(135deg, #84CEEB, #5AB9EA); box-shadow: 0 4px 6px -1px rgba(90, 185, 234, 0.3);" onmouseover="this.style.filter='brightness(1.1)'" onmouseout="this.style.filter=''">
+                                        <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                                        Évaluer
+                                    </a>
                                     <a href="{{ route('admin.intern-evaluations.show', $intern) }}" 
                                        class="inline-flex items-center px-4 py-2 text-sm font-medium text-white rounded-lg transition-all shadow-md" style="background: linear-gradient(135deg, #5680E9, #5AB9EA); box-shadow: 0 4px 6px -1px rgba(86, 128, 233, 0.3);" onmouseover="this.style.filter='brightness(1.1)'" onmouseout="this.style.filter=''">
                                         <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

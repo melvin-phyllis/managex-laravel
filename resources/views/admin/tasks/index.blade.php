@@ -419,12 +419,27 @@
                                         </button>
                                     </form>
                                 @elseif($task->statut === 'completed')
-                                    <form action="{{ route('admin.tasks.validate', $task) }}" method="POST" class="inline">
+                                    <form action="{{ route('admin.tasks.validate', $task) }}" method="POST" class="inline-flex items-center gap-1">
                                         @csrf
-                                        <button type="submit" class="p-1.5 text-emerald-600 hover:text-emerald-800 hover:bg-emerald-50 rounded-lg transition-colors" title="Valider">
+                                        <div class="relative group/rating">
+                                            <input type="number" name="rating" min="0" max="10" placeholder="/10" required
+                                                   class="w-12 px-1 py-1 text-xs border border-gray-300 rounded focus:ring-emerald-500 focus:border-emerald-500 text-center"
+                                                   title="Note sur 10">
+                                            <!-- Tooltip -->
+                                            <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 hidden group-hover/rating:block bg-gray-900 text-white text-[10px] px-2 py-1 rounded whitespace-nowrap">
+                                                Note sur 10
+                                            </div>
+                                        </div>
+                                        <button type="submit" class="p-1.5 text-emerald-600 hover:text-emerald-800 hover:bg-emerald-50 rounded-lg transition-colors" title="Valider et Noter">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                                         </button>
                                     </form>
+                                @endif
+
+                                @if($task->rating !== null)
+                                    <div class="flex items-center justify-center w-8 h-8 rounded-full {{ $task->rating >= 7 ? 'bg-emerald-100 text-emerald-700' : ($task->rating >= 5 ? 'bg-amber-100 text-amber-700' : 'bg-red-100 text-red-700') }} font-bold text-xs" title="Note: {{ $task->rating }}/10">
+                                        {{ $task->rating }}
+                                    </div>
                                 @endif
 
                                 <button type="button" 

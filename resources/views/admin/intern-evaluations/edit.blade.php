@@ -1,9 +1,4 @@
-@php
-    $isAdmin = auth()->user()->isAdmin();
-    $routePrefix = $isAdmin ? 'admin.tutor.evaluations' : 'employee.tutor.evaluations';
-@endphp
-
-<x-dynamic-component :component="$isAdmin ? 'layouts.admin' : 'layouts.employee'">
+<x-layouts.admin>
     <div class="space-y-6" x-data="evaluationForm()">
         <!-- Header -->
         <x-table-header title="Modifier l'évaluation" subtitle="{{ $evaluation->week_label }}">
@@ -13,7 +8,7 @@
                 </div>
             </x-slot:icon>
             <x-slot:actions>
-                <a href="{{ route($routePrefix . '.index') }}" class="inline-flex items-center px-4 py-2.5 bg-gray-100 text-gray-700 font-medium rounded-xl hover:bg-gray-200 transition-all text-sm">
+                <a href="{{ route('admin.intern-evaluations.index') }}" class="inline-flex items-center px-4 py-2.5 bg-gray-100 text-gray-700 font-medium rounded-xl hover:bg-gray-200 transition-all text-sm">
                     <x-icon name="arrow-left" class="w-4 h-4 mr-2" />
                     Retour
                 </a>
@@ -28,7 +23,7 @@
             </p>
         </div>
 
-        <form action="{{ route($routePrefix . '.update', $evaluation) }}" method="POST" class="space-y-6">
+        <form action="{{ route('admin.intern-evaluations.update', $evaluation) }}" method="POST" class="space-y-6">
             @csrf
             @method('PUT')
 
@@ -155,5 +150,4 @@
         }
     </script>
     @endpush
-</x-dynamic-component>
-
+</x-layouts.admin>

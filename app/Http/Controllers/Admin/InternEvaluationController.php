@@ -274,6 +274,173 @@ class InternEvaluationController extends Controller
     }
 
     /**
+     * Show evaluation form
+     */
+    public function create(User $intern)
+    {
+        if (! $intern->isIntern()) {
+            abort(404, 'Cet utilisateur n\'est pas un stagiaire.');
+        }
+
+        $currentWeekStart = now()->startOfWeek();
+        $user = auth()->user();
+
+        // Get or create draft evaluation
+        $evaluation = InternEvaluation::getOrCreateDraft(
+            $intern->id,
+            $user->id,
+            $currentWeekStart
+        );
+
+        // Get previous evaluations for reference
+        $previousEvaluations = $intern->internEvaluations()
+            ->submitted()
+            ->orderBy('week_start', 'desc')
+            ->limit(4)
+            ->get();
+
+        $criteria = InternEvaluation::CRITERIA;
+
+        return view('admin.intern-evaluations.create', compact(
+            'intern',
+            'evaluation',
+            'previousEvaluations',
+            'criteria'
+        ));
+    }
+
+    /**
+     * Store evaluation
+     */
+    public function store(Request $request, User $intern)
+    {
+        if (! $intern->isIntern()) {
+            abort(404, 'Cet utilisateur n\'est pas un stagiaire.');
+        }
+
+        $validated = $request->validate([
+            'discipline_score' => 'required|numeric|min:0|max:2.5',
+            'behavior_score' => 'required|numeric|min:0|max:2.5',
+            'skills_score' => 'required|numeric|min:0|max:2.5',
+            'communication_score' => 'required|numeric|min:0|max:2.5',
+            'discipline_comment' => 'nullable|string|max:1000',
+            'behavior_comment' => 'nullable|string|max:1000',
+            'skills_comment' => 'nullable|string|max:1000',
+            'communication_comment' => 'nullable|string|max:1000',
+            'general_comment' => 'nullable|string|max:2000',
+            'objectives_next_week' => 'nullable|string|max:1000',
+            'action' => 'required|in:draft,submit',
+        ]);
+
+        $currentWeekStart = now()->startOfWeek();
+        $user = auth()->user();
+
+        $evaluation = InternEvaluation::updateOrCreate(
+            [
+                'intern_id' => $intern->id,
+                'week_start' => $currentWeekStart,
+            ],
+            [
+                'tutor_id' => $user->id,
+                'discipline_score' => $validated['discipline_score'],
+                'behavior_score' => $validated['behavior_score'],
+                'skills_score' => $validated['skills_score'],
+                'communication_score' => $validated['communication_score'],
+                'discipline_comment' => $validated['discipline_comment'],
+                'behavior_comment' => $validated['behavior_comment'],
+                'skills_comment' => $validated['skills_comment'],
+                'communication_comment' => $validated['communication_comment'],
+                'general_comment' => $validated['general_comment'],
+                'objectives_next_week' => $validated['objectives_next_week'],
+                'status' => $validated['action'] === 'submit' ? 'submitted' : 'draft',
+                'submitted_at' => $validated['action'] === 'submit' ? now() : null,
+            ]
+        );
+
+        if ($validated['action'] === 'submit') {
+            // Notify intern
+            // $intern->notify(new NewEvaluationNotification($evaluation)); // Ensure notification class exists or comment out if unsure
+
+            return redirect()->route('admin.intern-evaluations.index')
+                ->with('success', 'Évaluation soumise avec succès.');
+        }
+
+        return redirect()->route('admin.intern-evaluations.index')
+            ->with('success', 'Brouillon sauvegardé.');
+    }
+
+    /**
+     * Edit evaluation
+     */
+    public function edit(InternEvaluation $evaluation)
+    {
+        // Admin can edit any evaluation, or maybe restriction?
+        // User requested removing tutor restriction, so admin has full power.
+
+        $intern = $evaluation->intern;
+
+        $previousEvaluations = $intern->internEvaluations()
+            ->where('id', '!=', $evaluation->id)
+            ->submitted()
+            ->orderBy('week_start', 'desc')
+            ->limit(4)
+            ->get();
+
+        $criteria = InternEvaluation::CRITERIA;
+
+        return view('admin.intern-evaluations.edit', compact(
+            'evaluation',
+            'intern',
+            'previousEvaluations',
+            'criteria'
+        ));
+    }
+
+    /**
+     * Update evaluation
+     */
+    public function update(Request $request, InternEvaluation $evaluation)
+    {
+        $validated = $request->validate([
+            'discipline_score' => 'required|numeric|min:0|max:2.5',
+            'behavior_score' => 'required|numeric|min:0|max:2.5',
+            'skills_score' => 'required|numeric|min:0|max:2.5',
+            'communication_score' => 'required|numeric|min:0|max:2.5',
+            'discipline_comment' => 'nullable|string|max:1000',
+            'behavior_comment' => 'nullable|string|max:1000',
+            'skills_comment' => 'nullable|string|max:1000',
+            'communication_comment' => 'nullable|string|max:1000',
+            'general_comment' => 'nullable|string|max:2000',
+            'objectives_next_week' => 'nullable|string|max:1000',
+            'action' => 'required|in:draft,submit',
+        ]);
+
+        $evaluation->update([
+            'discipline_score' => $validated['discipline_score'],
+            'behavior_score' => $validated['behavior_score'],
+            'skills_score' => $validated['skills_score'],
+            'communication_score' => $validated['communication_score'],
+            'discipline_comment' => $validated['discipline_comment'],
+            'behavior_comment' => $validated['behavior_comment'],
+            'skills_comment' => $validated['skills_comment'],
+            'communication_comment' => $validated['communication_comment'],
+            'general_comment' => $validated['general_comment'],
+            'objectives_next_week' => $validated['objectives_next_week'],
+            'status' => $validated['action'] === 'submit' ? 'submitted' : 'draft',
+            'submitted_at' => $validated['action'] === 'submit' ? now() : ($evaluation->submitted_at), // Preserve submitted_at if already submitted? Or re-submit?
+        ]);
+
+        if ($validated['action'] === 'submit') {
+             // $evaluation->intern->notify(new NewEvaluationNotification($evaluation));
+            return redirect()->route('admin.intern-evaluations.index')
+                ->with('success', 'Évaluation mise à jour avec succès.');
+        }
+
+        return redirect()->route('admin.intern-evaluations.index')
+            ->with('success', 'Brouillon mis à jour.');
+    }
+
+    /**
      * Get pending evaluations count
      */
     private function getPendingEvaluationsCount(): int

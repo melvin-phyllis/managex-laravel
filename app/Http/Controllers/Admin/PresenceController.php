@@ -452,7 +452,7 @@ class PresenceController extends Controller
                 fputcsv($file, [
                     $presence->user->name,
                     $presence->date->format('d/m/Y'),
-                    $presence->check_in_formatted,
+                    $presence->check_in_formatted ?? '-',
                     $presence->check_out_formatted ?? '-',
                     $presence->hours_worked ? number_format($presence->hours_worked, 2).'h' : '-',
                 ]);

@@ -30,7 +30,7 @@ use App\Http\Controllers\Employee\TaskController as EmployeeTaskController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PushSubscriptionController;
-use App\Http\Controllers\Tutor\InternEvaluationController as TutorInternEvaluationController;
+
 use Illuminate\Support\Facades\Route;
 
 // Route racine → redirection vers login
@@ -267,6 +267,20 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/dashboard/alerts', [AdminDashboardController::class, 'getAlertsData'])->name('dashboard.alerts');
     Route::get('/dashboard/calendar', [AdminDashboardController::class, 'getCalendarEventsData'])->name('dashboard.calendar');
 
+    // Analytics
+    Route::get('/analytics', [AnalyticsController::class, 'index'])->name('analytics.index');
+    Route::get('/analytics/kpis', [AnalyticsController::class, 'getKpiData'])->name('analytics.kpis');
+    Route::get('/analytics/charts', [AnalyticsController::class, 'getChartsData'])->name('analytics.charts');
+    Route::get('/analytics/activities', [AnalyticsController::class, 'getRecentActivities'])->name('analytics.activities');
+    Route::get('/analytics/pending', [AnalyticsController::class, 'getPendingRequests'])->name('analytics.pending');
+    Route::get('/analytics/latecomers', [AnalyticsController::class, 'getTopLatecomers'])->name('analytics.latecomers');
+    Route::get('/analytics/alerts', [AnalyticsController::class, 'getHrAlerts'])->name('analytics.alerts');
+    Route::get('/analytics/top-performers', [AnalyticsController::class, 'getTopPerformers'])->name('analytics.top-performers');
+    Route::get('/analytics/best-attendance', [AnalyticsController::class, 'getBestAttendance'])->name('analytics.best-attendance');
+    Route::get('/analytics/evaluation-stats', [AnalyticsController::class, 'getEvaluationStats'])->name('analytics.evaluation-stats');
+    Route::get('/analytics/export/pdf', [AnalyticsController::class, 'exportPdf'])->name('analytics.export.pdf');
+    Route::get('/analytics/export/excel', [AnalyticsController::class, 'exportExcel'])->name('analytics.export.excel');
+
     // Gestion des employés (export avant resource pour éviter que "export" soit pris comme {employee})
     Route::get('/employees/export', [EmployeeController::class, 'export'])->name('employees.export');
     Route::resource('employees', EmployeeController::class);
@@ -296,7 +310,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::put('/tasks/{task}', [AdminTaskController::class, 'update'])->name('tasks.update');
     Route::post('/tasks/{task}/approve', [AdminTaskController::class, 'approve'])->name('tasks.approve');
     Route::post('/tasks/{task}/reject', [AdminTaskController::class, 'reject'])->name('tasks.reject');
-    Route::post('/tasks/{task}/validate', [AdminTaskController::class, 'validate'])->name('tasks.validate');
+    Route::post('/tasks/{task}/validate', [AdminTaskController::class, 'validateTask'])->name('tasks.validate');
     Route::post('/tasks/{task}/update-status', [AdminTaskController::class, 'updateStatus'])->name('tasks.update-status');
     Route::delete('/tasks/{task}', [AdminTaskController::class, 'destroy'])->name('tasks.destroy');
     Route::get('/task-documents/{document}/download', [AdminTaskController::class, 'downloadDocument'])->name('tasks.document.download');
@@ -452,20 +466,15 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
         Route::get('/report', [AdminInternEvaluationController::class, 'report'])->name('report');
         Route::get('/missing', [AdminInternEvaluationController::class, 'missingEvaluations'])->name('missing');
         Route::get('/export-pdf', [AdminInternEvaluationController::class, 'exportPdf'])->name('export-pdf');
+        
+        // Gestion des évaluations
+        Route::get('/intern/{intern}/create', [AdminInternEvaluationController::class, 'create'])->name('create');
+        Route::post('/intern/{intern}', [AdminInternEvaluationController::class, 'store'])->name('store');
+        Route::get('/{evaluation}/edit', [AdminInternEvaluationController::class, 'edit'])->name('edit');
+        Route::put('/{evaluation}', [AdminInternEvaluationController::class, 'update'])->name('update');
+        
+        // Détail d'un stagiaire (historique) - doit être à la fin pour ne pas conflire
         Route::get('/intern/{intern}', [AdminInternEvaluationController::class, 'show'])->name('show');
-        Route::post('/intern/{intern}/assign-supervisor', [AdminInternEvaluationController::class, 'assignSupervisor'])->name('assign-supervisor');
-        Route::delete('/intern/{intern}/remove-supervisor', [AdminInternEvaluationController::class, 'removeSupervisor'])->name('remove-supervisor');
-    });
-
-    // Tuteur - Évaluations des stagiaires (pour les admins qui supervisent des stagiaires)
-    Route::prefix('tutor/evaluations')->name('tutor.evaluations.')->group(function () {
-        Route::get('/', [TutorInternEvaluationController::class, 'index'])->name('index');
-        Route::get('/intern/{intern}/create', [TutorInternEvaluationController::class, 'create'])->name('create');
-        Route::post('/intern/{intern}', [TutorInternEvaluationController::class, 'store'])->name('store');
-        Route::get('/{evaluation}', [TutorInternEvaluationController::class, 'show'])->name('show');
-        Route::get('/{evaluation}/edit', [TutorInternEvaluationController::class, 'edit'])->name('edit');
-        Route::put('/{evaluation}', [TutorInternEvaluationController::class, 'update'])->name('update');
-        Route::get('/intern/{intern}/history', [TutorInternEvaluationController::class, 'history'])->name('history');
     });
 
     // Paramètres de paie multi-pays
@@ -614,16 +623,7 @@ Route::middleware(['auth', 'role:employee', 'contract.accepted'])->prefix('emplo
         Route::get('/{evaluation}', [EmployeeInternEvaluationController::class, 'show'])->name('show');
     });
 
-    // Tuteur - Évaluations des stagiaires (pour les employés qui supervisent des stagiaires)
-    Route::prefix('tutor/evaluations')->name('tutor.evaluations.')->group(function () {
-        Route::get('/', [TutorInternEvaluationController::class, 'index'])->name('index');
-        Route::get('/intern/{intern}/create', [TutorInternEvaluationController::class, 'create'])->name('create');
-        Route::post('/intern/{intern}', [TutorInternEvaluationController::class, 'store'])->name('store');
-        Route::get('/{evaluation}', [TutorInternEvaluationController::class, 'show'])->name('show');
-        Route::get('/{evaluation}/edit', [TutorInternEvaluationController::class, 'edit'])->name('edit');
-        Route::put('/{evaluation}', [TutorInternEvaluationController::class, 'update'])->name('update');
-        Route::get('/intern/{intern}/history', [TutorInternEvaluationController::class, 'history'])->name('history');
-    });
+
 
     // Assistant IA RH
     Route::post('/ai/chat', [AIAssistantController::class, 'chat'])

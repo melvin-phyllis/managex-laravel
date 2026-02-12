@@ -378,6 +378,44 @@ class AnalyticsController extends Controller
             return ['label' => $dept->name, 'on_time' => $onTime, 'late' => $late];
         })->filter(fn ($d) => $d['on_time'] > 0 || $d['late'] > 0);
 
+        // 9. Evolution des stagiaires (recrutements vs fins de stage - 12 derniers mois)
+        $internEvolution = collect();
+        for ($i = 11; $i >= 0; $i--) {
+            $date = now()->subMonths($i);
+            $newInterns = User::where('role', 'employee')
+                ->where('contract_type', 'stage')
+                ->whereMonth('hire_date', $date->month)
+                ->whereYear('hire_date', $date->year)
+                ->when($departmentId, fn ($q) => $q->where('department_id', $departmentId))
+                ->count();
+            
+            $endedInterns = User::where('role', 'employee')
+                ->where('contract_type', 'stage')
+                ->whereMonth('contract_end_date', $date->month)
+                ->whereYear('contract_end_date', $date->year)
+                ->when($departmentId, fn ($q) => $q->where('department_id', $departmentId))
+                ->count();
+
+            $internEvolution->push([
+                'label' => $date->translatedFormat('M Y'),
+                'new' => $newInterns,
+                'ended' => $endedInterns,
+            ]);
+        }
+
+        // 10. Performance moyenne des stagiaires (radar chart data)
+        $internPerformance = InternEvaluation::submitted()
+            ->whereBetween('week_start', [$startDate, $endDate])
+            ->when($departmentId, fn ($q) => $q->whereHas('intern', fn ($u) => $u->where('department_id', $departmentId)))
+            ->selectRaw('AVG(discipline_score) as discipline, AVG(behavior_score) as behavior, AVG(skills_score) as skills, AVG(communication_score) as communication')
+            ->first();
+
+        // 11. Répartition des stagiaires par département
+        $internDepDistribution = Department::withCount(['users' => fn ($q) => $q->where('role', 'employee')->where('contract_type', 'stage')])
+            ->get()
+            ->map(fn ($d) => ['label' => $d->name, 'value' => $d->users_count])
+            ->filter(fn ($d) => $d['value'] > 0);
+
         return response()->json([
             'presence_trend' => [
                 'labels' => $presenceTrend->pluck('day')->map(fn ($d) => Carbon::parse($d)->format('d/m')),
@@ -419,6 +457,55 @@ class AnalyticsController extends Controller
                 'on_time' => $punctuality->pluck('on_time'),
                 'late' => $punctuality->pluck('late'),
             ],
+            'intern_evolution' => [
+                'labels' => $internEvolution->pluck('label'),
+                'new' => $internEvolution->pluck('new'),
+                'ended' => $internEvolution->pluck('ended'),
+            ],
+            'intern_performance' => [
+                'labels' => ['Discipline', 'Comportement', 'Compétences', 'Communication'],
+                'data' => [
+                    round($internPerformance->discipline ?? 0, 1),
+                    round($internPerformance->behavior ?? 0, 1),
+                    round($internPerformance->skills ?? 0, 1),
+                    round($internPerformance->communication ?? 0, 1),
+                ],
+            ],
+            'intern_department_distribution' => [
+                'labels' => $internDepDistribution->pluck('label'),
+                'data' => $internDepDistribution->pluck('value'),
+                'colors' => ['#6366F1', '#EC4899', '#8B5CF6', '#10B981', '#F59E0B'],
+            ],
+            // Advanced Task Analytics
+            'task_status_distribution' => [
+                'labels' => ['Terminée', 'En cours', 'Approuvée', 'En attente', 'Annulée'],
+                'data' => [
+                    $taskStats['completed'] ?? 0,
+                    $taskStats['in_progress'] ?? 0,
+                    $taskStats['approved'] ?? 0,
+                    $taskStats['pending'] ?? 0,
+                    $taskStats['cancelled'] ?? 0,
+                ],
+                'colors' => ['#10B981', '#3B82F6', '#6366F1', '#F59E0B', '#EF4444'],
+            ],
+            'task_completion_evolution' => $this->getTaskCompletionEvolution($departmentId),
+            'tasks_by_department' => Department::withCount(['users as tasks_count' => function ($query) {
+                $query->join('tasks', 'users.id', '=', 'tasks.user_id')
+                      ->whereIn('tasks.statut', ['pending', 'in_progress', 'approved']);
+            }])->get()->map(fn($d) => ['label' => $d->name, 'value' => $d->tasks_count]),
+            
+            // Employee Demographics
+            'gender_distribution' => User::where('role', 'employee')
+                ->when($departmentId, fn ($q) => $q->where('department_id', $departmentId))
+                ->selectRaw('gender, COUNT(*) as count')
+                ->groupBy('gender')
+                ->get()
+                ->map(fn($g) => [
+                    'label' => $g->gender === 'male' ? 'Hommes' : ($g->gender === 'female' ? 'Femmes' : 'Non spécifié'),
+                    'value' => $g->count
+                ]),
+            'age_pyramid' => $this->getAgePyramid($departmentId),
+            'seniority_distribution' => $this->getSeniorityDistribution($departmentId),
         ]);
     }
 
@@ -438,7 +525,7 @@ class AnalyticsController extends Controller
                         'type' => 'presence',
                         'user' => $p->user->name ?? 'Inconnu',
                         'avatar' => $p->user && $p->user->avatar ? avatar_url($p->user->avatar) : null,
-                        'description' => 'a pointé son arrivée à '.$p->check_in_formatted,
+                        'description' => 'a pointé son arrivée à '.($p->check_in_formatted ?? $p->created_at->format('H:i')),
                         'time' => $p->created_at->diffForHumans(),
                     ];
                 });
@@ -793,6 +880,94 @@ class AnalyticsController extends Controller
         };
 
         return ['start' => $start, 'end' => $end];
+    }
+
+    private function getTaskCompletionEvolution($departmentId)
+    {
+        $data = collect();
+        for ($i = 5; $i >= 0; $i--) {
+            $month = now()->subMonths($i);
+            $completed = Task::where('statut', 'completed')
+                ->whereMonth('updated_at', $month->month)
+                ->whereYear('updated_at', $month->year)
+                ->when($departmentId, fn ($q) => $q->whereHas('user', fn ($u) => $u->where('department_id', $departmentId)))
+                ->count();
+            $created = Task::whereMonth('created_at', $month->month)
+                ->whereYear('created_at', $month->year)
+                ->when($departmentId, fn ($q) => $q->whereHas('user', fn ($u) => $u->where('department_id', $departmentId)))
+                ->count();
+
+            $data->push([
+                'label' => $month->translatedFormat('M'),
+                'completed' => $completed,
+                'created' => $created,
+            ]);
+        }
+        return [
+            'labels' => $data->pluck('label'),
+            'completed' => $data->pluck('completed'),
+            'created' => $data->pluck('created'),
+        ];
+    }
+
+    private function getAgePyramid($departmentId)
+    {
+        // Buckets: <25, 25-30, 30-40, 40-50, 50+
+        $users = User::where('role', 'employee')
+            ->when($departmentId, fn ($q) => $q->where('department_id', $departmentId))
+            ->whereNotNull('date_of_birth')
+            ->get();
+        
+        $buckets = [
+            '< 25' => 0,
+            '25-30' => 0,
+            '30-40' => 0,
+            '40-50' => 0,
+            '50+' => 0,
+        ];
+
+        foreach ($users as $user) {
+            $age = $user->date_of_birth->age;
+            if ($age < 25) $buckets['< 25']++;
+            elseif ($age < 30) $buckets['25-30']++;
+            elseif ($age < 40) $buckets['30-40']++;
+            elseif ($age < 50) $buckets['40-50']++;
+            else $buckets['50+']++;
+        }
+
+        return [
+            'labels' => array_keys($buckets),
+            'data' => array_values($buckets),
+        ];
+    }
+
+    private function getSeniorityDistribution($departmentId)
+    {
+        // Buckets: < 1 an, 1-3 ans, 3-5 ans, 5+ ans
+        $users = User::where('role', 'employee')
+            ->when($departmentId, fn ($q) => $q->where('department_id', $departmentId))
+            ->whereNotNull('hire_date')
+            ->get();
+
+        $buckets = [
+            '< 1 an' => 0,
+            '1-3 ans' => 0,
+            '3-5 ans' => 0,
+            '5+ ans' => 0,
+        ];
+
+        foreach ($users as $user) {
+            $years = $user->hire_date->diffInYears(now());
+            if ($years < 1) $buckets['< 1 an']++;
+            elseif ($years < 3) $buckets['1-3 ans']++;
+            elseif ($years < 5) $buckets['3-5 ans']++;
+            else $buckets['5+ ans']++;
+        }
+
+        return [
+            'labels' => array_keys($buckets),
+            'data' => array_values($buckets),
+        ];
     }
 
     /**

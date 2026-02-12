@@ -205,7 +205,7 @@
                 <tr>
                     <td>{{ $presence->user->name }}</td>
                     <td>{{ $presence->date->format('d/m/Y') }}</td>
-                    <td class="time">{{ $presence->check_in->format('H:i') }}</td>
+                    <td class="time">{{ $presence->check_in ? $presence->check_in->format('H:i') : '-' }}</td>
                     <td class="time">{{ $presence->check_out ? $presence->check_out->format('H:i') : '-' }}</td>
                     <td class="duration">{{ $presence->duree ?? '-' }}</td>
                     <td>{{ Str::limit($presence->notes, 30) }}</td>

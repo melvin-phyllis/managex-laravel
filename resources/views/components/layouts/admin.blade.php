@@ -250,56 +250,47 @@
                         </svg>
                         Tableau de bord
                     </x-sidebar-link>
+                    
                     <x-sidebar-link :href="route('admin.analytics.index')" :active="request()->routeIs('admin.analytics.*')">
                         <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path>
                         </svg>
                         Analytics
                     </x-sidebar-link>
-                    <x-sidebar-link :href="route('admin.employees.index')" :active="request()->routeIs('admin.employees.*')">
-                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
-                        </svg>
-                        Employés
-                    </x-sidebar-link>
 
-                    <x-sidebar-link :href="route('admin.presences.index')" :active="request()->routeIs('admin.presences.*')">
-                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                        Présences
-                    </x-sidebar-link>
-
-                    <x-sidebar-link :href="route('admin.tasks.index')" :active="request()->routeIs('admin.tasks.*')">
-                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
-                        </svg>
-                        Taches
-                    </x-sidebar-link>
-
-                    <x-sidebar-link :href="route('admin.leaves.index')" :active="request()->routeIs('admin.leaves.*')">
-                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                        </svg>
-                        Congés
-                    </x-sidebar-link>
-
-                    <x-sidebar-link :href="route('admin.intern-evaluations.index')" :active="request()->routeIs('admin.intern-evaluations.*')">
-                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
-                        </svg>
-                        Suivi Stagiaires
-                    </x-sidebar-link>
+                    <!-- Gestion RH Dropdown -->
+                    <div x-data="{ open: {{ (request()->routeIs('admin.employees.*') || request()->routeIs('admin.presences.*') || request()->routeIs('admin.tasks.*') || request()->routeIs('admin.leaves.*') || request()->routeIs('admin.intern-evaluations.*')) ? 'true' : 'false' }} }">
+                        <button @click="open = !open" 
+                                class="w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 group {{ (request()->routeIs('admin.employees.*') || request()->routeIs('admin.presences.*') || request()->routeIs('admin.tasks.*') || request()->routeIs('admin.leaves.*') || request()->routeIs('admin.intern-evaluations.*')) ? 'text-blue-700 bg-gradient-to-r from-blue-50 to-indigo-50 font-medium border-l-4 border-blue-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 hover:translate-x-1' }}">
+                            <div class="flex items-center">
+                                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                                </svg>
+                                <span>Gestion RH</span>
+                            </div>
+                            <svg class="w-4 h-4 transition-transform duration-200" :class="{'rotate-180': open}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                            </svg>
+                        </button>
+                        
+                        <div x-show="open" x-cloak x-transition class="space-y-1 mt-1">
+                            <x-sidebar-link :href="route('admin.employees.index')" :active="request()->routeIs('admin.employees.*')" class="pl-12 text-sm">Employés</x-sidebar-link>
+                            <x-sidebar-link :href="route('admin.presences.index')" :active="request()->routeIs('admin.presences.*')" class="pl-12 text-sm">Présences</x-sidebar-link>
+                            <x-sidebar-link :href="route('admin.tasks.index')" :active="request()->routeIs('admin.tasks.*')" class="pl-12 text-sm">Tâches</x-sidebar-link>
+                            <x-sidebar-link :href="route('admin.leaves.index')" :active="request()->routeIs('admin.leaves.*')" class="pl-12 text-sm">Congés</x-sidebar-link>
+                            <x-sidebar-link :href="route('admin.intern-evaluations.index')" :active="request()->routeIs('admin.intern-evaluations.*')" class="pl-12 text-sm">Stagiaires</x-sidebar-link>
+                        </div>
+                    </div>
 
                     <!-- Paie Dropdown -->
-                    <div x-data="{ open: {{ (request()->routeIs('admin.payrolls.*') || request()->routeIs('admin.payroll-settings.*')) ? 'true' : 'false' }} }">
+                    <div x-data="{ open: {{ (request()->routeIs('admin.payrolls.*') || request()->routeIs('admin.payroll-settings.*') || request()->routeIs('admin.employee-evaluations.*')) ? 'true' : 'false' }} }">
                         <button @click="open = !open" 
-                                class="w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 group {{ (request()->routeIs('admin.payrolls.*') || request()->routeIs('admin.payroll-settings.*')) ? 'text-blue-700 bg-gradient-to-r from-blue-50 to-indigo-50 font-medium border-l-4 border-blue-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 hover:translate-x-1' }}">
+                                class="w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 group {{ (request()->routeIs('admin.payrolls.*') || request()->routeIs('admin.payroll-settings.*') || request()->routeIs('admin.employee-evaluations.*')) ? 'text-blue-700 bg-gradient-to-r from-blue-50 to-indigo-50 font-medium border-l-4 border-blue-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 hover:translate-x-1' }}">
                             <div class="flex items-center">
                                 <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
                                 </svg>
-                                <span>Paie</span>
+                                <span>Paie & Perf.</span>
                             </div>
                             <svg class="w-4 h-4 transition-transform duration-200" :class="{'rotate-180': open}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
@@ -308,47 +299,26 @@
                         
                         <div x-show="open" x-cloak x-transition class="space-y-1 mt-1">
                             <x-sidebar-link :href="route('admin.employee-evaluations.index')" :active="request()->routeIs('admin.employee-evaluations.*')" class="pl-12 text-sm">
-                                évaluations performances
+                                Évaluations
                             </x-sidebar-link>
                             <x-sidebar-link :href="route('admin.payrolls.index')" :active="request()->routeIs('admin.payrolls.*')" class="pl-12 text-sm">
                                 Fiches de paie
                             </x-sidebar-link>
                             <x-sidebar-link :href="route('admin.payroll-settings.countries')" :active="request()->routeIs('admin.payroll-settings.*')" class="pl-12 text-sm">
-                                Config. Paie Pays
+                                Config. Paie
                             </x-sidebar-link>
                         </div>
                     </div>
                    
-                    <x-sidebar-link :href="route('admin.surveys.index')" :active="request()->routeIs('admin.surveys.*')">
-                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-                        </svg>
-                        Sondages
-                    </x-sidebar-link>
-
-                    <x-sidebar-link :href="route('admin.announcements.index')" :active="request()->routeIs('admin.announcements.*')">
-                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"></path>
-                        </svg>
-                        Annonces
-                    </x-sidebar-link>
-
-                    <x-sidebar-link :href="route('admin.documents.index')" :active="request()->routeIs('admin.documents.*')">
-                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                        </svg>
-                        Documents
-                    </x-sidebar-link>
-
-                    <!-- Messagerie Dropdown -->
-                    <div x-data="{ open: {{ (request()->routeIs('messaging.admin.chat') || request()->routeIs('admin.messaging.*')) ? 'true' : 'false' }} }">
+                    <!-- Communication Dropdown -->
+                    <div x-data="{ open: {{ (request()->routeIs('admin.surveys.*') || request()->routeIs('admin.announcements.*') || request()->routeIs('admin.documents.*') || request()->routeIs('messaging.*') || request()->routeIs('admin.messaging.*')) ? 'true' : 'false' }} }">
                         <button @click="open = !open" 
-                                class="w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 group {{ (request()->routeIs('messaging.admin.chat') || request()->routeIs('admin.messaging.*')) ? 'text-blue-700 bg-gradient-to-r from-blue-50 to-indigo-50 font-medium border-l-4 border-blue-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 hover:translate-x-1' }}">
+                                class="w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 group {{ (request()->routeIs('admin.surveys.*') || request()->routeIs('admin.announcements.*') || request()->routeIs('admin.documents.*') || request()->routeIs('messaging.*') || request()->routeIs('admin.messaging.*')) ? 'text-blue-700 bg-gradient-to-r from-blue-50 to-indigo-50 font-medium border-l-4 border-blue-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 hover:translate-x-1' }}">
                             <div class="flex items-center">
                                 <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
                                 </svg>
-                                <span>Messagerie</span>
+                                <span>Communication</span>
                             </div>
                             <svg class="w-4 h-4 transition-transform duration-200" :class="{'rotate-180': open}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
@@ -356,29 +326,34 @@
                         </button>
                         
                         <div x-show="open" x-cloak x-transition class="space-y-1 mt-1">
-                            <x-sidebar-link :href="route('messaging.admin.chat')" :active="request()->routeIs('messaging.admin.chat')" class="pl-12 text-sm">
-                                Chat
-                            </x-sidebar-link>
-                            <x-sidebar-link :href="route('admin.messaging.index')" :active="request()->routeIs('admin.messaging.*')" class="pl-12 text-sm">
-                                Gestion Messages
-                            </x-sidebar-link>
+                            <x-sidebar-link :href="route('admin.surveys.index')" :active="request()->routeIs('admin.surveys.*')" class="pl-12 text-sm">Sondages</x-sidebar-link>
+                            <x-sidebar-link :href="route('admin.announcements.index')" :active="request()->routeIs('admin.announcements.*')" class="pl-12 text-sm">Annonces</x-sidebar-link>
+                            <x-sidebar-link :href="route('admin.documents.index')" :active="request()->routeIs('admin.documents.*')" class="pl-12 text-sm">Documents</x-sidebar-link>
+                            <x-sidebar-link :href="route('messaging.admin.chat')" :active="request()->routeIs('messaging.admin.chat')" class="pl-12 text-sm">Chat</x-sidebar-link>
+                            <x-sidebar-link :href="route('admin.messaging.index')" :active="request()->routeIs('admin.messaging.*')" class="pl-12 text-sm">Gestion Messages</x-sidebar-link>
                         </div>
                     </div>
 
-                    <!-- Séparateur Organisation -->
-                    <div class="pt-4 mt-4 border-t border-gray-200">
-                        <p class="px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider">Organisation</p>
+                    <!-- Organisation Dropdown -->
+                     <div x-data="{ open: {{ (request()->routeIs('admin.geolocation-zones.*')) ? 'true' : 'false' }} }">
+                        <button @click="open = !open" 
+                                class="w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 group {{ (request()->routeIs('admin.geolocation-zones.*')) ? 'text-blue-700 bg-gradient-to-r from-blue-50 to-indigo-50 font-medium border-l-4 border-blue-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 hover:translate-x-1' }}">
+                            <div class="flex items-center">
+                                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                                </svg>
+                                <span>Organisation</span>
+                            </div>
+                            <svg class="w-4 h-4 transition-transform duration-200" :class="{'rotate-180': open}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                            </svg>
+                        </button>
+                        
+                        <div x-show="open" x-cloak x-transition class="space-y-1 mt-1">
+                            <x-sidebar-link :href="route('admin.geolocation-zones.index')" :active="request()->routeIs('admin.geolocation-zones.*')" class="pl-12 text-sm">Zones Géoloc.</x-sidebar-link>
+                        </div>
                     </div>
 
-                    <x-sidebar-link :href="route('admin.geolocation-zones.index')" :active="request()->routeIs('admin.geolocation-zones.*')">
-                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                        </svg>
-                        Zones Géoloc.
-                    </x-sidebar-link>
-
-                    
                 </div>
             </nav>
         </aside>

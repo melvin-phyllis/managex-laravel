@@ -9,6 +9,10 @@
             </x-slot:icon>
             <x-slot:actions>
                 <div class="flex gap-2">
+                    <a href="{{ route('admin.intern-evaluations.create', $intern) }}" class="inline-flex items-center px-4 py-2.5 bg-violet-600 text-white font-medium rounded-xl hover:bg-violet-700 transition-all text-sm shadow-md">
+                        <x-icon name="plus" class="w-4 h-4 mr-2" />
+                        Nouvelle évaluation
+                    </a>
                     <a href="{{ route('admin.intern-evaluations.index') }}" class="inline-flex items-center px-4 py-2.5 bg-gray-100 text-gray-700 font-medium rounded-xl hover:bg-gray-200 transition-all text-sm">
                         <x-icon name="arrow-left" class="w-4 h-4 mr-2" />
                         Retour
@@ -45,38 +49,11 @@
                         <span class="text-gray-500">Poste</span>
                         <span class="font-medium">{{ $intern->position->name ?? 'Stagiaire' }}</span>
                     </div>
-                    <div class="flex justify-between">
-                        <span class="text-gray-500">Tuteur</span>
-                        @if($intern->supervisor)
-                            <span class="font-medium text-green-600">{{ $intern->supervisor->name }}</span>
-                        @else
-                            <span class="font-medium text-red-600">Non assigné</span>
-                        @endif
-                    </div>
+
                 </div>
 
                 <!-- Assign Supervisor Form -->
-                <div class="mt-6 pt-4 border-t border-gray-100">
-                    <form action="{{ route('admin.intern-evaluations.assign-supervisor', $intern) }}" method="POST">
-                        @csrf
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
-                            {{ $intern->supervisor ? 'Changer le tuteur' : 'Assigner un tuteur' }}
-                        </label>
-                        <div class="flex gap-2">
-                            <select name="supervisor_id" class="flex-1 px-3 py-2 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-violet-500 focus:border-violet-500">
-                                <option value="">Sélectionner un tuteur...</option>
-                                @foreach($tutors as $tutor)
-                                    <option value="{{ $tutor->id }}" {{ $intern->supervisor_id == $tutor->id ? 'selected' : '' }}>
-                                        {{ $tutor->name }} ({{ $tutor->role === 'admin' ? 'Admin' : 'Employé' }}{{ $tutor->department ? ' - ' . $tutor->department->name : '' }})
-                                    </option>
-                                @endforeach
-                            </select>
-                            <button type="submit" class="px-4 py-2 bg-violet-600 text-white rounded-xl hover:bg-violet-700 transition-colors text-sm font-medium">
-                                Assigner
-                            </button>
-                        </div>
-                    </form>
-                </div>
+
             </div>
 
             <!-- Moyennes -->
@@ -133,7 +110,8 @@
                             <th class="px-6 py-4 text-center text-xs font-semibold text-gray-600 uppercase">Compétences</th>
                             <th class="px-6 py-4 text-center text-xs font-semibold text-gray-600 uppercase">Communication</th>
                             <th class="px-6 py-4 text-center text-xs font-semibold text-gray-600 uppercase">Total</th>
-                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Tuteur</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Évaluateur</th>
+                            <th class="px-6 py-4 text-right text-xs font-semibold text-gray-600 uppercase">Actions</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100">
@@ -157,7 +135,10 @@
                                         {{ $evaluation->total_score }}/10
                                     </span>
                                 </td>
-                                <td class="px-6 py-4 text-sm text-gray-600">{{ $evaluation->tutor->name ?? 'N/A' }}</td>
+                                <td class="px-6 py-4 text-sm text-gray-600">{{ $evaluation->tutor->name ?? 'Admin' }}</td>
+                                <td class="px-6 py-4 text-right">
+                                    <a href="{{ route('admin.intern-evaluations.edit', $evaluation) }}" class="text-violet-600 hover:text-violet-900 font-medium text-sm">Modifier</a>
+                                </td>
                             </tr>
                         @empty
                             <tr>

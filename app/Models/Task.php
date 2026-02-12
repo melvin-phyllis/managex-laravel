@@ -20,6 +20,8 @@ class Task extends Model
         'date_debut',
         'date_fin',
         'priorite',
+        'rating',
+        'rating_comment',
     ];
 
     protected $casts = [

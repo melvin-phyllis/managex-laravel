@@ -201,6 +201,31 @@ class TaskController extends Controller
         return redirect()->back()->with('success', 'Tâche validée avec succès.');
     }
 
+    public function validateTask(Request $request, Task $task)
+    {
+        $request->validate([
+            'rating' => 'required|integer|min:0|max:10',
+            'rating_comment' => 'nullable|string|max:1000',
+        ]);
+
+        $task->update([
+            'statut' => 'validated',
+            'rating' => $request->rating,
+            'rating_comment' => $request->rating_comment,
+        ]);
+
+        // Notifier l'employé
+        if ($task->user) {
+            try {
+                $task->user->notify(new TaskStatusNotification($task, 'validated'));
+            } catch (\Exception $e) {
+                // Ignore notification errors
+            }
+        }
+
+        return redirect()->back()->with('success', 'Tâche validée et notée avec succès.');
+    }
+
     /**
      * Update task status via AJAX (for Kanban drag & drop)
      */

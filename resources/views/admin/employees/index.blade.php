@@ -49,7 +49,7 @@
         </x-table-header>
 
         <!-- Stats Cards -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             <!-- Total Employés -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 hover:shadow-md transition-shadow group animate-fade-in-up animation-delay-100">
                 <div class="flex items-center justify-between">
@@ -75,29 +75,7 @@
                 </div>
             </div>
 
-            <!-- Présents Aujourd'hui -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 hover:shadow-md transition-shadow group animate-fade-in-up animation-delay-200">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm font-medium text-gray-500">Présents ce jour</p>
-                        <p class="text-3xl font-bold text-gray-900 mt-1">{{ $stats['present'] }}</p>
-                    </div>
-                    <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform" style="background-image: linear-gradient(135deg, #5AB9EA, #5680E9) !important; box-shadow: 0 10px 15px -3px rgba(90, 185, 234, 0.3) !important;">
-                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
-                    </div>
-                </div>
-                <div class="mt-4">
-                    <div class="flex items-center justify-between text-xs mb-1">
-                        <span class="text-gray-500">Taux de présence</span>
-                        <span class="text-[#5AB9EA] font-bold">{{ $stats['total'] > 0 ? round(($stats['present'] / $stats['total']) * 100) : 0 }}%</span>
-                    </div>
-                    <div class="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
-                        <div class="bg-[#5AB9EA] h-1.5 rounded-full transition-all duration-1000" style="width: {{ $stats['total'] > 0 ? round(($stats['present'] / $stats['total']) * 100) : 0 }}%"></div>
-                    </div>
-                </div>
-            </div>
+
 
             <!-- En Congé -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 hover:shadow-md transition-shadow group animate-fade-in-up animation-delay-300">

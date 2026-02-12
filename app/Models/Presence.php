@@ -129,9 +129,9 @@ class Presence extends Model
     /**
      * Get formatted check in time
      */
-    public function getCheckInFormattedAttribute(): string
+    public function getCheckInFormattedAttribute(): ?string
     {
-        return $this->check_in->format('H:i');
+        return $this->check_in?->format('H:i');
     }
 
     /**

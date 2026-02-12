@@ -145,6 +145,63 @@
                         </div>
                     </div>
                 @endif
+                
+                @if($task->statut === 'completed')
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Validation de la tâche</h3>
+                        <form action="{{ route('admin.tasks.validate', $task) }}" method="POST" class="space-y-4">
+                            @csrf
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label for="rating" class="block text-sm font-medium text-gray-700">Note</label>
+                                    <div class="mt-1 flex items-center">
+                                        <input type="number" name="rating" id="rating" min="0" max="10" required
+                                               class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                               placeholder="0-10">
+                                        <span class="ml-2 text-gray-500 text-sm">/ 10</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label for="rating_comment" class="block text-sm font-medium text-gray-700">Commentaire (Optionnel)</label>
+                                <textarea name="rating_comment" id="rating_comment" rows="3"
+                                          class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                          placeholder="Pourquoi cette note ?"></textarea>
+                            </div>
+
+                            <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-colors">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                Valider et Noter
+                            </button>
+                        </form>
+
+                        <div class="mt-4 pt-4 border-t border-gray-100">
+                            <form action="{{ route('admin.tasks.reject', $task) }}" method="POST">
+                                @csrf
+                                <button type="submit" class="w-full flex justify-center py-2 px-4 border border-red-300 rounded-md shadow-sm text-sm font-medium text-red-700 bg-white hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors" onclick="return confirm('Êtes-vous sûr de vouloir rejeter cette tâche ? Cela la marquera comme rejetée.')">
+                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                    Rejeter (Non satisfaisant)
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                @endif
+
+                @if($task->statut === 'validated' && $task->rating !== null)
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Évaluation</h3>
+                        <div class="flex items-start space-x-4">
+                            <div class="flex items-center justify-center w-16 h-16 rounded-full {{ $task->rating >= 7 ? 'bg-emerald-100 text-emerald-700' : ($task->rating >= 5 ? 'bg-amber-100 text-amber-700' : 'bg-red-100 text-red-700') }} text-2xl font-bold flex-shrink-0">
+                                {{ $task->rating }}<span class="text-sm font-normal ml-0.5">/10</span>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-medium text-gray-900">Commentaire du manager</h4>
+                                <p class="mt-1 text-gray-600 text-sm">{{ $task->rating_comment ?? 'Aucun commentaire.' }}</p>
+                            </div>
+                        </div>
+                    </div>
+                @endif
             </div>
 
             <!-- Sidebar -->
