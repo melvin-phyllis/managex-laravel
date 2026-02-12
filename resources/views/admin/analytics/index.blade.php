@@ -765,7 +765,15 @@
                             }
                         });
                     }
-                }, // End renderEmployeeCharts
+                renderEmployeeCharts() {
+                    // ... existing code ...
+                },
+
+                async loadAiInsights() {
+                    // Placeholder function to prevent error
+                    // This feature seems to have been removed or disabled
+                    this.aiInsights.loading = false;
+                }
             } // End returned object
         } // End analyticsPage
     </script>
