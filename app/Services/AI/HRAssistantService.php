@@ -3,6 +3,7 @@
 namespace App\Services\AI;
 
 use App\Models\Department;
+use App\Models\EmployeeWorkDay;
 use App\Models\Leave;
 use App\Models\Presence;
 use App\Models\Task;
@@ -86,9 +87,6 @@ class HRAssistantService
     }
 
     /**
-     * Construire le contexte admin (données entreprise).
-     */
-    /**
      * Construire le contexte admin (données entreprise détaillées).
      */
     protected function buildAdminContext(): string
@@ -96,34 +94,50 @@ class HRAssistantService
         $now = Carbon::now();
         $monthStart = $now->copy()->startOfMonth();
         $todayStr = $now->toDateString();
+        $tomorrowStr = $now->copy()->addDay()->toDateString();
+        $tomorrowDayOfWeek = (int) $now->copy()->addDay()->isoFormat('E'); // 1=Lundi...7=Dimanche
+        $tomorrowDayName = EmployeeWorkDay::DAYS[$tomorrowDayOfWeek] ?? '?';
 
-        // 1. Données Gloables
+        // 1. Données Globales
         $totalActive = User::where('role', 'employee')->where('status', 'active')->count();
         $presentsToday = Presence::where('date', $todayStr)->distinct('user_id')->count('user_id');
         $lateCountMonth = Presence::whereBetween('date', [$monthStart, $now])->where('is_late', true)->count();
         $pendingLeaves = Leave::where('statut', 'en_attente')->count();
 
         // 2. Données Détaillées par Employé
-        // On récupère TOUS les employés actifs avec leurs relations clés
         $employees = User::with(['department', 'position', 'currentContract'])
             ->where('status', 'active')
             ->get();
 
+        // Pré-charger les jours de travail pour tous les employés
+        $allWorkDays = EmployeeWorkDay::whereIn('user_id', $employees->pluck('id'))
+            ->get()
+            ->groupBy('user_id');
+
+        // Pré-charger les congés approuvés couvrant demain
+        $tomorrowLeaves = Leave::where('statut', 'approuve')
+            ->where('date_debut', '<=', $tomorrowStr)
+            ->where('date_fin', '>=', $tomorrowStr)
+            ->get()
+            ->keyBy('user_id');
+
         $employeeDetails = [];
+        $expectedTomorrow = [];
+        $absentTomorrow = [];
 
         foreach ($employees as $emp) {
             // Stats Présence du mois
             $presencesMonth = Presence::where('user_id', $emp->id)
                 ->whereBetween('date', [$monthStart, $now])
                 ->get();
-            
+
             $daysPresent = $presencesMonth->count();
             $lates = $presencesMonth->where('is_late', true)->count();
             $totalLateMins = $presencesMonth->sum('late_minutes');
-            
+
             // Présence aujourd'hui
             $todayPresence = Presence::where('user_id', $emp->id)->where('date', $todayStr)->first();
-            $statusToday = $todayPresence 
+            $statusToday = $todayPresence
                 ? ($todayPresence->is_late ? "Présent (Retard {$todayPresence->late_minutes}m)" : "Présent (À l'heure)")
                 : "Absent";
 
@@ -133,25 +147,38 @@ class HRAssistantService
                 ->groupBy('statut')
                 ->pluck('count', 'statut')
                 ->toArray();
-            
+
             $pendingTasks = $tasks['pending'] ?? 0;
             $completedTasks = $tasks['completed'] ?? 0;
 
-            // Congés
+            // Congés actifs aujourd'hui
             $leaveBalance = $emp->leave_balance;
             $activeLeave = Leave::where('user_id', $emp->id)
                 ->where('statut', 'approuve')
                 ->where('date_debut', '<=', $todayStr)
                 ->where('date_fin', '>=', $todayStr)
                 ->first();
-            
+
             if ($activeLeave) {
                 $statusToday = "En congé ({$activeLeave->type}) jusqu'au " . Carbon::parse($activeLeave->date_fin)->format('d/m');
             }
 
-            // Évaluation (Stagiaires uniquement pour l'instant dans le contexte simplifié, ou dernière éval employés)
-            // Pour l'instant on reste simple pour ne pas exploser le contexte, on met juste la note moyenne si dispo
-            $lastEval = null; // À implémenter si besoin de détails spécifiques
+            // Planning: jours travaillés
+            $empWorkDays = $allWorkDays->get($emp->id, collect());
+            $workDayNumbers = $empWorkDays->pluck('day_of_week')->toArray();
+            $workDayNames = array_map(fn($d) => EmployeeWorkDay::DAYS[$d] ?? '?', $workDayNumbers);
+            $planning = !empty($workDayNames) ? implode(', ', $workDayNames) : 'Non défini';
+
+            // Prédiction demain
+            $worksOnTomorrow = in_array($tomorrowDayOfWeek, $workDayNumbers);
+            $onLeaveTomorrow = $tomorrowLeaves->has($emp->id);
+
+            if ($worksOnTomorrow && !$onLeaveTomorrow) {
+                $expectedTomorrow[] = $emp->name;
+            } elseif ($onLeaveTomorrow) {
+                $leaveTomorrow = $tomorrowLeaves->get($emp->id);
+                $absentTomorrow[] = "{$emp->name} (Congé {$leaveTomorrow->type} jusqu'au " . Carbon::parse($leaveTomorrow->date_fin)->format('d/m') . ')';
+            }
 
             $role = $emp->role === 'admin' ? 'Admin' : ($emp->contract_type === 'stage' ? 'Stagiaire' : 'Employé');
 
@@ -165,26 +192,30 @@ class HRAssistantService
                 "Stats Mois: {$daysPresent}j présents, {$lates} retards ({$totalLateMins} min)",
                 "Tâches: {$pendingTasks} en cours, {$completedTasks} terminées",
                 "Solde Congés: {$leaveBalance}j",
-                "Contrat: " . ($emp->contract_type ?? 'N/A') . " (Début: " . ($emp->hire_date ? Carbon::parse($emp->hire_date)->format('d/m/Y') : '?') . ")"
+                "Planning: {$planning}",
+                "Contrat: " . ($emp->contract_type ?? 'N/A') . " (Début: " . ($emp->hire_date ? Carbon::parse($emp->hire_date)->format('d/m/Y') : '?') . ')',
             ];
 
-            $employeeDetails[] = implode(" | ", $details);
+            $employeeDetails[] = implode(' | ', $details);
         }
 
-        // 3. Construction du Prompt Final
+        // 3. Construction du Contexte Final
         $contextLines = [
             "=== RÉSUMÉ GLOBAL ({$now->format('d/m/Y H:i')}) ===",
             "Effectif Actif: {$totalActive}",
             "Présents ce jour: {$presentsToday}",
             "Retards ce mois: {$lateCountMonth}",
             "Congés en attente: {$pendingLeaves}",
-            "",
+            '',
+            "=== PRÉVISION DEMAIN ({$tomorrowDayName} {$now->copy()->addDay()->format('d/m/Y')}) ===",
+            'Employés attendus (' . count($expectedTomorrow) . '): ' . (empty($expectedTomorrow) ? 'Aucun (jour non travaillé ou planning non défini)' : implode(', ', $expectedTomorrow)),
+            'Absents prévus (' . count($absentTomorrow) . '): ' . (empty($absentTomorrow) ? 'Aucun' : implode(', ', $absentTomorrow)),
+            '',
             "=== DÉTAILS DES EMPLOYÉS (Base de données en temps réel) ===",
-            "Format: ID | Nom | Département | Poste | Rôle | Statut Jour | Stats Mois | Tâches | Congés | Contrat",
-            ""
+            'Format: ID | Nom | Département | Poste | Rôle | Statut Jour | Stats Mois | Tâches | Congés | Planning | Contrat',
+            '',
         ];
 
-        // Ajouter la liste des employés
         $contextLines = array_merge($contextLines, $employeeDetails);
 
         return implode("\n", $contextLines);
@@ -201,14 +232,16 @@ class HRAssistantService
 Tu es l'assistant IA de gestion RH de {$companyName}, destiné aux administrateurs. Tu réponds en français de manière concise, précise et professionnelle.
 
 RÔLE:
-- Tu as accès en TEMPS RÉEL à toutes les données de la base (utilisateurs, tâches, présences, congés, etc.) via le contexte fourni.
+- Tu as accès en TEMPS RÉEL à toutes les données de la base (utilisateurs, tâches, présences, congés, planning, etc.) via le contexte fourni.
 - Tu aides l'administrateur à analyser ces données, trouver des informations précises sur un employé, ou détecter des tendances.
+- Tu PEUX prédire qui sera présent demain grâce aux plannings de travail et aux congés approuvés fournis dans le contexte.
 - Tes réponses doivent être basées UNIQUEMENT sur les données fournies. Si une info est absente, dis-le.
 
 RÈGLES STRICTES:
 - Sois direct et factuel.
 - Si on te demande "Qui est en retard ?", liste les noms.
-- Si on te demande des détails sur un employé, donne tout ce que tu as dans le contexte.
+- Si on te demande "Qui sera présent demain ?", utilise la section PRÉVISION DEMAIN du contexte.
+- Si on te demande des détails sur un employé, donne tout ce que tu as dans le contexte (y compris son planning hebdomadaire).
 - Ne mentionne jamais de données qui ne sont pas dans le contexte (pas d'hallucination).
 
 CONTEXTE BASE DE DONNÉES (Mise à jour temps réel):
@@ -216,6 +249,7 @@ CONTEXTE BASE DE DONNÉES (Mise à jour temps réel):
 
 FONCTIONNALITÉS:
 - Analyse des présences et retards
+- Prévision des présences de demain (basée sur le planning et les congés)
 - Suivi des tâches et performances
 - Gestion des congés et contrats
 - Vue globale et détaillée par employé
