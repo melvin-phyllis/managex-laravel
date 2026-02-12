@@ -258,7 +258,7 @@
             Statistiques Stagiaires
         </h2>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-fade-in-up animation-delay-600">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-fade-in-up animation-delay-600">
             {{-- Evolution Stagiaires (Bar) --}}
             <div class="lg:col-span-1 bg-white rounded-xl shadow-sm border border-gray-100 p-5">
                 <h3 class="font-semibold text-gray-900 mb-4">Recrutements vs Fins de stage</h3>
@@ -275,19 +275,15 @@
                 </div>
             </div>
 
-            {{-- Répartition (Doughnut) --}}
-            <div class="lg:col-span-1 bg-white rounded-xl shadow-sm border border-gray-100 p-5">
-                <h3 class="font-semibold text-gray-900 mb-4">Répartition par Département</h3>
-                <div class="h-64 relative w-full flex justify-center">
-                    <canvas id="internDepartmentChart"></canvas>
-                </div>
-            </div>
+
+        </div>
 
         {{-- Section Tâches --}}
         <h2 class="text-xl font-bold text-gray-800 mt-8 mb-4 flex items-center gap-2">
             <div class="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center">
                 <x-icon name="check-square" class="w-4 h-4 text-amber-600"/>
             </div>
+        </div>
             Statistiques Tâches
         </h2>
 
@@ -316,16 +312,18 @@
                 </div>
             </div>
         </div>
+        </div>
 
         {{-- Section Démographie --}}
         <h2 class="text-xl font-bold text-gray-800 mt-8 mb-4 flex items-center gap-2">
             <div class="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center">
                 <x-icon name="users" class="w-4 h-4 text-indigo-600"/>
             </div>
+        </div>
             Démographie & Carrière
         </h2>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 animate-fade-in-up animation-delay-800 mb-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-fade-in-up animation-delay-800 mb-8">
             {{-- Gender (Pie) --}}
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
                 <h3 class="font-semibold text-gray-900 mb-4">Parité (H/F)</h3>
@@ -350,7 +348,7 @@
                 </div>
             </div>
         </div>
-        </div>
+
 
 {{-- AI Analysis Removed --}}
 
@@ -612,28 +610,7 @@
                         });
                     }
 
-                    // 3. Department Distribution
-                    const ctxDept = document.getElementById('internDepartmentChart');
-                    if (ctxDept && ctxDept.getContext) {
-                        if (this.chartInstances.internDept) this.chartInstances.internDept.destroy();
-                        this.chartInstances.internDept = new Chart(ctxDept, {
-                            type: 'doughnut',
-                            data: {
-                                labels: this.charts.intern_department_distribution?.labels || [],
-                                datasets: [{
-                                    data: this.charts.intern_department_distribution?.data || [],
-                                    backgroundColor: this.charts.intern_department_distribution?.colors || ['#6366F1', '#EC4899', '#8B5CF6', '#10B981', '#F59E0B'],
-                                    borderWidth: 0
-                                }]
-                            },
-                            options: {
-                                responsive: true,
-                                maintainAspectRatio: false,
-                                cutout: '65%',
-                                plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, boxWidth: 6 } } }
-                            }
-                        });
-                    }
+
                 },
 
                 renderTaskCharts() {
