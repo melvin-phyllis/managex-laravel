@@ -15,14 +15,14 @@ Artisan::command('inspire', function () {
 // Friday 9:00 AM - Send weekly evaluation reminders to tutors
 Schedule::command('evaluations:send-reminders')
     ->weeklyOn(5, '09:00')
-    ->timezone('Europe/Paris')
+    ->timezone('Africa/Abidjan')
     ->withoutOverlapping()
     ->onOneServer();
 
 // Monday 8:00 AM - Check for missing evaluations and send alerts
 Schedule::command('evaluations:check-missing')
     ->weeklyOn(1, '08:00')
-    ->timezone('Europe/Paris')
+    ->timezone('Africa/Abidjan')
     ->withoutOverlapping()
     ->onOneServer();
 
@@ -42,7 +42,7 @@ Schedule::command('queue:work --stop-when-empty --max-time=55 --tries=1')
 // Daily at 6:00 AM - Check for expired late hours and apply penalties
 Schedule::command('presence:check-expired-late')
     ->dailyAt('06:00')
-    ->timezone('Europe/Paris')
+    ->timezone('Africa/Abidjan')
     ->withoutOverlapping()
     ->onOneServer()
     ->appendOutputTo(storage_path('logs/late-hours-check.log'));
@@ -61,7 +61,7 @@ try {
 
 Schedule::job(new \App\Jobs\SendCheckInRemindersJob('reminder'))
     ->dailyAt($workStartTime)
-    ->timezone('Europe/Paris')
+    ->timezone('Africa/Abidjan')
     ->onOneServer();
 
 // ==========================================
@@ -84,7 +84,7 @@ $checkoutReminderTime = \Carbon\Carbon::createFromTime((int) $endTimeParts[0], (
 
 Schedule::job(new \App\Jobs\SendCheckOutRemindersJob('reminder'))
     ->dailyAt($checkoutReminderTime)
-    ->timezone('Europe/Paris')
+    ->timezone('Africa/Abidjan')
     ->onOneServer();
 
 // ==========================================
@@ -101,7 +101,7 @@ try {
 
 Schedule::job(new \App\Jobs\SendBreakReminderJob('break_start'))
     ->dailyAt($breakStartTime)
-    ->timezone('Europe/Paris')
+    ->timezone('Africa/Abidjan')
     ->onOneServer();
 
 // At break end time - Remind employees break is over
@@ -114,7 +114,7 @@ try {
 
 Schedule::job(new \App\Jobs\SendBreakReminderJob('break_end'))
     ->dailyAt($breakEndTime)
-    ->timezone('Europe/Paris')
+    ->timezone('Africa/Abidjan')
     ->onOneServer();
 
 // ==========================================
@@ -124,5 +124,5 @@ Schedule::job(new \App\Jobs\SendBreakReminderJob('break_end'))
 // Daily at 08:00 AM - Send task reminders
 Schedule::command('notifications:send-reminders')
     ->dailyAt('08:00')
-    ->timezone('Europe/Paris')
+    ->timezone('Africa/Abidjan')
     ->onOneServer();
