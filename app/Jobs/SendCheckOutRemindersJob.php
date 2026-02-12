@@ -71,10 +71,10 @@ class SendCheckOutRemindersJob implements ShouldQueue
 
         Log::info("[CheckOutReminder] {$this->reminderType}: Processed {$processedCount} employees");
 
-        // Schedule auto-checkout 15 min after end time (if this is the reminder)
+        // Schedule auto-checkout 60 min after end time (if this is the reminder)
         if ($this->reminderType === 'reminder') {
-            // 25 min from now (10 min before end + 15 min after end = 25 min)
-            self::dispatch('auto_checkout')->delay(now()->addMinutes(25));
+            // 70 min from now (10 min before end + 60 min after end = 70 min)
+            self::dispatch('auto_checkout')->delay(now()->addMinutes(70));
         }
     }
 
