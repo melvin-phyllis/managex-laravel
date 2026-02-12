@@ -226,6 +226,22 @@ class TaskController extends Controller
         return redirect()->back()->with('success', 'Tâche validée et notée avec succès.');
     }
 
+    public function remind(Task $task)
+    {
+        // Envoyer un rappel manuel
+        if ($task->user) {
+            try {
+                // On utilise 'reminder' comme type pour personnaliser le message dans la notification
+                $task->user->notify(new TaskStatusNotification($task, 'reminder'));
+                return redirect()->back()->with('success', 'Rappel envoyé avec succès à ' . $task->user->name);
+            } catch (\Exception $e) {
+                return redirect()->back()->with('error', 'Erreur lors de l\'envoi du rappel : ' . $e->getMessage());
+            }
+        }
+
+        return redirect()->back()->with('error', 'Impossible d\'envoyer un rappel : aucun utilisateur assigné.');
+    }
+
     /**
      * Update task status via AJAX (for Kanban drag & drop)
      */

@@ -34,7 +34,7 @@
                         </button>
                         <button @click="exportData('excel')" class="px-4 py-2.5 bg-emerald-500/80 backdrop-blur-sm text-white font-medium rounded-xl hover:bg-emerald-600 transition-all flex items-center">
                             <x-icon name="table" class="w-4 h-4 mr-2"/>
-                            Export Excel
+                            Export CSV
                         </button>
                         <button @click="loadData()" class="px-4 py-2.5 bg-white text-indigo-700 font-semibold rounded-xl hover:bg-indigo-50 transition-all shadow-lg flex items-center">
                             <x-icon name="refresh-cw" class="w-4 h-4 mr-2" x-bind:class="{'animate-spin': loading}"/>
@@ -123,38 +123,38 @@
                 </div>
             </div>
 
-            {{-- 2. Taux de présence --}}
+            {{-- 2. Taux de Ponctualité --}}
             <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100 relative overflow-hidden group hover:shadow-md transition-all">
                 <div class="absolute right-0 top-0 w-24 h-24 bg-gradient-to-br from-emerald-500/10 to-teal-500/10 rounded-full -mr-8 -mt-8 group-hover:scale-125 transition-transform"></div>
                 <div class="relative z-10">
                     <div class="flex items-center justify-between">
                         <div class="w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-500/30">
-                            <x-icon name="check-circle" class="w-6 h-6 text-white"/>
+                            <x-icon name="clock" class="w-6 h-6 text-white"/>
                         </div>
-                        <span class="text-xs font-medium text-gray-500" x-text="(kpis.presents_today?.value || 0) + '/' + (kpis.presents_today?.expected || 0)"></span>
+                        <span class="text-xs font-medium text-gray-500">Aujourd'hui</span>
                     </div>
-                    <p class="text-3xl font-bold text-gray-900 mt-4"><span x-text="kpis.presents_today?.percentage || '0'"></span>%</p>
-                    <p class="text-sm text-gray-500 mt-1">Taux de présence</p>
+                    <p class="text-3xl font-bold text-gray-900 mt-4"><span x-text="kpis.punctuality_today?.percentage || '0'"></span>%</p>
+                    <p class="text-sm text-gray-500 mt-1">Taux de ponctualité</p>
                     <div class="w-full bg-gray-200 rounded-full h-2 mt-3">
-                        <div class="bg-gradient-to-r from-emerald-500 to-teal-500 h-2 rounded-full transition-all duration-1000" :style="'width: ' + (kpis.presents_today?.percentage || 0) + '%'"></div>
+                        <div class="bg-gradient-to-r from-emerald-500 to-teal-500 h-2 rounded-full transition-all duration-1000" :style="'width: ' + (kpis.punctuality_today?.percentage || 0) + '%'"></div>
                     </div>
                 </div>
             </div>
 
-            {{-- 3. Turnover --}}
+            {{-- 3. Mouvements du personnel --}}
             <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100 relative overflow-hidden group hover:shadow-md transition-all">
                 <div class="absolute right-0 top-0 w-24 h-24 bg-gradient-to-br from-amber-500/10 to-orange-500/10 rounded-full -mr-8 -mt-8 group-hover:scale-125 transition-transform"></div>
                 <div class="relative z-10">
                     <div class="flex items-center justify-between">
                         <div class="w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-600 rounded-xl flex items-center justify-center shadow-lg shadow-amber-500/30">
-                            <x-icon name="repeat" class="w-6 h-6 text-white"/>
+                            <x-icon name="user-plus" class="w-6 h-6 text-white"/>
                         </div>
-                        <span class="text-xs font-medium px-2 py-1 rounded-full" 
-                              :class="(kpis.turnover?.rate || 0) > 10 ? 'bg-red-100 text-red-700' : 'bg-emerald-100 text-emerald-700'"
-                              x-text="(kpis.turnover?.rate || 0) > 10 ? 'élevé' : 'Normal'"></span>
+                         <div class="flex items-center px-2 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-700">
+                            <span x-text="'+' + (kpis.turnover?.entries || 0)"></span>
+                        </div>
                     </div>
-                    <p class="text-3xl font-bold text-gray-900 mt-4"><span x-text="kpis.turnover?.rate || '0'"></span>%</p>
-                    <p class="text-sm text-gray-500 mt-1">Taux de turnover</p>
+                    <p class="text-3xl font-bold text-gray-900 mt-4" x-text="(kpis.turnover?.entries || 0) + (kpis.turnover?.exits || 0)"></p>
+                    <p class="text-sm text-gray-500 mt-1">Mouvements du personnel</p>
                     <p class="text-xs text-gray-400 mt-1">
                         <span class="text-emerald-600" x-text="'+' + (kpis.turnover?.entries || 0)"></span> entrées / 
                         <span class="text-red-600" x-text="'-' + (kpis.turnover?.exits || 0)"></span> sorties
@@ -283,7 +283,6 @@
             <div class="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center">
                 <x-icon name="check-square" class="w-4 h-4 text-amber-600"/>
             </div>
-        </div>
             Statistiques Tâches
         </h2>
 
@@ -312,14 +311,11 @@
                 </div>
             </div>
         </div>
-        </div>
-
-        {{-- Section Démographie --}}
+         {{-- Section Démographie --}}
         <h2 class="text-xl font-bold text-gray-800 mt-8 mb-4 flex items-center gap-2">
             <div class="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center">
                 <x-icon name="users" class="w-4 h-4 text-indigo-600"/>
             </div>
-        </div>
             Démographie & Carrière
         </h2>
 
@@ -349,6 +345,9 @@
             </div>
         </div>
 
+        </div>
+
+       
 
 {{-- AI Analysis Removed --}}
 
@@ -429,8 +428,8 @@
                         type = 'pdf';
                     } else if (format === 'excel') {
                         url = `{{ route('admin.analytics.export.excel') }}?${queryParams}`;
-                        filename = 'rapport-analytics.xlsx';
-                        type = 'excel';
+                        filename = 'rapport-analytics.csv';
+                        type = 'csv';
                     }
                     
                     // Utiliser l'overlay de téléchargement

@@ -111,6 +111,13 @@ class TaskStatusNotification extends Notification implements ShouldQueue
                 'closing' => 'Merci de traiter cette tache dans les delais impartis.',
                 'notification' => 'Nouvelle tache assignee : "'.$this->task->titre.'".',
             ],
+            'reminder' => [
+                'subject' => '🔔 Rappel : Votre tache est en attente - ManageX',
+                'intro' => 'Ceci est un rappel concernant votre tache **"'.$this->task->titre.'"**.',
+                'extra' => '**Date limite :** '.($this->task->date_fin ? $this->task->date_fin->format('d/m/Y') : 'Aucune date limite'),
+                'closing' => 'Merci de completer cette tache des que possible.',
+                'notification' => '🔔 Rappel : Tache "'.$this->task->titre.'" en attente.',
+            ],
             'in_progress' => [
                 'subject' => 'Tache en cours de traitement - ManageX',
                 'intro' => 'Votre tache **"'.$this->task->titre.'"** est maintenant **en cours de traitement**.',

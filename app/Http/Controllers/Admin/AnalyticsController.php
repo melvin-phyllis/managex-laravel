@@ -192,10 +192,12 @@ class AnalyticsController extends Controller
                 'variation' => $variation,
                 'previous' => $previousCount,
             ],
-            'presents_today' => [
+            'punctuality_today' => [
                 'value' => $presenceCount,
-                'expected' => $expectedPresences,
-                'percentage' => $expectedPresences > 0 ? round(($presenceCount / $expectedPresences) * 100) : 0,
+                'on_time' => $presencesMonth->where('is_late', false)->unique('date')->count(),
+                'percentage' => $presenceCount > 0 
+                    ? round(($presencesMonth->where('is_late', false)->count() / $presencesMonth->count()) * 100) 
+                    : 0,
             ],
             'en_conge' => [
                 'value' => $onLeave->count(),
@@ -984,11 +986,371 @@ class AnalyticsController extends Controller
     }
 
     /**
-     * Export analytics data to Excel - Feature disabled (Excel package removed for hosting compatibility)
+     * Export analytics data to CSV
      */
     public function exportExcel(Request $request)
     {
-        return redirect()->back()->with('error', 'L\'export Excel n\'est pas disponible sur cet hébergement.');
+        $data = $this->getExportData($request);
+        $kpis = $data['kpis'];
+        $charts = $data['charts'];
+
+        $filename = 'rapport-analytics-' . now()->format('Y-m-d') . '.csv';
+
+        $headers = [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => "attachment; filename=\"{$filename}\"",
+        ];
+
+        $callback = function () use ($data, $kpis, $charts) {
+            $file = fopen('php://output', 'w');
+            // BOM UTF-8 pour Excel
+            fprintf($file, chr(0xEF) . chr(0xBB) . chr(0xBF));
+
+            // ============================
+            // 1. INDICATEURS CLÉS (KPIs)
+            // ============================
+            fputcsv($file, ['=== INDICATEURS CLÉS ==='], ';');
+            fputcsv($file, ['Indicateur', 'Valeur', 'Détail'], ';');
+            fputcsv($file, ['Effectif total', $kpis['effectif_total']['value'] ?? 0, 'Variation: ' . ($kpis['effectif_total']['variation'] ?? 0) . '%'], ';');
+            fputcsv($file, ['Taux de ponctualité', ($kpis['punctuality_today']['percentage'] ?? 0) . '%', 'Présences à l\'heure: ' . ($kpis['punctuality_today']['on_time'] ?? 0)], ';');
+            fputcsv($file, ['En congé', $kpis['en_conge']['value'] ?? 0, 'Congé: ' . ($kpis['en_conge']['types']['conge'] ?? 0) . ' | Maladie: ' . ($kpis['en_conge']['types']['maladie'] ?? 0) . ' | Autre: ' . ($kpis['en_conge']['types']['autre'] ?? 0)], ';');
+            fputcsv($file, ['Absents non justifiés', $kpis['absents_non_justifies']['value'] ?? 0, ''], ';');
+            fputcsv($file, ['Masse salariale', $kpis['masse_salariale']['formatted'] ?? '0 FCFA', 'Variation: ' . ($kpis['masse_salariale']['variation'] ?? 0) . '%'], ';');
+            fputcsv($file, ['Heures supplémentaires', ($kpis['heures_supplementaires']['value'] ?? 0) . 'h', 'Employés concernés: ' . ($kpis['heures_supplementaires']['count'] ?? 0)], ';');
+            fputcsv($file, ['Turnover', ($kpis['turnover']['rate'] ?? 0) . '%', 'Entrées: ' . ($kpis['turnover']['entries'] ?? 0) . ' | Sorties: ' . ($kpis['turnover']['exits'] ?? 0)], ';');
+            fputcsv($file, ['Tâches terminées', $kpis['tasks']['completed'] ?? 0, 'Total: ' . ($kpis['tasks']['total'] ?? 0)], ';');
+            fputcsv($file, ['Tâches en cours', $kpis['tasks']['pending'] ?? 0, ''], ';');
+            fputcsv($file, ['Stagiaires', $kpis['interns']['count'] ?? 0, 'À évaluer: ' . ($kpis['interns']['to_evaluate'] ?? 0)], ';');
+            fputcsv($file, ['Retards totaux', ($kpis['late_hours']['total'] ?? 0) . 'h', 'Employés en retard: ' . ($kpis['late_hours']['employees'] ?? 0)], ';');
+            fputcsv($file, [], ';');
+
+            // ============================
+            // 2. EFFECTIF PAR DÉPARTEMENT
+            // ============================
+            fputcsv($file, ['=== EFFECTIF PAR DÉPARTEMENT ==='], ';');
+            fputcsv($file, ['Département', 'Effectif'], ';');
+            foreach ($data['department_stats'] as $dept) {
+                fputcsv($file, [$dept['name'], $dept['count']], ';');
+            }
+            fputcsv($file, [], ';');
+
+            // ============================
+            // 3. RÉPARTITION PAR TYPE DE CONTRAT
+            // ============================
+            if (!empty($charts['contract_types']['labels'])) {
+                fputcsv($file, ['=== RÉPARTITION PAR TYPE DE CONTRAT ==='], ';');
+                fputcsv($file, ['Type de contrat', 'Nombre'], ';');
+                $labels = $charts['contract_types']['labels'];
+                $values = $charts['contract_types']['data'];
+                for ($i = 0; $i < count($labels); $i++) {
+                    fputcsv($file, [$labels[$i] ?? '', $values[$i] ?? 0], ';');
+                }
+                fputcsv($file, [], ';');
+            }
+
+            // ============================
+            // 4. ÉVOLUTION DES PRÉSENCES
+            // ============================
+            if (!empty($charts['presence_trend']['labels'])) {
+                fputcsv($file, ['=== ÉVOLUTION DES PRÉSENCES ==='], ';');
+                fputcsv($file, ['Date', 'Nombre de présences'], ';');
+                $labels = $charts['presence_trend']['labels'];
+                $values = $charts['presence_trend']['data'];
+                for ($i = 0; $i < count($labels); $i++) {
+                    fputcsv($file, [$labels[$i] ?? '', $values[$i] ?? 0], ';');
+                }
+                fputcsv($file, [], ';');
+            }
+
+            // ============================
+            // 5. HEURES TRAVAILLÉES PAR SEMAINE
+            // ============================
+            if (!empty($charts['heures_travaillees_semaine']['labels'])) {
+                fputcsv($file, ['=== HEURES TRAVAILLÉES PAR SEMAINE ==='], ';');
+                fputcsv($file, ['Semaine', 'Heures'], ';');
+                $labels = $charts['heures_travaillees_semaine']['labels'];
+                $values = $charts['heures_travaillees_semaine']['data'];
+                for ($i = 0; $i < count($labels); $i++) {
+                    fputcsv($file, [$labels[$i] ?? '', $values[$i] ?? 0], ';');
+                }
+                fputcsv($file, ['Total', $charts['heures_travaillees_semaine']['total'] ?? 0], ';');
+                fputcsv($file, [], ';');
+            }
+
+            // ============================
+            // 6. ABSENTÉISME PAR SERVICE
+            // ============================
+            if (!empty($charts['absenteisme_par_service']['labels'])) {
+                fputcsv($file, ['=== TAUX D\'ABSENTÉISME PAR SERVICE ==='], ';');
+                fputcsv($file, ['Département', 'Taux (%)'], ';');
+                $labels = $charts['absenteisme_par_service']['labels'];
+                $rates = $charts['absenteisme_par_service']['rates'];
+                for ($i = 0; $i < count($labels); $i++) {
+                    fputcsv($file, [$labels[$i] ?? '', ($rates[$i] ?? 0) . '%'], ';');
+                }
+                fputcsv($file, [], ';');
+            }
+
+            // ============================
+            // 7. PONCTUALITÉ PAR DÉPARTEMENT
+            // ============================
+            if (!empty($charts['punctuality']['labels'])) {
+                fputcsv($file, ['=== PONCTUALITÉ PAR DÉPARTEMENT ==='], ';');
+                fputcsv($file, ['Département', 'À l\'heure', 'En retard'], ';');
+                $labels = $charts['punctuality']['labels'];
+                $onTime = $charts['punctuality']['on_time'];
+                $late = $charts['punctuality']['late'];
+                for ($i = 0; $i < count($labels); $i++) {
+                    fputcsv($file, [$labels[$i] ?? '', $onTime[$i] ?? 0, $late[$i] ?? 0], ';');
+                }
+                fputcsv($file, [], ';');
+            }
+
+            // ============================
+            // 8. RECRUTEMENTS VS DÉPARTS (12 mois)
+            // ============================
+            if (!empty($charts['recruitment_turnover']['labels'])) {
+                fputcsv($file, ['=== RECRUTEMENTS VS DÉPARTS (12 MOIS) ==='], ';');
+                fputcsv($file, ['Mois', 'Recrutements', 'Départs'], ';');
+                $labels = $charts['recruitment_turnover']['labels'];
+                $recruits = $charts['recruitment_turnover']['recrutements'];
+                $departs = $charts['recruitment_turnover']['departs'];
+                for ($i = 0; $i < count($labels); $i++) {
+                    fputcsv($file, [$labels[$i] ?? '', $recruits[$i] ?? 0, $departs[$i] ?? 0], ';');
+                }
+                fputcsv($file, [], ';');
+            }
+
+            // ============================
+            // 9. ÉTAT DES TÂCHES
+            // ============================
+            if (!empty($charts['task_status_distribution']['labels'])) {
+                fputcsv($file, ['=== ÉTAT DES TÂCHES ==='], ';');
+                fputcsv($file, ['Statut', 'Nombre'], ';');
+                $labels = $charts['task_status_distribution']['labels'];
+                $values = $charts['task_status_distribution']['data'];
+                for ($i = 0; $i < count($labels); $i++) {
+                    fputcsv($file, [$labels[$i] ?? '', $values[$i] ?? 0], ';');
+                }
+                fputcsv($file, [], ';');
+            }
+
+            // ============================
+            // 10. TÂCHES CRÉÉES VS TERMINÉES (6 mois)
+            // ============================
+            if (!empty($charts['task_completion_evolution']['labels'])) {
+                fputcsv($file, ['=== TÂCHES CRÉÉES VS TERMINÉES (6 MOIS) ==='], ';');
+                fputcsv($file, ['Mois', 'Créées', 'Terminées'], ';');
+                $labels = $charts['task_completion_evolution']['labels'];
+                $created = $charts['task_completion_evolution']['created'];
+                $completed = $charts['task_completion_evolution']['completed'];
+                for ($i = 0; $i < count($labels); $i++) {
+                    fputcsv($file, [$labels[$i] ?? '', $created[$i] ?? 0, $completed[$i] ?? 0], ';');
+                }
+                fputcsv($file, [], ';');
+            }
+
+            // ============================
+            // 11. CHARGE DE TRAVAIL PAR DÉPARTEMENT
+            // ============================
+            if (!empty($charts['tasks_by_department'])) {
+                fputcsv($file, ['=== CHARGE DE TRAVAIL PAR DÉPARTEMENT ==='], ';');
+                fputcsv($file, ['Département', 'Tâches actives'], ';');
+                foreach ($charts['tasks_by_department'] as $item) {
+                    fputcsv($file, [$item['label'] ?? '', $item['value'] ?? 0], ';');
+                }
+                fputcsv($file, [], ';');
+            }
+
+            // ============================
+            // 12. STAGIAIRES - ÉVOLUTION
+            // ============================
+            if (!empty($charts['intern_evolution']['labels'])) {
+                fputcsv($file, ['=== STAGIAIRES - RECRUTEMENTS VS FINS DE STAGE (12 MOIS) ==='], ';');
+                fputcsv($file, ['Mois', 'Nouveaux', 'Fins de stage'], ';');
+                $labels = $charts['intern_evolution']['labels'];
+                $newI = $charts['intern_evolution']['new'];
+                $ended = $charts['intern_evolution']['ended'];
+                for ($i = 0; $i < count($labels); $i++) {
+                    fputcsv($file, [$labels[$i] ?? '', $newI[$i] ?? 0, $ended[$i] ?? 0], ';');
+                }
+                fputcsv($file, [], ';');
+            }
+
+            // ============================
+            // 13. STAGIAIRES - PERFORMANCE MOYENNE
+            // ============================
+            if (!empty($charts['intern_performance']['labels'])) {
+                fputcsv($file, ['=== PERFORMANCE MOYENNE DES STAGIAIRES ==='], ';');
+                fputcsv($file, ['Critère', 'Note (/10)'], ';');
+                $labels = $charts['intern_performance']['labels'];
+                $values = $charts['intern_performance']['data'];
+                for ($i = 0; $i < count($labels); $i++) {
+                    fputcsv($file, [$labels[$i] ?? '', $values[$i] ?? 0], ';');
+                }
+                fputcsv($file, [], ';');
+            }
+
+            // ============================
+            // 14. DÉMOGRAPHIE - PARITÉ H/F
+            // ============================
+            if (!empty($charts['gender_distribution'])) {
+                fputcsv($file, ['=== PARITÉ (H/F) ==='], ';');
+                fputcsv($file, ['Genre', 'Nombre'], ';');
+                foreach ($charts['gender_distribution'] as $g) {
+                    fputcsv($file, [$g['label'] ?? '', $g['value'] ?? 0], ';');
+                }
+                fputcsv($file, [], ';');
+            }
+
+            // ============================
+            // 15. DÉMOGRAPHIE - PYRAMIDE DES ÂGES
+            // ============================
+            if (!empty($charts['age_pyramid']['labels'])) {
+                fputcsv($file, ['=== PYRAMIDE DES ÂGES ==='], ';');
+                fputcsv($file, ['Tranche d\'âge', 'Nombre'], ';');
+                $labels = $charts['age_pyramid']['labels'];
+                $values = $charts['age_pyramid']['data'];
+                for ($i = 0; $i < count($labels); $i++) {
+                    fputcsv($file, [$labels[$i] ?? '', $values[$i] ?? 0], ';');
+                }
+                fputcsv($file, [], ';');
+            }
+
+            // ============================
+            // 16. DÉMOGRAPHIE - ANCIENNETÉ
+            // ============================
+            if (!empty($charts['seniority_distribution']['labels'])) {
+                fputcsv($file, ['=== DISTRIBUTION PAR ANCIENNETÉ ==='], ';');
+                fputcsv($file, ['Ancienneté', 'Nombre'], ';');
+                $labels = $charts['seniority_distribution']['labels'];
+                $values = $charts['seniority_distribution']['data'];
+                for ($i = 0; $i < count($labels); $i++) {
+                    fputcsv($file, [$labels[$i] ?? '', $values[$i] ?? 0], ';');
+                }
+                fputcsv($file, [], ';');
+            }
+
+            // ============================
+            // 17. TOP RETARDATAIRES
+            // ============================
+            fputcsv($file, ['=== TOP RETARDATAIRES ==='], ';');
+            fputcsv($file, ['Rang', 'Nom', 'Département', 'Nb retards', 'Moy. minutes'], ';');
+            if (!empty($data['latecomers'])) {
+                foreach ($data['latecomers'] as $l) {
+                    fputcsv($file, [$l['rank'], $l['name'], $l['department'], $l['count'], $l['avg_minutes']], ';');
+                }
+            }
+            fputcsv($file, [], ';');
+
+            // ============================
+            // 18. MEILLEURE ASSIDUITÉ
+            // ============================
+            fputcsv($file, ['=== MEILLEURE ASSIDUITÉ ==='], ';');
+            fputcsv($file, ['Rang', 'Nom', 'Département', 'Présences', 'À l\'heure', 'Retards', 'Taux ponctualité (%)', 'Heures totales'], ';');
+            if (!empty($data['best_attendance'])) {
+                foreach ($data['best_attendance'] as $a) {
+                    fputcsv($file, [$a['rank'], $a['name'], $a['department'], $a['presence_count'], $a['on_time_count'], $a['late_count'], $a['punctuality_rate'] . '%', $a['total_hours']], ';');
+                }
+            }
+            fputcsv($file, [], ';');
+
+            // ============================
+            // 19. TOP PERFORMERS
+            // ============================
+            fputcsv($file, ['=== TOP PERFORMERS (EMPLOYÉS) ==='], ';');
+            fputcsv($file, ['Rang', 'Nom', 'Département', 'Score', 'Pourcentage (%)'], ';');
+            if (!empty($data['top_performers']['employees'])) {
+                foreach ($data['top_performers']['employees'] as $p) {
+                    fputcsv($file, [$p['rank'], $p['name'], $p['department'], $p['score'], $p['percentage'] . '%'], ';');
+                }
+            }
+            fputcsv($file, [], ';');
+
+            fputcsv($file, ['=== TOP PERFORMERS (STAGIAIRES) ==='], ';');
+            fputcsv($file, ['Rang', 'Nom', 'Département', 'Score', 'Pourcentage (%)'], ';');
+            if (!empty($data['top_performers']['interns'])) {
+                foreach ($data['top_performers']['interns'] as $p) {
+                    fputcsv($file, [$p['rank'], $p['name'], $p['department'], $p['score'], $p['percentage'] . '%'], ';');
+                }
+            }
+            fputcsv($file, [], ';');
+
+            // ============================
+            // 20. STATISTIQUES ÉVALUATIONS
+            // ============================
+            if (!empty($data['evaluation_stats'])) {
+                $evalEmp = $data['evaluation_stats']['employees'] ?? [];
+                $evalInt = $data['evaluation_stats']['interns'] ?? [];
+
+                fputcsv($file, ['=== STATISTIQUES ÉVALUATIONS EMPLOYÉS ==='], ';');
+                fputcsv($file, ['Indicateur', 'Valeur'], ';');
+                fputcsv($file, ['Total évaluations', $evalEmp['total'] ?? 0], ';');
+                fputcsv($file, ['Validées', $evalEmp['validated'] ?? 0], ';');
+                fputcsv($file, ['Brouillons', $evalEmp['draft'] ?? 0], ';');
+                fputcsv($file, ['Non évalués', $evalEmp['not_evaluated'] ?? 0], ';');
+                fputcsv($file, ['Score moyen', $evalEmp['avg_score'] ?? 0], ';');
+                fputcsv($file, ['Score max', $evalEmp['max_score'] ?? 0], ';');
+                fputcsv($file, ['Score min', $evalEmp['min_score'] ?? 0], ';');
+                fputcsv($file, [], ';');
+
+                fputcsv($file, ['=== STATISTIQUES ÉVALUATIONS STAGIAIRES ==='], ';');
+                fputcsv($file, ['Indicateur', 'Valeur'], ';');
+                fputcsv($file, ['Total évaluations (4 sem.)', $evalInt['total_evaluations'] ?? 0], ';');
+                fputcsv($file, ['Score moyen', $evalInt['avg_score'] ?? 0], ';');
+                fputcsv($file, ['Non évalués cette semaine', $evalInt['not_evaluated_this_week'] ?? 0], ';');
+                fputcsv($file, [], ';');
+            }
+
+            // ============================
+            // 21. CONGÉS EN ATTENTE
+            // ============================
+            fputcsv($file, ['=== CONGÉS EN ATTENTE ==='], ';');
+            fputcsv($file, ['Employé', 'Type', 'Date début', 'Date fin', 'Durée (jours)'], ';');
+            foreach ($data['pending_leaves'] as $leave) {
+                fputcsv($file, [
+                    $leave->user->name ?? 'Inconnu',
+                    $leave->type_label ?? $leave->type,
+                    $leave->date_debut?->format('d/m/Y') ?? '-',
+                    $leave->date_fin?->format('d/m/Y') ?? '-',
+                    $leave->duree ?? '-',
+                ], ';');
+            }
+            fputcsv($file, [], ';');
+
+            // ============================
+            // 22. LISTE COMPLÈTE DES EMPLOYÉS
+            // ============================
+            fputcsv($file, ['=== LISTE DES EMPLOYÉS ==='], ';');
+            fputcsv($file, ['Nom', 'Email', 'Département', 'Poste', 'Type contrat', 'Date embauche', 'Statut'], ';');
+            foreach ($data['employees'] as $emp) {
+                fputcsv($file, [
+                    $emp->name,
+                    $emp->email,
+                    $emp->department->name ?? '-',
+                    $emp->position->name ?? '-',
+                    strtoupper($emp->contract_type ?? '-'),
+                    $emp->hire_date?->format('d/m/Y') ?? '-',
+                    $emp->status === 'active' ? 'Actif' : ($emp->status ?? '-'),
+                ], ';');
+            }
+            fputcsv($file, [], ';');
+
+            // ============================
+            // PIED DE PAGE
+            // ============================
+            fputcsv($file, ['=== INFORMATIONS DU RAPPORT ==='], ';');
+            fputcsv($file, ['Rapport généré le', $data['generated_at']], ';');
+            fputcsv($file, ['Période', $data['period_label']], ';');
+            if ($data['department']) {
+                fputcsv($file, ['Département filtré', $data['department']->name], ';');
+            }
+            fputcsv($file, ['Application', 'ManageX - Analytics RH'], ';');
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
     }
 
     /**
@@ -1011,6 +1373,10 @@ class AnalyticsController extends Controller
         // Récupérer les KPIs via la méthode existante
         $kpisResponse = $this->getKpiData($request);
         $kpis = json_decode($kpisResponse->getContent(), true);
+
+        // Récupérer les données des graphiques
+        $chartsResponse = $this->getChartsData($request);
+        $charts = json_decode($chartsResponse->getContent(), true);
 
         // Département sélectionné
         $department = $departmentId ? Department::find($departmentId) : null;
@@ -1042,18 +1408,27 @@ class AnalyticsController extends Controller
         $evalStatsResponse = $this->getEvaluationStats($request);
         $evaluationStats = json_decode($evalStatsResponse->getContent(), true);
 
+        // Liste complète des employés
+        $employees = User::where('role', 'employee')
+            ->with(['department:id,name', 'position:id,name'])
+            ->when($departmentId, fn ($q) => $q->where('department_id', $departmentId))
+            ->orderBy('name')
+            ->get();
+
         return [
             'title' => 'Rapport Analytics RH',
             'period_label' => $periodLabel,
             'department' => $department,
             'generated_at' => now()->format('d/m/Y H:i'),
             'kpis' => $kpis,
+            'charts' => $charts,
             'department_stats' => $departmentStats,
             'latecomers' => $latecomers,
             'pending_leaves' => $pendingLeaves,
             'top_performers' => $topPerformers,
             'best_attendance' => $bestAttendance,
             'evaluation_stats' => $evaluationStats,
+            'employees' => $employees,
         ];
     }
 

@@ -8,6 +8,8 @@ use App\Http\Controllers\Admin\DepartmentController;
 use App\Http\Controllers\Admin\DocumentController as AdminDocumentController;
 use App\Http\Controllers\Admin\EmployeeController;
 use App\Http\Controllers\Admin\EmployeeEvaluationController;
+use App\Http\Controllers\Admin\EmployeeInvitationController;
+use App\Http\Controllers\EmployeeOnboardingController;
 use App\Http\Controllers\Admin\GeolocationZoneController;
 use App\Http\Controllers\Admin\InternEvaluationController as AdminInternEvaluationController;
 use App\Http\Controllers\Admin\LeaveController as AdminLeaveController;
@@ -292,6 +294,10 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::post('/employees/{employee}/suspend', [EmployeeController::class, 'suspend'])->name('employees.suspend');
     Route::post('/employees/{employee}/activate', [EmployeeController::class, 'activate'])->name('employees.activate');
 
+    // Invitations employés
+    Route::get('/employee-invitations/create', [EmployeeInvitationController::class, 'create'])->name('employee-invitations.create');
+    Route::post('/employee-invitations', [EmployeeInvitationController::class, 'store'])->name('employee-invitations.store');
+
     // Gestion des présences - Master View (fusion présences + global-view)
     Route::get('/presences', [AdminPresenceController::class, 'masterView'])->name('presences.index');
     Route::get('/presences/data', [AdminPresenceController::class, 'masterViewData'])->name('presences.master-data');
@@ -315,6 +321,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::delete('/tasks/{task}', [AdminTaskController::class, 'destroy'])->name('tasks.destroy');
     Route::get('/task-documents/{document}/download', [AdminTaskController::class, 'downloadDocument'])->name('tasks.document.download');
     Route::delete('/task-documents/{document}', [AdminTaskController::class, 'deleteDocument'])->name('tasks.document.delete');
+    Route::post('/tasks/{task}/remind', [AdminTaskController::class, 'remind'])->name('tasks.remind');
 
     // Gestion des congés
     Route::get('/leaves', [AdminLeaveController::class, 'index'])->name('leaves.index');
@@ -636,6 +643,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+// Invitation employé (routes publiques, pas d'auth)
+Route::middleware('throttle:10,1')->prefix('invitation')->name('invitation.')->group(function () {
+    Route::get('/{token}', [EmployeeOnboardingController::class, 'show'])->name('show');
+    Route::post('/{token}', [EmployeeOnboardingController::class, 'complete'])->name('complete');
 });
 
 require __DIR__.'/auth.php';

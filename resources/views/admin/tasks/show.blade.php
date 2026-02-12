@@ -144,6 +144,46 @@
                             </form>
                         </div>
                     </div>
+                @elseif(in_array($task->statut, ['approved', 'in_progress']))
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Actions d'administration</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <a href="{{ route('admin.tasks.edit', $task) }}" class="flex items-center justify-center px-4 py-2 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transition-colors">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                                Modifier
+                            </a>
+                            
+                            <form action="{{ route('admin.tasks.remind', $task) }}" method="POST">
+                                @csrf
+                                <button type="submit" class="w-full flex items-center justify-center px-4 py-2 bg-amber-500 text-white font-medium rounded-lg hover:bg-amber-600 transition-colors">
+                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+                                    Envoyer un rappel
+                                </button>
+                            </form>
+
+                            <form action="{{ route('admin.tasks.update', $task) }}" method="POST">
+                                @csrf
+                                @method('PUT')
+                                <input type="hidden" name="statut" value="completed">
+                                <input type="hidden" name="user_id" value="{{ $task->user_id }}">
+                                <input type="hidden" name="titre" value="{{ $task->titre }}">
+                                <input type="hidden" name="priorite" value="{{ $task->priorite }}">
+                                
+                                <button type="submit" class="w-full flex items-center justify-center px-4 py-2 bg-emerald-600 text-white font-medium rounded-lg hover:bg-emerald-700 transition-colors" onclick="return confirm('Forcer la fin de cette tâche ?')">
+                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                    Marquer terminée
+                                </button>
+                            </form>
+                
+                            <form action="{{ route('admin.tasks.reject', $task) }}" method="POST">
+                                @csrf
+                                <button type="submit" class="w-full flex items-center justify-center px-4 py-2 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition-colors" onclick="return confirm('Annuler cette tâche ?')">
+                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                                    Annuler / Rejeter
+                                </button>
+                            </form>
+                        </div>
+                    </div>
                 @endif
                 
                 @if($task->statut === 'completed')

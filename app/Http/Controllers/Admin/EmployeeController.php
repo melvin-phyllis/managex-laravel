@@ -9,6 +9,7 @@ use App\Models\EmployeeWorkDay;
 use App\Models\Position;
 use App\Models\User;
 use App\Notifications\WelcomeEmployeeNotification;
+use App\Traits\GeneratesEmployeeId;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -17,6 +18,7 @@ use Illuminate\Validation\Rules;
 
 class EmployeeController extends Controller
 {
+    use GeneratesEmployeeId;
     public function index(Request $request)
     {
         $query = User::where('role', 'employee')->with(['department', 'position']);
@@ -117,11 +119,68 @@ class EmployeeController extends Controller
     }
 
     /**
-     * Export all employees - Feature disabled (Excel package removed for hosting compatibility)
+     * Export employees to CSV
      */
     public function export(Request $request)
     {
-        return redirect()->back()->with('error', 'L\'export Excel n\'est pas disponible sur cet hébergement.');
+        $query = User::where('role', 'employee')->with(['department:id,name', 'position:id,name']);
+
+        if ($request->filled('department_id')) {
+            $query->where('department_id', $request->department_id);
+        }
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+        if ($request->filled('contract_type')) {
+            $query->where('contract_type', $request->contract_type);
+        }
+
+        $employees = $query->orderBy('name')->get();
+
+        $filename = 'employes-' . now()->format('Y-m-d') . '.csv';
+
+        $headers = [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => "attachment; filename=\"{$filename}\"",
+        ];
+
+        $callback = function () use ($employees) {
+            $file = fopen('php://output', 'w');
+            // BOM UTF-8 pour Excel
+            fprintf($file, chr(0xEF) . chr(0xBB) . chr(0xBF));
+
+            fputcsv($file, [
+                'Matricule', 'Nom', 'Email', 'Téléphone', 'Département', 'Poste',
+                'Type contrat', 'Date embauche', 'Fin contrat', 'Statut',
+                'Genre', 'Date naissance', 'Adresse', 'Ville',
+                'Contact urgence', 'Tél. urgence'
+            ], ';');
+
+            foreach ($employees as $emp) {
+                fputcsv($file, [
+                    $emp->employee_id ?? '-',
+                    $emp->name,
+                    $emp->email,
+                    $emp->telephone ?? '-',
+                    $emp->department->name ?? '-',
+                    $emp->position->name ?? '-',
+                    strtoupper($emp->contract_type ?? '-'),
+                    $emp->hire_date?->format('d/m/Y') ?? '-',
+                    $emp->contract_end_date?->format('d/m/Y') ?? '-',
+                    $emp->status === 'active' ? 'Actif' : ($emp->status === 'suspended' ? 'Suspendu' : ($emp->status ?? '-')),
+                    match($emp->gender) { 'male' => 'Homme', 'female' => 'Femme', default => '-' },
+                    $emp->date_of_birth?->format('d/m/Y') ?? '-',
+                    $emp->address ?? '-',
+                    $emp->city ?? '-',
+                    $emp->emergency_contact_name ?? '-',
+                    $emp->emergency_contact_phone ?? '-',
+                ], ';');
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
     }
 
     public function create()
@@ -248,38 +307,6 @@ class EmployeeController extends Controller
                 ->withInput()
                 ->with('error', 'Erreur lors de la création : '.$e->getMessage());
         }
-    }
-
-    /**
-     * Générer un matricule unique pour l'employé
-     */
-    protected function generateEmployeeId(): string
-    {
-        $prefix = 'EMP';
-        $year = date('Y');
-        $prefixWithYear = $prefix.$year;
-        $prefixLen = strlen($prefixWithYear);
-
-        $lastEmployee = User::where('employee_id', 'like', "{$prefixWithYear}%")
-            ->orderByRaw('CAST(SUBSTRING(employee_id, '.($prefixLen + 1).') AS UNSIGNED) DESC')
-            ->first();
-
-        if ($lastEmployee) {
-            $lastNumber = intval(substr($lastEmployee->employee_id, $prefixLen));
-            $nextNumber = $lastNumber + 1;
-        } else {
-            $nextNumber = 1;
-        }
-
-        $employeeId = $prefixWithYear.str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
-
-        // Verifier l'unicite (securite anti-doublon)
-        while (User::where('employee_id', $employeeId)->exists()) {
-            $nextNumber++;
-            $employeeId = $prefixWithYear.str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
-        }
-
-        return $employeeId;
     }
 
     public function show(User $employee)
