@@ -24,7 +24,7 @@ class MistralService
         $this->apiKey = config('ai.mistral.api_key', '');
         $this->baseUrl = config('ai.mistral.base_url', 'https://api.mistral.ai/v1');
         $this->model = config('ai.mistral.model', 'mistral-small-latest');
-        $this->maxTokens = config('ai.mistral.max_tokens', 1024);
+        $this->maxTokens = config('ai.mistral.max_tokens', 2048);
         $this->temperature = config('ai.mistral.temperature', 0.3);
         $this->timeout = config('ai.mistral.timeout', 30);
     }

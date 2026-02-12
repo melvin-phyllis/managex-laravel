@@ -88,97 +88,106 @@ class HRAssistantService
     /**
      * Construire le contexte admin (données entreprise).
      */
+    /**
+     * Construire le contexte admin (données entreprise détaillées).
+     */
     protected function buildAdminContext(): string
     {
         $now = Carbon::now();
         $monthStart = $now->copy()->startOfMonth();
         $todayStr = $now->toDateString();
 
-        // Effectif
+        // 1. Données Gloables
         $totalActive = User::where('role', 'employee')->where('status', 'active')->count();
-        $totalInterns = User::where('status', 'active')->where('contract_type', 'stage')->count();
-        $totalEmployees = $totalActive - $totalInterns;
-
-        // Présences aujourd'hui
         $presentsToday = Presence::where('date', $todayStr)->distinct('user_id')->count('user_id');
-
-        // Présences du mois
-        $monthPresences = Presence::whereBetween('date', [$monthStart, $now])->get();
-        $lateCountMonth = $monthPresences->where('is_late', true)->count();
-        $totalLateHours = round($monthPresences->sum('late_minutes') / 60, 1);
-
-        // Retards par département
-        $latsByDept = Presence::whereBetween('date', [$monthStart, $now])
-            ->where('is_late', true)
-            ->join('users', 'presences.user_id', '=', 'users.id')
-            ->join('departments', 'users.department_id', '=', 'departments.id')
-            ->selectRaw('departments.name as dept, COUNT(*) as total')
-            ->groupBy('departments.name')
-            ->orderByDesc('total')
-            ->limit(5)
-            ->pluck('total', 'dept');
-
-        // Congés en attente
+        $lateCountMonth = Presence::whereBetween('date', [$monthStart, $now])->where('is_late', true)->count();
         $pendingLeaves = Leave::where('statut', 'en_attente')->count();
-        $onLeaveToday = Leave::where('statut', 'approuve')
-            ->where('date_debut', '<=', $todayStr)
-            ->where('date_fin', '>=', $todayStr)
-            ->count();
 
-        // Tâches
-        $taskStats = Task::selectRaw('statut, COUNT(*) as total')
-            ->groupBy('statut')
-            ->pluck('total', 'statut');
+        // 2. Données Détaillées par Employé
+        // On récupère TOUS les employés actifs avec leurs relations clés
+        $employees = User::with(['department', 'position', 'currentContract'])
+            ->where('status', 'active')
+            ->get();
 
-        // Départements
-        $departments = Department::withCount(['users' => function ($q) {
-            $q->where('status', 'active');
-        }])->get();
+        $employeeDetails = [];
 
-        $lines = [
-            "=== DONNÉES ENTREPRISE ({$now->format('d/m/Y H:i')}) ===",
-            '',
-            '--- Effectif ---',
-            "Employés actifs (CDI): {$totalEmployees}",
-            "Stagiaires actifs: {$totalInterns}",
-            "Effectif total actif: {$totalActive}",
-            "Présents aujourd'hui: {$presentsToday}/{$totalActive}",
-            "En congé aujourd'hui: {$onLeaveToday}",
-            '',
-            '--- Présences (mois en cours) ---',
-            "Retards ce mois: {$lateCountMonth} occurrences",
-            "Heures de retard cumulées: {$totalLateHours}h",
+        foreach ($employees as $emp) {
+            // Stats Présence du mois
+            $presencesMonth = Presence::where('user_id', $emp->id)
+                ->whereBetween('date', [$monthStart, $now])
+                ->get();
+            
+            $daysPresent = $presencesMonth->count();
+            $lates = $presencesMonth->where('is_late', true)->count();
+            $totalLateMins = $presencesMonth->sum('late_minutes');
+            
+            // Présence aujourd'hui
+            $todayPresence = Presence::where('user_id', $emp->id)->where('date', $todayStr)->first();
+            $statusToday = $todayPresence 
+                ? ($todayPresence->is_late ? "Présent (Retard {$todayPresence->late_minutes}m)" : "Présent (À l'heure)")
+                : "Absent";
+
+            // Tâches
+            $tasks = Task::where('user_id', $emp->id)
+                ->selectRaw('statut, count(*) as count')
+                ->groupBy('statut')
+                ->pluck('count', 'statut')
+                ->toArray();
+            
+            $pendingTasks = $tasks['pending'] ?? 0;
+            $completedTasks = $tasks['completed'] ?? 0;
+
+            // Congés
+            $leaveBalance = $emp->leave_balance;
+            $activeLeave = Leave::where('user_id', $emp->id)
+                ->where('statut', 'approuve')
+                ->where('date_debut', '<=', $todayStr)
+                ->where('date_fin', '>=', $todayStr)
+                ->first();
+            
+            if ($activeLeave) {
+                $statusToday = "En congé ({$activeLeave->type}) jusqu'au " . Carbon::parse($activeLeave->date_fin)->format('d/m');
+            }
+
+            // Évaluation (Stagiaires uniquement pour l'instant dans le contexte simplifié, ou dernière éval employés)
+            // Pour l'instant on reste simple pour ne pas exploser le contexte, on met juste la note moyenne si dispo
+            $lastEval = null; // À implémenter si besoin de détails spécifiques
+
+            $role = $emp->role === 'admin' ? 'Admin' : ($emp->contract_type === 'stage' ? 'Stagiaire' : 'Employé');
+
+            $details = [
+                "ID: {$emp->id}",
+                "Nom: {$emp->name}",
+                "Dépt: " . ($emp->department->name ?? 'N/A'),
+                "Poste: " . ($emp->position->name ?? 'N/A'),
+                "Rôle: {$role}",
+                "Statut Aujourd'hui: {$statusToday}",
+                "Stats Mois: {$daysPresent}j présents, {$lates} retards ({$totalLateMins} min)",
+                "Tâches: {$pendingTasks} en cours, {$completedTasks} terminées",
+                "Solde Congés: {$leaveBalance}j",
+                "Contrat: " . ($emp->contract_type ?? 'N/A') . " (Début: " . ($emp->hire_date ? Carbon::parse($emp->hire_date)->format('d/m/Y') : '?') . ")"
+            ];
+
+            $employeeDetails[] = implode(" | ", $details);
+        }
+
+        // 3. Construction du Prompt Final
+        $contextLines = [
+            "=== RÉSUMÉ GLOBAL ({$now->format('d/m/Y H:i')}) ===",
+            "Effectif Actif: {$totalActive}",
+            "Présents ce jour: {$presentsToday}",
+            "Retards ce mois: {$lateCountMonth}",
+            "Congés en attente: {$pendingLeaves}",
+            "",
+            "=== DÉTAILS DES EMPLOYÉS (Base de données en temps réel) ===",
+            "Format: ID | Nom | Département | Poste | Rôle | Statut Jour | Stats Mois | Tâches | Congés | Contrat",
+            ""
         ];
 
-        if ($latsByDept->isNotEmpty()) {
-            $lines[] = '';
-            $lines[] = '--- Retards par département (top 5) ---';
-            foreach ($latsByDept as $dept => $count) {
-                $lines[] = "  {$dept}: {$count} retards";
-            }
-        }
+        // Ajouter la liste des employés
+        $contextLines = array_merge($contextLines, $employeeDetails);
 
-        $lines[] = '';
-        $lines[] = '--- Congés ---';
-        $lines[] = "Demandes en attente: {$pendingLeaves}";
-        $lines[] = "En congé aujourd'hui: {$onLeaveToday}";
-
-        $lines[] = '';
-        $lines[] = '--- Tâches ---';
-        $lines[] = 'En attente: '.($taskStats['pending'] ?? 0);
-        $lines[] = 'Approuvées: '.($taskStats['approved'] ?? 0);
-        $lines[] = 'Complétées: '.($taskStats['completed'] ?? 0);
-        $lines[] = 'Validées: '.($taskStats['validated'] ?? 0);
-
-        if ($departments->isNotEmpty()) {
-            $lines[] = '';
-            $lines[] = '--- Départements ---';
-            foreach ($departments as $dept) {
-                $lines[] = "  {$dept->name}: {$dept->users_count} employés";
-            }
-        }
-
-        return implode("\n", $lines);
+        return implode("\n", $contextLines);
     }
 
     /**
@@ -189,34 +198,27 @@ class HRAssistantService
         $companyName = config('app.name', 'ManageX');
 
         return <<<PROMPT
-Tu es l'assistant IA de gestion RH de {$companyName}, destiné aux administrateurs. Tu réponds en français de manière concise et professionnelle.
+Tu es l'assistant IA de gestion RH de {$companyName}, destiné aux administrateurs. Tu réponds en français de manière concise, précise et professionnelle.
 
 RÔLE:
-- Tu aides l'administrateur à comprendre et analyser les données RH de l'entreprise
-- Tu donnes des insights sur les tendances (présences, retards, congés, tâches)
-- Tu proposes des recommandations concrètes et actionnables
-- Tu alertes sur les anomalies ou situations nécessitant une attention
+- Tu as accès en TEMPS RÉEL à toutes les données de la base (utilisateurs, tâches, présences, congés, etc.) via le contexte fourni.
+- Tu aides l'administrateur à analyser ces données, trouver des informations précises sur un employé, ou détecter des tendances.
+- Tes réponses doivent être basées UNIQUEMENT sur les données fournies. Si une info est absente, dis-le.
 
 RÈGLES STRICTES:
-- Sois concis: 2-4 phrases, sauf si une analyse détaillée est demandée
-- Base-toi uniquement sur les données fournies, n'invente rien
-- Utilise des pourcentages et comparaisons quand c'est pertinent
-- Mets en gras (**mot**) les chiffres clés et points importants
-- Si l'admin demande quelque chose hors contexte RH, redirige poliment
-- Ne donne pas de conseils juridiques
+- Sois direct et factuel.
+- Si on te demande "Qui est en retard ?", liste les noms.
+- Si on te demande des détails sur un employé, donne tout ce que tu as dans le contexte.
+- Ne mentionne jamais de données qui ne sont pas dans le contexte (pas d'hallucination).
 
-CONTEXTE ENTREPRISE:
+CONTEXTE BASE DE DONNÉES (Mise à jour temps réel):
 {$context}
 
-FONCTIONNALITÉS DISPONIBLES DANS L'APPLICATION:
-- Tableau de bord Analytics avec KPIs en temps réel
-- Gestion des présences (pointage, géolocalisation, retards)
-- Gestion des congés (approbation, soldes)
-- Assignation et suivi des tâches
-- Gestion de la paie (fiches, règles multi-pays)
-- Évaluations des employés et stagiaires
-- Messagerie interne
-- Gestion documentaire
+FONCTIONNALITÉS:
+- Analyse des présences et retards
+- Suivi des tâches et performances
+- Gestion des congés et contrats
+- Vue globale et détaillée par employé
 PROMPT;
     }
 

@@ -57,7 +57,7 @@
             </div>
 
             <!-- Form -->
-            <form action="{{ route('invitation.complete', $invitation->token) }}" method="POST" class="space-y-6">
+            <form action="{{ route('invitation.complete', $invitation->token) }}" method="POST" enctype="multipart/form-data" class="space-y-6">
                 @csrf
 
                 <!-- Section 1: Informations personnelles -->
@@ -71,6 +71,17 @@
                         </h2>
                     </div>
                     <div class="p-6">
+                        <!-- Photo de profil -->
+                        <div class="mb-6">
+                            <label for="avatar" class="block text-sm font-medium text-gray-700 mb-1">Photo de profil</label>
+                            <input type="file" name="avatar" id="avatar" accept="image/*"
+                                   class="w-full rounded-lg border border-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 @error('avatar') border-red-500 @enderror">
+                            <p class="mt-1 text-xs text-gray-500">JPG, PNG, GIF ou WebP. Max 2 Mo.</p>
+                            @error('avatar')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                             <!-- Telephone -->
                             <div>

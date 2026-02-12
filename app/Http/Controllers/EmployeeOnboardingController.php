@@ -9,6 +9,7 @@ use App\Traits\GeneratesEmployeeId;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules;
 
 class EmployeeOnboardingController extends Controller
@@ -61,6 +62,7 @@ class EmployeeOnboardingController extends Controller
         }
 
         $validated = $request->validate([
+            'avatar' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:2048'],
             'telephone' => ['required', 'string', 'max:20'],
             'date_of_birth' => ['required', 'date', 'before:today'],
             'gender' => ['required', 'in:male,female,other'],
@@ -82,10 +84,12 @@ class EmployeeOnboardingController extends Controller
             'emergency_contact_relationship.required' => 'La relation avec le contact d\'urgence est obligatoire.',
             'password.required' => 'Le mot de passe est obligatoire.',
             'password.confirmed' => 'Les mots de passe ne correspondent pas.',
+            'avatar.image' => 'Le fichier doit être une image.',
+            'avatar.max' => 'La photo ne doit pas dépasser 2 Mo.',
         ]);
 
         try {
-            DB::transaction(function () use ($invitation, $validated) {
+            DB::transaction(function () use ($request, $invitation, $validated) {
                 $employee = new User([
                     // From invitation (admin data)
                     'name' => $invitation->name,
@@ -116,6 +120,11 @@ class EmployeeOnboardingController extends Controller
 
                 $employee->password = Hash::make($validated['password']);
                 $employee->role = 'employee';
+
+                if ($request->hasFile('avatar')) {
+                    $employee->avatar = $request->file('avatar')->store('avatars', 'public');
+                }
+
                 $employee->save();
 
                 // Create work days
