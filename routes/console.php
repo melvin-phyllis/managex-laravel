@@ -116,3 +116,13 @@ Schedule::job(new \App\Jobs\SendBreakReminderJob('break_end'))
     ->dailyAt($breakEndTime)
     ->timezone('Europe/Paris')
     ->onOneServer();
+
+// ==========================================
+// Task Reminders (24h before & Overdue)
+// ==========================================
+
+// Daily at 08:00 AM - Send task reminders
+Schedule::command('notifications:send-reminders')
+    ->dailyAt('08:00')
+    ->timezone('Europe/Paris')
+    ->onOneServer();
