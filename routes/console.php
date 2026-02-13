@@ -126,3 +126,13 @@ Schedule::command('notifications:send-reminders')
     ->dailyAt('08:00')
     ->timezone('Africa/Abidjan')
     ->onOneServer();
+
+// ==========================================
+// Daily Report (Compte Rendu Quotidien)
+// ==========================================
+
+// Daily at 19:00 - Send daily summary report to admins
+Schedule::command('report:daily')
+    ->dailyAt('19:00')
+    ->timezone('Africa/Abidjan')
+    ->onOneServer();

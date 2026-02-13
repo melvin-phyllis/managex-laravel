@@ -298,4 +298,52 @@
         }, 60000);
     </script>
     @endpush
+
+    {{-- Modal: Configurer l'email de réception du rapport quotidien --}}
+    @unless($hasReportEmail ?? true)
+    <div x-data="{ showReportEmailModal: true }" x-show="showReportEmailModal" x-cloak
+         class="fixed inset-0 z-50 flex items-center justify-center p-4" style="background: rgba(0,0,0,0.5);">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden" @click.away="showReportEmailModal = false">
+            <div class="px-6 py-5" style="background: linear-gradient(135deg, #5680E9, #84CEEB);">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-white">Rapport quotidien</h3>
+                        <p class="text-white/80 text-sm">Configurez votre email de réception</p>
+                    </div>
+                </div>
+            </div>
+
+            <form action="{{ route('admin.settings.update-report-email') }}" method="POST" class="p-6">
+                @csrf
+                @method('PUT')
+
+                <p class="text-sm text-gray-600 mb-4">
+                    Chaque jour à 19h, un compte rendu complet de la journée vous sera envoyé par email (présences, retards, tâches, congés...).
+                </p>
+
+                <div>
+                    <label for="modal_report_email" class="block text-sm font-medium text-gray-700 mb-1">Email de réception</label>
+                    <input type="email" name="report_email" id="modal_report_email" required
+                           value="{{ auth()->user()->email }}"
+                           class="w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
+                           placeholder="votre-email@exemple.com">
+                </div>
+
+                <div class="flex gap-3 mt-6">
+                    <button type="submit" class="flex-1 px-4 py-2.5 text-white font-medium rounded-xl transition-all" style="background: linear-gradient(135deg, #5680E9, #5AB9EA);">
+                        Enregistrer
+                    </button>
+                    <button type="button" @click="showReportEmailModal = false" class="px-4 py-2.5 text-gray-600 font-medium rounded-xl border border-gray-300 hover:bg-gray-50 transition-all">
+                        Plus tard
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    @endunless
 </x-layouts.admin>

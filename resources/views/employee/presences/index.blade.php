@@ -56,9 +56,93 @@
                         </div>
                     </div>
                 </div>
-                <div class="flex items-center gap-2">
+                <div class="flex items-center gap-2" x-data="{ showWorkDaysEditor: false }">
                     <span class="text-sm text-gray-600">Vos jours de travail:</span>
                     <span class="font-medium text-indigo-700">{{ $workDayNames ?? 'Non définis' }}</span>
+                    @if(isset($modificationsThisWeek) && $modificationsThisWeek < $maxModifications)
+                    <button @click="showWorkDaysEditor = !showWorkDaysEditor" type="button" class="ml-2 inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-lg bg-indigo-100 text-indigo-700 hover:bg-indigo-200 transition-colors">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                        Modifier
+                    </button>
+                    @else
+                    <span class="ml-2 inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-lg bg-gray-100 text-gray-500">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                        2/2 modifications
+                    </span>
+                    @endif
+
+                    <!-- Work Days Editor Panel (collapsible) -->
+                    <div x-show="showWorkDaysEditor" x-cloak x-transition:enter="ease-out duration-200" x-transition:enter-start="opacity-0 -translate-y-2" x-transition:enter-end="opacity-100 translate-y-0"
+                         class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/50" @click.self="showWorkDaysEditor = false" @keydown.escape.window="showWorkDaysEditor = false">
+                        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 p-6" @click.stop
+                             x-data="{
+                                 selectedDays: @json($currentWorkDays ?? []),
+                                 maxAllowed: {{ $maxAllowedDays ?? 3 }},
+                                 dayNames: {1: 'Lundi', 2: 'Mardi', 3: 'Mercredi', 4: 'Jeudi', 5: 'Vendredi'},
+                                 dayShort: {1: 'Lun', 2: 'Mar', 3: 'Mer', 4: 'Jeu', 5: 'Ven'},
+                                 dayIcons: {1: '🔵', 2: '🟢', 3: '🟡', 4: '🟠', 5: '🔴'},
+                                 toggleDay(day) {
+                                     const idx = this.selectedDays.indexOf(day);
+                                     if (idx > -1) { this.selectedDays.splice(idx, 1); }
+                                     else if (this.selectedDays.length < this.maxAllowed) { this.selectedDays.push(day); }
+                                 },
+                                 isSelected(day) { return this.selectedDays.includes(day); },
+                                 get isMaxReached() { return this.selectedDays.length >= this.maxAllowed; },
+                                 get isValid() { return this.selectedDays.length >= 1 && this.selectedDays.length <= this.maxAllowed; }
+                             }">
+                            <div class="flex items-center justify-between mb-5">
+                                <div>
+                                    <h3 class="text-lg font-semibold text-gray-900">Modifier vos jours de travail</h3>
+                                    <p class="text-xs text-gray-500 mt-0.5">Sélectionnez au maximum <span class="font-bold text-indigo-600" x-text="maxAllowed"></span> jour(s) cette semaine</p>
+                                </div>
+                                <button @click="showWorkDaysEditor = false" class="text-gray-400 hover:text-gray-600 p-1 rounded-lg hover:bg-gray-100">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                </button>
+                            </div>
+
+                            <div class="grid grid-cols-5 gap-2 mb-5">
+                                <template x-for="day in [1,2,3,4,5]" :key="day">
+                                    <button type="button" @click="toggleDay(day)"
+                                            :class="isSelected(day)
+                                                ? 'bg-gradient-to-br from-indigo-500 to-purple-600 text-white shadow-lg shadow-indigo-500/30 scale-105 border-transparent'
+                                                : (isMaxReached ? 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed' : 'bg-gray-50 text-gray-600 border-gray-200 hover:border-indigo-300 hover:bg-indigo-50')"
+                                            :disabled="!isSelected(day) && isMaxReached"
+                                            class="flex flex-col items-center gap-1.5 p-3 rounded-xl border-2 transition-all duration-200 transform">
+                                        <span class="text-lg" x-text="dayIcons[day]"></span>
+                                        <span class="text-xs font-semibold" x-text="dayShort[day]"></span>
+                                    </button>
+                                </template>
+                            </div>
+
+                            <!-- Validation + Counter -->
+                            <div class="flex items-center justify-between mb-4">
+                                <div>
+                                    <span class="text-xs font-medium" :class="isValid ? 'text-green-600' : 'text-red-500'"
+                                          x-text="selectedDays.length + '/' + maxAllowed + ' jour(s) sélectionné(s)' + (isMaxReached ? ' (max atteint)' : '')"></span>
+                                </div>
+                                <div class="flex items-center gap-1.5">
+                                    <span class="text-xs text-gray-500">Modifications cette semaine:</span>
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold {{ $modificationsThisWeek >= $maxModifications ? 'bg-red-100 text-red-700' : 'bg-indigo-100 text-indigo-700' }}">{{ $modificationsThisWeek }}/{{ $maxModifications }}</span>
+                                </div>
+                            </div>
+
+                            <form action="{{ route('employee.presences.work-days') }}" method="POST">
+                                @csrf
+                                @method('PUT')
+                                <template x-for="day in selectedDays" :key="'input-' + day">
+                                    <input type="hidden" name="work_days[]" :value="day">
+                                </template>
+                                <div class="flex gap-3">
+                                    <button type="button" @click="showWorkDaysEditor = false" class="flex-1 px-4 py-2.5 bg-gray-100 text-gray-700 rounded-xl font-medium hover:bg-gray-200 transition-colors">Annuler</button>
+                                    <button type="submit" :disabled="!isValid"
+                                            class="flex-1 px-4 py-2.5 text-white rounded-xl font-medium transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none"
+                                            style="background: linear-gradient(135deg, #31708E, #5085A5);">
+                                        Enregistrer
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

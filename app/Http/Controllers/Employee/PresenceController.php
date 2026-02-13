@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Employee;
 
 use App\Http\Controllers\Controller;
+use App\Models\EmployeeWorkDay;
 use App\Models\GeolocationZone;
 use App\Models\Presence;
 use App\Models\Setting;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PresenceController extends Controller
 {
@@ -250,6 +252,20 @@ class PresenceController extends Controller
         $isWorkingDay = $user->isWorkingDay();
         $workDayNames = $user->work_day_names;
 
+        // Données pour la modification des jours de travail
+        $currentWorkDays = $user->workDays()->pluck('day_of_week')->toArray();
+        $weekStart = Carbon::now()->startOfWeek();
+        $modificationsThisWeek = DB::table('work_day_modifications')
+            ->where('user_id', $user->id)
+            ->where('week_start', $weekStart->toDateString())
+            ->count();
+        $maxModifications = 2;
+
+        // Max jours autorisés = min(3, jours ouvrés restants cette semaine incluant aujourd'hui)
+        $todayIso = Carbon::now()->dayOfWeekIso; // 1=Lundi ... 5=Vendredi
+        $remainingWeekDays = max(0, 5 - $todayIso + 1); // jours restants Lun-Ven (aujourd'hui inclus)
+        $maxAllowedDays = min(3, $remainingWeekDays);
+
         // --- LOGIQUE STRICTE DE POINTAGE ---
 
         // 1. Restriction Horaire (17:00 Hard Limit)
@@ -349,7 +365,11 @@ class PresenceController extends Controller
             'preCheckIn',
             'canStartRecoverySession',
             'recoverySessionInfo',
-            'isRecoverySessionToday'
+            'isRecoverySessionToday',
+            'currentWorkDays',
+            'modificationsThisWeek',
+            'maxModifications',
+            'maxAllowedDays'
         ));
     }
 
@@ -931,5 +951,76 @@ class PresenceController extends Controller
         }
 
         return redirect()->back()->with('success', $message);
+    }
+    /**
+     * Modifier les jours de travail de l'employé
+     */
+    public function updateWorkDays(Request $request)
+    {
+        $user = auth()->user();
+
+        // Calculer le max dynamique selon les jours restants de la semaine
+        $todayIso = Carbon::now()->dayOfWeekIso;
+        $remainingWeekDays = max(0, 5 - $todayIso + 1);
+        $maxAllowedDays = min(3, $remainingWeekDays);
+
+        if ($maxAllowedDays <= 0) {
+            return redirect()->back()->with('error', 'Il ne reste plus de jours ouvrés cette semaine. Réessayez lundi.');
+        }
+
+        $request->validate([
+            'work_days' => "required|array|max:{$maxAllowedDays}",
+            'work_days.*' => 'integer|between:1,5',
+        ], [
+            'work_days.required' => 'Veuillez sélectionner vos jours de travail.',
+            'work_days.max' => "Vous pouvez sélectionner au maximum {$maxAllowedDays} jour(s) cette semaine.",
+            'work_days.*.between' => 'Les jours doivent être du lundi (1) au vendredi (5).',
+        ]);
+
+        $workDays = array_map('intval', $request->input('work_days'));
+        sort($workDays);
+
+        // Vérifier la limite de modifications par semaine (max 2)
+        $weekStart = Carbon::now()->startOfWeek();
+        $modificationsThisWeek = DB::table('work_day_modifications')
+            ->where('user_id', $user->id)
+            ->where('week_start', $weekStart->toDateString())
+            ->count();
+
+        if ($modificationsThisWeek >= 2) {
+            return redirect()->back()->with('error', 'Vous avez atteint la limite de 2 modifications par semaine. Réessayez la semaine prochaine.');
+        }
+
+        // Vérifier si les jours sont identiques
+        $currentDays = $user->workDays()->pluck('day_of_week')->sort()->values()->toArray();
+        if ($currentDays === $workDays) {
+            return redirect()->back()->with('info', 'Vos jours de travail sont déjà configurés ainsi.');
+        }
+
+        DB::transaction(function () use ($user, $workDays, $currentDays, $weekStart) {
+            // Supprimer les anciens jours
+            EmployeeWorkDay::where('user_id', $user->id)->delete();
+
+            // Créer les nouveaux jours
+            foreach ($workDays as $day) {
+                EmployeeWorkDay::create([
+                    'user_id' => $user->id,
+                    'day_of_week' => $day,
+                ]);
+            }
+
+            // Logger la modification
+            DB::table('work_day_modifications')->insert([
+                'user_id' => $user->id,
+                'week_start' => $weekStart->toDateString(),
+                'old_days' => json_encode($currentDays),
+                'new_days' => json_encode($workDays),
+                'modified_at' => now(),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        });
+
+        return redirect()->back()->with('success', 'Vos jours de travail ont été mis à jour avec succès.');
     }
 }

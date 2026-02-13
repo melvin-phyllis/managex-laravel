@@ -38,6 +38,15 @@
                     </svg>
                     Sécurité
                 </button>
+                <button @click="activeTab = 'workdays'"
+                        :class="activeTab === 'workdays' ? 'text-blue-600 border-b-2' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+                        :style="activeTab === 'workdays' ? 'border-color: #3B8BEB; color: #3B8BEB;' : ''"
+                        class="whitespace-nowrap py-4 px-1 font-medium text-sm flex items-center gap-2 transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                    </svg>
+                    Jours de présence
+                </button>
                 <button @click="activeTab = 'notifications'"
                         :class="activeTab === 'notifications' ? 'text-blue-600 border-b-2' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
                         :style="activeTab === 'notifications' ? 'border-color: #3B8BEB; color: #3B8BEB;' : ''"
@@ -139,6 +148,126 @@
                             <span class="px-2 py-1 text-xs font-medium rounded-full" style="background-color: rgba(59, 139, 235, 0.1); color: #3B8BEB;">Active</span>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <!-- Tab: Jours de présence -->
+            <div x-show="activeTab === 'workdays'" x-cloak class="py-6"
+                 x-data="{
+                    selectedDays: @json($currentWorkDays ?? []),
+                    modificationsUsed: {{ $modificationsThisWeek ?? 0 }},
+                    maxModifications: {{ $maxModifications ?? 2 }},
+                    dayNames: {1: 'Lundi', 2: 'Mardi', 3: 'Mercredi', 4: 'Jeudi', 5: 'Vendredi'},
+                    get isLimitReached() { return this.modificationsUsed >= this.maxModifications },
+                    get canSubmit() { return this.selectedDays.length >= 3 && !this.isLimitReached },
+                    toggleDay(day) {
+                        if (this.isLimitReached) return;
+                        const idx = this.selectedDays.indexOf(day);
+                        if (idx > -1) {
+                            this.selectedDays.splice(idx, 1);
+                        } else {
+                            this.selectedDays.push(day);
+                        }
+                    },
+                    isDaySelected(day) {
+                        return this.selectedDays.includes(day);
+                    }
+                 }">
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                    <div class="flex items-center mb-6">
+                        <div class="p-3 rounded-full mr-4" style="background-color: rgba(59, 139, 235, 0.1);">
+                            <svg class="w-6 h-6" style="color: #3B8BEB;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h2 class="text-lg font-semibold text-gray-900">Jours de présence</h2>
+                            <p class="text-sm text-gray-500">Choisissez vos jours de travail (minimum 3 jours, lundi à vendredi).</p>
+                        </div>
+                    </div>
+
+                    <!-- Compteur de modifications -->
+                    <div class="mb-6 p-4 rounded-lg" :class="isLimitReached ? 'bg-red-50 border border-red-200' : 'bg-blue-50 border border-blue-200'">
+                        <div class="flex items-center gap-2">
+                            <template x-if="!isLimitReached">
+                                <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                            </template>
+                            <template x-if="isLimitReached">
+                                <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.27 16.5c-.77.833.192 2.5 1.732 2.5z"/>
+                                </svg>
+                            </template>
+                            <div>
+                                <p class="font-medium text-sm" :class="isLimitReached ? 'text-red-700' : 'text-blue-700'">
+                                    <span x-text="modificationsUsed"></span>/<span x-text="maxModifications"></span> modifications utilisées cette semaine
+                                </p>
+                                <p x-show="isLimitReached" class="text-xs text-red-600 mt-1">
+                                    Limite atteinte. Vous pourrez à nouveau modifier vos jours à partir de lundi.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form action="{{ route('employee.settings.work-days') }}" method="POST"
+                          @submit.prevent="if(canSubmit) $el.submit()"
+                          x-ref="workDaysForm">
+                        @csrf
+                        @method('PUT')
+
+                        <div class="grid grid-cols-5 gap-3 mb-6">
+                            <template x-for="day in [1, 2, 3, 4, 5]" :key="day">
+                                <div>
+                                    <input type="checkbox" :name="'work_days[]'" :value="day" :id="'day_' + day"
+                                           class="sr-only"
+                                           :checked="isDaySelected(day)"
+                                           :disabled="isLimitReached"
+                                           @change="toggleDay(day)">
+                                    <label :for="'day_' + day"
+                                           @click="toggleDay(day)"
+                                           class="flex flex-col items-center justify-center p-4 rounded-xl border-2 cursor-pointer transition-all duration-200"
+                                           :class="isLimitReached
+                                               ? 'opacity-60 cursor-not-allowed ' + (isDaySelected(day) ? 'bg-gray-100 border-gray-300 text-gray-500' : 'bg-gray-50 border-gray-200 text-gray-400')
+                                               : (isDaySelected(day) ? 'border-blue-500 bg-blue-50 text-blue-700 shadow-sm' : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300 hover:bg-gray-50')">
+                                        <svg class="w-6 h-6 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                             :class="isDaySelected(day) ? (isLimitReached ? 'text-gray-400' : 'text-blue-500') : 'text-gray-400'">
+                                            <path x-show="isDaySelected(day)" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                            <path x-show="!isDaySelected(day)" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                        </svg>
+                                        <span class="text-sm font-medium" x-text="dayNames[day]"></span>
+                                    </label>
+                                </div>
+                            </template>
+                        </div>
+
+                        <!-- Validation message -->
+                        <div x-show="selectedDays.length < 3 && selectedDays.length > 0 && !isLimitReached" class="mb-4 p-3 bg-amber-50 border border-amber-200 rounded-lg flex items-center gap-2">
+                            <svg class="w-5 h-5 text-amber-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.27 16.5c-.77.833.192 2.5 1.732 2.5z"/>
+                            </svg>
+                            <p class="text-sm text-amber-700">Vous devez sélectionner au minimum <strong>3 jours</strong>. Actuellement : <span x-text="selectedDays.length"></span>.</p>
+                        </div>
+
+                        @error('work_days')
+                            <div class="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                                <p class="text-sm text-red-600">{{ $message }}</p>
+                            </div>
+                        @enderror
+
+                        <div class="flex items-center gap-4">
+                            <button type="submit"
+                                    class="px-6 py-2.5 text-white font-medium rounded-lg transition-all duration-200"
+                                    :disabled="!canSubmit"
+                                    :class="canSubmit ? 'hover:opacity-90 cursor-pointer' : 'opacity-50 cursor-not-allowed'"
+                                    :style="canSubmit ? 'background-color: #3B8BEB;' : 'background-color: #9CA3AF;'">
+                                Mettre à jour mes jours
+                            </button>
+                            <p class="text-sm text-gray-500">
+                                <span x-text="selectedDays.length"></span> jour(s) sélectionné(s)
+                            </p>
+                        </div>
+                    </form>
                 </div>
             </div>
 

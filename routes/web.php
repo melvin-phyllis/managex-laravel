@@ -391,6 +391,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::put('/settings', [SettingsController::class, 'update'])->name('settings.update');
     Route::put('/settings/email', [SettingsController::class, 'updateEmail'])->name('settings.update-email');
     Route::put('/settings/password', [SettingsController::class, 'updatePassword'])->name('settings.update-password');
+    Route::put('/settings/report-email', [SettingsController::class, 'updateReportEmail'])->name('settings.update-report-email');
 
     // Départements (dans settings)
     Route::post('/settings/departments', [SettingsController::class, 'storeDepartment'])->name('settings.departments.store');
@@ -550,6 +551,9 @@ Route::middleware(['auth', 'role:employee', 'contract.accepted'])->prefix('emplo
     Route::post('/presences/recovery/end', [EmployeePresenceController::class, 'endRecoverySession'])
         ->middleware('throttle:5,1')
         ->name('presences.recovery.end');
+    // Modification des jours de travail
+    Route::put('/presences/work-days', [EmployeePresenceController::class, 'updateWorkDays'])
+        ->name('presences.work-days');
 
     // Tâches (assignées par l'admin, l'employé peut seulement voir et mettre à jour la progression)
     Route::get('/tasks', [EmployeeTaskController::class, 'index'])->name('tasks.index');
@@ -586,6 +590,7 @@ Route::middleware(['auth', 'role:employee', 'contract.accepted'])->prefix('emplo
     // Paramètres employé
     Route::get('/settings', [\App\Http\Controllers\Employee\SettingsController::class, 'index'])->name('settings.index');
     Route::put('/settings/password', [\App\Http\Controllers\Employee\SettingsController::class, 'updatePassword'])->name('settings.password');
+    Route::put('/settings/work-days', [\App\Http\Controllers\Employee\SettingsController::class, 'updateWorkDays'])->name('settings.work-days');
 
     // Messagerie
     Route::get('/messaging', [\App\Http\Controllers\Messaging\ConversationController::class, 'index'])->name('messaging.index');

@@ -227,6 +227,43 @@
                 </div>
             </div>
             
+            <!-- Email de réception du rapport quotidien -->
+            <div class="mt-6 bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                <div class="px-5 py-4" style="background: linear-gradient(135deg, #5AB9EA, #84CEEB);">
+                    <h3 class="text-white font-semibold flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+                        </svg>
+                        Rapport quotidien (19h)
+                    </h3>
+                </div>
+                <form action="{{ route('admin.settings.update-report-email') }}" method="POST" class="p-6">
+                    @csrf
+                    @method('PUT')
+
+                    <p class="text-sm text-gray-600 mb-4">
+                        Chaque jour à 19h, un rapport complet est envoyé à cette adresse (présences, absences, retards, tâches, congés, évaluations).
+                    </p>
+
+                    <div>
+                        <label for="report_email" class="block text-sm font-medium text-gray-700 mb-1">Email de réception</label>
+                        <input type="email" name="report_email" id="report_email" required
+                               value="{{ $settings['report_email'] ?? '' }}"
+                               class="w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
+                               placeholder="votre-email@exemple.com">
+                        @error('report_email')
+                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div class="mt-4">
+                        <button type="submit" class="w-full px-6 py-2.5 text-white font-medium rounded-xl transition-all shadow-lg" style="background: linear-gradient(135deg, #5AB9EA, #84CEEB);">
+                            Enregistrer l'email de rapport
+                        </button>
+                    </div>
+                </form>
+            </div>
+
             <!-- Info sécurité -->
             <div class="mt-6 p-4 bg-amber-50 border border-amber-200 rounded-xl">
                 <div class="flex items-start gap-3">

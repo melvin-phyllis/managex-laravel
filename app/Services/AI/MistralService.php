@@ -44,7 +44,7 @@ class MistralService
      * @param  array  $messages  Historique [{role: 'user'|'assistant', content: '...'}]
      * @return string|null Réponse de l'IA ou null en cas d'erreur
      */
-    public function chat(string $system, array $messages): ?string
+    public function chat(string $system, array $messages, ?int $maxTokens = null): ?string
     {
         if (! $this->isAvailable()) {
             Log::warning('MistralService: clé API non configurée');
@@ -54,7 +54,7 @@ class MistralService
 
         $payload = [
             'model' => $this->model,
-            'max_tokens' => $this->maxTokens,
+            'max_tokens' => $maxTokens ?? $this->maxTokens,
             'temperature' => $this->temperature,
             'messages' => array_merge(
                 [['role' => 'system', 'content' => $system]],

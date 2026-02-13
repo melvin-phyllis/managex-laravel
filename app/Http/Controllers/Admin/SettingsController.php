@@ -24,6 +24,7 @@ class SettingsController extends Controller
             'break_end_time' => Setting::getBreakEndTime(),
             'late_tolerance_minutes' => Setting::getLateTolerance(),
             'payroll_country_id' => Setting::get('payroll_country_id'),
+            'report_email' => Setting::get('report_email'),
         ];
 
         $payrollCountries = PayrollCountry::active()->orderBy('name')->get();
@@ -295,6 +296,24 @@ class SettingsController extends Controller
 
         return redirect()->route('admin.settings.index', ['tab' => 'compte'])
             ->with('success', 'Email mis à jour avec succès.');
+    }
+
+    /**
+     * Mettre à jour l'email de réception du rapport quotidien
+     */
+    public function updateReportEmail(Request $request)
+    {
+        $validated = $request->validate([
+            'report_email' => 'required|email|max:255',
+        ], [
+            'report_email.required' => 'L\'email de réception est obligatoire.',
+            'report_email.email' => 'L\'email doit être valide.',
+        ]);
+
+        Setting::set('report_email', $validated['report_email'], 'string', 'notifications', 'Email de réception du rapport quotidien');
+
+        return redirect()->route('admin.settings.index', ['tab' => 'compte'])
+            ->with('success', 'Email de réception du rapport mis à jour avec succès.');
     }
 
     /**

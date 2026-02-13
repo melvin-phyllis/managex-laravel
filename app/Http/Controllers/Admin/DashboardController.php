@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Department;
 use App\Models\Leave;
 use App\Models\Presence;
+use App\Models\Setting;
 use App\Models\Survey;
 use App\Models\Task;
 use App\Models\User;
@@ -30,6 +31,8 @@ class DashboardController extends Controller
         $calendarEvents = $this->getCalendarEvents();
         $departmentStats = $this->getDepartmentStats();
 
+        $hasReportEmail = ! empty(Setting::get('report_email'));
+
         return view('admin.dashboard', compact(
             'stats',
             'advancedStats',
@@ -39,7 +42,8 @@ class DashboardController extends Controller
             'alerts',
             'recentActivities',
             'calendarEvents',
-            'departmentStats'
+            'departmentStats',
+            'hasReportEmail'
         ));
     }
 
