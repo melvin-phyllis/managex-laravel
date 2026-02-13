@@ -1,7 +1,4 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
-
-    # Si le fichier ou dossier existe dans public/, le servir directement
-    RewriteCond %{REQUEST_URI} !^/managex/public/
     RewriteRule ^(.*)$ public/$1 [L]
 </IfModule>
