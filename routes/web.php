@@ -35,6 +35,11 @@ use App\Http\Controllers\PushSubscriptionController;
 
 use Illuminate\Support\Facades\Route;
 
+// Route racine → Landing Page
+Route::get('/', function () {
+    return view('landing');
+})->name('landing');
+
 // ============================================================================
 // ROUTES DE DÉVELOPPEMENT - PROTÉGÉES PAR ENVIRONNEMENT + AUTHENTIFICATION
 // Ces routes sont UNIQUEMENT accessibles en environnement local par un admin
