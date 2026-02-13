@@ -35,11 +35,6 @@ use App\Http\Controllers\PushSubscriptionController;
 
 use Illuminate\Support\Facades\Route;
 
-// Route racine → redirection vers login
-Route::get('/', function () {
-    return redirect()->route('login');
-});
-
 // ============================================================================
 // ROUTES DE DÉVELOPPEMENT - PROTÉGÉES PAR ENVIRONNEMENT + AUTHENTIFICATION
 // Ces routes sont UNIQUEMENT accessibles en environnement local par un admin
