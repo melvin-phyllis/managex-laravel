@@ -34,12 +34,6 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PushSubscriptionController;
 
 use Illuminate\Support\Facades\Route;
-
-// Route racine → Landing Page
-Route::get('/', function () {
-    return view('landing');
-})->name('landing');
-
 // ============================================================================
 // ROUTES DE DÉVELOPPEMENT - PROTÉGÉES PAR ENVIRONNEMENT + AUTHENTIFICATION
 // Ces routes sont UNIQUEMENT accessibles en environnement local par un admin
@@ -246,6 +240,9 @@ Route::get('/manifest.webmanifest', function () {
     ])->header('Content-Type', 'application/manifest+json');
 })->name('manifest');
 
+// Route racine de l'application :
+// - Visiteur non connecté : affiche la landing page
+// - Utilisateur connecté : redirige vers le bon dashboard (admin / employee)
 Route::get('/', [PageController::class, 'home'])->name('home');
 Route::get('/demo', [PageController::class, 'demoRequest'])->name('demo-request');
 Route::post('/demo', [PageController::class, 'storeDemoRequest'])->name('demo-request.store');
