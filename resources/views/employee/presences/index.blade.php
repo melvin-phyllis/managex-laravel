@@ -72,32 +72,32 @@
                     @endif
 
                     <!-- Work Days Editor Panel (collapsible) -->
-                    <div x-show="showWorkDaysEditor" x-cloak x-transition:enter="ease-out duration-200" x-transition:enter-start="opacity-0 -translate-y-2" x-transition:enter-end="opacity-100 translate-y-0"
-                         class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/50" @click.self="showWorkDaysEditor = false" @keydown.escape.window="showWorkDaysEditor = false">
-                        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 p-6" @click.stop
-                             x-data="{
-                                 selectedDays: @json($currentWorkDays ?? []),
-                                 maxAllowed: {{ $maxAllowedDays ?? 3 }},
-                                 dayNames: {1: 'Lundi', 2: 'Mardi', 3: 'Mercredi', 4: 'Jeudi', 5: 'Vendredi'},
-                                 dayShort: {1: 'Lun', 2: 'Mar', 3: 'Mer', 4: 'Jeu', 5: 'Ven'},
-                                 dayIcons: {1: '🔵', 2: '🟢', 3: '🟡', 4: '🟠', 5: '🔴'},
-                                 toggleDay(day) {
-                                     const idx = this.selectedDays.indexOf(day);
-                                     if (idx > -1) { this.selectedDays.splice(idx, 1); }
-                                     else if (this.selectedDays.length < this.maxAllowed) { this.selectedDays.push(day); }
-                                 },
-                                 isSelected(day) { return this.selectedDays.includes(day); },
-                                 get isMaxReached() { return this.selectedDays.length >= this.maxAllowed; },
-                                 get isValid() { return this.selectedDays.length >= 1 && this.selectedDays.length <= this.maxAllowed; }
-                             }">
-                            <div class="flex items-center justify-between mb-5">
-                                <div>
-                                    <h3 class="text-lg font-semibold text-gray-900">Modifier vos jours de travail</h3>
-                                    <p class="text-xs text-gray-500 mt-0.5">Sélectionnez au maximum <span class="font-bold text-indigo-600" x-text="maxAllowed"></span> jour(s) cette semaine</p>
-                                </div>
-                                <button @click="showWorkDaysEditor = false" class="text-gray-400 hover:text-gray-600 p-1 rounded-lg hover:bg-gray-100">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                                </button>
+                     <div x-show="showWorkDaysEditor" x-cloak x-transition:enter="ease-out duration-200" x-transition:enter-start="opacity-0 -translate-y-2" x-transition:enter-end="opacity-100 translate-y-0"
+                          class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/50" @click.self="showWorkDaysEditor = false" @keydown.escape.window="showWorkDaysEditor = false">
+                         <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 p-6" @click.stop
+                              x-data="{
+                                  selectedDays: @json($currentWorkDays ?? []),
+                                  maxAllowed: {{ $maxAllowedDays ?? 3 }},
+                                  dayNames: @json([1 => 'Lundi', 2 => 'Mardi', 3 => 'Mercredi', 4 => 'Jeudi', 5 => 'Vendredi']),
+                                  dayShort: @json([1 => 'Lun', 2 => 'Mar', 3 => 'Mer', 4 => 'Jeu', 5 => 'Ven']),
+                                  dayIcons: @json([1 => '🔵', 2 => '🟢', 3 => '🟡', 4 => '🟠', 5 => '🔴']),
+                                  toggleDay(day) {
+                                      const idx = this.selectedDays.indexOf(day);
+                                      if (idx > -1) { this.selectedDays.splice(idx, 1); }
+                                      else if (this.selectedDays.length < this.maxAllowed) { this.selectedDays.push(day); }
+                                  },
+                                  isSelected(day) { return this.selectedDays.includes(day); },
+                                  get isMaxReached() { return this.selectedDays.length >= this.maxAllowed; },
+                                  get isValid() { return this.selectedDays.length >= 1 && this.selectedDays.length <= this.maxAllowed; }
+                              }">
+                             <div class="flex items-center justify-between mb-5">
+                                 <div>
+                                     <h3 class="text-lg font-semibold text-gray-900">Modifier vos jours de travail</h3>
+                                     <p class="text-xs text-gray-500 mt-0.5">Sélectionnez au maximum <span class="font-bold text-indigo-600" x-text="maxAllowed"></span> jour(s) cette semaine</p>
+                                 </div>
+                                 <button @click="showWorkDaysEditor = false" class="text-gray-400 hover:text-gray-600 p-1 rounded-lg hover:bg-gray-100">
+                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                 </button>
                             </div>
 
                             <div class="grid grid-cols-5 gap-2 mb-5">
