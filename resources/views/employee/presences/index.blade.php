@@ -72,15 +72,20 @@
                     @endif
 
                     <!-- Work Days Editor Panel (collapsible) -->
+@php
+    $dayNames = [1 => 'Lundi', 2 => 'Mardi', 3 => 'Mercredi', 4 => 'Jeudi', 5 => 'Vendredi'];
+    $dayShort = [1 => 'Lun', 2 => 'Mar', 3 => 'Mer', 4 => 'Jeu', 5 => 'Ven'];
+    $dayIcons = [1 => '🔵', 2 => '🟢', 3 => '🟡', 4 => '🟠', 5 => '🔴'];
+@endphp
                      <div x-show="showWorkDaysEditor" x-cloak x-transition:enter="ease-out duration-200" x-transition:enter-start="opacity-0 -translate-y-2" x-transition:enter-end="opacity-100 translate-y-0"
                           class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/50" @click.self="showWorkDaysEditor = false" @keydown.escape.window="showWorkDaysEditor = false">
                          <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 p-6" @click.stop
                               x-data="{
                                   selectedDays: @json($currentWorkDays ?? []),
                                   maxAllowed: {{ $maxAllowedDays ?? 3 }},
-                                  dayNames: @json([1 => 'Lundi', 2 => 'Mardi', 3 => 'Mercredi', 4 => 'Jeudi', 5 => 'Vendredi']),
-                                  dayShort: @json([1 => 'Lun', 2 => 'Mar', 3 => 'Mer', 4 => 'Jeu', 5 => 'Ven']),
-                                  dayIcons: @json([1 => '🔵', 2 => '🟢', 3 => '🟡', 4 => '🟠', 5 => '🔴']),
+                                  dayNames: @json($dayNames),
+                                  dayShort: @json($dayShort),
+                                  dayIcons: @json($dayIcons),
                                   toggleDay(day) {
                                       const idx = this.selectedDays.indexOf(day);
                                       if (idx > -1) { this.selectedDays.splice(idx, 1); }
