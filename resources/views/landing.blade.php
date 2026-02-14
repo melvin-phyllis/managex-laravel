@@ -4,8 +4,60 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>ManageX — Gestion RH intelligente</title>
-  <meta name="description" content="ManageX centralise présences, tâches, congés, paie, sondages et statistiques dans un seul dashboard clair et moderne." />
+  <meta name="description" content="ManageX centralise les présences, tâches, congés, paie, sondages et statistiques dans un seul tableau de bord clair et moderne." />
   <meta name="theme-color" content="#5680E9">
+
+  <!-- Canonical -->
+  <link rel="canonical" href="{{ url('/') }}" />
+
+  <!-- OpenGraph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="ManageX — Gestion RH intelligente" />
+  <meta property="og:description" content="ManageX centralise les présences, tâches, congés, paie, sondages et statistiques dans un seul tableau de bord clair et moderne." />
+  <meta property="og:url" content="{{ url('/') }}" />
+  <meta property="og:site_name" content="ManageX" />
+  <meta property="og:image" content="{{ asset('images/hero-managex.png') }}" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:locale" content="fr_FR" />
+  <meta property="og:updated_time" content="{{ now()->toIso8601String() }}" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="ManageX — Gestion RH intelligente" />
+  <meta name="twitter:description" content="ManageX centralise les présences, tâches, congés, paie, sondages et statistiques dans un seul tableau de bord clair et moderne." />
+  <meta name="twitter:image" content="{{ asset('images/hero-managex.png') }}" />
+
+  <!-- Schema.org -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "ManageX",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Web",
+    "description": "ManageX centralise les présences, tâches, congés, paie, sondages et statistiques dans un seul tableau de bord clair et moderne.",
+    "url": "{{ url('/') }}",
+    "image": "{{ asset('images/hero-managex.png') }}",
+    "author": {
+      "@type": "Organization",
+      "name": "YA Consulting",
+      "url": "https://ya-consulting.com"
+    },
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "XOF",
+      "description": "Demandez une démo gratuite"
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "5",
+      "reviewCount": "3",
+      "bestRating": "5"
+    }
+  }
+  </script>
   <link rel="manifest" href="{{ route('manifest') }}">
   <link rel="apple-touch-icon" href="{{ asset('icons/icon-192x192.png') }}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -243,7 +295,7 @@
     <div class="container nav-inner">
       <a href="{{ url('/') }}" class="nav-logo">
         <span class="nav-logo-icon">
-          <img src="{{ asset('images/managex_logo.png') }}" alt="" style="width:28px;height:28px;border-radius:50%;object-fit:cover">
+          <img src="{{ asset('images/managex_logo.png') }}" alt="ManageX Logo" style="width:28px;height:28px;border-radius:50%;object-fit:cover">
         </span>
         <span class="text-gradient">ManageX</span>
       </a>
@@ -521,16 +573,16 @@
     <div class="container">
       <div class="footer-grid">
         <div>
-         " <a href="{{ url('/') }}" class="nav-logo"><span class="text-gradient" style="font-size:1.1rem">ManageX</span></a>"
+          <a href="{{ url('/') }}" class="nav-logo"><span class="text-gradient" style="font-size:1.1rem">ManageX</span></a>
           <p class="footer-brand-desc">La plateforme RH nouvelle génération propulsée par l'IA. Conçue pour les entreprises ambitieuses d'Afrique et du monde.</p>
         </div>
         <div class="footer-col">
           <h3 class="footer-col-title">Produit</h3>
-          <ul><li><a href="#features" class="link-hover">Fonctionnalités</a></li><li><a href="#ai" class="link-hover">Intelligence IA</a></li><li><a href="{{ route('demo-request') }}" class="link-hover">Démo</a></li></ul>
+          <ul><li><a href="#features" class="link-hover">Fonctionnalités</a></li><li><a href="#ai" class="link-hover">Intelligence IA</a></li><li><a href="#testimonials" class="link-hover">Témoignages</a></li><li><a href="{{ route('demo-request') }}" class="link-hover">Démo</a></li><li><a href="{{ route('login') }}" class="link-hover">Connexion</a></li></ul>
         </div>
         <div class="footer-col">
           <h3 class="footer-col-title">Entreprise</h3>
-          <ul><li><a href="#about" class="link-hover">À propos</a></li><li><a href="#contact" class="link-hover">Contact</a></li><li><a href="#" class="link-hover">Confidentialité</a></li></ul>
+          <ul><li><a href="#about" class="link-hover">À propos</a></li><li><a href="#contact" class="link-hover">Contact</a></li><li><a href="{{ url('/') }}" class="link-hover">Accueil</a></li></ul>
         </div>
       </div>
       <div class="footer-bottom">

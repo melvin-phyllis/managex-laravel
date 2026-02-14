@@ -66,11 +66,11 @@ class SettingsController extends Controller
     public function updateWorkDays(Request $request)
     {
         $request->validate([
-            'work_days' => 'required|array|min:3',
+            'work_days' => 'required|array|size:3',
             'work_days.*' => 'integer|between:1,5',
         ], [
             'work_days.required' => 'Vous devez sélectionner vos jours de présence.',
-            'work_days.min' => 'Vous devez sélectionner au minimum 3 jours.',
+            'work_days.size' => 'Vous devez sélectionner exactement 3 jours.',
             'work_days.*.between' => 'Les jours doivent être du lundi au vendredi.',
         ]);
 

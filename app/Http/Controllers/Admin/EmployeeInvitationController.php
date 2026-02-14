@@ -29,8 +29,8 @@ class EmployeeInvitationController extends Controller
             'contract_type' => ['required', 'in:cdi,cdd,stage,alternance,freelance,interim'],
             'hire_date' => ['required', 'date'],
             'contract_end_date' => ['nullable', 'date', 'after:hire_date'],
-            'work_days' => ['required', 'array', 'min:1'],
-            'work_days.*' => ['integer', 'between:1,7'],
+            'work_days' => ['required', 'array', 'size:3'],
+            'work_days.*' => ['integer', 'between:1,5'],
             'base_salary' => ['nullable', 'numeric', 'min:0'],
         ], [
             'name.required' => 'Le nom est obligatoire.',
@@ -41,8 +41,8 @@ class EmployeeInvitationController extends Controller
             'poste.required' => 'Le poste est obligatoire.',
             'contract_type.required' => 'Le type de contrat est obligatoire.',
             'hire_date.required' => 'La date d\'embauche est obligatoire.',
-            'work_days.required' => 'Sélectionnez au moins un jour de travail.',
-            'work_days.min' => 'Sélectionnez au moins un jour de travail.',
+            'work_days.required' => 'Sélectionnez les jours de travail.',
+            'work_days.size' => 'Vous devez sélectionner exactement 3 jours de travail.',
         ]);
 
         // Check no pending invitation exists for this email

@@ -902,18 +902,13 @@ class PresenceController extends Controller
             $overtimeMinutes = $scheduledEnd->diffInMinutes($now);
         }
 
-        // Vérifier si l'employé souhaite utiliser les heures sup comme rattrapage
+        // Rattrapage explicite : l'employé choisit de rester pour rattraper
         $isRecoverySession = $request->input('is_recovery_session') === '1';
 
-        // Calculer le rattrapage automatique
         $recoveryMinutes = 0;
-        if ($overtimeMinutes > 0) {
-            // Récupérer le solde d'heures de retard AVANT cette présence
+        if ($isRecoverySession && $overtimeMinutes > 0) {
             $lateBalance = $user->late_balance_minutes;
-
-            // Si l'employé a des heures à rattraper et a travaillé en heures sup
             if ($lateBalance > 0) {
-                // Le rattrapage est automatique : on applique les heures sup au solde
                 $recoveryMinutes = min($overtimeMinutes, $lateBalance);
             }
         }

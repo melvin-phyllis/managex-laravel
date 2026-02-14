@@ -632,19 +632,94 @@
                     </div>
 
                     <!-- Formulaires de départ -->
-                    <div class="flex-1 space-y-2" x-data="{ showUrgencyModal: false, urgencyReason: '' }">
-                        <!-- Formulaire de départ normal -->
-                        <form id="checkOutForm" action="{{ route('employee.presences.check-out') }}" method="POST">
-                            @csrf
-                            <input type="hidden" name="latitude" id="checkOutLat">
-                            <input type="hidden" name="longitude" id="checkOutLng">
-                            <button type="button" id="checkOutBtn" class="w-full px-6 py-4 text-white font-medium rounded-xl transition-all shadow-lg flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02] active:scale-[0.98]" style="background: linear-gradient(135deg, #687864, #5085A5); box-shadow: 0 10px 15px -3px rgba(104, 120, 100, 0.3);">
-                                <svg id="checkOutIcon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
-                                </svg>
-                                <span id="checkOutText" class="text-lg">Pointer le départ</span>
-                            </button>
-                        </form>
+                    <div class="flex-1 space-y-2" x-data="{
+                        showUrgencyModal: false,
+                        urgencyReason: '',
+                        isAfterEndTime: false,
+                        hasLateBalance: {{ $totalUnrecoveredMinutes > 0 ? 'true' : 'false' }},
+                        lateMinutes: {{ $totalUnrecoveredMinutes }},
+                        recoveryMode: false
+                    }" x-init="
+                        const endParts = '{{ $workSettings['work_end'] }}'.split(':');
+                        const checkEnd = () => {
+                            const now = new Date();
+                            const end = new Date();
+                            end.setHours(parseInt(endParts[0]), parseInt(endParts[1]), 0);
+                            isAfterEndTime = now >= end;
+                        };
+                        checkEnd();
+                        setInterval(checkEnd, 30000);
+                    ">
+                        <!-- === APRÈS L'HEURE DE FIN + RETARD À RATTRAPER === -->
+                        <template x-if="isAfterEndTime && hasLateBalance && !recoveryMode">
+                            <div class="space-y-2">
+                                <!-- Bouton principal : Rattraper -->
+                                <button type="button" @click="recoveryMode = true" class="w-full px-6 py-4 text-white font-medium rounded-xl transition-all shadow-lg flex items-center justify-center gap-3 transform hover:scale-[1.02] active:scale-[0.98]" style="background: linear-gradient(135deg, #7c3aed, #6d28d9); box-shadow: 0 10px 15px -3px rgba(124, 58, 237, 0.3);">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    <span class="text-lg">Rattraper les heures de retard</span>
+                                </button>
+                                <p class="text-xs text-center text-violet-600"><span x-text="lateMinutes"></span> min de retard à rattraper</p>
+
+                                <!-- Bouton secondaire : Partir sans rattraper -->
+                                <form id="checkOutForm" action="{{ route('employee.presences.check-out') }}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="latitude" id="checkOutLat">
+                                    <input type="hidden" name="longitude" id="checkOutLng">
+                                    <button type="button" id="checkOutBtn" class="w-full px-4 py-2.5 text-gray-600 font-medium rounded-xl transition-all flex items-center justify-center gap-2 border border-gray-300 hover:bg-gray-50 text-sm">
+                                        <svg id="checkOutIcon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                                        </svg>
+                                        <span id="checkOutText">Partir sans rattraper</span>
+                                    </button>
+                                </form>
+                            </div>
+                        </template>
+
+                        <!-- === MODE RATTRAPAGE ACTIVÉ === -->
+                        <template x-if="recoveryMode">
+                            <div class="space-y-2">
+                                <div class="px-4 py-3 bg-violet-50 border border-violet-200 rounded-xl">
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-2 h-2 bg-violet-500 rounded-full animate-pulse"></div>
+                                        <p class="text-sm font-semibold text-violet-800">Rattrapage en cours</p>
+                                    </div>
+                                    <p class="text-xs text-violet-600 mt-1">Vous rattrapez vos <span x-text="lateMinutes"></span> min de retard. Quand vous avez terminé, cliquez sur le bouton ci-dessous pour pointer votre départ.</p>
+                                </div>
+
+                                <!-- Bouton principal : Terminer et partir -->
+                                <form id="checkOutForm" action="{{ route('employee.presences.check-out') }}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="latitude" id="checkOutLat">
+                                    <input type="hidden" name="longitude" id="checkOutLng">
+                                    <input type="hidden" name="is_recovery_session" value="1">
+                                    <button type="button" id="checkOutBtn" class="w-full px-6 py-4 text-white font-medium rounded-xl transition-all shadow-lg flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02] active:scale-[0.98]" style="background: linear-gradient(135deg, #7c3aed, #5b21b6); box-shadow: 0 10px 15px -3px rgba(124, 58, 237, 0.3);">
+                                        <svg id="checkOutIcon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                        </svg>
+                                        <span id="checkOutText" class="text-lg">Terminer le rattrapage et partir</span>
+                                    </button>
+                                </form>
+
+                                <button type="button" @click="recoveryMode = false" class="w-full px-3 py-1.5 text-xs text-gray-500 hover:text-gray-700 transition-colors text-center">Annuler le rattrapage</button>
+                            </div>
+                        </template>
+
+                        <!-- === BOUTON DÉPART NORMAL (avant l'heure de fin OU pas de retard) === -->
+                        <template x-if="!recoveryMode && !(isAfterEndTime && hasLateBalance)">
+                            <form id="checkOutForm" action="{{ route('employee.presences.check-out') }}" method="POST">
+                                @csrf
+                                <input type="hidden" name="latitude" id="checkOutLat">
+                                <input type="hidden" name="longitude" id="checkOutLng">
+                                <button type="button" id="checkOutBtn" class="w-full px-6 py-4 text-white font-medium rounded-xl transition-all shadow-lg flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02] active:scale-[0.98]" style="background: linear-gradient(135deg, #687864, #5085A5); box-shadow: 0 10px 15px -3px rgba(104, 120, 100, 0.3);">
+                                    <svg id="checkOutIcon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                                    </svg>
+                                    <span id="checkOutText" class="text-lg">Pointer le départ</span>
+                                </button>
+                            </form>
+                        </template>
 
                         <!-- Bouton de départ d'urgence -->
                         <button type="button" @click="showUrgencyModal = true" class="w-full px-4 py-2 bg-amber-100 text-amber-700 text-sm font-medium rounded-xl hover:bg-amber-200 transition-colors flex items-center justify-center gap-2 border border-amber-200">

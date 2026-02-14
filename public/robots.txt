@@ -6,3 +6,5 @@ Disallow: /api
 Allow: /
 Allow: /login
 Allow: /demo-request
+
+Sitemap: https://managex.ya-consulting.com/sitemap.xml

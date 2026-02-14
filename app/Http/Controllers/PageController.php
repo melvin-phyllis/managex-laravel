@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\DemoRequest;
+use App\Models\Setting;
+use App\Models\User;
+use App\Notifications\DemoRequestNotification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
 
 class PageController extends Controller
 {
@@ -43,7 +47,20 @@ class PageController extends Controller
             'message' => ['nullable', 'string', 'max:1000'],
         ]);
 
-        DemoRequest::create($validated);
+        $demo = DemoRequest::create($validated);
+
+        // Notifier les admins par email
+        $reportEmail = Setting::get('report_email');
+
+        if ($reportEmail) {
+            Notification::route('mail', $reportEmail)
+                ->notify(new DemoRequestNotification($demo));
+        } else {
+            $admins = User::where('role', 'admin')->get();
+            foreach ($admins as $admin) {
+                $admin->notify(new DemoRequestNotification($demo));
+            }
+        }
 
         return redirect()->route('demo-request')->with('success', 'Merci ! Notre équipe vous contactera sous 24h pour planifier votre démonstration.');
     }

@@ -1,172 +1,161 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<!doctype html>
+<html lang="fr">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Demander une démo - {{ config('app.name', 'ManageX') }}</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Demander une démo — ManageX</title>
+  <meta name="description" content="Demandez une démonstration gratuite de ManageX, la plateforme RH intelligente." />
+  <meta name="theme-color" content="#5680E9">
+  <link rel="canonical" href="{{ route('demo-request') }}" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    :root{
+      --primary:#5680E9;--secondary:#5AB9EA;--accent:#8860D0;
+      --border:#C1C8E4;--bg:#f8fafc;--card:#fff;--fg:#1e293b;--muted:#64748b;
+      --shadow-soft:0 10px 30px -18px rgba(86,128,233,.35);
+      --shadow-md:0 20px 50px -20px rgba(86,128,233,.22);
+      --gradient-logo:linear-gradient(90deg,#3158a8,#5AB9EA);
+      --radius:0.9rem;--radius-lg:1.25rem;
+    }
+    html{scroll-behavior:smooth;font-size:16px;-webkit-font-smoothing:antialiased}
+    body{font-family:Figtree,system-ui,sans-serif;background:var(--bg);color:var(--fg);line-height:1.6;min-height:100vh;display:flex;flex-direction:column}
+    a{text-decoration:none;color:inherit}
+    .container{max-width:1200px;margin:0 auto;padding:0 1.5rem}
+    .text-gradient{background:var(--gradient-logo);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 
-    <!-- PWA Meta Tags -->
-    <meta name="theme-color" content="#4f46e5">
-    <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
-    <link rel="manifest" href="{{ route('manifest') }}">
+    /* Nav */
+    .nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.82);backdrop-filter:blur(16px);border-bottom:1px solid rgba(193,200,228,.5)}
+    .nav-inner{display:flex;align-items:center;justify-content:space-between;height:64px}
+    .nav-logo{display:inline-flex;align-items:center;gap:.5rem;font-size:1rem;font-weight:700}
+    .nav-logo-icon{width:36px;height:36px;border-radius:var(--radius);background:rgba(86,128,233,.1);border:1px solid rgba(193,200,228,.5);display:flex;align-items:center;justify-content:center}
+    .nav-back{display:inline-flex;align-items:center;gap:.5rem;font-size:.875rem;color:var(--muted);transition:color .2s}
+    .nav-back:hover{color:var(--primary)}
 
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700&display=swap" rel="stylesheet" />
-    
-    <!-- Alpine.js -->
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    /* Form section */
+    .demo-section{flex:1;display:flex;align-items:center;justify-content:center;padding:3rem 1.5rem}
+    .demo-card{width:100%;max-width:560px;background:var(--card);border:1px solid rgba(193,200,228,.5);border-radius:var(--radius-lg);box-shadow:var(--shadow-md);padding:2.5rem}
+    .demo-title{font-size:1.5rem;font-weight:700;margin-bottom:.25rem}
+    .demo-subtitle{font-size:.875rem;color:var(--muted);margin-bottom:2rem}
 
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    .form-group{margin-bottom:1.25rem}
+    .form-label{display:block;font-size:.8rem;font-weight:600;color:var(--muted);margin-bottom:.4rem}
+    .form-input,.form-select,.form-textarea{width:100%;padding:.7rem .9rem;border:1px solid rgba(193,200,228,.6);border-radius:var(--radius);font:inherit;font-size:.875rem;outline:none;transition:border-color .2s,box-shadow .2s;background:#fff}
+    .form-input:focus,.form-select:focus,.form-textarea:focus{border-color:rgba(86,128,233,.5);box-shadow:0 0 0 3px rgba(86,128,233,.1)}
+    .form-textarea{resize:vertical;min-height:80px}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+    .form-error{font-size:.75rem;color:#dc2626;margin-top:.25rem}
+
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;padding:.8rem 1.5rem;border-radius:var(--radius);font-size:.875rem;font-weight:600;border:none;cursor:pointer;transition:all .2s;width:100%}
+    .btn:hover{transform:translateY(-2px)}
+    .btn-primary{background:var(--primary);color:#fff;box-shadow:var(--shadow-soft)}
+    .btn-primary:hover{box-shadow:var(--shadow-md)}
+
+    .alert{padding:.75rem 1rem;border-radius:var(--radius);font-size:.875rem;margin-bottom:1.5rem}
+    .alert-success{background:rgba(5,150,105,.08);border:1px solid rgba(5,150,105,.2);color:#059669}
+    .alert-error{background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.2);color:#dc2626}
+
+    /* Footer */
+    .footer{border-top:1px solid rgba(193,200,228,.5);background:#fff;padding:1.5rem 0;text-align:center;font-size:.75rem;color:var(--muted)}
+
+    @media(max-width:767px){
+      .demo-card{padding:1.5rem}
+      .form-row{grid-template-columns:1fr}
+      .container{padding:0 1rem}
+    }
+  </style>
 </head>
-<body class="font-sans antialiased text-gray-900 bg-gray-50">
-    <!-- Particles.js Background -->
-    <div id="particles-js" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;"></div>
-
-    <div class="min-h-screen flex items-center justify-center p-6 relative overflow-hidden">
-        
-        <!-- Motifs décoratifs -->
-        <div class="absolute inset-0 overflow-hidden pointer-events-none">
-            <div class="absolute -top-24 -left-24 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl"></div>
-            <div class="absolute bottom-0 right-0 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl"></div>
-        </div>
-
-        <div class="w-full max-w-5xl bg-white rounded-3xl shadow-xl overflow-hidden relative z-10 grid grid-cols-1 md:grid-cols-2">
-            
-            <!-- Left Column: Content -->
-            <div class="p-8 md:p-12 bg-gradient-to-br from-indigo-50 to-white flex flex-col justify-center">
-                <a href="/" class="flex items-center gap-3 mb-8">
-                    <x-application-logo class="w-10 h-10 rounded-full shadow-sm" />
-                    <span class="text-2xl font-bold text-gray-900 tracking-tight">ManageX</span>
-                </a>
-
-                <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6 leading-tight">
-                    Transformez votre <span class="text-indigo-600">Gestion RH</span> aujourd'hui.
-                </h1>
-                
-                <p class="text-gray-600 mb-8 text-lg">
-                    Découvrez comment ManageX simplifie la paie, les congés et la performance pour les entreprises modernes.
-                </p>
-
-                <ul class="space-y-4">
-                    @foreach(['Tout-en-un intuitif', 'Automatisation IA', 'Support Premium 24/7 de'] as $benefit)
-                    <li class="flex items-center gap-3">
-                        <div class="flex-shrink-0 w-6 h-6 rounded-full bg-green-100 flex items-center justify-center">
-                            <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                            </svg>
-                        </div>
-                        <span class="text-gray-700 font-medium">{{ $benefit }}</span>
-                    </li>
-                    @endforeach
-                </ul>
-            </div>
-
-            <!-- Right Column: Form -->
-            <div class="p-8 md:p-12 bg-white" x-data="{ submitting: false }">
-                <div class="flex justify-end mb-4">
-                     <a href="{{ route('login') }}" class="text-sm font-medium text-indigo-600 hover:text-indigo-500">
-                        Déjà un compte ? Se connecter
-                    </a>
-                </div>
-
-                <h2 class="text-2xl font-bold text-gray-900 mb-2">Réserver une démo</h2>
-                <p class="text-gray-500 mb-6 text-sm">Remplissez ce formulaire pour une présentation sur mesure.</p>
-
-                @if(session('success'))
-                <div class="bg-green-50 border border-green-200 rounded-xl p-6 text-center animate-fade-in-up">
-                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                    </div>
-                    <h3 class="text-lg font-bold text-gray-900 mb-2">Demande envoyée !</h3>
-                    <p class="text-gray-600 mb-4">Notre équipe vous contactera sous 24h ouvrées.</p>
-                    <a href="/" class="inline-block px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50">Retour à l'accueil</a>
-                </div>
-                @else
-                <form action="{{ route('demo-request.store') }}" method="POST" @submit="submitting = true" class="space-y-4">
-                    @csrf
-                    
-                    @if($errors->any())
-                    <div class="bg-red-50 text-red-700 p-3 rounded-lg text-sm">
-                        <ul class="list-disc list-inside">
-                            @foreach($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                    @endif
-
-                    <div class="grid grid-cols-2 gap-4">
-                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Nom complet</label>
-                            <input type="text" name="contact_name" required class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" placeholder="Jean Dupont" value="{{ old('contact_name') }}">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Email Pro</label>
-                            <input type="email" name="email" required class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" placeholder="jean@societe.com" value="{{ old('email') }}">
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Entreprise</label>
-                            <input type="text" name="company_name" required class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" placeholder="Mon Entreprise" value="{{ old('company_name') }}">
-                        </div>
-                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Taille</label>
-                            <select name="company_size" required class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white">
-                                <option value="" disabled selected>Sélectionner...</option>
-                                <option value="1-10">1-10 employés</option>
-                                <option value="11-50">11-50 employés</option>
-                                <option value="51-200">51-200 employés</option>
-                                <option value="200+">200+ employés</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Message (Optionnel)</label>
-                        <textarea name="message" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" placeholder="Vos besoins spécifiques...">{{ old('message') }}</textarea>
-                    </div>
-
-                    <button type="submit" :disabled="submitting" class="w-full py-3 px-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg shadow-blue-500/25 transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-75 disabled:cursor-not-allowed">
-                        <span x-show="!submitting">Obtenir ma démo gratuite</span>
-                        <span x-show="submitting" style="display: none;">Envoi en cours...</span>
-                    </button>
-                    
-                    <p class="text-center text-gray-400 text-xs mt-4">
-                        Sans engagement. Vos données sont sécurisées.
-                    </p>
-                </form>
-                @endif
-            </div>
-        </div>
+<body>
+  <!-- NAV -->
+  <header class="nav">
+    <div class="container nav-inner">
+      <a href="{{ url('/') }}" class="nav-logo">
+        <span class="nav-logo-icon">
+          <img src="{{ asset('images/managex_logo.png') }}" alt="ManageX Logo" style="width:28px;height:28px;border-radius:50%;object-fit:cover">
+        </span>
+        <span class="text-gradient">ManageX</span>
+      </a>
+      <a href="{{ url('/') }}" class="nav-back">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Retour à l'accueil
+      </a>
     </div>
+  </header>
 
-    <!-- Particles.js Script -->
-    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            if (typeof particlesJS !== 'undefined') {
-                particlesJS('particles-js', {
-                    particles: {
-                        number: { value: 50, density: { enable: true, value_area: 800 } },
-                        color: { value: '#6c4cec' },
-                        shape: { type: 'circle' },
-                        opacity: { value: 0.12, random: true, anim: { enable: true, speed: 0.6, opacity_min: 0.04, sync: false } },
-                        size: { value: 3, random: true, anim: { enable: true, speed: 2, size_min: 0.5, sync: false } },
-                        line_linked: { enable: true, distance: 130, color: '#6c4cec', opacity: 0.07, width: 1 },
-                        move: { enable: true, speed: 1, direction: 'none', random: true, straight: false, out_mode: 'out', bounce: false }
-                    },
-                    interactivity: {
-                        detect_on: 'window',
-                        events: { onhover: { enable: true, mode: 'grab' }, onclick: { enable: true, mode: 'push' }, resize: true },
-                        modes: { grab: { distance: 120, line_linked: { opacity: 0.15 } } }
-                    },
-                    retina_detect: true
-                });
-            }
-        });
-    </script>
+  <!-- FORM -->
+  <section class="demo-section">
+    <div class="demo-card">
+      <h1 class="demo-title">Demander une <span class="text-gradient">démo</span></h1>
+      <p class="demo-subtitle">Remplissez le formulaire ci-dessous et notre équipe vous contactera sous 24h pour planifier votre démonstration personnalisée.</p>
+
+      @if(session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+      @endif
+
+      @if($errors->any())
+        <div class="alert alert-error">
+          @foreach($errors->all() as $error)
+            <p>{{ $error }}</p>
+          @endforeach
+        </div>
+      @endif
+
+      <form method="POST" action="{{ route('demo-request.store') }}">
+        @csrf
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="company_name">Nom de l'entreprise *</label>
+            <input type="text" id="company_name" name="company_name" class="form-input" value="{{ old('company_name') }}" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="contact_name">Nom du contact *</label>
+            <input type="text" id="contact_name" name="contact_name" class="form-input" value="{{ old('contact_name') }}" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="email">Email professionnel *</label>
+            <input type="email" id="email" name="email" class="form-input" value="{{ old('email') }}" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="phone">Téléphone</label>
+            <input type="tel" id="phone" name="phone" class="form-input" value="{{ old('phone') }}">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="company_size">Taille de l'entreprise *</label>
+          <select id="company_size" name="company_size" class="form-select" required>
+            <option value="" disabled {{ old('company_size') ? '' : 'selected' }}>Sélectionnez</option>
+            <option value="1-10" {{ old('company_size') === '1-10' ? 'selected' : '' }}>1 - 10 employés</option>
+            <option value="11-50" {{ old('company_size') === '11-50' ? 'selected' : '' }}>11 - 50 employés</option>
+            <option value="51-200" {{ old('company_size') === '51-200' ? 'selected' : '' }}>51 - 200 employés</option>
+            <option value="200+" {{ old('company_size') === '200+' ? 'selected' : '' }}>200+ employés</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="message">Message (optionnel)</label>
+          <textarea id="message" name="message" class="form-textarea" placeholder="Décrivez vos besoins ou posez vos questions...">{{ old('message') }}</textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+          Envoyer ma demande
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <span>&copy; {{ date('Y') }} ManageX. Tous droits réservés.</span>
+    </div>
+  </footer>
 </body>
 </html>

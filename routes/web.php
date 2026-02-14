@@ -245,6 +245,17 @@ Route::get('/manifest.webmanifest', function () {
 // - Utilisateur connecté : redirige vers le bon dashboard (admin / employee)
 Route::get('/', [PageController::class, 'home'])->name('home');
 Route::get('/demo', [PageController::class, 'demoRequest'])->name('demo-request');
+
+// Sitemap XML
+Route::get('/sitemap.xml', function () {
+    $urls = [
+        ['loc' => url('/'), 'lastmod' => now()->toDateString(), 'priority' => '1.0'],
+        ['loc' => route('login'), 'lastmod' => now()->toDateString(), 'priority' => '0.8'],
+        ['loc' => route('demo-request'), 'lastmod' => now()->toDateString(), 'priority' => '0.9'],
+    ];
+    return response()->view('sitemap', compact('urls'))
+        ->header('Content-Type', 'application/xml');
+})->name('sitemap');
 Route::post('/demo', [PageController::class, 'storeDemoRequest'])->name('demo-request.store');
 
 // Redirection après login selon le rôle

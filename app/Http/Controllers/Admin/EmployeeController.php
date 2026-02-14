@@ -199,8 +199,8 @@ class EmployeeController extends Controller
             'telephone' => ['nullable', 'string', 'max:20'],
             'department_id' => ['required', 'exists:departments,id'],
             'position_id' => ['nullable', 'exists:positions,id'],
-            'work_days' => ['required', 'array', 'min:1'],
-            'work_days.*' => ['integer', 'between:1,7'],
+            'work_days' => ['required', 'array', 'size:3'],
+            'work_days.*' => ['integer', 'between:1,5'],
             // Champs RH personnels
             'date_of_birth' => ['nullable', 'date', 'before:today'],
             'gender' => ['required', 'in:male,female,other'],
@@ -226,8 +226,8 @@ class EmployeeController extends Controller
             'leave_balance' => ['nullable', 'numeric', 'min:0'],
             'rtt_balance' => ['nullable', 'numeric', 'min:0'],
         ], [
-            'work_days.required' => 'Veuillez sélectionner au moins un jour de travail.',
-            'work_days.min' => 'Veuillez sélectionner au moins un jour de travail.',
+            'work_days.required' => 'Veuillez sélectionner les jours de travail.',
+            'work_days.size' => 'Vous devez sélectionner exactement 3 jours de travail.',
             'contract_end_date.after' => 'La date de fin de contrat doit être postérieure à la date d\'embauche.',
             'poste.required' => 'L\'intitulé du poste est obligatoire.',
             'department_id.required' => 'Le département est obligatoire.',
@@ -341,8 +341,8 @@ class EmployeeController extends Controller
             'password' => ['nullable', 'confirmed', Rules\Password::defaults()],
             'department_id' => ['nullable', 'exists:departments,id'],
             'position_id' => ['nullable', 'exists:positions,id'],
-            'work_days' => ['required', 'array', 'min:1'],
-            'work_days.*' => ['integer', 'between:1,7'],
+            'work_days' => ['required', 'array', 'size:3'],
+            'work_days.*' => ['integer', 'between:1,5'],
             // Champs RH personnels
             'date_of_birth' => ['nullable', 'date', 'before:today'],
             'gender' => ['nullable', 'in:male,female,other'],
@@ -370,8 +370,8 @@ class EmployeeController extends Controller
             'status' => ['nullable', 'in:active,on_leave,suspended,terminated'],
             'avatar' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:2048'],
         ], [
-            'work_days.required' => 'Veuillez sélectionner au moins un jour de travail.',
-            'work_days.min' => 'Veuillez sélectionner au moins un jour de travail.',
+            'work_days.required' => 'Veuillez sélectionner les jours de travail.',
+            'work_days.size' => 'Vous devez sélectionner exactement 3 jours de travail.',
             'contract_end_date.after' => 'La date de fin de contrat doit être postérieure à la date d\'embauche.',
             'avatar.image' => 'Le fichier doit être une image.',
             'avatar.max' => 'La photo ne doit pas dépasser 2 Mo.',
