@@ -276,6 +276,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/dashboard/activity', [AdminDashboardController::class, 'getRecentActivity'])->name('dashboard.activity');
     Route::get('/dashboard/alerts', [AdminDashboardController::class, 'getAlertsData'])->name('dashboard.alerts');
     Route::get('/dashboard/calendar', [AdminDashboardController::class, 'getCalendarEventsData'])->name('dashboard.calendar');
+    Route::get('/dashboard/presence-planning', [AdminDashboardController::class, 'getPresencePlanning'])->name('dashboard.presence-planning');
 
     // Analytics
     Route::get('/analytics', [AnalyticsController::class, 'index'])->name('analytics.index');
@@ -534,6 +535,7 @@ Route::middleware(['auth', 'role:employee', 'contract.accepted'])->prefix('emplo
     Route::get('/dashboard', [EmployeeDashboardController::class, 'index'])->name('dashboard');
     Route::get('/dashboard/chart-data', [EmployeeDashboardController::class, 'getChartDataApi'])->name('dashboard.chart-data');
     Route::get('/dashboard/events', [EmployeeDashboardController::class, 'getUpcomingEventsApi'])->name('dashboard.events');
+    Route::get('/dashboard/presence-planning', [EmployeeDashboardController::class, 'getPresencePlanning'])->name('dashboard.presence-planning');
     Route::get('/notifications/unread-count', [EmployeeDashboardController::class, 'getUnreadNotificationsCount'])->name('notifications.unread-count');
     Route::post('/notifications/{id}/read', [EmployeeDashboardController::class, 'markNotificationAsRead'])->name('notifications.read');
     Route::post('/notifications/read-all', [EmployeeDashboardController::class, 'markAllNotificationsAsRead'])->name('notifications.read-all');

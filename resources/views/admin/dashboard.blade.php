@@ -114,6 +114,9 @@
             </div>
         </div>
 
+        <!-- Planning de présence -->
+        <x-presence-planning :apiUrl="route('admin.dashboard.presence-planning')" />
+
         <!-- Charts Row -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <!-- Tasks Chart -->

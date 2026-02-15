@@ -573,6 +573,9 @@
             </div>
         </div>
 
+        <!-- Planning de présence -->
+        <x-presence-planning :apiUrl="route('employee.dashboard.presence-planning')" />
+
         <!-- Tasks & Events Row -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <!-- Recent Tasks -->

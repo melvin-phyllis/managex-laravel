@@ -552,4 +552,66 @@ class DashboardController extends Controller
             'count' => auth()->user()->unreadNotifications()->count(),
         ]);
     }
+
+    /**
+     * API : Planning de présence de la semaine
+     */
+    public function getPresencePlanning()
+    {
+        $startOfWeek = Carbon::now()->startOfWeek();
+        $dayNames = [1 => 'Lundi', 2 => 'Mardi', 3 => 'Mercredi', 4 => 'Jeudi', 5 => 'Vendredi'];
+
+        $employees = User::where('role', 'employee')
+            ->with(['workDays', 'department'])
+            ->orderBy('name')
+            ->get();
+
+        $planning = [];
+        for ($day = 1; $day <= 5; $day++) {
+            $date = $startOfWeek->copy()->addDays($day - 1);
+            $presentEmployees = [];
+
+            foreach ($employees as $employee) {
+                $workDayNumbers = $employee->workDays->pluck('day_of_week')->toArray();
+                if (in_array($day, $workDayNumbers)) {
+                    $hasLeave = $employee->leaves()
+                        ->where('statut', 'approved')
+                        ->where('date_debut', '<=', $date)
+                        ->where('date_fin', '>=', $date)
+                        ->exists();
+
+                    $hasAbsence = Presence::where('user_id', $employee->id)
+                        ->whereDate('date', $date)
+                        ->where('is_absent', true)
+                        ->exists();
+
+                    $presence = Presence::where('user_id', $employee->id)
+                        ->whereDate('date', $date)
+                        ->where('is_absent', false)
+                        ->first();
+
+                    $presentEmployees[] = [
+                        'id' => $employee->id,
+                        'name' => $employee->name,
+                        'avatar' => $employee->avatar ? asset('storage/' . $employee->avatar) : null,
+                        'department' => $employee->department?->name,
+                        'status' => $hasLeave ? 'leave' : ($hasAbsence ? 'absent' : ($presence ? ($presence->check_out ? 'done' : 'present') : 'scheduled')),
+                    ];
+                }
+            }
+
+            $planning[] = [
+                'day' => $day,
+                'day_name' => $dayNames[$day],
+                'date' => $date->format('d/m'),
+                'date_full' => $date->translatedFormat('l d F'),
+                'is_today' => $date->isToday(),
+                'is_past' => $date->isPast() && !$date->isToday(),
+                'employees' => $presentEmployees,
+                'count' => count(array_filter($presentEmployees, fn($e) => $e['status'] !== 'leave' && $e['status'] !== 'absent')),
+            ];
+        }
+
+        return response()->json($planning);
+    }
 }
