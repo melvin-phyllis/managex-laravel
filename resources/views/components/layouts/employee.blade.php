@@ -428,7 +428,29 @@
             <!-- Page Content -->
             <main class="p-6">
                 <!-- Flash Messages -->
-               
+
+                <!-- Rappel configuration jours de présence -->
+                @if(auth()->user()->workDays()->count() === 0)
+                <div class="mb-4 p-4 bg-amber-50 border border-amber-300 rounded-2xl shadow-sm" x-data="{ show: true }" x-show="show">
+                    <div class="flex items-start gap-3">
+                        <div class="flex-shrink-0 p-2 bg-amber-100 rounded-xl">
+                            <svg class="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                            </svg>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-semibold text-amber-800">Configurez vos jours de presence</h4>
+                            <p class="text-sm text-amber-700 mt-1">Vous n'avez pas encore choisi vos 3 jours de presence. Veuillez les configurer pour pouvoir pointer.</p>
+                            <div class="mt-3 flex gap-2">
+                                <a href="{{ route('employee.presences.index') }}" class="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-white rounded-lg shadow-sm" style="background: linear-gradient(135deg, #31708E, #5085A5);">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                                    Configurer maintenant
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @endif
 
                 {{ $slot }}
             </main>
