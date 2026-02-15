@@ -194,6 +194,10 @@ class PresenceController extends Controller
         // Date d'embauche de l'employé (ne pas marquer absent avant cette date)
         $hireDate = $user->hire_date ? Carbon::parse($user->hire_date)->startOfDay() : null;
 
+        // Date de configuration des jours de travail (ne pas marquer absent avant)
+        $workDaysConfigDate = $user->workDays()->min('created_at');
+        $workDaysConfigDate = $workDaysConfigDate ? Carbon::parse($workDaysConfigDate)->startOfDay() : null;
+
         for ($date = $monthStart->copy(); $date <= $monthEnd; $date->addDay()) {
             $dateKey = $date->format('Y-m-d');
             $isWeekend = ! in_array($date->dayOfWeekIso, $workDays);
@@ -201,12 +205,13 @@ class PresenceController extends Controller
             $isOnLeave = isset($leaveDays[$dateKey]);
             $isFuture = $date->isFuture();
             $isBeforeHire = $hireDate && $date->lt($hireDate);
+            $isBeforeConfig = $workDaysConfigDate && $date->lt($workDaysConfigDate);
 
             $status = 'none';
             if ($isFuture) {
                 $status = 'future';
-            } elseif ($isBeforeHire) {
-                // Jour avant l'embauche - ne pas marquer comme absent
+            } elseif ($isBeforeHire || $isBeforeConfig) {
+                // Jour avant l'embauche ou avant la config des jours - ne pas marquer comme absent
                 $status = 'none';
             } elseif ($isOnLeave) {
                 $status = 'leave';
