@@ -40,6 +40,9 @@ class Presence extends Model
         'pre_check_in_longitude',
         'is_early_arrival',
         'is_auto_checkout',
+        // Absence tracking
+        'is_absent',
+        'absence_reason',
     ];
 
     protected $casts = [
@@ -60,6 +63,7 @@ class Presence extends Model
         'pre_check_in' => 'datetime',
         'is_early_arrival' => 'boolean',
         'is_auto_checkout' => 'boolean',
+        'is_absent' => 'boolean',
     ];
 
     /**

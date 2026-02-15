@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Employee;
 
 use App\Http\Controllers\Controller;
 use App\Models\EmployeeWorkDay;
+use App\Models\Presence;
+use App\Models\Setting;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -31,10 +33,22 @@ class SettingsController extends Controller
             ->where('week_start', $weekStart)
             ->count();
 
+        // Jours verrouillés (passés en semaine)
+        $todayIso = Carbon::now()->dayOfWeekIso;
+        $isWeekend = $todayIso >= 6;
+        $lockedDays = [];
+        if (!$isWeekend) {
+            for ($d = 1; $d < $todayIso; $d++) {
+                $lockedDays[] = $d;
+            }
+        }
+
         return view('employee.settings.index', [
             'currentWorkDays' => $currentWorkDays,
             'modificationsThisWeek' => $modificationsThisWeek,
             'maxModifications' => 2,
+            'lockedDays' => $lockedDays,
+            'isWeekend' => $isWeekend,
         ]);
     }
 
@@ -77,6 +91,31 @@ class SettingsController extends Controller
         $user = auth()->user();
         $weekStart = Carbon::now()->startOfWeek()->toDateString();
 
+        $newDays = array_map('intval', $request->work_days);
+        sort($newDays);
+
+        // Récupérer les anciens jours
+        $oldDays = EmployeeWorkDay::where('user_id', $user->id)
+            ->pluck('day_of_week')
+            ->sort()
+            ->values()
+            ->toArray();
+
+        // Vérifier que les jours verrouillés n'ont pas été modifiés
+        $todayIso = Carbon::now()->dayOfWeekIso;
+        $isWeekend = $todayIso >= 6;
+        if (!$isWeekend) {
+            for ($d = 1; $d < $todayIso; $d++) {
+                $wasSelected = in_array($d, $oldDays);
+                $isNowSelected = in_array($d, $newDays);
+                if ($wasSelected !== $isNowSelected) {
+                    $dayName = [1 => 'Lundi', 2 => 'Mardi', 3 => 'Mercredi', 4 => 'Jeudi', 5 => 'Vendredi'][$d];
+                    return redirect()->route('employee.settings.index')
+                        ->with('error', "$dayName est déjà passé et ne peut plus être modifié.");
+                }
+            }
+        }
+
         // Vérifier la limite de modifications cette semaine
         $modificationsThisWeek = DB::table('work_day_modifications')
             ->where('user_id', $user->id)
@@ -88,23 +127,39 @@ class SettingsController extends Controller
                 ->with('error', 'Limite atteinte : vous avez déjà modifié vos jours 2 fois cette semaine. Réinitialisation lundi.');
         }
 
-        $newDays = array_map('intval', $request->work_days);
-        sort($newDays);
-
-        // Récupérer les anciens jours
-        $oldDays = EmployeeWorkDay::where('user_id', $user->id)
-            ->pluck('day_of_week')
-            ->sort()
-            ->values()
-            ->toArray();
-
         // Vérifier si les jours sont identiques
         if ($oldDays === $newDays) {
             return redirect()->route('employee.settings.index')
                 ->with('error', 'Les jours sélectionnés sont identiques aux jours actuels.');
         }
 
-        DB::transaction(function () use ($user, $oldDays, $newDays, $weekStart) {
+        // Identifier les jours retirés (futurs) qui deviennent des absences
+        $removedDays = array_diff($oldDays, $newDays);
+        $absenceDays = [];
+        $workStartTime = Setting::getWorkStartTime();
+        $workEndTime = Setting::getWorkEndTime();
+
+        foreach ($removedDays as $removedDay) {
+            $dayDate = Carbon::now()->startOfWeek()->addDays($removedDay - 1);
+
+            // Si weekend, les absences sont pour la semaine prochaine
+            if ($isWeekend) {
+                $dayDate = $dayDate->addWeek();
+            }
+
+            // Ne créer une absence que pour les jours futurs
+            if ($dayDate->gte(today())) {
+                $existingPresence = Presence::where('user_id', $user->id)
+                    ->whereDate('date', $dayDate)
+                    ->first();
+
+                if (!$existingPresence) {
+                    $absenceDays[] = $dayDate;
+                }
+            }
+        }
+
+        DB::transaction(function () use ($user, $oldDays, $newDays, $weekStart, $absenceDays, $workStartTime, $workEndTime) {
             // Supprimer les anciens jours
             EmployeeWorkDay::where('user_id', $user->id)->delete();
 
@@ -114,6 +169,28 @@ class SettingsController extends Controller
                     'user_id' => $user->id,
                     'day_of_week' => $day,
                 ]);
+            }
+
+            // Créer les absences pour les jours retirés
+            foreach ($absenceDays as $absenceDate) {
+                Presence::create([
+                    'user_id' => $user->id,
+                    'date' => $absenceDate,
+                    'check_in' => $absenceDate->copy()->setTimeFromTimeString($workStartTime),
+                    'check_out' => $absenceDate->copy()->setTimeFromTimeString($workStartTime),
+                    'is_absent' => true,
+                    'absence_reason' => 'Jour retiré du planning',
+                    'scheduled_start' => $absenceDate->copy()->setTimeFromTimeString($workStartTime),
+                    'scheduled_end' => $absenceDate->copy()->setTimeFromTimeString($workEndTime),
+                    'notes' => 'Absence automatique - jour de travail retiré du planning',
+                ]);
+
+                // Ajouter le temps de travail manqué au solde de retard
+                $scheduledStart = Carbon::parse($workStartTime);
+                $scheduledEnd = Carbon::parse($workEndTime);
+                $workMinutes = $scheduledStart->diffInMinutes($scheduledEnd);
+
+                $user->increment('late_balance_minutes', $workMinutes);
             }
 
             // Logger la modification
@@ -128,7 +205,13 @@ class SettingsController extends Controller
             ]);
         });
 
+        $message = 'Jours de présence mis à jour avec succès.';
+        if (count($absenceDays) > 0) {
+            $count = count($absenceDays);
+            $message .= " {$count} absence(s) enregistrée(s). Vous pouvez rattraper ces heures sur vos jours de repos.";
+        }
+
         return redirect()->route('employee.settings.index')
-            ->with('success', 'Jours de présence mis à jour avec succès.');
+            ->with('success', $message);
     }
 }
