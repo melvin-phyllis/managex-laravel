@@ -80,17 +80,13 @@
                      <div x-show="showWorkDaysEditor" x-cloak x-transition:enter="ease-out duration-200" x-transition:enter-start="opacity-0 -translate-y-2" x-transition:enter-end="opacity-100 translate-y-0"
                           class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/50" @click.self="showWorkDaysEditor = false" @keydown.escape.window="showWorkDaysEditor = false">
                          <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 p-6" @click.stop
-                              x-data='{
+                              x-data="{
                                   selectedDays: <?php echo json_encode($currentWorkDays ?? []); ?>,
-                                  lockedDays: <?php echo json_encode($lockedDays ?? []); ?>,
-                                  isWeekend: <?php echo json_encode($isWeekend ?? false); ?>,
                                   maxAllowed: {{ $maxAllowedDays ?? 3 }},
                                   dayNames: <?php echo json_encode($dayNames); ?>,
                                   dayShort: <?php echo json_encode($dayShort); ?>,
                                   dayIcons: <?php echo json_encode($dayIcons); ?>,
-                                  isLocked(day) { return this.lockedDays.includes(day); },
                                   toggleDay(day) {
-                                      if (this.isLocked(day)) return;
                                       const idx = this.selectedDays.indexOf(day);
                                       if (idx > -1) { this.selectedDays.splice(idx, 1); }
                                       else if (this.selectedDays.length < this.maxAllowed) { this.selectedDays.push(day); }
@@ -98,11 +94,11 @@
                                   isSelected(day) { return this.selectedDays.includes(day); },
                                   get isMaxReached() { return this.selectedDays.length >= this.maxAllowed; },
                                   get isValid() { return this.selectedDays.length === this.maxAllowed; }
-                              }'>
+                              }">
                              <div class="flex items-center justify-between mb-5">
                                  <div>
                                      <h3 class="text-lg font-semibold text-gray-900">Modifier vos jours de travail</h3>
-                                             <p class="text-xs text-gray-500 mt-0.5" x-text="isWeekend ? 'Choisissez vos 3 jours pour la semaine prochaine' : 'Les jours passés sont verrouillés. Modifiez les jours restants.'"></p>
+                                             <p class="text-xs text-gray-500 mt-0.5">Choisissez exactement 3 jours (lundi - vendredi)</p>
                                  </div>
                                  <button @click="showWorkDaysEditor = false" class="text-gray-400 hover:text-gray-600 p-1 rounded-lg hover:bg-gray-100">
                                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
@@ -112,16 +108,13 @@
                             <div class="grid grid-cols-5 gap-2 mb-5">
                                 <template x-for="day in [1,2,3,4,5]" :key="day">
                                     <button type="button" @click="toggleDay(day)"
-                                            :class="isLocked(day)
-                                                ? (isSelected(day) ? 'bg-gray-200 text-gray-500 border-gray-300 cursor-not-allowed opacity-60' : 'bg-gray-100 text-gray-300 border-gray-200 cursor-not-allowed opacity-40')
-                                                : (isSelected(day)
-                                                    ? 'bg-gradient-to-br from-indigo-500 to-purple-600 text-white shadow-lg shadow-indigo-500/30 scale-105 border-transparent'
-                                                    : (isMaxReached ? 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed' : 'bg-gray-50 text-gray-600 border-gray-200 hover:border-indigo-300 hover:bg-indigo-50'))"
-                                            :disabled="isLocked(day) || (!isSelected(day) && isMaxReached)"
+                                            :class="isSelected(day)
+                                                ? 'bg-gradient-to-br from-indigo-500 to-purple-600 text-white shadow-lg shadow-indigo-500/30 scale-105 border-transparent'
+                                                : (isMaxReached ? 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed' : 'bg-gray-50 text-gray-600 border-gray-200 hover:border-indigo-300 hover:bg-indigo-50')"
+                                            :disabled="!isSelected(day) && isMaxReached"
                                             class="relative flex flex-col items-center gap-1.5 p-3 rounded-xl border-2 transition-all duration-200 transform">
                                         <span class="text-lg" x-text="dayIcons[day]"></span>
                                         <span class="text-xs font-semibold" x-text="dayShort[day]"></span>
-                                        <span x-show="isLocked(day)" class="absolute -top-1 -right-1 text-xs">🔒</span>
                                     </button>
                                 </template>
                             </div>

@@ -261,17 +261,6 @@ class PresenceController extends Controller
             ->count();
         $maxModifications = 2;
 
-        // Logique des jours modifiables :
-        // - Weekend (sam/dim) : tous les jours sont modifiables (pour la semaine prochaine)
-        // - En semaine : les jours passés sont verrouillés, seuls les jours restants (aujourd'hui+) sont modifiables
-        $todayIso = Carbon::now()->dayOfWeekIso; // 1=Lun ... 7=Dim
-        $isWeekend = $todayIso >= 6;
-        $lockedDays = [];
-        if (!$isWeekend) {
-            for ($d = 1; $d < $todayIso; $d++) {
-                $lockedDays[] = $d;
-            }
-        }
         $maxAllowedDays = 3;
 
         // --- LOGIQUE STRICTE DE POINTAGE ---
@@ -377,9 +366,7 @@ class PresenceController extends Controller
             'currentWorkDays',
             'modificationsThisWeek',
             'maxModifications',
-            'maxAllowedDays',
-            'lockedDays',
-            'isWeekend'
+            'maxAllowedDays'
         ));
     }
 
@@ -976,22 +963,7 @@ class PresenceController extends Controller
         $workDays = array_map('intval', $request->input('work_days'));
         sort($workDays);
 
-        // Vérifier que les jours verrouillés n'ont pas été modifiés
-        $todayIso = Carbon::now()->dayOfWeekIso;
-        $isWeekend = $todayIso >= 6;
         $currentDays = $user->workDays()->pluck('day_of_week')->sort()->values()->toArray();
-
-        if (!$isWeekend) {
-            // Les jours avant aujourd'hui doivent rester identiques
-            for ($d = 1; $d < $todayIso; $d++) {
-                $wasSelected = in_array($d, $currentDays);
-                $isNowSelected = in_array($d, $workDays);
-                if ($wasSelected !== $isNowSelected) {
-                    $dayName = [1 => 'Lundi', 2 => 'Mardi', 3 => 'Mercredi', 4 => 'Jeudi', 5 => 'Vendredi'][$d];
-                    return redirect()->back()->with('error', "$dayName est déjà passé et ne peut plus être modifié.");
-                }
-            }
-        }
 
         // Vérifier la limite de modifications par semaine (max 2)
         $weekStart = Carbon::now()->startOfWeek();
@@ -1001,7 +973,7 @@ class PresenceController extends Controller
             ->count();
 
         if ($modificationsThisWeek >= 2) {
-            return redirect()->back()->with('error', 'Vous avez atteint la limite de 2 modifications par semaine. Réessayez la semaine prochaine.');
+            return redirect()->back()->with('error', 'Vous avez atteint la limite de 2 modifications par semaine.');
         }
 
         // Vérifier si les jours sont identiques
@@ -1009,33 +981,7 @@ class PresenceController extends Controller
             return redirect()->back()->with('info', 'Vos jours de travail sont déjà configurés ainsi.');
         }
 
-        // Identifier les jours retirés (futurs) qui deviennent des absences
-        $removedDays = array_diff($currentDays, $workDays);
-        $absenceDays = [];
-        $workStartTime = Setting::getWorkStartTime();
-        $workEndTime = Setting::getWorkEndTime();
-
-        foreach ($removedDays as $removedDay) {
-            // Calculer la date de ce jour dans la semaine en cours (ou prochaine si weekend)
-            $dayDate = Carbon::now()->startOfWeek()->addDays($removedDay - 1);
-            if ($isWeekend) {
-                $dayDate = $dayDate->addWeek();
-            }
-
-            // Ne créer une absence que pour les jours futurs (aujourd'hui inclus si pas encore travaillé)
-            if ($dayDate->gte(today())) {
-                // Vérifier qu'il n'y a pas déjà une présence ou absence pour ce jour
-                $existingPresence = Presence::where('user_id', $user->id)
-                    ->whereDate('date', $dayDate)
-                    ->first();
-
-                if (!$existingPresence) {
-                    $absenceDays[] = $dayDate;
-                }
-            }
-        }
-
-        DB::transaction(function () use ($user, $workDays, $currentDays, $weekStart, $absenceDays, $workStartTime, $workEndTime) {
+        DB::transaction(function () use ($user, $workDays, $currentDays, $weekStart) {
             // Supprimer les anciens jours
             EmployeeWorkDay::where('user_id', $user->id)->delete();
 
@@ -1045,28 +991,6 @@ class PresenceController extends Controller
                     'user_id' => $user->id,
                     'day_of_week' => $day,
                 ]);
-            }
-
-            // Créer les absences pour les jours retirés
-            foreach ($absenceDays as $absenceDate) {
-                Presence::create([
-                    'user_id' => $user->id,
-                    'date' => $absenceDate,
-                    'check_in' => $absenceDate->copy()->setTimeFromTimeString($workStartTime),
-                    'check_out' => $absenceDate->copy()->setTimeFromTimeString($workStartTime),
-                    'is_absent' => true,
-                    'absence_reason' => 'Jour retiré du planning',
-                    'scheduled_start' => $absenceDate->copy()->setTimeFromTimeString($workStartTime),
-                    'scheduled_end' => $absenceDate->copy()->setTimeFromTimeString($workEndTime),
-                    'notes' => 'Absence automatique - jour de travail retiré du planning',
-                ]);
-
-                // Ajouter le temps de travail manqué au solde de retard
-                $scheduledStart = Carbon::parse($workStartTime);
-                $scheduledEnd = Carbon::parse($workEndTime);
-                $workMinutes = $scheduledStart->diffInMinutes($scheduledEnd);
-
-                $user->increment('late_balance_minutes', $workMinutes);
             }
 
             // Logger la modification
@@ -1081,12 +1005,6 @@ class PresenceController extends Controller
             ]);
         });
 
-        $message = 'Vos jours de travail ont été mis à jour avec succès.';
-        if (count($absenceDays) > 0) {
-            $count = count($absenceDays);
-            $message .= " {$count} absence(s) enregistrée(s). Vous pouvez rattraper ces heures sur vos jours de repos.";
-        }
-
-        return redirect()->back()->with('success', $message);
+        return redirect()->back()->with('success', 'Vos jours de travail ont été mis à jour avec succès.');
     }
 }

@@ -155,16 +155,13 @@
             <div x-show="activeTab === 'workdays'" x-cloak class="py-6"
                  x-data="{
                     selectedDays: <?php echo json_encode($currentWorkDays ?? []); ?>,
-                    lockedDays: <?php echo json_encode($lockedDays ?? []); ?>,
-                    isWeekend: <?php echo json_encode($isWeekend ?? false); ?>,
                     modificationsUsed: {{ $modificationsThisWeek ?? 0 }},
                     maxModifications: {{ $maxModifications ?? 2 }},
                     dayNames: {1: 'Lundi', 2: 'Mardi', 3: 'Mercredi', 4: 'Jeudi', 5: 'Vendredi'},
                     get isLimitReached() { return this.modificationsUsed >= this.maxModifications },
                     get canSubmit() { return this.selectedDays.length === 3 && !this.isLimitReached },
-                    isLocked(day) { return this.lockedDays.includes(day); },
                     toggleDay(day) {
-                        if (this.isLimitReached || this.isLocked(day)) return;
+                        if (this.isLimitReached) return;
                         const idx = this.selectedDays.indexOf(day);
                         if (idx > -1) {
                             this.selectedDays.splice(idx, 1);
@@ -185,7 +182,7 @@
                         </div>
                         <div>
                             <h2 class="text-lg font-semibold text-gray-900">Jours de présence</h2>
-                            <p class="text-sm text-gray-500" x-text="isWeekend ? 'Choisissez vos 3 jours de travail pour la semaine prochaine.' : 'Les jours passés sont verrouillés. Modifiez les jours restants.'"></p>
+                            <p class="text-sm text-gray-500">Choisissez exactement 3 jours (lundi - vendredi)</p>
                         </div>
                     </div>
 
@@ -225,24 +222,21 @@
                                     <input type="checkbox" :name="'work_days[]'" :value="day" :id="'day_' + day"
                                            class="sr-only"
                                            :checked="isDaySelected(day)"
-                                           :disabled="isLimitReached || isLocked(day)"
+                                           :disabled="isLimitReached"
                                            @change="toggleDay(day)">
                                     <label :for="'day_' + day"
                                            @click="toggleDay(day)"
                                            class="flex flex-col items-center justify-center p-4 rounded-xl border-2 transition-all duration-200"
-                                           :class="isLocked(day)
-                                               ? (isDaySelected(day) ? 'bg-gray-200 border-gray-300 text-gray-500 cursor-not-allowed opacity-60' : 'bg-gray-100 border-gray-200 text-gray-300 cursor-not-allowed opacity-40')
-                                               : (isLimitReached
+                                           :class="isLimitReached
                                                    ? 'opacity-60 cursor-not-allowed ' + (isDaySelected(day) ? 'bg-gray-100 border-gray-300 text-gray-500' : 'bg-gray-50 border-gray-200 text-gray-400')
-                                                   : (isDaySelected(day) ? 'border-blue-500 bg-blue-50 text-blue-700 shadow-sm cursor-pointer' : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300 hover:bg-gray-50 cursor-pointer'))">
+                                                   : (isDaySelected(day) ? 'border-blue-500 bg-blue-50 text-blue-700 shadow-sm cursor-pointer' : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300 hover:bg-gray-50 cursor-pointer')">
                                         <svg class="w-6 h-6 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                             :class="isLocked(day) ? 'text-gray-300' : (isDaySelected(day) ? (isLimitReached ? 'text-gray-400' : 'text-blue-500') : 'text-gray-400')">
+                                             :class="isDaySelected(day) ? (isLimitReached ? 'text-gray-400' : 'text-blue-500') : 'text-gray-400'">
                                             <path x-show="isDaySelected(day)" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                             <path x-show="!isDaySelected(day)" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                         </svg>
                                         <span class="text-sm font-medium" x-text="dayNames[day]"></span>
                                     </label>
-                                    <span x-show="isLocked(day)" class="absolute -top-1 -right-1 text-xs">🔒</span>
                                 </div>
                             </template>
                         </div>
