@@ -127,7 +127,7 @@ class Presence extends Model
             return null;
         }
 
-        return $this->check_in->diffInMinutes($this->check_out) / 60;
+        return round($this->check_in->diffInMinutes($this->check_out) / 60, 2);
     }
 
     /**
