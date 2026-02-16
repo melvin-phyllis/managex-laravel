@@ -41,6 +41,7 @@ Schedule::command('queue:work --stop-when-empty --max-time=55 --tries=1')
 
 // Daily at 6:00 AM - Check for expired late hours and apply penalties
 Schedule::command('presence:check-expired-late')
+    ->weekdays()
     ->dailyAt('06:00')
     ->timezone('Africa/Abidjan')
     ->withoutOverlapping()
@@ -60,6 +61,7 @@ try {
 }
 
 Schedule::job(new \App\Jobs\SendCheckInRemindersJob('reminder'))
+    ->weekdays()
     ->dailyAt($workStartTime)
     ->timezone('Africa/Abidjan')
     ->onOneServer();
@@ -83,6 +85,7 @@ $checkoutReminderTime = \Carbon\Carbon::createFromTime((int) $endTimeParts[0], (
     ->format('H:i');
 
 Schedule::job(new \App\Jobs\SendCheckOutRemindersJob('reminder'))
+    ->weekdays()
     ->dailyAt($checkoutReminderTime)
     ->timezone('Africa/Abidjan')
     ->onOneServer();
@@ -100,6 +103,7 @@ try {
 }
 
 Schedule::job(new \App\Jobs\SendBreakReminderJob('break_start'))
+    ->weekdays()
     ->dailyAt($breakStartTime)
     ->timezone('Africa/Abidjan')
     ->onOneServer();
@@ -113,6 +117,7 @@ try {
 }
 
 Schedule::job(new \App\Jobs\SendBreakReminderJob('break_end'))
+    ->weekdays()
     ->dailyAt($breakEndTime)
     ->timezone('Africa/Abidjan')
     ->onOneServer();
@@ -123,6 +128,7 @@ Schedule::job(new \App\Jobs\SendBreakReminderJob('break_end'))
 
 // Daily at 08:00 AM - Send task reminders
 Schedule::command('notifications:send-reminders')
+    ->weekdays()
     ->dailyAt('08:00')
     ->timezone('Africa/Abidjan')
     ->onOneServer();
@@ -133,6 +139,7 @@ Schedule::command('notifications:send-reminders')
 
 // Daily at 19:00 - Send daily summary report to admins
 Schedule::command('report:daily')
+    ->weekdays()
     ->dailyAt('19:00')
     ->timezone('Africa/Abidjan')
     ->onOneServer();

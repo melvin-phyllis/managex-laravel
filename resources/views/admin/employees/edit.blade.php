@@ -364,8 +364,6 @@
                                 3 => 'Mercredi',
                                 4 => 'Jeudi',
                                 5 => 'Vendredi',
-                                6 => 'Samedi',
-                                7 => 'Dimanche',
                             ];
                             $employeeWorkDays = $employee->workDays->pluck('day_of_week')->toArray();
                         @endphp

@@ -307,8 +307,6 @@
                                 3 => 'Mercredi',
                                 4 => 'Jeudi',
                                 5 => 'Vendredi',
-                                6 => 'Samedi',
-                                7 => 'Dimanche',
                             ];
                             $defaultWorkDays = old('work_days', [1, 2, 3, 4, 5]);
                         @endphp
