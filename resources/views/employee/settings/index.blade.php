@@ -152,27 +152,31 @@
             </div>
 
             <!-- Tab: Jours de présence -->
-            <div x-show="activeTab === 'workdays'" x-cloak class="py-6"
-                 x-data="{
-                    selectedDays: <?php echo json_encode($currentWorkDays ?? []); ?>,
-                    modificationsUsed: {{ $modificationsThisWeek ?? 0 }},
-                    maxModifications: {{ $maxModifications ?? 2 }},
-                    dayNames: {1: 'Lundi', 2: 'Mardi', 3: 'Mercredi', 4: 'Jeudi', 5: 'Vendredi'},
-                    get isLimitReached() { return this.modificationsUsed >= this.maxModifications },
-                    get canSubmit() { return this.selectedDays.length === 3 && !this.isLimitReached },
-                    toggleDay(day) {
-                        if (this.isLimitReached) return;
-                        const idx = this.selectedDays.indexOf(day);
-                        if (idx > -1) {
-                            this.selectedDays.splice(idx, 1);
-                        } else if (this.selectedDays.length < 3) {
-                            this.selectedDays.push(day);
+            <script>
+                document.addEventListener('alpine:init', () => {
+                    Alpine.data('settingsWorkDays', () => ({
+                        selectedDays: @json($currentWorkDays ?? []).map(Number),
+                        modificationsUsed: {{ $modificationsThisWeek ?? 0 }},
+                        maxModifications: {{ $maxModifications ?? 2 }},
+                        dayNames: {1: 'Lundi', 2: 'Mardi', 3: 'Mercredi', 4: 'Jeudi', 5: 'Vendredi'},
+                        get isLimitReached() { return this.modificationsUsed >= this.maxModifications },
+                        get canSubmit() { return this.selectedDays.length === 3 && !this.isLimitReached },
+                        toggleDay(day) {
+                            if (this.isLimitReached) return;
+                            const idx = this.selectedDays.indexOf(day);
+                            if (idx > -1) {
+                                this.selectedDays.splice(idx, 1);
+                            } else if (this.selectedDays.length < 3) {
+                                this.selectedDays.push(day);
+                            }
+                        },
+                        isDaySelected(day) {
+                            return this.selectedDays.includes(day);
                         }
-                    },
-                    isDaySelected(day) {
-                        return this.selectedDays.includes(day);
-                    }
-                 }">
+                    }));
+                });
+            </script>
+            <div x-show="activeTab === 'workdays'" x-cloak class="py-6" x-data="settingsWorkDays">
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                     <div class="flex items-center mb-6">
                         <div class="p-3 rounded-full mr-4" style="background-color: rgba(59, 139, 235, 0.1);">
