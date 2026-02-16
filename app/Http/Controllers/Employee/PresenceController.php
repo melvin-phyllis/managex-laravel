@@ -316,29 +316,48 @@ class PresenceController extends Controller
         // 3. Flag pour le départ
         $canCheckOut = $todayPresence && ! $todayPresence->check_out;
 
-        // 4. Session de rattrapage (jours non travaillés)
+        // 4. Session de rattrapage
         // Permettre le pointage de rattrapage si:
-        // - Ce n'est PAS un jour de travail normal
-        // - L'employé a des heures à rattraper
-        // - Il n'a pas déjà pointé aujourd'hui
-        // - La géolocalisation est activée
-        // - Il n'est pas après 17h
+        // a) Jour non travaillé : pas encore pointé, avant 17h, géoloc activée
+        // b) Jour travaillé après les heures : déjà checked out, après l'heure de fin
         $canStartRecoverySession = false;
         $recoverySessionInfo = null;
 
-        if (! $isWorkingDay && $geolocationEnabled && ! $isAfterHours && ! $user->hasCheckedInToday()) {
+        $workEndTime = $workSettings['work_end'];
+        $scheduledEnd = Carbon::createFromFormat('H:i', $workEndTime)
+            ->setDate(now()->year, now()->month, now()->day);
+        $isAfterWorkEnd = now()->gt($scheduledEnd);
+
+        // Cas 1: Jour non travaillé (comportement existant)
+        $canRecoveryOffDay = ! $isWorkingDay && $geolocationEnabled && ! $isAfterHours && ! $user->hasCheckedInToday();
+
+        // Cas 2: Jour travaillé, après les heures, déjà checked out, pas déjà de rattrapage aujourd'hui
+        $hasRecoveryToday = $user->presences()
+            ->whereDate('date', today())
+            ->where('is_recovery_session', true)
+            ->exists();
+        $canRecoveryAfterWork = $isWorkingDay && $isAfterWorkEnd && $geolocationEnabled
+            && $todayPresence && $todayPresence->check_out && ! $hasRecoveryToday;
+
+        if ($canRecoveryOffDay || $canRecoveryAfterWork) {
             $hasLateToRecover = $totalUnrecoveredMinutes > 0;
             if ($hasLateToRecover) {
                 $canStartRecoverySession = true;
                 $recoverySessionInfo = [
                     'minutes_to_recover' => $totalUnrecoveredMinutes,
                     'formatted' => $this->formatMinutes($totalUnrecoveredMinutes),
+                    'is_after_work' => $canRecoveryAfterWork,
                 ];
             }
         }
 
-        // Vérifier si la présence d'aujourd'hui est une session de rattrapage
-        $isRecoverySessionToday = $todayPresence && $todayPresence->is_recovery_session;
+        // Vérifier si une session de rattrapage est en cours aujourd'hui
+        $activeRecoverySession = $user->presences()
+            ->whereDate('date', today())
+            ->where('is_recovery_session', true)
+            ->whereNull('check_out')
+            ->first();
+        $isRecoverySessionToday = $activeRecoverySession !== null;
 
         return view('employee.presences.index', compact(
             'presences',
@@ -368,6 +387,7 @@ class PresenceController extends Controller
             'canStartRecoverySession',
             'recoverySessionInfo',
             'isRecoverySessionToday',
+            'activeRecoverySession',
             'currentWorkDays',
             'modificationsThisWeek',
             'maxModifications',
@@ -393,21 +413,48 @@ class PresenceController extends Controller
     }
 
     /**
-     * Démarrer une session de rattrapage (jour non travaillé)
+     * Démarrer une session de rattrapage
+     * - Jour non travaillé : crée une nouvelle présence
+     * - Jour travaillé après les heures : crée une 2ème présence de rattrapage
      */
     public function startRecoverySession(Request $request)
     {
         $user = auth()->user();
+        $isWorkingDay = $user->isWorkingDay();
 
-        // Vérifier qu'il n'a pas déjà pointé aujourd'hui
-        if ($user->hasCheckedInToday()) {
-            return redirect()->back()->with('error', 'Vous avez déjà pointé aujourd\'hui.');
-        }
+        // Déterminer si c'est un rattrapage après les heures de travail
+        $workEndTime = Setting::getWorkEndTime();
+        $scheduledEnd = Carbon::createFromFormat('H:i', $workEndTime)
+            ->setDate(now()->year, now()->month, now()->day);
+        $isAfterWorkEnd = now()->gt($scheduledEnd);
 
-        // Restriction horaire
-        $limitTime = Carbon::today()->setHour(17)->setMinute(0);
-        if (now()->gt($limitTime)) {
-            return redirect()->back()->with('error', 'Session de rattrapage refusée. Il est passé 17h00.');
+        if ($isWorkingDay && $isAfterWorkEnd) {
+            // Cas: jour travaillé, après les heures
+            // Vérifier que l'employé a déjà fait sa journée (check-out effectué)
+            $todayPresence = $user->todayPresence();
+            if (! $todayPresence || ! $todayPresence->check_out) {
+                return redirect()->back()->with('error', 'Vous devez d\'abord terminer votre journée de travail avant de démarrer une session de rattrapage.');
+            }
+
+            // Vérifier qu'il n'y a pas déjà une session de rattrapage aujourd'hui
+            $existingRecovery = $user->presences()
+                ->whereDate('date', today())
+                ->where('is_recovery_session', true)
+                ->first();
+            if ($existingRecovery) {
+                return redirect()->back()->with('error', 'Vous avez déjà une session de rattrapage aujourd\'hui.');
+            }
+        } else {
+            // Cas: jour non travaillé
+            if ($user->hasCheckedInToday()) {
+                return redirect()->back()->with('error', 'Vous avez déjà pointé aujourd\'hui.');
+            }
+
+            // Restriction horaire pour les jours non travaillés
+            $limitTime = Carbon::today()->setHour(17)->setMinute(0);
+            if (now()->gt($limitTime)) {
+                return redirect()->back()->with('error', 'Session de rattrapage refusée. Il est passé 17h00.');
+            }
         }
 
         // Vérifier qu'il a des heures à rattraper
@@ -454,8 +501,6 @@ class PresenceController extends Controller
         }
 
         // Créer la présence en mode "session de rattrapage"
-        $workEndTime = Setting::getWorkEndTime();
-
         Presence::create([
             'user_id' => $user->id,
             'check_in' => now(),
@@ -464,16 +509,16 @@ class PresenceController extends Controller
             'check_in_longitude' => $longitude,
             'check_in_status' => $checkInStatus,
             'geolocation_zone_id' => $geolocationZoneId,
-            'is_late' => false, // Ce n'est pas un retard, c'est une session de rattrapage
+            'is_late' => false,
             'late_minutes' => null,
-            'scheduled_start' => now()->format('H:i'), // L'heure d'arrivée = heure de début
+            'scheduled_start' => now()->format('H:i'),
             'scheduled_end' => $workEndTime,
-            'is_recovery_session' => true, // Marquer comme session de rattrapage
+            'is_recovery_session' => true,
         ]);
 
         $formatted = $this->formatMinutes($totalUnrecoveredMinutes);
 
-        return redirect()->back()->with('success', "Session de rattrapage démarrée. Vous avez $formatted à rattraper. Tout le temps travaillé aujourd'hui sera comptabilisé comme rattrapage.");
+        return redirect()->back()->with('success', "Session de rattrapage démarrée. Vous avez $formatted à rattraper. Tout le temps travaillé sera comptabilisé comme rattrapage.");
     }
 
     /**
@@ -482,19 +527,16 @@ class PresenceController extends Controller
     public function endRecoverySession(Request $request)
     {
         $user = auth()->user();
-        $presence = $user->todayPresence();
+
+        // Trouver spécifiquement la session de rattrapage en cours (sans check_out)
+        $presence = $user->presences()
+            ->whereDate('date', today())
+            ->where('is_recovery_session', true)
+            ->whereNull('check_out')
+            ->first();
 
         if (! $presence) {
             return redirect()->back()->with('error', 'Aucune session de rattrapage en cours.');
-        }
-
-        if ($presence->check_out) {
-            return redirect()->back()->with('error', 'Vous avez déjà terminé votre session de rattrapage.');
-        }
-
-        if (! $presence->is_recovery_session) {
-            // Si ce n'est pas une session de rattrapage, utiliser le checkout normal
-            return $this->checkOut($request);
         }
 
         // Vérifier la géolocalisation

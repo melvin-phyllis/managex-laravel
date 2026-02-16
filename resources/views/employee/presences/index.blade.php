@@ -235,68 +235,75 @@
         </div>
         @endif
 
-        <!-- Jour non travaillé - Option de rattrapage -->
-        @if(isset($isWorkingDay) && !$isWorkingDay)
-            @if(isset($canStartRecoverySession) && $canStartRecoverySession && isset($recoverySessionInfo))
-                <!-- Session de rattrapage disponible -->
-                <div class="bg-gradient-to-r from-violet-50 to-purple-50 border border-violet-200 rounded-2xl p-5 mb-4 animate-fade-in-up">
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                        <div class="flex items-start gap-4">
-                            <div class="flex-shrink-0 bg-gradient-to-br from-violet-500 to-purple-600 p-3 rounded-xl shadow-lg shadow-violet-500/30">
-                                <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
-                            </div>
-                            <div>
-                                <h3 class="font-semibold text-violet-900">Session de rattrapage disponible</h3>
-                                <p class="text-sm text-violet-700 mt-1">
-                                    Aujourd'hui n'est pas un jour de travail, mais vous avez 
-                                    <strong class="text-violet-900">{{ $recoverySessionInfo['formatted'] }}</strong> de retard à rattraper.
-                                </p>
-                                <p class="text-xs text-violet-600 mt-2">
-                                     Vous pouvez venir travailler aujourd'hui pour rattraper vos heures. Tout le temps travaillé sera comptabilisé comme rattrapage.
-                                </p>
-                            </div>
-                        </div>
-                        <form id="recoveryStartForm" action="{{ route('employee.presences.recovery.start') }}" method="POST" class="flex-shrink-0">
-                            @csrf
-                            <input type="hidden" name="latitude" id="recoveryStartLat">
-                            <input type="hidden" name="longitude" id="recoveryStartLng">
-                            <button type="button" id="recoveryStartBtn"
-                                    class="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-violet-600 to-purple-600 text-white font-medium rounded-xl hover:from-violet-700 hover:to-purple-700 transition-all shadow-lg shadow-violet-500/30 flex items-center justify-center gap-2">
-                                <svg id="recoveryStartIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
-                                <span id="recoveryStartText">Démarrer le rattrapage</span>
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            @elseif(!isset($todayPresence) || !$todayPresence)
-                <!-- Jour non travaillé sans heures à rattraper -->
-                <div class="bg-amber-50 border-l-4 border-amber-400 p-4 rounded-r-lg mb-4">
-                    <div class="flex">
-                        <div class="flex-shrink-0">
-                            <svg class="h-5 w-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+        <!-- Option de rattrapage (jour non travaillé OU après les heures sur jour travaillé) -->
+        @if(isset($canStartRecoverySession) && $canStartRecoverySession && isset($recoverySessionInfo))
+            <!-- Session de rattrapage disponible -->
+            <div class="bg-gradient-to-r from-violet-50 to-purple-50 border border-violet-200 rounded-2xl p-5 mb-4 animate-fade-in-up">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div class="flex items-start gap-4">
+                        <div class="flex-shrink-0 bg-gradient-to-br from-violet-500 to-purple-600 p-3 rounded-xl shadow-lg shadow-violet-500/30">
+                            <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
                         </div>
-                        <div class="ml-3">
-                            <p class="text-sm text-amber-700">
-                                <strong>Aujourd'hui n'est pas un jour de travail pour vous.</strong> Le pointage normal est désactivé.
+                        <div>
+                            <h3 class="font-semibold text-violet-900">Session de rattrapage disponible</h3>
+                            <p class="text-sm text-violet-700 mt-1">
+                                @if(!empty($recoverySessionInfo['is_after_work']))
+                                    Votre journée est terminée, mais vous avez
+                                    <strong class="text-violet-900">{{ $recoverySessionInfo['formatted'] }}</strong> de retard à rattraper.
+                                @else
+                                    Aujourd'hui n'est pas un jour de travail, mais vous avez
+                                    <strong class="text-violet-900">{{ $recoverySessionInfo['formatted'] }}</strong> de retard à rattraper.
+                                @endif
                             </p>
-                            @if(isset($totalUnrecoveredMinutes) && $totalUnrecoveredMinutes <= 0)
-                                <p class="text-xs text-amber-600 mt-1">Vous n'avez pas d'heures de retard à rattraper. Profitez de votre repos !</p>
-                            @endif
+                            <p class="text-xs text-violet-600 mt-2">
+                                @if(!empty($recoverySessionInfo['is_after_work']))
+                                    Vous pouvez rester pour rattraper vos heures de retard. Le temps supplémentaire sera comptabilisé comme rattrapage.
+                                @else
+                                    Vous pouvez venir travailler aujourd'hui pour rattraper vos heures. Tout le temps travaillé sera comptabilisé comme rattrapage.
+                                @endif
+                            </p>
                         </div>
                     </div>
+                    <form id="recoveryStartForm" action="{{ route('employee.presences.recovery.start') }}" method="POST" class="flex-shrink-0">
+                        @csrf
+                        <input type="hidden" name="latitude" id="recoveryStartLat">
+                        <input type="hidden" name="longitude" id="recoveryStartLng">
+                        <button type="button" id="recoveryStartBtn"
+                                class="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-violet-600 to-purple-600 text-white font-medium rounded-xl hover:from-violet-700 hover:to-purple-700 transition-all shadow-lg shadow-violet-500/30 flex items-center justify-center gap-2">
+                            <svg id="recoveryStartIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span id="recoveryStartText">Démarrer le rattrapage</span>
+                        </button>
+                    </form>
                 </div>
-            @endif
+            </div>
+        @elseif(isset($isWorkingDay) && !$isWorkingDay && (!isset($todayPresence) || !$todayPresence))
+            <!-- Jour non travaillé sans heures à rattraper -->
+            <div class="bg-amber-50 border-l-4 border-amber-400 p-4 rounded-r-lg mb-4">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <svg class="h-5 w-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm text-amber-700">
+                            <strong>Aujourd'hui n'est pas un jour de travail pour vous.</strong> Le pointage normal est désactivé.
+                        </p>
+                        @if(isset($totalUnrecoveredMinutes) && $totalUnrecoveredMinutes <= 0)
+                            <p class="text-xs text-amber-600 mt-1">Vous n'avez pas d'heures de retard à rattraper. Profitez de votre repos !</p>
+                        @endif
+                    </div>
+                </div>
+            </div>
         @endif
         
         <!-- Session de rattrapage en cours -->
-        @if(isset($isRecoverySessionToday) && $isRecoverySessionToday && $todayPresence && !$todayPresence->check_out)
+        @if(isset($isRecoverySessionToday) && $isRecoverySessionToday && isset($activeRecoverySession) && $activeRecoverySession)
         <div class="bg-gradient-to-r from-violet-100 to-purple-100 border-2 border-violet-300 rounded-2xl p-5 mb-4 animate-fade-in-up">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div class="flex items-start gap-4">
@@ -311,7 +318,7 @@
                             Session de rattrapage en cours
                         </h3>
                         <p class="text-sm text-violet-700 mt-1">
-                            Arrivée à <strong>{{ $todayPresence->check_in->format('H:i') }}</strong>
+                            Arrivée à <strong>{{ $activeRecoverySession->check_in->format('H:i') }}</strong>
                             <span class="mx-2">•</span>
                             En cours depuis <span id="recoveryDuration" class="font-medium">--</span>
                         </p>
@@ -338,7 +345,7 @@
         <script nonce="{{ $cspNonce ?? '' }}">
             // Afficher la durée de la session de rattrapage
             (function() {
-                const checkInTime = new Date('{{ $todayPresence->check_in->toIso8601String() }}');
+                const checkInTime = new Date('{{ $activeRecoverySession->check_in->toIso8601String() }}');
                 const durationEl = document.getElementById('recoveryDuration');
                 
                 function updateDuration() {
