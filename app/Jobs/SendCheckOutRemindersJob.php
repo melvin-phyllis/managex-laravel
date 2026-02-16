@@ -83,8 +83,14 @@ class SendCheckOutRemindersJob implements ShouldQueue
         $scheduledEnd = Carbon::createFromFormat('H:i', $workEndTime)
             ->setDate(now()->year, now()->month, now()->day);
 
+        // Ne pas faire d'auto-checkout si l'heure de fin n'est pas encore passée
+        if (now()->lt($scheduledEnd)) {
+            Log::info("[CheckOutReminder] Skipping auto-checkout for {$employee->name} - end time {$workEndTime} not reached yet");
+            return;
+        }
+
         $presence->update([
-            'check_out' => $scheduledEnd,
+            'check_out' => now(),
             'is_auto_checkout' => true,
             'scheduled_end' => $workEndTime,
         ]);
