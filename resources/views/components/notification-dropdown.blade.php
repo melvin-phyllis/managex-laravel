@@ -76,6 +76,10 @@ if (!function_exists('getNotificationMessage')) {
         case 'evaluation_reminder':
             return "📝 Rappel : évaluations hebdomadaires à soumettre";
             
+        case 'auto_checkout':
+            $checkOut = $data['check_out'] ?? '';
+            return "⚠️ Départ automatique enregistré" . ($checkOut ? " à {$checkOut}" : '') . ". Pensez à pointer votre départ.";
+            
         default:
             return 'Nouvelle notification';
     }

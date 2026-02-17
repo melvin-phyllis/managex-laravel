@@ -91,6 +91,23 @@ Schedule::job(new \App\Jobs\SendCheckOutRemindersJob('reminder'))
     ->onOneServer();
 
 // ==========================================
+// Auto Check-Out (Forgot to clock out)
+// ==========================================
+
+// 30 min after work end time - Auto check-out employees who forgot
+$autoCheckoutTime = \Carbon\Carbon::createFromTime((int) $endTimeParts[0], (int) $endTimeParts[1])
+    ->addMinutes(30)
+    ->format('H:i');
+
+Schedule::command('presence:auto-checkout')
+    ->weekdays()
+    ->dailyAt($autoCheckoutTime)
+    ->timezone('Africa/Abidjan')
+    ->withoutOverlapping()
+    ->onOneServer()
+    ->appendOutputTo(storage_path('logs/auto-checkout.log'));
+
+// ==========================================
 // Break Reminders
 // ==========================================
 
