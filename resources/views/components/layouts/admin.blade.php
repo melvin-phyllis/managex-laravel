@@ -226,6 +226,7 @@
 <body class="font-sans antialiased" x-data="{ showLogoutModal: false }">
     <script nonce="{{ $cspNonce ?? '' }}">window.userId = {{ auth()->id() ?? 'null' }};</script>
     <x-realtime-notifications />
+    <x-login-notifications />
     <div class="min-h-screen bg-slate-50">
         <!-- Decorative Background -->
         <div class="fixed inset-0 overflow-hidden pointer-events-none">

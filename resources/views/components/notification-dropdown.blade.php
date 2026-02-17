@@ -99,7 +99,8 @@ if (!function_exists('getNotificationMessage')) {
          @click.away="open = false"
          x-transition
          x-cloak
-         class="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg py-2 z-50 border border-gray-100">
+         class="fixed sm:absolute right-2 sm:right-0 left-2 sm:left-auto mt-2 sm:w-80 bg-white rounded-xl shadow-2xl py-2 z-50 border border-gray-100"
+         style="top: 3.5rem;">
 
         <div class="px-4 py-2 border-b border-gray-100 flex items-center justify-between">
             <h3 class="text-sm font-semibold text-gray-900">Notifications</h3>

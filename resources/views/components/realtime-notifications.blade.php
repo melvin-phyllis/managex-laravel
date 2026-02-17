@@ -44,6 +44,7 @@ function realtimeToasts(notificationCountUrl) {
         
         lastNotificationId: null,
         pollingInterval: null,
+        audioCtx: null,
 
         init() {
             // Essayer WebSocket en premier
@@ -56,6 +57,49 @@ function realtimeToasts(notificationCountUrl) {
             } else {
                 // Fallback: polling toutes les 30 secondes si pas de WebSocket
                 this.startPolling();
+            }
+        },
+
+        /**
+         * Jouer un son de notification synthétique (ding) via Web Audio API
+         */
+        playNotificationSound() {
+            // Vérifier si le son est activé (par défaut: true)
+            if (localStorage.getItem('managex-notif-sound') === 'false') return;
+
+            try {
+                if (!this.audioCtx) {
+                    this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                const ctx = this.audioCtx;
+                const now = ctx.currentTime;
+
+                // Oscillateur principal (ding aigu)
+                const osc1 = ctx.createOscillator();
+                const gain1 = ctx.createGain();
+                osc1.type = 'sine';
+                osc1.frequency.setValueAtTime(880, now);        // A5
+                osc1.frequency.setValueAtTime(1108.73, now + 0.08); // C#6
+                gain1.gain.setValueAtTime(0.3, now);
+                gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+                osc1.connect(gain1);
+                gain1.connect(ctx.destination);
+                osc1.start(now);
+                osc1.stop(now + 0.5);
+
+                // Oscillateur harmonique
+                const osc2 = ctx.createOscillator();
+                const gain2 = ctx.createGain();
+                osc2.type = 'sine';
+                osc2.frequency.setValueAtTime(1318.51, now + 0.08); // E6
+                gain2.gain.setValueAtTime(0.15, now + 0.08);
+                gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
+                osc2.connect(gain2);
+                gain2.connect(ctx.destination);
+                osc2.start(now + 0.08);
+                osc2.stop(now + 0.6);
+            } catch (e) {
+                // Web Audio non supporté ou bloqué, ignorer silencieusement
             }
         },
 
@@ -242,6 +286,9 @@ function realtimeToasts(notificationCountUrl) {
                 borderClass: config.borderClass,
                 icon: config.icon
             });
+
+            // Jouer le son de notification
+            this.playNotificationSound();
             
             setTimeout(() => {
                 if (this.toasts.length > 0) {
