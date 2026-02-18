@@ -125,7 +125,12 @@ function realtimeToasts(notificationCountUrl) {
             if (document.hidden) return; // Skip if tab is hidden
             
             try {
-                const response = await fetch(this.notificationCountUrl);
+                const response = await fetch(this.notificationCountUrl, {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json',
+                    }
+                });
                 if (response.ok) {
                     const data = await response.json();
                     // Mettre à jour le compteur dans la navbar si différent

@@ -10,41 +10,53 @@ use Illuminate\Support\Facades\Log;
 
 class AutoCheckoutCommand extends Command
 {
-    protected $signature = 'presence:auto-checkout';
+    protected $signature = 'presence:auto-checkout {--days=7 : Nombre de jours en arrière à vérifier}';
 
-    protected $description = 'Auto check-out les employés qui ont oublié de pointer leur départ';
+    protected $description = "Auto check-out les employés qui ont oublié de pointer leur départ (aujourd'hui et jours précédents)";
 
     public function handle(): int
     {
         $workEndTime = Setting::getWorkEndTime();
+        $days = (int) $this->option('days');
         $today = today();
 
-        // Trouver toutes les présences d'aujourd'hui sans check-out
-        $presences = Presence::whereDate('date', $today)
+        // Chercher les présences ouvertes sur les N derniers jours
+        $presences = Presence::whereBetween('date', [$today->copy()->subDays($days), $today])
             ->whereNotNull('check_in')
             ->whereNull('check_out')
             ->where('is_absent', false)
+            ->with('user')
             ->get();
 
         if ($presences->isEmpty()) {
-            $this->info('Aucune présence sans check-out trouvée.');
+            $this->info('✅ Aucune présence sans check-out trouvée.');
             return self::SUCCESS;
         }
 
-        $scheduledEnd = Carbon::createFromFormat('H:i', $workEndTime)
-            ->setDate($today->year, $today->month, $today->day);
+        $this->info("🔍 {$presences->count()} présence(s) ouvertes trouvées sur les {$days} derniers jours.");
 
         $count = 0;
 
         foreach ($presences as $presence) {
+            $presenceDate = Carbon::parse($presence->date);
+            $isToday = $presenceDate->isToday();
+
+            // Pour les jours passés : utiliser l'heure de fin enregistrée ou la valeur par défaut
+            $endTimeStr = $presence->scheduled_end ?? $workEndTime;
+            $scheduledEnd = Carbon::createFromFormat('H:i', $endTimeStr)
+                ->setDate($presenceDate->year, $presenceDate->month, $presenceDate->day);
+
             $presence->update([
-                'check_out' => $scheduledEnd,
-                'is_auto_checkout' => true,
-                'departure_type' => 'auto',
-                'overtime_minutes' => 0,
-                'is_early_departure' => false,
+                'check_out'               => $scheduledEnd,
+                'is_auto_checkout'        => true,
+                'departure_type'          => 'auto',
+                'overtime_minutes'        => 0,
+                'is_early_departure'      => false,
                 'early_departure_minutes' => null,
             ]);
+
+            $dateLabel = $isToday ? "aujourd'hui" : $presenceDate->format('d/m/Y');
+            $this->line("  → {$presence->user->name} ({$dateLabel}) → check-out à {$scheduledEnd->format('H:i')}");
 
             $count++;
 
@@ -56,8 +68,8 @@ class AutoCheckoutCommand extends Command
             }
         }
 
-        $this->info("✅ {$count} employé(s) auto-checké(s) à {$workEndTime}.");
-        Log::info("Auto-checkout: {$count} employé(s) traités à {$workEndTime}.");
+        $this->info("✅ {$count} employé(s) auto-checké(s).");
+        Log::info("Auto-checkout: {$count} employé(s) traités (lookback: {$days} jours).");
 
         return self::SUCCESS;
     }

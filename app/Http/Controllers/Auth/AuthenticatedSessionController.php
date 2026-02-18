@@ -28,7 +28,38 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        // Determine the default dashboard based on role
+        $user = auth()->user();
+        $defaultRoute = match($user->role) {
+            'admin' => route('admin.dashboard', absolute: false),
+            default => route('employee.dashboard', absolute: false),
+        };
+
+        // Get the intended URL but reject AJAX/API endpoints
+        $intended = session()->pull('url.intended');
+        $ajaxPatterns = [
+            'notifications/unread-count',
+            'notifications/mark-all-read',
+            'dashboard/activity',
+            'presence-planning',
+            'pre-check-in-status',
+        ];
+
+        $isAjaxUrl = false;
+        if ($intended) {
+            foreach ($ajaxPatterns as $pattern) {
+                if (str_contains($intended, $pattern)) {
+                    $isAjaxUrl = true;
+                    break;
+                }
+            }
+        }
+
+        if ($intended && !$isAjaxUrl) {
+            return redirect($intended);
+        }
+
+        return redirect($defaultRoute);
     }
 
     /**
