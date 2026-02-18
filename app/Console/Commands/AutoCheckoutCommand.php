@@ -43,7 +43,8 @@ class AutoCheckoutCommand extends Command
 
             // Pour les jours passés : utiliser l'heure de fin enregistrée ou la valeur par défaut
             $endTimeStr = $presence->scheduled_end ?? $workEndTime;
-            $scheduledEnd = Carbon::createFromFormat('H:i', $endTimeStr)
+            // Carbon::parse handles both 'H:i' and 'H:i:s' formats
+            $scheduledEnd = Carbon::parse($endTimeStr)
                 ->setDate($presenceDate->year, $presenceDate->month, $presenceDate->day);
 
             $presence->update([
