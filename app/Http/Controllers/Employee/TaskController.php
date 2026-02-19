@@ -4,7 +4,10 @@ namespace App\Http\Controllers\Employee;
 
 use App\Http\Controllers\Controller;
 use App\Models\Task;
+use App\Models\User;
+use App\Notifications\TaskCompletedAdminNotification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
 
 class TaskController extends Controller
 {
@@ -101,6 +104,12 @@ class TaskController extends Controller
             'statut' => $request->progression >= 100 ? 'completed' : 'approved',
         ]);
 
+        // Notifier les admins quand la tâche est terminée
+        if ($request->progression >= 100) {
+            $admins = User::where('role', 'admin')->get();
+            Notification::send($admins, new TaskCompletedAdminNotification($task, auth()->user()));
+        }
+
         return redirect()->route('employee.tasks.index')
             ->with('success', 'Progression mise à jour avec succès.');
     }
@@ -125,6 +134,12 @@ class TaskController extends Controller
             'progression' => $request->progression,
             'statut' => $request->progression >= 100 ? 'completed' : 'approved',
         ]);
+
+        // Notifier les admins quand la tâche est terminée
+        if ($request->progression >= 100) {
+            $admins = User::where('role', 'admin')->get();
+            Notification::send($admins, new TaskCompletedAdminNotification($task, auth()->user()));
+        }
 
         return response()->json([
             'success' => true,

@@ -80,6 +80,11 @@ if (!function_exists('getNotificationMessage')) {
             $checkOut = $data['check_out'] ?? '';
             return "⚠️ Départ automatique enregistré" . ($checkOut ? " à {$checkOut}" : '') . ". Pensez à pointer votre départ.";
             
+        case 'task_completed':
+            $employeeName = $data['employee_name'] ?? 'Un employé';
+            $taskTitle = $data['task_titre'] ?? 'une tâche';
+            return "✅ {$employeeName} a terminé la tâche \"{$taskTitle}\". En attente de validation.";
+            
         default:
             return 'Nouvelle notification';
     }

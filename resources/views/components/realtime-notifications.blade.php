@@ -243,6 +243,13 @@ function realtimeToasts(notificationCountUrl) {
                     borderClass: 'border-l-4 border-l-orange-500',
                     icon: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>'
                 },
+                'task_completed': {
+                    title: 'Tâche terminée',
+                    iconClass: 'bg-green-100 text-green-600',
+                    titleClass: 'text-green-900',
+                    borderClass: 'border-l-4 border-l-green-500',
+                    icon: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>'
+                },
                 'default': {
                     title: 'Notification',
                     iconClass: 'bg-gray-100 text-gray-600',
