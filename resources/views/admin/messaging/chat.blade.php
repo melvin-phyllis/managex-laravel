@@ -522,20 +522,40 @@
 
                 startPolling() {
                     this.pollAbortController = new AbortController();
+                    this._failCount = 0;
+                    this._maxBackoff = 60000;
+
+                    // Pause polling when offline, resume when online
+                    window.addEventListener('online', () => {
+                        this._failCount = 0;
+                        if (!this.pollingInterval) this._startIntervals();
+                    });
+                    window.addEventListener('offline', () => this._clearIntervals());
+
+                    if (navigator.onLine) this._startIntervals();
+                },
+
+                _startIntervals() {
+                    if (this.pollingInterval) return;
 
                     // Poll for new messages every 3 seconds
                     this.pollingInterval = setInterval(() => {
-                        if (this.selectedConversation && !this.isPolling) {
+                        if (this.selectedConversation && !this.isPolling && navigator.onLine) {
                             this.pollNewMessages();
                         }
                     }, 3000);
 
                     // Poll for conversation updates every 10 seconds
                     this.conversationPollingInterval = setInterval(() => {
-                        if (!this.isLoadingConversations) {
+                        if (!this.isLoadingConversations && navigator.onLine) {
                             this.loadConversationsData();
                         }
                     }, 10000);
+                },
+
+                _clearIntervals() {
+                    if (this.pollingInterval) { clearInterval(this.pollingInterval); this.pollingInterval = null; }
+                    if (this.conversationPollingInterval) { clearInterval(this.conversationPollingInterval); this.conversationPollingInterval = null; }
                 },
 
                 async pollNewMessages() {
@@ -586,7 +606,10 @@
                         }
                     } catch (error) {
                         if (error.name !== 'AbortError') {
-                            console.error('Error loading conversations:', error);
+                            this._failCount = (this._failCount || 0) + 1;
+                            if (this._failCount <= 1) {
+                                console.warn('Chat polling: network issue, will retry silently.');
+                            }
                         }
                     } finally {
                         this.isLoadingConversations = false;
