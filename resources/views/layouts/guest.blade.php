@@ -82,7 +82,7 @@
             margin-bottom:3rem;
         }
         .login-deco-logo img{
-            width:44px;height:44px;border-radius:10px;object-fit:cover;
+            height:80px;width:auto;object-fit:contain;
         }
         .login-deco-logo span{
             font-size:1.3rem;font-weight:700;color:var(--cream);
@@ -260,7 +260,8 @@
             pointer-events:none;
         }
         .field input[type="email"],
-        .field input[type="password"]{
+        .field input[type="password"],
+        .field input[type="text"]{
             width:100%;
             padding:.85rem .85rem .85rem 2.75rem;
             border:1.5px solid var(--cream-dark);
@@ -444,7 +445,6 @@
             <div class="login-deco-content">
                 <div class="login-deco-logo">
                     <img src="{{ asset('images/managex_logo.png') }}" alt="ManageX Logo">
-                    <span>ManageX</span>
                 </div>
                 <h2>Gérez vos équipes avec simplicité et efficacité</h2>
                 <p>Présences, tâches, congés, paie — tout dans une seule plateforme intuitive propulsée par l'IA.</p>

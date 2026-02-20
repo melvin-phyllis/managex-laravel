@@ -5,7 +5,7 @@
             <div class="flex items-center justify-between">
                 <div>
                     <h1 class="text-2xl font-bold mb-1">Annonces</h1>
-                    <p style="color: #C4DBF6;">Communications et actualités de l'entreprise</p>
+                    <p style="color: #C4DBF6;">Communications et actualitÃ©s de l'entreprise</p>
                 </div>
                 <div class="hidden sm:flex w-14 h-14 bg-white/20 rounded-xl items-center justify-center">
                     <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -52,7 +52,7 @@
                     </div>
                     <div>
                         <p class="text-2xl font-bold" style="color: #5C6E68;">{{ $stats['pending_ack'] }}</p>
-                        <p class="text-xs text-gray-500">à confirmer</p>
+                        <p class="text-xs text-gray-500">Ã© confirmer</p>
                     </div>
                 </div>
             </div>
@@ -87,7 +87,7 @@
             <a href="{{ route('employee.announcements.index', ['filter' => 'acknowledgment']) }}" 
                class="px-4 py-2 rounded-lg font-medium transition-all {{ $filter === 'acknowledgment' ? 'text-white shadow-md' : 'border' }}"
                style="{{ $filter === 'acknowledgment' ? 'background-color: #5C6E68;' : 'background-color: rgba(133, 144, 170, 0.1); color: #5C6E68; border-color: rgba(133, 144, 170, 0.3);' }}">
-                à confirmer ({{ $stats['pending_ack'] }})
+                Ã© confirmer ({{ $stats['pending_ack'] }})
             </a>
             @endif
         </div>
@@ -109,7 +109,7 @@
                 <div class="bg-white rounded-xl shadow-sm border {{ !$announcement->is_read ? 'border-[#1B3C35]/30' : 'border-gray-100' }} overflow-hidden hover:shadow-md transition-all" style="{{ !$announcement->is_read ? 'background-color: rgba(27, 60, 53, 0.03);' : '' }}">
                     <div class="p-5">
                         <div class="flex flex-col sm:flex-row sm:items-start gap-4">
-                            <!-- Icône -->
+                            <!-- IcÃ©ne -->
                             <div class="flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center text-white shadow-sm" style="background-color: {{ $typeColor }};">
                                 @if($announcement->type === 'urgent')
                                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -142,7 +142,7 @@
                                             <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                                                 <path d="M10 2a1 1 0 011 1v1.323l3.954 1.582 1.599-.8a1 1 0 01.894 1.79l-1.233.616 1.738 5.42a1 1 0 01-.285 1.05A3.989 3.989 0 0115 15a3.989 3.989 0 01-2.667-1.019 1 1 0 01-.285-1.05l1.715-5.349L11 6.477V16h2a1 1 0 110 2H7a1 1 0 110-2h2V6.477L6.237 7.582l1.715 5.349a1 1 0 01-.285 1.05A3.989 3.989 0 015 15a3.989 3.989 0 01-2.667-1.019 1 1 0 01-.285-1.05l1.738-5.42-1.233-.617a1 1 0 01.894-1.788l1.599.799L9 4.323V3a1 1 0 011-1z"/>
                                             </svg>
-                                            épinglée
+                                            Ã©pinglÃ©e
                                         </span>
                                     @endif
                                     @if($announcement->priority === 'critical')
@@ -183,7 +183,7 @@
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
                                             </svg>
-                                            Confirmé
+                                            ConfirmÃ©
                                         </span>
                                     @endif
                                 </div>
@@ -201,7 +201,7 @@
                             </div>
                         </div>
 
-                        <!-- Bannière d'accusé de réception -->
+                        <!-- BanniÃ©re d'accusÃ© de rÃ©ception -->
                         @if($announcement->requires_acknowledgment && !$announcement->is_acknowledged)
                             <div class="mt-4 p-4 rounded-xl" style="background-color: rgba(133, 144, 170, 0.1); border: 1px solid rgba(133, 144, 170, 0.2);">
                                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -212,7 +212,7 @@
                                             </svg>
                                         </div>
                                         <span class="text-sm font-medium" style="color: #5C6E68;">
-                                            Cette annonce nécessite un accusé de réception
+                                            Cette annonce nÃ©cessite un accusÃ© de rÃ©ception
                                         </span>
                                     </div>
                                     <button onclick="acknowledgeAnnouncement({{ $announcement->id }}, this)"
@@ -234,9 +234,9 @@
                     <h3 class="text-lg font-semibold text-gray-900 mb-2">Aucune annonce</h3>
                     <p class="text-gray-500">
                         @if($filter === 'unread')
-                            Toutes les annonces ont été lues !
+                            Toutes les annonces ont Ã©tÃ© lues !
                         @elseif($filter === 'acknowledgment')
-                            Aucun accusé de réception en attente.
+                            Aucun accusÃ© de rÃ©ception en attente.
                         @else
                             Aucune annonce pour le moment.
                         @endif
@@ -275,7 +275,7 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    button.textContent = '“ Confirmé';
+                    button.textContent = 'Ã© ConfirmÃ©';
                     button.classList.remove('from-amber-500', 'to-orange-500');
                     button.classList.add('from-emerald-500', 'to-green-500');
                     

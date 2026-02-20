@@ -24,8 +24,8 @@
                     <!-- Info -->
                     <div class="text-white">
                         <h1 class="text-2xl font-bold">{{ $user->name }}</h1>
-                        <p class="text-blue-100" style="color: rgba(255, 255, 255, 0.9);">{{ $user->position?->name ?? $user->poste ?? 'Employé' }}</p>
-                        <p class="text-blue-200 text-sm mt-1" style="color: rgba(255, 255, 255, 0.7);">{{ $user->department?->name ?? 'Non assigné' }}</p>
+                        <p class="text-blue-100" style="color: rgba(255, 255, 255, 0.9);">{{ $user->position?->name ?? $user->poste ?? 'EmployÃ©' }}</p>
+                        <p class="text-blue-200 text-sm mt-1" style="color: rgba(255, 255, 255, 0.7);">{{ $user->department?->name ?? 'Non assignÃ©' }}</p>
                     </div>
                 </div>
             </div>
@@ -34,11 +34,11 @@
             <div class="grid grid-cols-3 divide-x divide-gray-100 bg-gray-50">
                 <div class="px-6 py-4 text-center">
                     <p class="text-2xl font-bold text-gray-900">{{ $user->leave_balance ?? 0 }}</p>
-                    <p class="text-xs text-gray-500">Congés restants</p>
+                    <p class="text-xs text-gray-500">CongÃ©s restants</p>
                 </div>
                 <div class="px-6 py-4 text-center">
                     <p class="text-2xl font-bold text-gray-900">{{ $user->hire_date ? (int) $user->hire_date->diffInYears(now()) : '-' }}</p>
-                    <p class="text-xs text-gray-500">Années d'ancienneté</p>
+                    <p class="text-xs text-gray-500">AnnÃ©es d'anciennetÃ©</p>
                 </div>
                 <div class="px-6 py-4 text-center">
                     <p class="text-2xl font-bold text-gray-900">
@@ -75,7 +75,7 @@
                     <p class="font-medium text-gray-900">{{ $user->email }}</p>
                 </div>
                 <div>
-                    <p class="text-sm text-gray-500">Téléphone</p>
+                    <p class="text-sm text-gray-500">TÃ©lÃ©phone</p>
                     <p class="font-medium text-gray-900">{{ $user->telephone ?? '-' }}</p>
                 </div>
                 <div>
@@ -107,9 +107,9 @@
                     <p class="text-sm text-gray-500">Situation Familiale</p>
                     <p class="font-medium text-gray-900">
                         @switch($user->marital_status)
-                            @case('single') Célibataire @break
-                            @case('married') Marié(e) @break
-                            @case('divorced') Divorcé(e) @break
+                            @case('single') CÃ©libataire @break
+                            @case('married') MariÃ©(e) @break
+                            @case('divorced') DivorcÃ©(e) @break
                             @case('widowed') Veuf/Veuve @break
                             @default -
                         @endswitch
@@ -117,7 +117,7 @@
                     </p>
                 </div>
                 <div>
-                    <p class="text-sm text-gray-500">Numéro CNPS</p>
+                    <p class="text-sm text-gray-500">NumÃ©ro CNPS</p>
                     <p class="font-medium text-gray-900">{{ $user->cnps_number ?? '-' }}</p>
                 </div>
             </div>
@@ -143,7 +143,7 @@
                         <p class="font-medium text-gray-900">{{ $user->emergency_contact_name }}</p>
                     </div>
                     <div>
-                        <p class="text-sm text-gray-500">Téléphone</p>
+                        <p class="text-sm text-gray-500">TÃ©lÃ©phone</p>
                         <p class="font-medium text-gray-900">{{ $user->emergency_contact_phone ?? '-' }}</p>
                     </div>
                     <div>
@@ -156,7 +156,7 @@
                     <svg class="w-12 h-12 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"/>
                     </svg>
-                    <p>Aucun contact d'urgence renseigné</p>
+                    <p>Aucun contact d'urgence renseignÃ©</p>
                     <button onclick="document.getElementById('emergencyModal').classList.remove('hidden')" 
                             class="mt-4 hover:underline" style="color: #1B3C35;">
                         Ajouter un contact
@@ -171,11 +171,11 @@
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                    <p class="text-sm text-gray-500">Numéro employé</p>
+                    <p class="text-sm text-gray-500">NumÃ©ro employÃ©</p>
                     <p class="font-medium text-gray-900">{{ $user->employee_id ?? '-' }}</p>
                 </div>
                 <div>
-                    <p class="text-sm text-gray-500">Département</p>
+                    <p class="text-sm text-gray-500">DÃ©partement</p>
                     <p class="font-medium text-gray-900">{{ $user->department?->name ?? '-' }}</p>
                 </div>
                 <div>
@@ -196,19 +196,19 @@
                 </div>
             </div>
             
-            <p class="text-xs text-gray-400 mt-4">Ces informations sont gérées par les RH et ne peuvent pas éªtre modifiées.</p>
+            <p class="text-xs text-gray-400 mt-4">Ces informations sont gÃ©rÃ©es par les RH et ne peuvent pas Ã©tre modifiÃ©es.</p>
         </div>
 
         <!-- Security -->
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 animate-fade-in-up animation-delay-400">
             <div class="flex items-center justify-between mb-6">
-                <h2 class="text-lg font-semibold text-gray-900">Sécurité</h2>
+                <h2 class="text-lg font-semibold text-gray-900">SÃ©curitÃ©</h2>
             </div>
             
             <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                 <div>
                     <p class="font-medium text-gray-900">Mot de passe</p>
-                    <p class="text-sm text-gray-500">Derniére modification : {{ $user->updated_at->diffForHumans() }}</p>
+                    <p class="text-sm text-gray-500">DerniÃ©re modification : {{ $user->updated_at->diffForHumans() }}</p>
                 </div>
                 <button onclick="document.getElementById('passwordModal').classList.remove('hidden')" 
                         class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">
@@ -232,7 +232,7 @@
                                class="w-full rounded-lg border-gray-300 focus:ring-opacity-50 focus:border-[#1B3C35] focus:ring-[#1B3C35]">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">TÃ©lÃ©phone</label>
                         <input type="tel" name="telephone" value="{{ $user->telephone }}"
                                class="w-full rounded-lg border-gray-300 focus:border-[#1B3C35] focus:ring-[#1B3C35]">
                     </div>
@@ -244,7 +244,7 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Genre</label>
                         <select name="gender" class="w-full rounded-lg border-gray-300 focus:border-[#1B3C35] focus:ring-[#1B3C35]">
-                            <option value="">Non spécifié</option>
+                            <option value="">Non spÃ©cifiÃ©</option>
                             <option value="male" {{ $user->gender === 'male' ? 'selected' : '' }}>Homme</option>
                             <option value="female" {{ $user->gender === 'female' ? 'selected' : '' }}>Femme</option>
                             <option value="other" {{ $user->gender === 'other' ? 'selected' : '' }}>Autre</option>
@@ -279,9 +279,9 @@
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Situation familiale</label>
                                 <select name="marital_status" class="w-full rounded-lg border-gray-300 focus:border-[#1B3C35] focus:ring-[#1B3C35]">
-                                    <option value="single" {{ $user->marital_status === 'single' ? 'selected' : '' }}>Célibataire</option>
-                                    <option value="married" {{ $user->marital_status === 'married' ? 'selected' : '' }}>Marié(e)</option>
-                                    <option value="divorced" {{ $user->marital_status === 'divorced' ? 'selected' : '' }}>Divorcé(e)</option>
+                                    <option value="single" {{ $user->marital_status === 'single' ? 'selected' : '' }}>CÃ©libataire</option>
+                                    <option value="married" {{ $user->marital_status === 'married' ? 'selected' : '' }}>MariÃ©(e)</option>
+                                    <option value="divorced" {{ $user->marital_status === 'divorced' ? 'selected' : '' }}>DivorcÃ©(e)</option>
                                     <option value="widowed" {{ $user->marital_status === 'widowed' ? 'selected' : '' }}>Veuf/Veuve</option>
                                 </select>
                             </div>
@@ -292,7 +292,7 @@
                                            class="w-full rounded-lg border-gray-300 focus:border-[#1B3C35] focus:ring-[#1B3C35]">
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">N° CNPS</label>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">NÃ© CNPS</label>
                                     <input type="text" name="cnps_number" value="{{ $user->cnps_number }}"
                                            class="w-full rounded-lg border-gray-300 focus:border-[#1B3C35] focus:ring-[#1B3C35]">
                                 </div>
@@ -327,7 +327,7 @@
                                class="w-full rounded-lg border-gray-300 focus:border-[#1B3C35] focus:ring-[#1B3C35]">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">TÃ©lÃ©phone</label>
                         <input type="tel" name="emergency_contact_phone" value="{{ $user->emergency_contact_phone }}"
                                class="w-full rounded-lg border-gray-300 focus:border-[#1B3C35] focus:ring-[#1B3C35]">
                     </div>
@@ -368,7 +368,7 @@
                         </div>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Sélectionner une image</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">SÃ©lectionner une image</label>
                         <input type="file" name="avatar" accept="image/*" required
                                onchange="previewAvatar(this)"
                                class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
@@ -405,7 +405,7 @@
                         <label class="block text-sm font-medium text-gray-700 mb-1">Nouveau mot de passe</label>
                         <input type="password" name="password" required minlength="8"
                                class="w-full rounded-lg border-gray-300 focus:border-[#1B3C35] focus:ring-[#1B3C35]">
-                        <p class="text-xs text-gray-500 mt-1">Min 8 caractéres, majuscule, minuscule et chiffre</p>
+                        <p class="text-xs text-gray-500 mt-1">Min 8 caractÃ©res, majuscule, minuscule et chiffre</p>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Confirmer le mot de passe</label>

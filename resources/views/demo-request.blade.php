@@ -65,7 +65,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      height: 64px;
+      height: 110px;
     }
 
     .nav-logo {
@@ -78,10 +78,9 @@
     }
 
     .nav-logo img {
-      width: 32px;
-      height: 32px;
-      border-radius: 8px;
-      object-fit: cover;
+      height: 80px;
+      width: auto;
+      object-fit: contain;
     }
 
     .nav-right {
@@ -441,13 +440,12 @@
     <div class="container nav-inner">
       <a href="{{ url('/') }}" class="nav-logo">
         <img src="{{ asset('images/managex_logo.png') }}" alt="ManageX Logo">
-        <span>ManageX</span>
       </a>
       <div class="nav-right">
         <a href="{{ url('/') }}" class="nav-link">Accueil</a>
         <a href="{{ url('/') }}#features" class="nav-link">Fonctionnalités</a>
         <a href="{{ route('login') }}" class="btn-nav btn-nav-outline">Connexion</a>
-        <a href="#demo-form" class="btn-nav btn-nav-primary">Démo gratuite</a>
+        <a href="#demo-form" class="btn-nav btn-nav-primary">Démo</a>
       </div>
     </div>
   </header>
