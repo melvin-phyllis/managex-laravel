@@ -1,10 +1,10 @@
-<x-layouts.admin>
+﻿<x-layouts.admin>
     <div class="space-y-6" x-data="masterViewPage()" x-init="init()">
         <!-- Breadcrumbs -->
         <nav class="flex" aria-label="Breadcrumb">
             <ol class="inline-flex items-center space-x-1 md:space-x-3">
                 <li class="inline-flex items-center">
-                    <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600">
+                    <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-[#1B3C35]">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
                         </svg>
@@ -26,7 +26,7 @@
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
                 <h1 class="text-2xl font-bold text-gray-900 flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg" style="background: linear-gradient(135deg, #5680E9, #84CEEB) !important; box-shadow: 0 10px 15px -3px rgba(86, 128, 233, 0.3) !important;">
+                    <div class="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg" style="background: linear-gradient(135deg, #1B3C35, #3D7A6A) !important; box-shadow: 0 10px 15px -3px rgba(27, 60, 53, 0.3) !important;">
                         <x-icon name="users" class="w-5 h-5 text-white" />
                     </div>
                     Suivi des Présences
@@ -55,13 +55,13 @@
                 {{-- Mode Toggle --}}
                 <div class="flex bg-gray-100 rounded-lg p-1">
                     <button @click="switchMode('today')" 
-                        x-bind:class="mode === 'today' ? 'bg-white shadow-sm text-indigo-600' : 'text-gray-600 hover:text-gray-900'"
+                        x-bind:class="mode === 'today' ? 'bg-white shadow-sm text-[#1B3C35]' : 'text-gray-600 hover:text-gray-900'"
                         class="px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2">
                         <x-icon name="clock" class="w-4 h-4"/>
                         Aujourd'hui
                     </button>
                     <button @click="switchMode('historical')"
-                        x-bind:class="mode === 'historical' ? 'bg-white shadow-sm text-indigo-600' : 'text-gray-600 hover:text-gray-900'"
+                        x-bind:class="mode === 'historical' ? 'bg-white shadow-sm text-[#1B3C35]' : 'text-gray-600 hover:text-gray-900'"
                         class="px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2">
                         <x-icon name="calendar" class="w-4 h-4"/>
                         Historique
@@ -98,8 +98,8 @@
 
                 {{-- Filtre  risque (mode historique) --}}
                 <template x-if="mode === 'historical'">
-                    <label class="flex items-center gap-2 cursor-pointer bg-red-50 text-red-700 px-3 py-2 rounded-lg border border-red-200 hover:bg-red-100 transition-colors">
-                        <input type="checkbox" x-model="filters.risk_only" @change="loadData()" class="rounded border-red-300 text-red-600">
+                    <label class="flex items-center gap-2 cursor-pointer bg-[#F0F5F3] text-[#163530] px-3 py-2 rounded-lg border border-[#B8D1C7] hover:bg-[#E8F0ED] transition-colors">
+                        <input type="checkbox" x-model="filters.risk_only" @change="loadData()" class="rounded border-[#8FB5A8] text-[#1B3C35]">
                         <x-icon name="alert-triangle" class="w-4 h-4"/>
                         <span class="text-sm font-medium"> risque</span>
                     </label>
@@ -109,19 +109,19 @@
 
         {{-- Stats Cards --}}
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            <div class="rounded-xl p-4 text-white shadow-lg" style="background: linear-gradient(135deg, #5680E9, #84CEEB) !important;">
+            <div class="rounded-xl p-4 text-white shadow-lg" style="background: linear-gradient(135deg, #1B3C35, #3D7A6A) !important;">
                 <p class="text-white/80 text-xs font-medium uppercase">Total</p>
                 <p class="text-3xl font-bold mt-1" x-text="data.stats?.total || 0"></p>
             </div>
-            <div class="rounded-xl p-4 text-white shadow-lg" style="background: linear-gradient(135deg, #5AB9EA, #5680E9) !important;">
+            <div class="rounded-xl p-4 text-white shadow-lg" style="background: linear-gradient(135deg, #2D5A4E, #1B3C35) !important;">
                 <p class="text-white/80 text-xs font-medium uppercase" x-text="mode === 'today' ? 'Présents' : 'Performants'"></p>
                 <p class="text-3xl font-bold mt-1" x-text="data.stats?.present || 0"></p>
             </div>
-            <div class="rounded-xl p-4 text-white shadow-lg" style="background: linear-gradient(135deg, #84CEEB, #5AB9EA) !important;">
+            <div class="rounded-xl p-4 text-white shadow-lg" style="background: linear-gradient(135deg, #3D7A6A, #2D5A4E) !important;">
                 <p class="text-white/80 text-xs font-medium uppercase" x-text="mode === 'today' ? 'En retard' : ' surveiller'"></p>
                 <p class="text-3xl font-bold mt-1" x-text="data.stats?.late || 0"></p>
             </div>
-            <div class="rounded-xl p-4 text-white shadow-lg" style="background: linear-gradient(135deg, #8860D0, #5680E9) !important;">
+            <div class="rounded-xl p-4 text-white shadow-lg" style="background: linear-gradient(135deg, #C8A96E, #1B3C35) !important;">
                 <p class="text-white/80 text-xs font-medium uppercase" x-text="mode === 'today' ? 'Absents' : ' risque'"></p>
                 <p class="text-3xl font-bold mt-1" x-text="data.stats?.absent || 0"></p>
             </div>
@@ -163,7 +163,7 @@
                                 <td class="py-4 px-5">
                                     <div class="flex items-center gap-3">
                                         <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm"
-                                            style="background: linear-gradient(135deg, #5680E9, #84CEEB) !important;"
+                                            style="background: linear-gradient(135deg, #1B3C35, #3D7A6A) !important;"
                                             x-text="emp.name.substring(0,2).toUpperCase()"></div>
                                         <div>
                                             <p class="font-medium text-gray-900" x-text="emp.name"></p>
@@ -174,7 +174,7 @@
                                 
                                 {{-- Département (commun) --}}
                                 <td class="py-4 px-5">
-                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-indigo-100 text-indigo-700"
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-[#E8F0ED] text-[#163530]"
                                         x-text="emp.department || '-'"></span>
                                 </td>
 
@@ -193,20 +193,20 @@
                                 
                                 {{-- Mode Aujourd'hui: Statut --}}
                                 <td x-show="mode === 'today'" class="py-4 px-5 text-center">
-                                    <span x-show="emp.status === 'present'" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold text-[#5680E9]" style="background-color: #5AB9EA20;">
+                                    <span x-show="emp.status === 'present'" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold text-[#1B3C35]" style="background-color: #2D5A4E20;">
                                         “ Présent
                                     </span>
-                                    <span x-show="emp.status === 'late'" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold text-[#5680E9]" style="background-color: #84CEEB30;">
+                                    <span x-show="emp.status === 'late'" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold text-[#1B3C35]" style="background-color: #3D7A6A30;">
                                          En retard
                                     </span>
-                                    <span x-show="emp.status === 'absent'" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold text-[#8860D0]" style="background-color: #8860D020;">
+                                    <span x-show="emp.status === 'absent'" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold text-[#C8A96E]" style="background-color: #C8A96E20;">
                                         • Absent
                                     </span>
                                 </td>
                                 
                                 {{-- Mode Aujourd'hui: Retard --}}
                                 <td x-show="mode === 'today'" class="py-4 px-5 text-center">
-                                    <span x-show="emp.late_minutes > 0" class="font-medium text-red-600" x-text="'+' + emp.late_minutes + ' min'"></span>
+                                    <span x-show="emp.late_minutes > 0" class="font-medium text-[#1B3C35]" x-text="'+' + emp.late_minutes + ' min'"></span>
                                     <span x-show="!emp.late_minutes" class="text-gray-400">-</span>
                                 </td>
 
@@ -217,13 +217,13 @@
                                             <svg class="w-12 h-12 transform -rotate-90" viewBox="0 0 36 36">
                                                 <circle cx="18" cy="18" r="16" fill="none" class="stroke-gray-200" stroke-width="3"></circle>
                                                 <circle cx="18" cy="18" r="16" fill="none" 
-                                                    x-bind:class="emp.attendance_rate >= 95 ? 'stroke-green-500' : (emp.attendance_rate >= 80 ? 'stroke-amber-500' : 'stroke-red-500')" 
+                                                    x-bind:class="emp.attendance_rate >= 95 ? 'stroke-green-500' : (emp.attendance_rate >= 80 ? 'stroke-[#C8A96E]' : 'stroke-[#C8A96E]')" 
                                                     stroke-width="3" 
                                                     x-bind:stroke-dasharray="emp.attendance_rate + ', 100'"
                                                     stroke-linecap="round"></circle>
                                             </svg>
                                             <span class="absolute inset-0 flex items-center justify-center text-[10px] font-bold"
-                                                x-bind:class="emp.attendance_rate >= 95 ? 'text-green-600' : (emp.attendance_rate >= 80 ? 'text-amber-600' : 'text-red-600')"
+                                                x-bind:class="emp.attendance_rate >= 95 ? 'text-green-600' : (emp.attendance_rate >= 80 ? 'text-amber-600' : 'text-[#1B3C35]')"
                                                 x-text="emp.attendance_rate + '%'"></span>
                                         </div>
                                     </div>
@@ -232,7 +232,7 @@
                                 {{-- Mode Historique: Retards --}}
                                 <td x-show="mode === 'historical'" class="py-4 px-5 text-center">
                                     <span class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-bold"
-                                        x-bind:class="emp.late_count === 0 ? 'bg-green-100 text-green-700' : (emp.late_count <= 5 ? 'bg-amber-100 text-amber-700' : 'bg-red-100 text-red-700')">
+                                        x-bind:class="emp.late_count === 0 ? 'bg-green-100 text-green-700' : (emp.late_count <= 5 ? 'bg-amber-100 text-amber-700' : 'bg-[#E8F0ED] text-[#163530]')">
                                          <span x-text="emp.late_count"></span>
                                     </span>
                                 </td>
@@ -240,19 +240,19 @@
                                 {{-- Mode Historique: Impact --}}
                                 <td x-show="mode === 'historical'" class="py-4 px-5 text-center">
                                     <span class="font-medium" 
-                                        x-bind:class="emp.late_count === 0 ? 'text-green-600' : (emp.late_count <= 5 ? 'text-amber-600' : 'text-red-600')"
+                                        x-bind:class="emp.late_count === 0 ? 'text-green-600' : (emp.late_count <= 5 ? 'text-amber-600' : 'text-[#1B3C35]')"
                                         x-text="emp.late_impact"></span>
                                 </td>
                                 
                                 {{-- Mode Historique: Statut risque --}}
                                 <td x-show="mode === 'historical'" class="py-4 px-5 text-center">
-                                    <span x-show="emp.risk_level === 'low'" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold text-[#5680E9]" style="background-color: #5AB9EA20;">
+                                    <span x-show="emp.risk_level === 'low'" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold text-[#1B3C35]" style="background-color: #2D5A4E20;">
                                         “ OK
                                     </span>
-                                    <span x-show="emp.risk_level === 'medium'" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold text-[#5680E9]" style="background-color: #84CEEB30;">
+                                    <span x-show="emp.risk_level === 'medium'" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold text-[#1B3C35]" style="background-color: #3D7A6A30;">
                                           Surveiller
                                     </span>
-                                    <span x-show="emp.risk_level === 'high'" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold text-[#8860D0]" style="background-color: #8860D020;">
+                                    <span x-show="emp.risk_level === 'high'" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold text-[#C8A96E]" style="background-color: #C8A96E20;">
                                           Risque
                                     </span>
                                 </td>
@@ -260,7 +260,7 @@
                                 {{-- Mode Historique: Bouton détails --}}
                                 <td x-show="mode === 'historical'" class="py-4 px-5 text-center">
                                     <a :href="'{{ url('/admin/presences/employee') }}/' + emp.id + '?period=' + filters.period + (filters.period === 'custom' ? '&start_date=' + filters.start_date + '&end_date=' + filters.end_date : '')" 
-                                       class="inline-flex items-center gap-1 px-3 py-1.5 text-sm font-medium text-indigo-600 hover:text-white bg-indigo-50 hover:bg-indigo-600 rounded-lg transition-colors">
+                                       class="inline-flex items-center gap-1 px-3 py-1.5 text-sm font-medium text-[#1B3C35] hover:text-white bg-[#F0F5F3] hover:bg-[#1B3C35] rounded-lg transition-colors">
                                         Détails 
                                     </a>
                                 </td>

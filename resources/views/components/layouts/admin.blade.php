@@ -6,13 +6,14 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ config('app.name', 'ManageX') }} - Admin</title>
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
     <!-- PWA -->
-    <meta name="theme-color" content="#4f46e5">
+    <meta name="theme-color" content="#1B3C35">
     <link rel="manifest" href="{{ route('manifest') }}">
     <link rel="apple-touch-icon" href="{{ asset('icons/icon-192x192.png') }}">
     <meta name="mobile-web-app-capable" content="yes">
@@ -132,9 +133,9 @@
         to { opacity: 1; transform: translateY(0) scale(1); }
     }
     #onesignal-custom-prompt .notif-card {
-        background: linear-gradient(135deg, #312e81 0%, #4338ca 50%, #6366f1 100%);
+        background: linear-gradient(135deg, #1B3C35 0%, #2D5A4E 50%, #3D7A6A 100%);
         border-radius: 20px; padding: 28px 24px; color: white;
-        box-shadow: 0 25px 60px -12px rgba(67, 56, 202, 0.5), 0 0 0 1px rgba(255,255,255,0.1) inset;
+        box-shadow: 0 25px 60px -12px rgba(27, 60, 53, 0.5), 0 0 0 1px rgba(255,255,255,0.1) inset;
         backdrop-filter: blur(10px); position: relative; overflow: hidden;
     }
     #onesignal-custom-prompt .notif-card::before {
@@ -166,7 +167,7 @@
     }
     #onesignal-custom-prompt .btn-accept {
         width: 100%; padding: 12px 20px; border-radius: 12px;
-        background: white; color: #4338ca; font-weight: 600;
+        background: white; color: #2D5A4E; font-weight: 600;
         font-size: 15px; border: none; cursor: pointer;
         transition: all 0.2s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
@@ -230,8 +231,8 @@
     <div class="min-h-screen bg-slate-50">
         <!-- Decorative Background -->
         <div class="fixed inset-0 overflow-hidden pointer-events-none">
-            <div class="absolute -top-40 -right-40 w-80 h-80 bg-blue-100 rounded-full blur-3xl opacity-50"></div>
-            <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-sky-100 rounded-full blur-3xl opacity-50"></div>
+            <div class="absolute -top-40 -right-40 w-80 h-80 bg-[#E8F0ED] rounded-full blur-3xl opacity-50"></div>
+            <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-[#E8F0ED] rounded-full blur-3xl opacity-50"></div>
         </div>
 
         <!-- Mobile Sidebar Backdrop -->
@@ -239,8 +240,10 @@
 
         <!-- Sidebar -->
         <aside class="fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-slate-200 transform transition-transform duration-200 ease-in-out lg:translate-x-0 -translate-x-full flex flex-col items-center" id="sidebar">
-            <div class="flex items-center justify-center h-20 w-full border-b border-slate-100">
-                <span class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-700 to-sky-500">ManageX</span>
+            <div class="flex items-center justify-center h-20 w-full border-b border-slate-100" style="background-color: #1b3c3505;">
+                <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-2">
+                    <img src="{{ asset('images/logo.png') }}" alt="ManageX Logo" class="h-25 w-full rounded-lg object-contain">
+                </a>
             </div>
 
             <nav class="mt-6 flex-1 overflow-y-auto">
@@ -262,7 +265,7 @@
                     <!-- Gestion RH Dropdown -->
                     <div x-data="{ open: {{ (request()->routeIs('admin.employees.*') || request()->routeIs('admin.presences.*') || request()->routeIs('admin.tasks.*') || request()->routeIs('admin.leaves.*') || request()->routeIs('admin.intern-evaluations.*')) ? 'true' : 'false' }} }">
                         <button @click="open = !open" 
-                                class="w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 group {{ (request()->routeIs('admin.employees.*') || request()->routeIs('admin.presences.*') || request()->routeIs('admin.tasks.*') || request()->routeIs('admin.leaves.*') || request()->routeIs('admin.intern-evaluations.*')) ? 'text-blue-700 bg-gradient-to-r from-blue-50 to-indigo-50 font-medium border-l-4 border-blue-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 hover:translate-x-1' }}">
+                                class="w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 group {{ (request()->routeIs('admin.employees.*') || request()->routeIs('admin.presences.*') || request()->routeIs('admin.tasks.*') || request()->routeIs('admin.leaves.*') || request()->routeIs('admin.intern-evaluations.*')) ? 'text-[#163530] bg-gradient-to-r from-[#F0F5F3] to-[#E8F0ED] font-medium border-l-4 border-[#1B3C35]' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 hover:translate-x-1' }}">
                             <div class="flex items-center">
                                 <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
@@ -286,7 +289,7 @@
                     <!-- Paie Dropdown -->
                     <div x-data="{ open: {{ (request()->routeIs('admin.payrolls.*') || request()->routeIs('admin.payroll-settings.*') || request()->routeIs('admin.employee-evaluations.*')) ? 'true' : 'false' }} }">
                         <button @click="open = !open" 
-                                class="w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 group {{ (request()->routeIs('admin.payrolls.*') || request()->routeIs('admin.payroll-settings.*') || request()->routeIs('admin.employee-evaluations.*')) ? 'text-blue-700 bg-gradient-to-r from-blue-50 to-indigo-50 font-medium border-l-4 border-blue-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 hover:translate-x-1' }}">
+                                class="w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 group {{ (request()->routeIs('admin.payrolls.*') || request()->routeIs('admin.payroll-settings.*') || request()->routeIs('admin.employee-evaluations.*')) ? 'text-[#163530] bg-gradient-to-r from-[#F0F5F3] to-[#E8F0ED] font-medium border-l-4 border-[#1B3C35]' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 hover:translate-x-1' }}">
                             <div class="flex items-center">
                                 <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
@@ -314,7 +317,7 @@
                     <!-- Communication Dropdown -->
                     <div x-data="{ open: {{ (request()->routeIs('admin.surveys.*') || request()->routeIs('admin.announcements.*') || request()->routeIs('admin.documents.*') || request()->routeIs('messaging.*') || request()->routeIs('admin.messaging.*')) ? 'true' : 'false' }} }">
                         <button @click="open = !open" 
-                                class="w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 group {{ (request()->routeIs('admin.surveys.*') || request()->routeIs('admin.announcements.*') || request()->routeIs('admin.documents.*') || request()->routeIs('messaging.*') || request()->routeIs('admin.messaging.*')) ? 'text-blue-700 bg-gradient-to-r from-blue-50 to-indigo-50 font-medium border-l-4 border-blue-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 hover:translate-x-1' }}">
+                                class="w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 group {{ (request()->routeIs('admin.surveys.*') || request()->routeIs('admin.announcements.*') || request()->routeIs('admin.documents.*') || request()->routeIs('messaging.*') || request()->routeIs('admin.messaging.*')) ? 'text-[#163530] bg-gradient-to-r from-[#F0F5F3] to-[#E8F0ED] font-medium border-l-4 border-[#1B3C35]' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 hover:translate-x-1' }}">
                             <div class="flex items-center">
                                 <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
@@ -338,7 +341,7 @@
                     <!-- Organisation Dropdown -->
                      <div x-data="{ open: {{ (request()->routeIs('admin.geolocation-zones.*')) ? 'true' : 'false' }} }">
                         <button @click="open = !open" 
-                                class="w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 group {{ (request()->routeIs('admin.geolocation-zones.*')) ? 'text-blue-700 bg-gradient-to-r from-blue-50 to-indigo-50 font-medium border-l-4 border-blue-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 hover:translate-x-1' }}">
+                                class="w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 group {{ (request()->routeIs('admin.geolocation-zones.*')) ? 'text-[#163530] bg-gradient-to-r from-[#F0F5F3] to-[#E8F0ED] font-medium border-l-4 border-[#1B3C35]' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 hover:translate-x-1' }}">
                             <div class="flex items-center">
                                 <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
@@ -381,7 +384,7 @@
                         <div class="relative" x-data="{ open: false }">
                             <button @click="open = !open" @click.away="open = false" 
                                     class="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 transition-colors">
-                                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white text-sm font-semibold overflow-hidden">
+                                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-[#1B3C35] to-[#2D5A4E] flex items-center justify-center text-white text-sm font-semibold overflow-hidden">
                                     @if(auth()->user()->avatar && avatar_url(auth()->user()->avatar))
                                         <img src="{{ avatar_url(auth()->user()->avatar) }}" alt="{{ auth()->user()->name }}" class="w-full h-full object-cover" onerror="this.style.display='none'; this.parentElement.textContent=@js(strtoupper(substr(auth()->user()->name, 0, 1)));">
                                     @else
@@ -399,7 +402,7 @@
                                 <div class="px-4 py-3 border-b border-gray-100">
                                     <p class="text-sm font-semibold text-gray-900">{{ auth()->user()->name }}</p>
                                     <p class="text-xs text-gray-500 truncate">{{ auth()->user()->email }}</p>
-                                    <span class="inline-flex items-center px-2 py-0.5 mt-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                    <span class="inline-flex items-center px-2 py-0.5 mt-1 rounded-full text-xs font-medium bg-[#E8F0ED] text-[#163530]">
                                         Administrateur
                                     </span>
                                 </div>
@@ -413,7 +416,7 @@
                                     </a>
                                 </div>
                                 <div class="border-t border-gray-100 pt-1">
-                                    <button type="button" @click="showLogoutModal = true" class="flex items-center gap-3 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+                                    <button type="button" @click="showLogoutModal = true" class="flex items-center gap-3 w-full px-4 py-2 text-sm text-[#1B3C35] hover:bg-[#F0F5F3]">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
                                         </svg>
@@ -445,8 +448,8 @@
             <div x-show="showLogoutModal" x-transition class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
                 <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                     <div class="sm:flex sm:items-start">
-                        <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
-                            <svg class="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-[#E8F0ED] sm:mx-0 sm:h-10 sm:w-10">
+                            <svg class="h-6 w-6 text-[#1B3C35]" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
                             </svg>
                         </div>
@@ -459,7 +462,7 @@
                     </div>
                 </div>
                 <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                    <button type="button" @click="$refs.logoutForm.submit()" class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto">Déconnexion</button>
+                    <button type="button" @click="$refs.logoutForm.submit()" class="inline-flex w-full justify-center rounded-md bg-[#1B3C35] px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[#2D5A4E] sm:ml-3 sm:w-auto">Déconnexion</button>
                     <button type="button" @click="showLogoutModal = false" class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto">Annuler</button>
                 </div>
             </div>
@@ -494,16 +497,16 @@
             
             const configs = {
                 success: {
-                    bg: 'bg-gradient-to-r from-emerald-500 to-green-600',
+                    bg: 'bg-gradient-to-r from-[#2D5A4E] to-green-600',
                     icon: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>`,
                     title: 'Succés',
-                    progressBg: 'bg-emerald-300/50'
+                    progressBg: 'bg-[#3D7A6A]/50'
                 },
                 error: {
                     bg: 'bg-gradient-to-r from-red-500 to-rose-600',
                     icon: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>`,
                     title: 'Erreur',
-                    progressBg: 'bg-red-300/50'
+                    progressBg: 'bg-[#8FB5A8]/50'
                 },
                 warning: {
                     bg: 'bg-gradient-to-r from-amber-500 to-orange-600',
@@ -512,10 +515,10 @@
                     progressBg: 'bg-amber-300/50'
                 },
                 info: {
-                    bg: 'bg-gradient-to-r from-blue-500 to-indigo-600',
+                    bg: 'bg-gradient-to-r from-[#1B3C35] to-[#2D5A4E]',
                     icon: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>`,
                     title: 'Info',
-                    progressBg: 'bg-blue-300/50'
+                    progressBg: 'bg-[#3D7A6A]/50'
                 }
             };
             

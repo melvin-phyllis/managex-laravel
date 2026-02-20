@@ -1,7 +1,7 @@
-<x-layouts.admin>
+﻿<x-layouts.admin>
     <div class="space-y-6">
         <!-- Header comme sur tasks -->
-        <div class="relative overflow-hidden rounded-2xl shadow-xl animate-fade-in-up" style="background: linear-gradient(135deg, #5680E9, #84CEEB) !important;">
+        <div class="relative overflow-hidden rounded-2xl shadow-xl animate-fade-in-up" style="background: linear-gradient(135deg, #1B3C35, #3D7A6A) !important;">
             <div class="absolute inset-0 bg-black/10"></div>
             <div class="absolute -top-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
             <div class="absolute -bottom-24 -left-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
@@ -31,7 +31,7 @@
                         <p class="text-white/80 mt-2">Gérez les champs personnalisés pour les bulletins de paie</p>
                     </div>
                     <a href="{{ route('admin.payroll-settings.countries') }}" 
-                       class="px-4 py-2.5 bg-white font-semibold rounded-xl hover:bg-purple-50 transition-all shadow-lg flex items-center" style="color: #5680E9;">
+                       class="px-4 py-2.5 bg-white font-semibold rounded-xl hover:bg-[#FBF7F0] transition-all shadow-lg flex items-center" style="color: #1B3C35;">
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
                         </svg>
@@ -71,20 +71,20 @@
                     </thead>
                     <tbody class="divide-y divide-gray-100">
                         @forelse($fields as $field)
-                            <tr class="hover:bg-purple-50/50 transition-colors group">
+                            <tr class="hover:bg-[#FBF7F0]/50 transition-colors group">
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <span class="font-mono text-sm bg-gray-100 px-2.5 py-1 rounded-lg">{{ $field->field_name }}</span>
                                 </td>
                                 <td class="px-6 py-4 text-sm text-gray-900">{{ $field->field_label }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium" style="background-color: rgba(86, 128, 233, 0.15); color: #5680E9;">
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium" style="background-color: rgba(27, 60, 53, 0.15); color: #1B3C35;">
                                         {{ $field->field_type }}
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $field->section }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     @if($field->is_taxable)
-                                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium" style="background-color: rgba(90, 185, 234, 0.15); color: #5680E9;">
+                                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium" style="background-color: rgba(45, 90, 78, 0.15); color: #1B3C35;">
                                             <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                                                 <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
                                             </svg>
@@ -99,7 +99,7 @@
                                         <form action="{{ route('admin.payroll-settings.fields.destroy', [$country, $field]) }}" method="POST" class="inline" onsubmit="return confirm('Supprimer ce champ ?')">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Supprimer">
+                                            <button type="submit" class="p-1.5 text-gray-500 hover:text-[#1B3C35] hover:bg-[#F0F5F3] rounded-lg transition-colors" title="Supprimer">
                                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
                                                 </svg>
@@ -131,8 +131,8 @@
         <!-- Add New Field Form -->
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 animate-fade-in-up animation-delay-200">
             <h2 class="font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: rgba(86, 128, 233, 0.15);">
-                    <svg class="w-4 h-4" style="color: #5680E9;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: rgba(27, 60, 53, 0.15);">
+                    <svg class="w-4 h-4" style="color: #1B3C35;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                     </svg>
                 </div>
@@ -144,19 +144,19 @@
                     <div>
                         <label for="field_name" class="block text-sm font-medium text-gray-700 mb-1">Nom du Champ *</label>
                         <input type="text" name="field_name" id="field_name" required
-                               class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                               class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2D5A4E] focus:border-[#2D5A4E]"
                                placeholder="transport_allowance">
                     </div>
                     <div>
                         <label for="field_label" class="block text-sm font-medium text-gray-700 mb-1">Libellé *</label>
                         <input type="text" name="field_label" id="field_label" required
-                               class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                               class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2D5A4E] focus:border-[#2D5A4E]"
                                placeholder="Indemnité de Transport">
                     </div>
                     <div>
                         <label for="field_type" class="block text-sm font-medium text-gray-700 mb-1">Type *</label>
                         <select name="field_type" id="field_type" required
-                                class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                                class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2D5A4E] focus:border-[#2D5A4E]">
                             <option value="number">Nombre</option>
                             <option value="text">Texte</option>
                             <option value="select">Liste</option>
@@ -167,7 +167,7 @@
                     <div>
                         <label for="section" class="block text-sm font-medium text-gray-700 mb-1">Section *</label>
                         <select name="section" id="section" required
-                                class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                                class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2D5A4E] focus:border-[#2D5A4E]">
                             <option value="allowances">Indemnités</option>
                             <option value="deductions">Retenues</option>
                             <option value="earnings">Revenus</option>
@@ -177,18 +177,18 @@
                     <div class="flex items-end gap-4">
                         <label class="inline-flex items-center cursor-pointer">
                             <input type="checkbox" name="is_taxable" value="1" checked
-                                   class="rounded border-gray-300 focus:ring-indigo-500" style="color: #5680E9;">
+                                   class="rounded border-gray-300 focus:ring-[#2D5A4E]" style="color: #1B3C35;">
                             <span class="ml-2 text-sm text-gray-700">Imposable</span>
                         </label>
                         <label class="inline-flex items-center cursor-pointer">
                             <input type="checkbox" name="is_required" value="1"
-                                   class="rounded border-gray-300 focus:ring-indigo-500" style="color: #5680E9;">
+                                   class="rounded border-gray-300 focus:ring-[#2D5A4E]" style="color: #1B3C35;">
                             <span class="ml-2 text-sm text-gray-700">Obligatoire</span>
                         </label>
                     </div>
                     <div class="flex items-end">
                         <button type="submit" 
-                                class="w-full px-4 py-2.5 text-sm font-semibold text-white rounded-xl shadow-lg transition-all" style="background: linear-gradient(135deg, #5680E9, #5AB9EA);">
+                                class="w-full px-4 py-2.5 text-sm font-semibold text-white rounded-xl shadow-lg transition-all" style="background: linear-gradient(135deg, #1B3C35, #2D5A4E);">
                             Ajouter le Champ
                         </button>
                     </div>

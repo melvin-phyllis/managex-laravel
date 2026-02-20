@@ -1,7 +1,7 @@
 ﻿<x-layouts.admin>
     <div class="space-y-6">
         <!-- Header comme sur tasks -->
-        <div class="relative overflow-hidden rounded-2xl shadow-xl animate-fade-in-up" style="background: linear-gradient(135deg, #5680E9, #84CEEB) !important;">
+        <div class="relative overflow-hidden rounded-2xl shadow-xl animate-fade-in-up" style="background: linear-gradient(135deg, #1B3C35, #3D7A6A) !important;">
             <div class="absolute inset-0 bg-black/10"></div>
             <div class="absolute -top-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
             <div class="absolute -bottom-24 -left-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
@@ -31,7 +31,7 @@
                         <p class="text-white/80 mt-2">Modifiez les paramètres de cette règle de calcul</p>
                     </div>
                     <a href="{{ route('admin.payroll-settings.rules', $country) }}" 
-                       class="px-4 py-2.5 bg-white font-semibold rounded-xl hover:bg-purple-50 transition-all shadow-lg flex items-center" style="color: #5680E9;">
+                       class="px-4 py-2.5 bg-white font-semibold rounded-xl hover:bg-[#FBF7F0] transition-all shadow-lg flex items-center" style="color: #1B3C35;">
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
                         </svg>
@@ -55,13 +55,13 @@
                 <div>
                     <label for="label" class="block text-sm font-medium text-gray-700 mb-1">Libellé *</label>
                     <input type="text" name="label" id="label" value="{{ old('label', $rule->label) }}" required
-                           class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                           class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2D5A4E] focus:border-[#2D5A4E]">
                 </div>
 
                 <div>
                     <label for="rule_type" class="block text-sm font-medium text-gray-700 mb-1">Type *</label>
                     <select name="rule_type" id="rule_type" required
-                            class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                            class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2D5A4E] focus:border-[#2D5A4E]">
                         <option value="tax" {{ old('rule_type', $rule->rule_type) === 'tax' ? 'selected' : '' }}>Taxe</option>
                         <option value="contribution" {{ old('rule_type', $rule->rule_type) === 'contribution' ? 'selected' : '' }}>Cotisation</option>
                         <option value="allowance" {{ old('rule_type', $rule->rule_type) === 'allowance' ? 'selected' : '' }}>Indemnité</option>
@@ -73,7 +73,7 @@
                 <div>
                     <label for="rule_category" class="block text-sm font-medium text-gray-700 mb-1">Catégorie *</label>
                     <select name="rule_category" id="rule_category" required
-                            class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                            class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2D5A4E] focus:border-[#2D5A4E]">
                         <option value="employee" {{ old('rule_category', $rule->rule_category) === 'employee' ? 'selected' : '' }}>Employé</option>
                         <option value="employer" {{ old('rule_category', $rule->rule_category) === 'employer' ? 'selected' : '' }}>Employeur</option>
                         <option value="both" {{ old('rule_category', $rule->rule_category) === 'both' ? 'selected' : '' }}>Les deux</option>
@@ -83,7 +83,7 @@
                 <div>
                     <label for="calculation_type" class="block text-sm font-medium text-gray-700 mb-1">Mode de Calcul *</label>
                     <select name="calculation_type" id="calculation_type" required
-                            class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                            class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2D5A4E] focus:border-[#2D5A4E]"
                             onchange="toggleCalculationFields()">
                         <option value="percentage" {{ old('calculation_type', $rule->calculation_type) === 'percentage' ? 'selected' : '' }}>Pourcentage</option>
                         <option value="fixed" {{ old('calculation_type', $rule->calculation_type) === 'fixed' ? 'selected' : '' }}>Montant Fixe</option>
@@ -94,7 +94,7 @@
                 <div>
                     <label for="base_field" class="block text-sm font-medium text-gray-700 mb-1">Base de Calcul *</label>
                     <select name="base_field" id="base_field" required
-                            class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                            class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2D5A4E] focus:border-[#2D5A4E]">
                         <option value="taxable_gross" {{ old('base_field', $rule->base_field) === 'taxable_gross' ? 'selected' : '' }}>Brut Imposable</option>
                         <option value="gross_salary" {{ old('base_field', $rule->base_field) === 'gross_salary' ? 'selected' : '' }}>Salaire Brut</option>
                         <option value="igr_base" {{ old('base_field', $rule->base_field) === 'igr_base' ? 'selected' : '' }}>Base IGR</option>
@@ -104,59 +104,59 @@
                 <div id="rate_field">
                     <label for="rate" class="block text-sm font-medium text-gray-700 mb-1">Taux (%)</label>
                     <input type="number" name="rate" id="rate" value="{{ old('rate', $rule->rate) }}" step="0.01" min="0" max="100"
-                           class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                           class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2D5A4E] focus:border-[#2D5A4E]">
                 </div>
 
                 <div id="fixed_field" style="display: none;">
                     <label for="fixed_amount" class="block text-sm font-medium text-gray-700 mb-1">Montant Fixe</label>
                     <input type="number" name="fixed_amount" id="fixed_amount" value="{{ old('fixed_amount', $rule->fixed_amount) }}" step="0.01" min="0"
-                           class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                           class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2D5A4E] focus:border-[#2D5A4E]">
                 </div>
 
                 <div>
                     <label for="ceiling" class="block text-sm font-medium text-gray-700 mb-1">Plafond</label>
                     <input type="number" name="ceiling" id="ceiling" value="{{ old('ceiling', $rule->ceiling) }}" step="0.01" min="0"
-                           class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                           class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2D5A4E] focus:border-[#2D5A4E]">
                 </div>
 
                 <div>
                     <label for="display_order" class="block text-sm font-medium text-gray-700 mb-1">Ordre d'Affichage</label>
                     <input type="number" name="display_order" id="display_order" value="{{ old('display_order', $rule->display_order) }}" min="0"
-                           class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                           class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2D5A4E] focus:border-[#2D5A4E]">
                 </div>
 
                 <div>
                     <label for="pdf_code" class="block text-sm font-medium text-gray-700 mb-1">Code PDF</label>
                     <input type="text" name="pdf_code" id="pdf_code" value="{{ old('pdf_code', $rule->pdf_code) }}"
-                           class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                           class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2D5A4E] focus:border-[#2D5A4E]">
                 </div>
 
                 <div id="brackets_field" class="md:col-span-2" style="display: none;">
                     <label for="brackets" class="block text-sm font-medium text-gray-700 mb-1">Barème (JSON)</label>
                     <textarea name="brackets" id="brackets" rows="5"
-                              class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 font-mono text-sm">{{ old('brackets', json_encode($rule->brackets, JSON_PRETTY_PRINT)) }}</textarea>
+                              class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2D5A4E] focus:border-[#2D5A4E] font-mono text-sm">{{ old('brackets', json_encode($rule->brackets, JSON_PRETTY_PRINT)) }}</textarea>
                 </div>
 
                 <div class="md:col-span-2">
                     <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Description</label>
                     <textarea name="description" id="description" rows="2"
-                              class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">{{ old('description', $rule->description) }}</textarea>
+                              class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2D5A4E] focus:border-[#2D5A4E]">{{ old('description', $rule->description) }}</textarea>
                 </div>
 
                 <div class="md:col-span-2 flex flex-wrap gap-6">
                     <label class="inline-flex items-center cursor-pointer">
                         <input type="checkbox" name="is_deductible" value="1" {{ old('is_deductible', $rule->is_deductible) ? 'checked' : '' }}
-                               class="rounded border-gray-300 focus:ring-indigo-500" style="color: #5680E9;">
+                               class="rounded border-gray-300 focus:ring-[#2D5A4E]" style="color: #1B3C35;">
                         <span class="ml-2 text-sm text-gray-700">Déductible de la base IGR</span>
                     </label>
                     <label class="inline-flex items-center cursor-pointer">
                         <input type="checkbox" name="is_mandatory" value="1" {{ old('is_mandatory', $rule->is_mandatory) ? 'checked' : '' }}
-                               class="rounded border-gray-300 focus:ring-indigo-500" style="color: #5680E9;">
+                               class="rounded border-gray-300 focus:ring-[#2D5A4E]" style="color: #1B3C35;">
                         <span class="ml-2 text-sm text-gray-700">Obligatoire</span>
                     </label>
                     <label class="inline-flex items-center cursor-pointer">
                         <input type="checkbox" name="is_visible_on_payslip" value="1" {{ old('is_visible_on_payslip', $rule->is_visible_on_payslip) ? 'checked' : '' }}
-                               class="rounded border-gray-300 focus:ring-indigo-500" style="color: #5680E9;">
+                               class="rounded border-gray-300 focus:ring-[#2D5A4E]" style="color: #1B3C35;">
                         <span class="ml-2 text-sm text-gray-700">Visible sur le bulletin</span>
                     </label>
                 </div>
@@ -168,7 +168,7 @@
                     Annuler
                 </a>
                 <button type="submit" 
-                        class="px-6 py-2.5 text-sm font-semibold text-white rounded-xl shadow-lg transition-all" style="background: linear-gradient(135deg, #5680E9, #5AB9EA);">
+                        class="px-6 py-2.5 text-sm font-semibold text-white rounded-xl shadow-lg transition-all" style="background: linear-gradient(135deg, #1B3C35, #2D5A4E);">
                     Enregistrer
                 </button>
             </div>

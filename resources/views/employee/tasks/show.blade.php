@@ -1,7 +1,7 @@
 <x-layouts.employee>
     <div class="space-y-6">
         <!-- Header -->
-        <div class="relative overflow-hidden rounded-2xl p-6 text-white shadow-xl" style="background-color: #3B8BEB;">
+        <div class="relative overflow-hidden rounded-2xl p-6 text-white shadow-xl" style="background-color: #1B3C35;">
             <div class="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full" style="transform: translate(30%, -50%);"></div>
             <div class="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full" style="transform: translate(-30%, 50%);"></div>
 
@@ -46,9 +46,9 @@
                         <h3 class="text-sm font-medium text-gray-700 mb-3">Progression</h3>
                         <div class="flex items-center gap-3">
                             <div class="flex-1 bg-gray-100 rounded-full h-3">
-                                <div class="h-3 rounded-full transition-all duration-500" style="width: {{ $task->progression }}%; background-color: #3B8BEB;"></div>
+                                <div class="h-3 rounded-full transition-all duration-500" style="width: {{ $task->progression }}%; background-color: #1B3C35;"></div>
                             </div>
-                            <span class="text-sm font-bold" style="color: #3B8BEB;">{{ $task->progression }}%</span>
+                            <span class="text-sm font-bold" style="color: #1B3C35;">{{ $task->progression }}%</span>
                         </div>
                     </div>
                 </div>
@@ -108,11 +108,11 @@
                         <div class="space-y-4">
                             <div class="flex items-center gap-3">
                                 <input type="range" min="0" max="100" step="5" x-model="progress"
-                                       class="flex-1 h-2 rounded-lg appearance-none cursor-pointer" style="accent-color: #3B8BEB;">
-                                <span class="text-sm font-bold w-12 text-right" style="color: #3B8BEB;" x-text="progress + '%'"></span>
+                                       class="flex-1 h-2 rounded-lg appearance-none cursor-pointer" style="accent-color: #1B3C35;">
+                                <span class="text-sm font-bold w-12 text-right" style="color: #1B3C35;" x-text="progress + '%'"></span>
                             </div>
                             <template x-if="progress == 100">
-                                <p class="text-xs p-2 rounded-lg border" style="background-color: rgba(59, 139, 235, 0.1); color: #3B8BEB; border-color: rgba(59, 139, 235, 0.2);">
+                                <p class="text-xs p-2 rounded-lg border" style="background-color: rgba(27, 60, 53, 0.1); color: #1B3C35; border-color: rgba(27, 60, 53, 0.2);">
                                     <span class="font-semibold">A 100%</span>, la tache sera envoyee a l'admin pour validation.
                                 </p>
                             </template>
@@ -134,7 +134,7 @@
                                     }
                                 }).catch(() => { saving = false; alert('Erreur lors de la sauvegarde'); })"
                                 class="w-full px-4 py-2 text-white text-sm font-medium rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
-                                style="background-color: #3B8BEB;"
+                                style="background-color: #1B3C35;"
                                 data-no-submit-guard>
                                 <span x-show="!saving && !saved">Sauvegarder</span>
                                 <span x-show="saving" x-cloak>Enregistrement...</span>
@@ -157,9 +157,9 @@
                                 @php
                                     $priorityLabels = ['high' => 'Haute', 'medium' => 'Moyenne', 'low' => 'Basse'];
                                     $priorityColors = [
-                                        'high' => 'background-color: rgba(178, 56, 80, 0.1); color: #B23850;',
-                                        'medium' => 'background-color: #E7E3D4; color: #8590AA;',
-                                        'low' => 'background-color: rgba(59, 139, 235, 0.1); color: #3B8BEB;',
+                                        'high' => 'background-color: rgba(200, 169, 110, 0.1); color: #C8A96E;',
+                                        'medium' => 'background-color: #E7E3D4; color: #5C6E68;',
+                                        'low' => 'background-color: rgba(27, 60, 53, 0.1); color: #1B3C35;',
                                     ];
                                 @endphp
                                 <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium" style="{{ $priorityColors[$task->priorite] ?? '' }}">

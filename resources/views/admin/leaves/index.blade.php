@@ -1,9 +1,9 @@
-<x-layouts.admin>
+﻿<x-layouts.admin>
     {{-- Statistiques passées depuis le contrôleur (optimisé: 1 requête au lieu de 4) --}}
 
     <div class="space-y-6">
         <!-- Header avec gradient -->
-        <div class="relative overflow-hidden rounded-2xl shadow-xl" style="background: linear-gradient(135deg, #5680E9, #84CEEB) !important;">
+        <div class="relative overflow-hidden rounded-2xl shadow-xl" style="background: linear-gradient(135deg, #1B3C35, #3D7A6A) !important;">
             <div class="absolute inset-0 bg-black/10"></div>
             <div class="absolute -top-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
             <div class="absolute -bottom-24 -left-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
@@ -62,7 +62,7 @@
             
             <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
                 <div class="flex items-center gap-3">
-                    <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg" style="background: linear-gradient(135deg, #5680E9, #5AB9EA); box-shadow: 0 10px 15px -3px rgba(86, 128, 233, 0.3);">
+                    <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg" style="background: linear-gradient(135deg, #1B3C35, #2D5A4E); box-shadow: 0 10px 15px -3px rgba(27, 60, 53, 0.3);">
                         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                         </svg>
@@ -76,7 +76,7 @@
             
             <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
                 <div class="flex items-center gap-3">
-                    <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg" style="background: linear-gradient(135deg, #5AB9EA, #84CEEB); box-shadow: 0 10px 15px -3px rgba(90, 185, 234, 0.3);">
+                    <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg" style="background: linear-gradient(135deg, #2D5A4E, #3D7A6A); box-shadow: 0 10px 15px -3px rgba(45, 90, 78, 0.3);">
                         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                         </svg>
@@ -90,7 +90,7 @@
             
             <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
                 <div class="flex items-center gap-3">
-                    <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg" style="background: linear-gradient(135deg, #8860D0, #9333EA); box-shadow: 0 10px 15px -3px rgba(136, 96, 208, 0.3);">
+                    <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg" style="background: linear-gradient(135deg, #C8A96E, #9333EA); box-shadow: 0 10px 15px -3px rgba(200, 169, 110, 0.3);">
                         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                         </svg>
@@ -117,7 +117,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                     <div>
                         <label for="employee_id" class="block text-sm font-medium text-gray-700 mb-1">Employé</label>
-                        <select name="employee_id" id="employee_id" class="w-full rounded-xl border-gray-300 text-sm" style="--tw-ring-color: #5680E9;" onfocus="this.style.borderColor='#5680E9'" onblur="this.style.borderColor=''">
+                        <select name="employee_id" id="employee_id" class="w-full rounded-xl border-gray-300 text-sm" style="--tw-ring-color: #1B3C35;" onfocus="this.style.borderColor='#1B3C35'" onblur="this.style.borderColor=''">
                             <option value="">Tous les employés</option>
                             @foreach($employees as $emp)
                                 <option value="{{ $emp->id }}" {{ request('employee_id') == $emp->id ? 'selected' : '' }}>{{ $emp->name }}</option>
@@ -126,7 +126,7 @@
                     </div>
                     <div>
                         <label for="statut" class="block text-sm font-medium text-gray-700 mb-1">Statut</label>
-                        <select name="statut" id="statut" class="w-full rounded-xl border-gray-300 text-sm" style="--tw-ring-color: #5680E9;" onfocus="this.style.borderColor='#5680E9'" onblur="this.style.borderColor=''">
+                        <select name="statut" id="statut" class="w-full rounded-xl border-gray-300 text-sm" style="--tw-ring-color: #1B3C35;" onfocus="this.style.borderColor='#1B3C35'" onblur="this.style.borderColor=''">
                             <option value="">Tous les statuts</option>
                             <option value="pending" {{ request('statut') == 'pending' ? 'selected' : '' }}>En attente</option>
                             <option value="approved" {{ request('statut') == 'approved' ? 'selected' : '' }}>Approuvé</option>
@@ -135,7 +135,7 @@
                     </div>
                     <div>
                         <label for="type" class="block text-sm font-medium text-gray-700 mb-1">Type</label>
-                        <select name="type" id="type" class="w-full rounded-xl border-gray-300 text-sm" style="--tw-ring-color: #5680E9;" onfocus="this.style.borderColor='#5680E9'" onblur="this.style.borderColor=''">
+                        <select name="type" id="type" class="w-full rounded-xl border-gray-300 text-sm" style="--tw-ring-color: #1B3C35;" onfocus="this.style.borderColor='#1B3C35'" onblur="this.style.borderColor=''">
                             <option value="">Tous les types</option>
                             <option value="conge" {{ request('type') == 'conge' ? 'selected' : '' }}>Congé payé</option>
                             <option value="maladie" {{ request('type') == 'maladie' ? 'selected' : '' }}>Arrêt maladie</option>
@@ -143,7 +143,7 @@
                         </select>
                     </div>
                     <div class="flex items-end gap-2">
-                        <button type="submit" class="flex-1 px-4 py-2.5 text-white font-medium rounded-xl transition-all shadow-lg" style="background: linear-gradient(135deg, #5680E9, #5AB9EA); box-shadow: 0 10px 15px -3px rgba(86, 128, 233, 0.3);" onmouseover="this.style.filter='brightness(1.1)'" onmouseout="this.style.filter=''">
+                        <button type="submit" class="flex-1 px-4 py-2.5 text-white font-medium rounded-xl transition-all shadow-lg" style="background: linear-gradient(135deg, #1B3C35, #2D5A4E); box-shadow: 0 10px 15px -3px rgba(27, 60, 53, 0.3);" onmouseover="this.style.filter='brightness(1.1)'" onmouseout="this.style.filter=''">
                             <span class="flex items-center justify-center gap-2">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
@@ -183,15 +183,15 @@
                             @php
                                 $typeConfig = [
                                     'conge' => [
-                                        'gradient' => 'linear-gradient(135deg, #5680E9, #5AB9EA)',
-                                        'bg' => 'rgba(90, 185, 234, 0.1)',
-                                        'text' => '#5AB9EA',
+                                        'gradient' => 'linear-gradient(135deg, #1B3C35, #2D5A4E)',
+                                        'bg' => 'rgba(45, 90, 78, 0.1)',
+                                        'text' => '#2D5A4E',
                                         'icon' => 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z'
                                     ],
                                     'maladie' => [
-                                        'gradient' => 'linear-gradient(135deg, #8860D0, #9333EA)',
-                                        'bg' => 'rgba(136, 96, 208, 0.1)',
-                                        'text' => '#8860D0',
+                                        'gradient' => 'linear-gradient(135deg, #C8A96E, #9333EA)',
+                                        'bg' => 'rgba(200, 169, 110, 0.1)',
+                                        'text' => '#C8A96E',
                                         'icon' => 'M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z'
                                     ],
                                     'autre' => [
@@ -203,13 +203,13 @@
                                 ];
                                 $config = $typeConfig[$leave->type] ?? $typeConfig['autre'];
                             @endphp
-                            <tr class="hover:bg-teal-50/50 transition-colors group">
+                            <tr class="hover:bg-[#F0F5F3]/50 transition-colors group">
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="flex items-center gap-3">
                                         @if($leave->user->avatar)
                                             <img class="h-10 w-10 rounded-xl object-cover ring-2 ring-white shadow-md" src="{{ avatar_url($leave->user->avatar) }}" alt="{{ $leave->user->name }}">
                                         @else
-                                            <div class="h-10 w-10 rounded-xl flex items-center justify-center ring-2 ring-white shadow-md" style="background: linear-gradient(135deg, #5680E9, #84CEEB);">
+                                            <div class="h-10 w-10 rounded-xl flex items-center justify-center ring-2 ring-white shadow-md" style="background: linear-gradient(135deg, #1B3C35, #3D7A6A);">
                                                 <span class="text-white font-bold text-xs">{{ strtoupper(substr($leave->user->name, 0, 2)) }}</span>
                                             </div>
                                         @endif
@@ -241,7 +241,7 @@
                                     </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-bold" style="background-color: rgba(90, 185, 234, 0.15); color: #5AB9EA;">
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-bold" style="background-color: rgba(45, 90, 78, 0.15); color: #2D5A4E;">
                                         {{ $leave->duree }} jour{{ $leave->duree > 1 ? 's' : '' }}
                                     </span>
                                 </td>
@@ -254,8 +254,8 @@
                                     @php
                                         $statusConfig = [
                                             'pending' => ['bg' => 'bg-amber-100', 'text' => 'text-amber-800', 'dot' => 'bg-amber-500', 'label' => 'En attente'],
-                                            'approved' => ['bg' => 'bg-emerald-100', 'text' => 'text-emerald-800', 'dot' => 'bg-emerald-500', 'label' => 'Approuvé'],
-                                            'rejected' => ['bg' => 'bg-red-100', 'text' => 'text-red-800', 'dot' => 'bg-red-500', 'label' => 'Rejeté'],
+                                            'approved' => ['bg' => 'bg-[#E8F0ED]', 'text' => 'text-[#0F2A25]', 'dot' => 'bg-[#2D5A4E]', 'label' => 'Approuvé'],
+                                            'rejected' => ['bg' => 'bg-[#E8F0ED]', 'text' => 'text-[#0F2A25]', 'dot' => 'bg-[#2D5A4E]', 'label' => 'Rejeté'],
                                         ];
                                         $status = $statusConfig[$leave->statut] ?? $statusConfig['pending'];
                                     @endphp
@@ -267,7 +267,7 @@
                                 <td class="px-6 py-4 whitespace-nowrap text-right">
                                     <div class="flex items-center justify-end gap-1">
                                         <a href="{{ route('admin.leaves.show', $leave) }}" 
-                                           class="p-2 text-gray-500 hover:text-teal-600 hover:bg-teal-50 rounded-lg transition-colors" title="Voir les détails">
+                                           class="p-2 text-gray-500 hover:text-[#1B3C35] hover:bg-[#F0F5F3] rounded-lg transition-colors" title="Voir les détails">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
@@ -277,7 +277,7 @@
                                             <form action="{{ route('admin.leaves.approve', $leave) }}" method="POST" class="inline">
                                                 @csrf
                                                 <button type="submit" 
-                                                        class="p-2 text-gray-500 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors" 
+                                                        class="p-2 text-gray-500 hover:text-[#1B3C35] hover:bg-[#F0F5F3] rounded-lg transition-colors" 
                                                         title="Approuver">
                                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
@@ -287,7 +287,7 @@
                                             <form action="{{ route('admin.leaves.reject', $leave) }}" method="POST" class="inline">
                                                 @csrf
                                                 <button type="submit" 
-                                                        class="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" 
+                                                        class="p-2 text-gray-500 hover:text-[#1B3C35] hover:bg-[#F0F5F3] rounded-lg transition-colors" 
                                                         title="Rejeter">
                                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
@@ -302,8 +302,8 @@
                             <tr>
                                 <td colspan="7" class="px-6 py-16 text-center">
                                     <div class="flex flex-col items-center">
-                                        <div class="w-20 h-20 rounded-full bg-gradient-to-br from-teal-100 to-cyan-100 flex items-center justify-center mb-4">
-                                            <svg class="w-10 h-10 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <div class="w-20 h-20 rounded-full bg-gradient-to-br from-[#E8F0ED] to-[#E8F0ED] flex items-center justify-center mb-4">
+                                            <svg class="w-10 h-10 text-[#3D7A6A]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                                             </svg>
                                         </div>

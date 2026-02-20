@@ -641,7 +641,7 @@
                                 <span x-text="progress + '%'"></span>
                             </div>
                             <div class="w-full bg-gray-200 rounded-full h-2">
-                                <div class="bg-gradient-to-r from-blue-500 to-indigo-600 h-2 rounded-full transition-all duration-1000" :style="'width: ' + progress + '%'"></div>
+                                <div class="bg-gradient-to-r from-[#1B3C35] to-[#2D5A4E] h-2 rounded-full transition-all duration-1000" :style="'width: ' + progress + '%'"></div>
                             </div>
                         </div>
                     </div>

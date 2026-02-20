@@ -1,4 +1,4 @@
-<x-layouts.admin>
+﻿<x-layouts.admin>
     <div class="space-y-6">
         <!-- Header -->
         <div class="flex items-center justify-between animate-fade-in-up">
@@ -9,7 +9,7 @@
                 <div>
                     <h1 class="text-2xl font-bold text-gray-900 flex items-center gap-2">
                         @if($conversation->type === 'channel')
-                            <x-icon name="hash" class="w-6 h-6 text-blue-500" />
+                            <x-icon name="hash" class="w-6 h-6 text-[#2D5A4E]" />
                         @elseif($conversation->type === 'announcement')
                             <x-icon name="megaphone" class="w-6 h-6 text-amber-500" />
                         @else
@@ -29,7 +29,7 @@
                 </div>
             </div>
             
-            <span class="inline-flex items-center px-3 py-1 text-sm rounded-full font-medium {{ $conversation->type === 'channel' ? 'bg-blue-100 text-blue-700' : ($conversation->type === 'announcement' ? 'bg-amber-100 text-amber-700' : 'bg-gray-100 text-gray-700') }}">
+            <span class="inline-flex items-center px-3 py-1 text-sm rounded-full font-medium {{ $conversation->type === 'channel' ? 'bg-[#E8F0ED] text-[#163530]' : ($conversation->type === 'announcement' ? 'bg-amber-100 text-amber-700' : 'bg-gray-100 text-gray-700') }}">
                 {{ ucfirst($conversation->type) }}
             </span>
         </div>
@@ -49,7 +49,7 @@
                     @foreach($conversation->activeParticipants as $participant)
                         <div class="flex items-center justify-between group p-2 hover:bg-gray-50 rounded-lg transition-colors">
                             <div class="flex items-center gap-3">
-                                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white text-xs font-semibold shadow-sm">
+                                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-[#1B3C35] to-[#2D5A4E] flex items-center justify-center text-white text-xs font-semibold shadow-sm">
                                     {{ strtoupper(substr($participant->user->name ?? 'U', 0, 1)) }}
                                 </div>
                                 <div class="min-w-0">
@@ -61,7 +61,7 @@
                                 <form action="{{ route('admin.messaging.participants.remove', [$conversation, $participant->user]) }}" method="POST" onsubmit="return confirm('Retirer ce participant ?')">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="p-1.5 text-gray-300 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors opacity-0 group-hover:opacity-100">
+                                    <button type="submit" class="p-1.5 text-gray-300 hover:text-[#1B3C35] hover:bg-[#F0F5F3] rounded-lg transition-colors opacity-0 group-hover:opacity-100">
                                         <x-icon name="trash-2" class="w-4 h-4" />
                                     </button>
                                 </form>
@@ -78,13 +78,13 @@
                         Ajouter un participant
                     </label>
                     <div class="flex gap-2">
-                        <select name="user_id" required class="flex-1 rounded-lg border-gray-300 text-sm focus:border-blue-500 focus:ring-blue-500">
+                        <select name="user_id" required class="flex-1 rounded-lg border-gray-300 text-sm focus:border-[#2D5A4E] focus:ring-[#2D5A4E]">
                             <option value="">Sélectionner...</option>
                             @foreach(\App\Models\User::whereNotIn('id', $conversation->activeParticipants->pluck('user_id'))->get() as $user)
                                 <option value="{{ $user->id }}">{{ $user->name }}</option>
                             @endforeach
                         </select>
-                        <button type="submit" class="px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm transition-colors shadow-sm">
+                        <button type="submit" class="px-3 py-2 bg-[#1B3C35] text-white rounded-lg hover:bg-[#163530] text-sm transition-colors shadow-sm">
                             <x-icon name="plus" class="w-5 h-5" />
                         </button>
                     </div>
@@ -106,7 +106,7 @@
                         <div class="p-3 hover:bg-gray-50 rounded-lg transition-colors group">
                             <div class="flex items-start justify-between">
                                 <div class="flex items-start gap-3">
-                                    <div class="w-9 h-9 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold flex-shrink-0 shadow-sm mt-0.5">
+                                    <div class="w-9 h-9 rounded-full bg-gradient-to-br from-[#2D5A4E] to-[#2D5A4E] flex items-center justify-center text-white text-xs font-bold flex-shrink-0 shadow-sm mt-0.5">
                                         {{ $message->sender ? strtoupper(substr($message->sender->name, 0, 1)) : 'S' }}
                                     </div>
                                     <div class="min-w-0 max-w-2xl">
@@ -134,7 +134,7 @@
                                 <form action="{{ route('admin.messaging.message.delete', $message) }}" method="POST" onsubmit="return confirm('Supprimer ce message ?')">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="p-1.5 text-gray-300 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors opacity-0 group-hover:opacity-100">
+                                    <button type="submit" class="p-1.5 text-gray-300 hover:text-[#1B3C35] hover:bg-[#F0F5F3] rounded-lg transition-colors opacity-0 group-hover:opacity-100">
                                         <x-icon name="trash-2" class="w-4 h-4" />
                                     </button>
                                 </form>
@@ -159,18 +159,18 @@
         </div>
 
         <!-- Danger Zone -->
-        <div class="bg-red-50 rounded-xl border border-red-200 p-6 mt-8">
+        <div class="bg-[#F0F5F3] rounded-xl border border-[#B8D1C7] p-6 mt-8">
             <div class="flex items-start gap-4">
-                <div class="p-3 bg-red-100 rounded-lg">
-                    <x-icon name="alert-triangle" class="w-6 h-6 text-red-600" />
+                <div class="p-3 bg-[#E8F0ED] rounded-lg">
+                    <x-icon name="alert-triangle" class="w-6 h-6 text-[#1B3C35]" />
                 </div>
                 <div class="flex-1">
-                    <h3 class="text-lg font-semibold text-red-800 mb-1">Zone de danger</h3>
-                    <p class="text-sm text-red-600 mb-4">Cette action est irréversible. Tous les messages, fichiers et l'historique des participants seront définitivement supprimés.</p>
+                    <h3 class="text-lg font-semibold text-[#0F2A25] mb-1">Zone de danger</h3>
+                    <p class="text-sm text-[#1B3C35] mb-4">Cette action est irréversible. Tous les messages, fichiers et l'historique des participants seront définitivement supprimés.</p>
                     <form action="{{ route('admin.messaging.destroy', $conversation) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette conversation ? Cette action est irréversible.')">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="inline-flex items-center px-4 py-2.5 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition-colors shadow-lg shadow-red-500/20">
+                        <button type="submit" class="inline-flex items-center px-4 py-2.5 bg-[#1B3C35] text-white font-medium rounded-lg hover:bg-[#163530] transition-colors shadow-lg shadow-[#1B3C35]/20">
                             <x-icon name="trash-2" class="w-4 h-4 mr-2" />
                             Supprimer cette conversation
                         </button>

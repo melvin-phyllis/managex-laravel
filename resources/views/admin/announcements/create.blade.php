@@ -4,7 +4,7 @@
         <nav class="flex animate-fade-in-up" aria-label="Breadcrumb">
             <ol class="inline-flex items-center space-x-1 md:space-x-3">
                 <li class="inline-flex items-center">
-                    <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600">
+                    <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-[#1B3C35]">
                         <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
                             <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
                         </svg>
@@ -16,7 +16,7 @@
                         <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
                         </svg>
-                        <a href="{{ route('admin.announcements.index') }}" class="ml-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ml-2">Annonces</a>
+                        <a href="{{ route('admin.announcements.index') }}" class="ml-1 text-sm font-medium text-gray-700 hover:text-[#1B3C35] md:ml-2">Annonces</a>
                     </div>
                 </li>
                 <li aria-current="page">
@@ -54,13 +54,13 @@
                 <!-- Title -->
                 <div>
                     <label for="title" class="block text-sm font-medium text-gray-700 mb-1">
-                        Titre <span class="text-red-500">*</span>
+                        Titre <span class="text-[#2D5A4E]">*</span>
                     </label>
                     <input type="text" name="title" id="title" value="{{ old('title') }}" required
                            class="w-full rounded-lg border-gray-300 focus:border-green-500 focus:ring-green-500"
                            placeholder="Ex: Maintenance serveur prévue">
                     @error('title')
-                        <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                        <p class="mt-1 text-sm text-[#2D5A4E]">{{ $message }}</p>
                     @enderror
                 </div>
 
@@ -68,7 +68,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label for="type" class="block text-sm font-medium text-gray-700 mb-1">
-                            Type <span class="text-red-500">*</span>
+                            Type <span class="text-[#2D5A4E]">*</span>
                         </label>
                         <select name="type" id="type" required
                                 class="w-full rounded-lg border-gray-300 focus:border-green-500 focus:ring-green-500">
@@ -81,7 +81,7 @@
                     </div>
                     <div>
                         <label for="priority" class="block text-sm font-medium text-gray-700 mb-1">
-                            Priorité <span class="text-red-500">*</span>
+                            Priorité <span class="text-[#2D5A4E]">*</span>
                         </label>
                         <select name="priority" id="priority" required
                                 class="w-full rounded-lg border-gray-300 focus:border-green-500 focus:ring-green-500">
@@ -95,13 +95,13 @@
                 <!-- Content -->
                 <div>
                     <label for="content" class="block text-sm font-medium text-gray-700 mb-1">
-                        Contenu <span class="text-red-500">*</span>
+                        Contenu <span class="text-[#2D5A4E]">*</span>
                     </label>
                     <textarea name="content" id="content" rows="6" required
                               class="w-full rounded-lg border-gray-300 focus:border-green-500 focus:ring-green-500"
                               placeholder="Rédigez votre annonce...">{{ old('content') }}</textarea>
                     @error('content')
-                        <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                        <p class="mt-1 text-sm text-[#2D5A4E]">{{ $message }}</p>
                     @enderror
                 </div>
             </div>

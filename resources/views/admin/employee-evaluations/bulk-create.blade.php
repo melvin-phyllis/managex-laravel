@@ -1,7 +1,7 @@
 ﻿<x-layouts.admin>
     <div class="space-y-6">
         <!-- Header comme sur tasks -->
-        <div class="relative overflow-hidden rounded-2xl shadow-xl animate-fade-in-up" style="background: linear-gradient(135deg, #5680E9, #84CEEB) !important;">
+        <div class="relative overflow-hidden rounded-2xl shadow-xl animate-fade-in-up" style="background: linear-gradient(135deg, #1B3C35, #3D7A6A) !important;">
             <div class="absolute inset-0 bg-black/10"></div>
             <div class="absolute -top-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
             <div class="absolute -bottom-24 -left-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
@@ -29,7 +29,7 @@
                         <p class="text-white/80 mt-2">{{ \Carbon\Carbon::create()->month((int) $month)->translatedFormat('F') }} {{ $year }} · {{ $employees->count() }} employé(s) à évaluer</p>
                     </div>
                     <a href="{{ route('admin.employee-evaluations.index', ['month' => $month, 'year' => $year]) }}" 
-                       class="px-4 py-2.5 bg-white font-semibold rounded-xl hover:bg-purple-50 transition-all shadow-lg flex items-center" style="color: #5680E9;">
+                       class="px-4 py-2.5 bg-white font-semibold rounded-xl hover:bg-[#FBF7F0] transition-all shadow-lg flex items-center" style="color: #1B3C35;">
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
                         </svg>
@@ -41,7 +41,7 @@
 
         @if($employees->isEmpty())
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-12 text-center">
-                <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style="background: linear-gradient(135deg, #84CEEB, #5680E9);">
+                <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style="background: linear-gradient(135deg, #3D7A6A, #1B3C35);">
                     <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                     </svg>
@@ -51,15 +51,15 @@
             </div>
         @else
             <!-- Info des critères -->
-            <div class="bg-indigo-50 border border-indigo-100 rounded-xl p-4 flex items-center gap-3 animate-fade-in-up">
-                <div class="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="bg-[#F0F5F3] border border-[#E8F0ED] rounded-xl p-4 flex items-center gap-3 animate-fade-in-up">
+                <div class="w-10 h-10 bg-[#E8F0ED] rounded-lg flex items-center justify-center flex-shrink-0">
+                    <svg class="w-5 h-5 text-[#1B3C35]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
                 </div>
                 <div>
-                    <p class="text-sm font-medium text-indigo-900">Critères d'évaluation</p>
-                    <p class="text-xs text-indigo-700">
+                    <p class="text-sm font-medium text-[#0F2A25]">Critères d'évaluation</p>
+                    <p class="text-xs text-[#163530]">
                         Résolution problèmes <span class="font-semibold">(max 2)</span> | 
                         Objectifs <span class="font-semibold">(max 0,5)</span> | 
                         Pression <span class="font-semibold">(max 1)</span> | 
@@ -90,11 +90,11 @@
                             </thead>
                             <tbody class="divide-y divide-gray-100">
                                 @foreach($employees as $index => $employee)
-                                    <tr class="hover:bg-purple-50/50 transition-colors" data-row="{{ $index }}">
+                                    <tr class="hover:bg-[#FBF7F0]/50 transition-colors" data-row="{{ $index }}">
                                         <td class="px-6 py-4">
                                             <input type="hidden" name="evaluations[{{ $index }}][user_id]" value="{{ $employee->id }}">
                                             <div class="flex items-center gap-3">
-                                                <div class="w-9 h-9 rounded-full flex items-center justify-center ring-2 ring-white shadow-sm" style="background: linear-gradient(135deg, #5680E9, #84CEEB);">
+                                                <div class="w-9 h-9 rounded-full flex items-center justify-center ring-2 ring-white shadow-sm" style="background: linear-gradient(135deg, #1B3C35, #3D7A6A);">
                                                     <span class="text-white font-bold text-xs">{{ strtoupper(substr($employee->name, 0, 2)) }}</span>
                                                 </div>
                                                 <div>
@@ -108,7 +108,7 @@
                                                    name="evaluations[{{ $index }}][problem_solving]" 
                                                    min="0" max="2" step="0.5" 
                                                    value="0"
-                                                   class="w-16 text-center border-gray-300 rounded-lg focus:border-indigo-500 focus:ring-indigo-500 text-sm font-medium bulk-input"
+                                                   class="w-16 text-center border-gray-300 rounded-lg focus:border-[#2D5A4E] focus:ring-[#2D5A4E] text-sm font-medium bulk-input"
                                                    data-row="{{ $index }}" data-max="2">
                                         </td>
                                         <td class="px-4 py-4 text-center">
@@ -116,7 +116,7 @@
                                                    name="evaluations[{{ $index }}][objectives_respect]" 
                                                    min="0" max="0.5" step="0.5" 
                                                    value="0"
-                                                   class="w-16 text-center border-gray-300 rounded-lg focus:border-indigo-500 focus:ring-indigo-500 text-sm font-medium bulk-input"
+                                                   class="w-16 text-center border-gray-300 rounded-lg focus:border-[#2D5A4E] focus:ring-[#2D5A4E] text-sm font-medium bulk-input"
                                                    data-row="{{ $index }}" data-max="0.5">
                                         </td>
                                         <td class="px-4 py-4 text-center">
@@ -124,7 +124,7 @@
                                                    name="evaluations[{{ $index }}][work_under_pressure]" 
                                                    min="0" max="1" step="0.5" 
                                                    value="0"
-                                                   class="w-16 text-center border-gray-300 rounded-lg focus:border-indigo-500 focus:ring-indigo-500 text-sm font-medium bulk-input"
+                                                   class="w-16 text-center border-gray-300 rounded-lg focus:border-[#2D5A4E] focus:ring-[#2D5A4E] text-sm font-medium bulk-input"
                                                    data-row="{{ $index }}" data-max="1">
                                         </td>
                                         <td class="px-4 py-4 text-center">
@@ -132,14 +132,14 @@
                                                    name="evaluations[{{ $index }}][accountability]" 
                                                    min="0" max="2" step="0.5" 
                                                    value="0"
-                                                   class="w-16 text-center border-gray-300 rounded-lg focus:border-indigo-500 focus:ring-indigo-500 text-sm font-medium bulk-input"
+                                                   class="w-16 text-center border-gray-300 rounded-lg focus:border-[#2D5A4E] focus:ring-[#2D5A4E] text-sm font-medium bulk-input"
                                                    data-row="{{ $index }}" data-max="2">
                                         </td>
                                         <td class="px-4 py-4 text-center">
-                                            <span class="row-total font-bold" style="color: #8860D0;" data-row="{{ $index }}">0</span>
+                                            <span class="row-total font-bold" style="color: #C8A96E;" data-row="{{ $index }}">0</span>
                                         </td>
                                         <td class="px-6 py-4 text-right">
-                                            <span class="row-salary font-bold" style="color: #5680E9;" data-row="{{ $index }}">{{ number_format($smic, 0, ',', ' ') }}</span>
+                                            <span class="row-salary font-bold" style="color: #1B3C35;" data-row="{{ $index }}">{{ number_format($smic, 0, ',', ' ') }}</span>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -150,9 +150,9 @@
                     <div class="px-6 py-4 border-t border-gray-100 flex items-center justify-between bg-gray-50">
                         <div class="text-sm text-gray-600">
                             <span class="font-semibold" id="totalEmployees">{{ $employees->count() }}</span> employé(s) | 
-                            Salaire total estimé : <span id="grandTotal" class="font-bold" style="color: #5680E9;">{{ number_format($employees->count() * $smic, 0, ',', ' ') }} FCFA</span>
+                            Salaire total estimé : <span id="grandTotal" class="font-bold" style="color: #1B3C35;">{{ number_format($employees->count() * $smic, 0, ',', ' ') }} FCFA</span>
                         </div>
-                        <button type="submit" class="px-6 py-3 text-white font-semibold rounded-xl transition-all shadow-lg flex items-center" style="background: linear-gradient(135deg, #5680E9, #5AB9EA);">
+                        <button type="submit" class="px-6 py-3 text-white font-semibold rounded-xl transition-all shadow-lg flex items-center" style="background: linear-gradient(135deg, #1B3C35, #2D5A4E);">
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                             </svg>
@@ -189,13 +189,13 @@
 
             // Color based on score
             if (total >= 4) {
-                totalEl.style.color = '#5680E9';
+                totalEl.style.color = '#1B3C35';
             } else if (total >= 2.5) {
-                totalEl.style.color = '#8860D0';
+                totalEl.style.color = '#C8A96E';
             } else if (total > 0) {
                 totalEl.style.color = '#ef4444';
             } else {
-                totalEl.style.color = '#8860D0';
+                totalEl.style.color = '#C8A96E';
             }
 
             updateGrandTotal();

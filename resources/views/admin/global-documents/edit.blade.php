@@ -1,7 +1,7 @@
-<x-layouts.admin>
+﻿<x-layouts.admin>
     <div class="max-w-2xl mx-auto space-y-6">
         <!-- Header avec gradient -->
-        <div class="relative overflow-hidden rounded-2xl shadow-xl animate-fade-in-up" style="background: linear-gradient(135deg, #5680E9, #84CEEB) !important;">
+        <div class="relative overflow-hidden rounded-2xl shadow-xl animate-fade-in-up" style="background: linear-gradient(135deg, #1B3C35, #3D7A6A) !important;">
             <div class="absolute inset-0 bg-black/10"></div>
             <div class="absolute -top-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
             <div class="absolute -bottom-24 -left-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
@@ -35,7 +35,7 @@
             @method('PUT')
 
             @if($errors->any())
-                <div class="bg-red-50 border-l-4 border-red-500 text-red-700 px-4 py-3 m-6 rounded-lg">
+                <div class="bg-[#F0F5F3] border-l-4 border-[#2D5A4E] text-[#163530] px-4 py-3 m-6 rounded-lg">
                     <ul class="list-disc list-inside">
                         @foreach($errors->all() as $error)
                             <li>{{ $error }}</li>
@@ -47,31 +47,31 @@
             <div class="p-6 space-y-6">
                 <!-- Titre -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Titre <span class="text-red-500">*</span></label>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Titre <span class="text-[#2D5A4E]">*</span></label>
                     <input type="text" name="title" value="{{ old('title', $globalDocument->title) }}" required
-                           class="w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-indigo-500">
+                           class="w-full rounded-xl border-gray-300 focus:border-[#2D5A4E] focus:ring-[#2D5A4E]">
                 </div>
 
                 <!-- Description -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
                     <textarea name="description" rows="3"
-                              class="w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-indigo-500">{{ old('description', $globalDocument->description) }}</textarea>
+                              class="w-full rounded-xl border-gray-300 focus:border-[#2D5A4E] focus:ring-[#2D5A4E]">{{ old('description', $globalDocument->description) }}</textarea>
                 </div>
 
                 <!-- Fichier actuel -->
-                <div class="p-4 rounded-xl" style="background: linear-gradient(135deg, #5680E910, #84CEEB10);">
+                <div class="p-4 rounded-xl" style="background: linear-gradient(135deg, #1B3C3510, #3D7A6A10);">
                     <p class="text-sm text-gray-600 mb-2">Fichier actuel :</p>
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: linear-gradient(135deg, #5680E930, #84CEEB30);">
-                            <svg class="w-5 h-5" style="color: #5680E9;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: linear-gradient(135deg, #1B3C3530, #3D7A6A30);">
+                            <svg class="w-5 h-5" style="color: #1B3C35;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
                             </svg>
                         </div>
                         <span class="font-medium text-gray-800">{{ $globalDocument->original_filename }}</span>
                         <span class="text-sm text-gray-500">({{ $globalDocument->file_size_formatted }})</span>
                         <a href="{{ route('admin.global-documents.download', $globalDocument) }}"
-                           class="hover:underline text-sm ml-auto font-medium" style="color: #5680E9;">Télécharger</a>
+                           class="hover:underline text-sm ml-auto font-medium" style="color: #1B3C35;">Télécharger</a>
                     </div>
                 </div>
 
@@ -79,14 +79,14 @@
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Remplacer le fichier (optionnel)</label>
                     <input type="file" name="file" accept=".pdf,.doc,.docx"
-                           class="w-full text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 file:font-medium file:cursor-pointer">
+                           class="w-full text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-[#F0F5F3] file:text-[#163530] hover:file:bg-[#E8F0ED] file:font-medium file:cursor-pointer">
                 </div>
 
                 <!-- Actif -->
                 <div class="flex items-center gap-3">
                     <input type="checkbox" name="is_active" value="1" id="is_active"
                            {{ $globalDocument->is_active ? 'checked' : '' }}
-                           class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                           class="rounded border-gray-300 text-[#1B3C35] focus:ring-[#2D5A4E]">
                     <label for="is_active" class="text-sm text-gray-700">Document actif (visible par les employés)</label>
                 </div>
             </div>
@@ -96,7 +96,7 @@
                 <a href="{{ route('admin.global-documents.index') }}"
                    class="px-4 py-2.5 text-gray-600 hover:text-gray-800 font-medium transition">Annuler</a>
                 <button type="submit"
-                        class="px-6 py-2.5 text-white font-semibold rounded-xl transition-all shadow-lg" style="background: linear-gradient(135deg, #5680E9, #5AB9EA);">
+                        class="px-6 py-2.5 text-white font-semibold rounded-xl transition-all shadow-lg" style="background: linear-gradient(135deg, #1B3C35, #2D5A4E);">
                     <span class="flex items-center gap-2">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>

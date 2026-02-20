@@ -236,6 +236,16 @@ class DashboardController extends Controller
         $currentStreak = 0;
         $lastPresenceDate = null;
 
+        // Récupérer les jours de travail de l'employé (ex: [1, 3, 5] = Lun, Mer, Ven)
+        $workDaysArray = $user->getWorkDayNumbers();
+        $workDaysPerWeek = count($workDaysArray);
+
+        // Si pas de jours de travail configurés, fallback sur lundi-vendredi
+        if (empty($workDaysArray)) {
+            $workDaysArray = [1, 2, 3, 4, 5];
+            $workDaysPerWeek = 5;
+        }
+
         // Récupérer toutes les présences triées par date
         $presences = $user->presences()
             ->orderBy('date', 'desc')
@@ -249,6 +259,7 @@ class DashboardController extends Controller
                 'current' => 0,
                 'best' => 0,
                 'last_date' => null,
+                'work_days_per_week' => $workDaysPerWeek,
             ];
         }
 
@@ -257,19 +268,19 @@ class DashboardController extends Controller
         // Calculer la série actuelle
         $checkDate = now()->format('Y-m-d');
 
-        // Si pas de présence aujourd'hui, vérifier hier
+        // Si pas de présence aujourd'hui, vérifier le jour ouvré précédent
         if (! $presences->contains($checkDate)) {
             $checkDate = now()->subDay()->format('Y-m-d');
         }
 
-        // Compter les jours consécutifs (en ignorant les weekends)
+        // Compter les jours consécutifs (en ignorant les jours non travaillés)
         while (true) {
             $carbonDate = Carbon::parse($checkDate);
+            $dayOfWeek = $carbonDate->dayOfWeekIso; // 1=Lundi ... 7=Dimanche
 
-            // Ignorer les weekends
-            if ($carbonDate->isWeekend()) {
+            // Ignorer les jours qui ne sont pas des jours de travail
+            if (! in_array($dayOfWeek, $workDaysArray)) {
                 $checkDate = $carbonDate->subDay()->format('Y-m-d');
-
                 continue;
             }
 
@@ -286,17 +297,18 @@ class DashboardController extends Controller
             }
         }
 
-        // Calculer la meilleure série (simplifié)
-        $bestStreak = max($currentStreak, $this->calculateBestStreak($presences));
+        // Calculer la meilleure série
+        $bestStreak = max($currentStreak, $this->calculateBestStreak($presences, $workDaysArray));
 
         return [
             'current' => $currentStreak,
             'best' => $bestStreak,
             'last_date' => $lastPresenceDate,
+            'work_days_per_week' => $workDaysPerWeek,
         ];
     }
 
-    private function calculateBestStreak($presences): int
+    private function calculateBestStreak($presences, array $workDaysArray = [1, 2, 3, 4, 5]): int
     {
         if ($presences->isEmpty()) {
             return 0;
@@ -313,17 +325,18 @@ class DashboardController extends Controller
                 $prevDate = Carbon::parse($dates[$i - 1]);
                 $currDate = Carbon::parse($dates[$i]);
 
-                // Calculer la différence en jours ouvrés
-                $diff = 0;
+                // Calculer la différence en jours de travail manqués entre les deux dates
+                $missedWorkDays = 0;
                 $checkDate = $prevDate->copy()->addDay();
                 while ($checkDate < $currDate) {
-                    if (! $checkDate->isWeekend()) {
-                        $diff++;
+                    $dayOfWeek = $checkDate->dayOfWeekIso;
+                    if (in_array($dayOfWeek, $workDaysArray)) {
+                        $missedWorkDays++;
                     }
                     $checkDate->addDay();
                 }
 
-                if ($diff === 0 || ($diff === 1 && $prevDate->isFriday() && $currDate->isMonday())) {
+                if ($missedWorkDays === 0) {
                     $currentStreak++;
                 } else {
                     $bestStreak = max($bestStreak, $currentStreak);
@@ -407,9 +420,15 @@ class DashboardController extends Controller
 
     private function getMonthlyGoals($user): array
     {
-        // Jours ouvrés du mois
-        $workingDays = $this->getWorkingDaysInMonth(now()->month, now()->year);
-        $workingDaysSoFar = $this->getWorkingDaysSoFar();
+        // Récupérer les jours de travail de l'employé
+        $userWorkDays = $user->getWorkDayNumbers();
+        if (empty($userWorkDays)) {
+            $userWorkDays = [1, 2, 3, 4, 5];
+        }
+
+        // Jours ouvrés du mois (basés sur les jours de travail de l'employé)
+        $workingDays = $this->getWorkingDaysInMonth(now()->month, now()->year, $userWorkDays);
+        $workingDaysSoFar = $this->getWorkingDaysSoFar($userWorkDays);
 
         // Présences du mois
         $presencesMonth = $user->presences()
@@ -465,14 +484,14 @@ class DashboardController extends Controller
         ];
     }
 
-    private function getWorkingDaysInMonth(int $month, int $year): int
+    private function getWorkingDaysInMonth(int $month, int $year, array $userWorkDays = [1, 2, 3, 4, 5]): int
     {
         $start = Carbon::create($year, $month, 1);
         $end = $start->copy()->endOfMonth();
         $workingDays = 0;
 
         while ($start <= $end) {
-            if (! $start->isWeekend()) {
+            if (in_array($start->dayOfWeekIso, $userWorkDays)) {
                 $workingDays++;
             }
             $start->addDay();
@@ -481,14 +500,14 @@ class DashboardController extends Controller
         return $workingDays;
     }
 
-    private function getWorkingDaysSoFar(): int
+    private function getWorkingDaysSoFar(array $userWorkDays = [1, 2, 3, 4, 5]): int
     {
         $start = now()->startOfMonth();
         $end = now();
         $workingDays = 0;
 
         while ($start <= $end) {
-            if (! $start->isWeekend()) {
+            if (in_array($start->dayOfWeekIso, $userWorkDays)) {
                 $workingDays++;
             }
             $start->addDay();

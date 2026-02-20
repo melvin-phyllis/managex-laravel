@@ -1,7 +1,7 @@
 ﻿<x-layouts.admin>
     <div class="space-y-6">
         <!-- Header avec gradient -->
-        <div class="relative overflow-hidden rounded-2xl shadow-xl" style="background: linear-gradient(135deg, #5680E9, #84CEEB);">
+        <div class="relative overflow-hidden rounded-2xl shadow-xl" style="background: linear-gradient(135deg, #1B3C35, #3D7A6A);">
             <div class="absolute inset-0 bg-black/10"></div>
             <div class="absolute -top-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
             <div class="absolute -bottom-24 -left-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
@@ -51,7 +51,7 @@
             <!-- Total Stagiaires -->
             <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
                 <div class="flex items-center gap-3">
-                    <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg" style="background: linear-gradient(135deg, #5680E9, #5AB9EA); box-shadow: 0 10px 15px -3px rgba(86, 128, 233, 0.3);">
+                    <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg" style="background: linear-gradient(135deg, #1B3C35, #2D5A4E); box-shadow: 0 10px 15px -3px rgba(27, 60, 53, 0.3);">
                         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
                         </svg>
@@ -68,7 +68,7 @@
             <!-- évaluations cette semaine -->
             <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
                 <div class="flex items-center gap-3">
-                    <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg" style="background: linear-gradient(135deg, #84CEEB, #5AB9EA); box-shadow: 0 10px 15px -3px rgba(132, 206, 235, 0.3);">
+                    <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg" style="background: linear-gradient(135deg, #3D7A6A, #2D5A4E); box-shadow: 0 10px 15px -3px rgba(132, 206, 235, 0.3);">
                         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
                         </svg>
@@ -83,7 +83,7 @@
             <!-- Score moyen -->
             <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
                 <div class="flex items-center gap-3">
-                    <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg" style="background: linear-gradient(135deg, #5680E9, #84CEEB); box-shadow: 0 10px 15px -3px rgba(86, 128, 233, 0.3);">
+                    <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg" style="background: linear-gradient(135deg, #1B3C35, #3D7A6A); box-shadow: 0 10px 15px -3px rgba(27, 60, 53, 0.3);">
                         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
                         </svg>
@@ -100,7 +100,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <!-- Distribution des notes -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                <div class="px-5 py-4" style="background: linear-gradient(135deg, #5680E9, #5AB9EA);">
+                <div class="px-5 py-4" style="background: linear-gradient(135deg, #1B3C35, #2D5A4E);">
                     <h3 class="text-white font-semibold flex items-center gap-2">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"/>
@@ -118,7 +118,7 @@
 
             <!-- évaluations récentes -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                <div class="px-5 py-4 flex items-center justify-between" style="background: linear-gradient(135deg, #5680E9, #5AB9EA);">
+                <div class="px-5 py-4 flex items-center justify-between" style="background: linear-gradient(135deg, #1B3C35, #2D5A4E);">
                     <h3 class="text-white font-semibold flex items-center gap-2">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
@@ -135,24 +135,24 @@
                             @php
                                 $gradeConfig = [
                                     'A' => [
-                                        'bg' => 'rgba(90, 185, 234, 0.1)',
-                                        'text' => '#5AB9EA',
-                                        'gradient' => 'linear-gradient(135deg, #5AB9EA, #84CEEB)'
+                                        'bg' => 'rgba(45, 90, 78, 0.1)',
+                                        'text' => '#2D5A4E',
+                                        'gradient' => 'linear-gradient(135deg, #2D5A4E, #3D7A6A)'
                                     ],
                                     'B' => [
                                         'bg' => 'rgba(132, 206, 235, 0.1)',
-                                        'text' => '#84CEEB',
-                                        'gradient' => 'linear-gradient(135deg, #84CEEB, #5AB9EA)'
+                                        'text' => '#3D7A6A',
+                                        'gradient' => 'linear-gradient(135deg, #3D7A6A, #2D5A4E)'
                                     ],
                                     'C' => [
-                                        'bg' => 'rgba(86, 128, 233, 0.1)',
-                                        'text' => '#5680E9',
-                                        'gradient' => 'linear-gradient(135deg, #5680E9, #5AB9EA)'
+                                        'bg' => 'rgba(27, 60, 53, 0.1)',
+                                        'text' => '#1B3C35',
+                                        'gradient' => 'linear-gradient(135deg, #1B3C35, #2D5A4E)'
                                     ],
                                     'D' => [
-                                        'bg' => 'rgba(136, 96, 208, 0.1)',
-                                        'text' => '#8860D0',
-                                        'gradient' => 'linear-gradient(135deg, #8860D0, #5680E9)'
+                                        'bg' => 'rgba(200, 169, 110, 0.1)',
+                                        'text' => '#C8A96E',
+                                        'gradient' => 'linear-gradient(135deg, #C8A96E, #1B3C35)'
                                     ],
                                     'E' => [
                                         'bg' => 'rgba(107, 114, 128, 0.1)',
@@ -194,7 +194,7 @@
 
         <!-- Liste des Stagiaires -->
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-            <div class="px-5 py-4 flex items-center justify-between" style="background: linear-gradient(135deg, #5680E9, #5AB9EA);">
+            <div class="px-5 py-4 flex items-center justify-between" style="background: linear-gradient(135deg, #1B3C35, #2D5A4E);">
                 <h3 class="text-white font-semibold flex items-center gap-2">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
@@ -219,10 +219,10 @@
                     </thead>
                     <tbody class="divide-y divide-gray-100">
                         @forelse($interns as $intern)
-                            <tr class="hover:bg-blue-50/30 transition-colors">
+                            <tr class="hover:bg-[#F0F5F3]/30 transition-colors">
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="flex items-center gap-3">
-                                        <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-sm flex-shrink-0 shadow-md" style="background: linear-gradient(135deg, #5680E9, #84CEEB); box-shadow: 0 4px 6px -1px rgba(86, 128, 233, 0.3);">
+                                        <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-sm flex-shrink-0 shadow-md" style="background: linear-gradient(135deg, #1B3C35, #3D7A6A); box-shadow: 0 4px 6px -1px rgba(27, 60, 53, 0.3);">
                                             {{ strtoupper(substr($intern->name, 0, 2)) }}
                                         </div>
                                         <div>
@@ -245,7 +245,7 @@
                                 </td>
 
                                 <td class="px-6 py-4 text-center">
-                                    <span class="inline-flex items-center justify-center w-8 h-8 rounded-lg font-bold text-sm" style="background-color: rgba(90, 185, 234, 0.15); color: #5AB9EA;">
+                                    <span class="inline-flex items-center justify-center w-8 h-8 rounded-lg font-bold text-sm" style="background-color: rgba(45, 90, 78, 0.15); color: #2D5A4E;">
                                         {{ $intern->internEvaluations->count() }}
                                     </span>
                                 </td>
@@ -255,20 +255,20 @@
                                             $lastEval = $intern->internEvaluations->first();
                                             $gradeConfig = [
                                                 'A' => [
-                                                    'bg' => 'rgba(90, 185, 234, 0.1)',
-                                                    'text' => '#5AB9EA'
+                                                    'bg' => 'rgba(45, 90, 78, 0.1)',
+                                                    'text' => '#2D5A4E'
                                                 ],
                                                 'B' => [
                                                     'bg' => 'rgba(132, 206, 235, 0.1)',
-                                                    'text' => '#84CEEB'
+                                                    'text' => '#3D7A6A'
                                                 ],
                                                 'C' => [
-                                                    'bg' => 'rgba(86, 128, 233, 0.1)',
-                                                    'text' => '#5680E9'
+                                                    'bg' => 'rgba(27, 60, 53, 0.1)',
+                                                    'text' => '#1B3C35'
                                                 ],
                                                 'D' => [
-                                                    'bg' => 'rgba(136, 96, 208, 0.1)',
-                                                    'text' => '#8860D0'
+                                                    'bg' => 'rgba(200, 169, 110, 0.1)',
+                                                    'text' => '#C8A96E'
                                                 ],
                                                 'E' => [
                                                     'bg' => 'rgba(107, 114, 128, 0.1)',
@@ -287,12 +287,12 @@
                                 </td>
                                 <td class="px-6 py-4 text-right">
                                     <a href="{{ route('admin.intern-evaluations.create', $intern) }}" 
-                                       class="inline-flex items-center px-3 py-2 text-sm font-medium text-white rounded-lg transition-all shadow-md mr-2" style="background: linear-gradient(135deg, #84CEEB, #5AB9EA); box-shadow: 0 4px 6px -1px rgba(90, 185, 234, 0.3);" onmouseover="this.style.filter='brightness(1.1)'" onmouseout="this.style.filter=''">
+                                       class="inline-flex items-center px-3 py-2 text-sm font-medium text-white rounded-lg transition-all shadow-md mr-2" style="background: linear-gradient(135deg, #3D7A6A, #2D5A4E); box-shadow: 0 4px 6px -1px rgba(45, 90, 78, 0.3);" onmouseover="this.style.filter='brightness(1.1)'" onmouseout="this.style.filter=''">
                                         <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                                         Évaluer
                                     </a>
                                     <a href="{{ route('admin.intern-evaluations.show', $intern) }}" 
-                                       class="inline-flex items-center px-4 py-2 text-sm font-medium text-white rounded-lg transition-all shadow-md" style="background: linear-gradient(135deg, #5680E9, #5AB9EA); box-shadow: 0 4px 6px -1px rgba(86, 128, 233, 0.3);" onmouseover="this.style.filter='brightness(1.1)'" onmouseout="this.style.filter=''">
+                                       class="inline-flex items-center px-4 py-2 text-sm font-medium text-white rounded-lg transition-all shadow-md" style="background: linear-gradient(135deg, #1B3C35, #2D5A4E); box-shadow: 0 4px 6px -1px rgba(27, 60, 53, 0.3);" onmouseover="this.style.filter='brightness(1.1)'" onmouseout="this.style.filter=''">
                                         <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
@@ -305,8 +305,8 @@
                             <tr>
                                 <td colspan="6" class="px-6 py-16 text-center">
                                     <div class="flex flex-col items-center">
-                                        <div class="w-20 h-20 rounded-full flex items-center justify-center mb-4" style="background: linear-gradient(135deg, rgba(86, 128, 233, 0.1), rgba(132, 206, 235, 0.1));">
-                                            <svg class="w-10 h-10 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <div class="w-20 h-20 rounded-full flex items-center justify-center mb-4" style="background: linear-gradient(135deg, rgba(27, 60, 53, 0.1), rgba(132, 206, 235, 0.1));">
+                                            <svg class="w-10 h-10 text-[#D4BC8B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
                                             </svg>
                                         </div>

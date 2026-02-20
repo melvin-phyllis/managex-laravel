@@ -1,13 +1,13 @@
-ï»¿<x-layouts.employee>
+<x-layouts.employee>
     <div class="space-y-6">
         <!-- Header avec Tolia Blue -->
-        <div class="relative overflow-hidden rounded-2xl p-6 text-white shadow-xl" style="background-color: #3B8BEB;">
+        <div class="relative overflow-hidden rounded-2xl p-6 text-white shadow-xl" style="background-color: #1B3C35;">
             <div class="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full" style="transform: translate(30%, -50%);"></div>
             <div class="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full" style="transform: translate(-30%, 50%);"></div>
             
             <div class="relative flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <h1 class="text-2xl font-bold mb-1">Nouvelle demande de congÃ©</h1>
+                    <h1 class="text-2xl font-bold mb-1">Nouvelle demande de congé</h1>
                     <p style="color: #C4DBF6;">Soumettre une demande pour approbation</p>
                 </div>
                 <a href="{{ route('employee.leaves.index') }}" 
@@ -24,7 +24,7 @@
         <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-100" style="background-color: rgba(231, 227, 212, 0.3);">
                 <h3 class="font-semibold text-gray-800 flex items-center gap-2">
-                    <svg class="w-5 h-5" style="color: #3B8BEB;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-5 h-5" style="color: #1B3C35;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                     </svg>
                     Informations de la demande
@@ -34,28 +34,28 @@
             <form action="{{ route('employee.leaves.store') }}" method="POST" class="p-6 space-y-6">
                 @csrf
 
-                <!-- Type de congÃ© -->
+                <!-- Type de congé -->
                 <div x-data="{ selectedType: '{{ old('type', '') }}' }">
-                    <label class="block text-sm font-medium text-gray-700 mb-3">Type de congÃ© *</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-3">Type de congé *</label>
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                        <!-- CongÃ© payÃ© -->
+                        <!-- Congé payé -->
                         <label class="relative cursor-pointer" @click="selectedType = 'conge'">
                             <input type="radio" name="type" value="conge" x-model="selectedType" class="sr-only" required>
                             <div class="p-4 border-2 rounded-xl transition-all"
-                                 :class="selectedType === 'conge' ? 'border-[#3B8BEB] ring-2 ring-[#3B8BEB] ring-offset-2' : 'border-gray-200 hover:bg-gray-50'"
-                                 :style="selectedType === 'conge' ? 'background-color: rgba(59, 139, 235, 0.1)' : ''">
+                                 :class="selectedType === 'conge' ? 'border-[#1B3C35] ring-2 ring-[#1B3C35] ring-offset-2' : 'border-gray-200 hover:bg-gray-50'"
+                                 :style="selectedType === 'conge' ? 'background-color: rgba(27, 60, 53, 0.1)' : ''">
                                 <div class="flex items-center gap-3">
-                                    <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background-color: #3B8BEB;">
+                                    <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background-color: #1B3C35;">
                                         <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
                                         </svg>
                                     </div>
                                     <div>
-                                        <p class="font-semibold text-gray-900">CongÃ© payÃ©</p>
+                                        <p class="font-semibold text-gray-900">Congé payé</p>
                                         <p class="text-xs text-gray-500">Vacances, repos</p>
                                     </div>
                                     <div x-show="selectedType === 'conge'" class="ml-auto">
-                                        <svg class="w-6 h-6" style="color: #3B8BEB;" fill="currentColor" viewBox="0 0 20 20">
+                                        <svg class="w-6 h-6" style="color: #1B3C35;" fill="currentColor" viewBox="0 0 20 20">
                                             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
                                         </svg>
                                     </div>
@@ -63,24 +63,24 @@
                             </div>
                         </label>
                         
-                        <!-- ArrÃªt maladie -->
+                        <!-- Arrêt maladie -->
                         <label class="relative cursor-pointer" @click="selectedType = 'maladie'">
                             <input type="radio" name="type" value="maladie" x-model="selectedType" class="sr-only">
                             <div class="p-4 border-2 rounded-xl transition-all"
-                                 :class="selectedType === 'maladie' ? 'border-[#B23850] ring-2 ring-[#B23850] ring-offset-2' : 'border-gray-200 hover:bg-gray-50'"
-                                 :style="selectedType === 'maladie' ? 'background-color: rgba(178, 56, 80, 0.1)' : ''">
+                                 :class="selectedType === 'maladie' ? 'border-[#C8A96E] ring-2 ring-[#C8A96E] ring-offset-2' : 'border-gray-200 hover:bg-gray-50'"
+                                 :style="selectedType === 'maladie' ? 'background-color: rgba(200, 169, 110, 0.1)' : ''">
                                 <div class="flex items-center gap-3">
-                                    <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background-color: #B23850;">
+                                    <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background-color: #C8A96E;">
                                         <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
                                         </svg>
                                     </div>
                                     <div>
-                                        <p class="font-semibold text-gray-900">ArrÃªt maladie</p>
-                                        <p class="text-xs text-gray-500">Raison mÃ©dicale</p>
+                                        <p class="font-semibold text-gray-900">Arrêt maladie</p>
+                                        <p class="text-xs text-gray-500">Raison médicale</p>
                                     </div>
                                     <div x-show="selectedType === 'maladie'" class="ml-auto">
-                                        <svg class="w-6 h-6" style="color: #B23850;" fill="currentColor" viewBox="0 0 20 20">
+                                        <svg class="w-6 h-6" style="color: #C8A96E;" fill="currentColor" viewBox="0 0 20 20">
                                             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
                                         </svg>
                                     </div>
@@ -92,20 +92,20 @@
                         <label class="relative cursor-pointer" @click="selectedType = 'autre'">
                             <input type="radio" name="type" value="autre" x-model="selectedType" class="sr-only">
                             <div class="p-4 border-2 rounded-xl transition-all"
-                                 :class="selectedType === 'autre' ? 'border-[#8590AA] ring-2 ring-[#8590AA] ring-offset-2' : 'border-gray-200 hover:bg-gray-50'"
+                                 :class="selectedType === 'autre' ? 'border-[#5C6E68] ring-2 ring-[#5C6E68] ring-offset-2' : 'border-gray-200 hover:bg-gray-50'"
                                  :style="selectedType === 'autre' ? 'background-color: rgba(133, 144, 170, 0.1)' : ''">
                                 <div class="flex items-center gap-3">
-                                    <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background-color: #8590AA;">
+                                    <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background-color: #5C6E68;">
                                         <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                                         </svg>
                                     </div>
                                     <div>
                                         <p class="font-semibold text-gray-900">Autre</p>
-                                        <p class="text-xs text-gray-500">Ã‰vÃ©nement familial...</p>
+                                        <p class="text-xs text-gray-500">Événement familial...</p>
                                     </div>
                                     <div x-show="selectedType === 'autre'" class="ml-auto">
-                                        <svg class="w-6 h-6" style="color: #8590AA;" fill="currentColor" viewBox="0 0 20 20">
+                                        <svg class="w-6 h-6" style="color: #5C6E68;" fill="currentColor" viewBox="0 0 20 20">
                                             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
                                         </svg>
                                     </div>
@@ -114,7 +114,7 @@
                         </label>
                     </div>
                     @error('type')
-                        <p class="mt-2 text-sm flex items-center gap-1" style="color: #B23850;">
+                        <p class="mt-2 text-sm flex items-center gap-1" style="color: #C8A96E;">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                             </svg>
@@ -126,7 +126,7 @@
                 <!-- Dates -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <label for="date_debut" class="block text-sm font-medium text-gray-700 mb-2">Date de dÃ©but *</label>
+                        <label for="date_debut" class="block text-sm font-medium text-gray-700 mb-2">Date de début *</label>
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -137,10 +137,10 @@
                                    value="{{ old('date_debut') }}" 
                                    required 
                                    min="{{ now()->format('Y-m-d') }}" 
-                                   class="w-full pl-10 rounded-xl border-gray-300 focus:border-[#3B8BEB] focus:ring-[#3B8BEB] @error('date_debut') border-red-500 @enderror">
+                                   class="w-full pl-10 rounded-xl border-gray-300 focus:border-[#1B3C35] focus:ring-[#1B3C35] @error('date_debut') border-red-500 @enderror">
                         </div>
                         @error('date_debut')
-                            <p class="mt-2 text-sm" style="color: #B23850;">{{ $message }}</p>
+                            <p class="mt-2 text-sm" style="color: #C8A96E;">{{ $message }}</p>
                         @enderror
                     </div>
 
@@ -156,25 +156,25 @@
                                    value="{{ old('date_fin') }}" 
                                    required 
                                    min="{{ now()->format('Y-m-d') }}" 
-                                   class="w-full pl-10 rounded-xl border-gray-300 focus:border-[#3B8BEB] focus:ring-[#3B8BEB] @error('date_fin') border-red-500 @enderror">
+                                   class="w-full pl-10 rounded-xl border-gray-300 focus:border-[#1B3C35] focus:ring-[#1B3C35] @error('date_fin') border-red-500 @enderror">
                         </div>
                         @error('date_fin')
-                            <p class="mt-2 text-sm" style="color: #B23850;">{{ $message }}</p>
+                            <p class="mt-2 text-sm" style="color: #C8A96E;">{{ $message }}</p>
                         @enderror
                     </div>
                 </div>
 
-                <!-- DurÃ©e calculÃ©e -->
-                <div id="duration-info" class="hidden p-4 rounded-xl" style="background-color: rgba(59, 139, 235, 0.1); border: 1px solid rgba(59, 139, 235, 0.2);">
+                <!-- Durée calculée -->
+                <div id="duration-info" class="hidden p-4 rounded-xl" style="background-color: rgba(27, 60, 53, 0.1); border: 1px solid rgba(27, 60, 53, 0.2);">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background-color: rgba(59, 139, 235, 0.2);">
-                            <svg class="w-5 h-5" style="color: #3B8BEB;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background-color: rgba(27, 60, 53, 0.2);">
+                            <svg class="w-5 h-5" style="color: #1B3C35;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                             </svg>
                         </div>
                         <div>
-                            <p class="text-sm font-medium" style="color: #3B8BEB;">DurÃ©e de la demande</p>
-                            <p class="text-lg font-bold" style="color: #3B8BEB;" id="duration-text">-</p>
+                            <p class="text-sm font-medium" style="color: #1B3C35;">Durée de la demande</p>
+                            <p class="text-lg font-bold" style="color: #1B3C35;" id="duration-text">-</p>
                         </div>
                     </div>
                 </div>
@@ -183,24 +183,24 @@
                 <div>
                     <label for="motif" class="block text-sm font-medium text-gray-700 mb-2">Motif de la demande *</label>
                     <textarea name="motif" id="motif" rows="4" required 
-                              class="w-full rounded-xl border-gray-300 focus:border-[#3B8BEB] focus:ring-[#3B8BEB] @error('motif') border-red-500 @enderror" 
+                              class="w-full rounded-xl border-gray-300 focus:border-[#1B3C35] focus:ring-[#1B3C35] @error('motif') border-red-500 @enderror" 
                               placeholder="Expliquez la raison de votre demande...">{{ old('motif') }}</textarea>
                     @error('motif')
-                        <p class="mt-2 text-sm" style="color: #B23850;">{{ $message }}</p>
+                        <p class="mt-2 text-sm" style="color: #C8A96E;">{{ $message }}</p>
                     @enderror
                 </div>
 
                 <!-- Info -->
-                <div class="p-4 rounded-xl" style="background-color: rgba(59, 139, 235, 0.1); border: 1px solid rgba(59, 139, 235, 0.2);">
+                <div class="p-4 rounded-xl" style="background-color: rgba(27, 60, 53, 0.1); border: 1px solid rgba(27, 60, 53, 0.2);">
                     <div class="flex gap-3">
-                        <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background-color: rgba(59, 139, 235, 0.2);">
-                            <svg class="w-5 h-5" style="color: #3B8BEB;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background-color: rgba(27, 60, 53, 0.2);">
+                            <svg class="w-5 h-5" style="color: #1B3C35;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                             </svg>
                         </div>
                         <div>
-                            <p class="text-sm font-medium" style="color: #3B8BEB;">Information</p>
-                            <p class="text-sm mt-1" style="color: rgba(59, 139, 235, 0.8);">Votre demande sera envoyÃ©e Ã  l'administrateur pour approbation. Vous recevrez une notification dÃ¨s qu'une dÃ©cision sera prise.</p>
+                            <p class="text-sm font-medium" style="color: #1B3C35;">Information</p>
+                            <p class="text-sm mt-1" style="color: rgba(27, 60, 53, 0.8);">Votre demande sera envoyée à l'administrateur pour approbation. Vous recevrez une notification dès qu'une décision sera prise.</p>
                         </div>
                     </div>
                 </div>
@@ -212,7 +212,7 @@
                         Annuler
                     </a>
                     <button type="submit" 
-                            class="w-full sm:w-auto px-6 py-2.5 text-white font-medium rounded-xl transition-colors shadow-lg hover:shadow-xl inline-flex items-center justify-center gap-2" style="background-color: #3B8BEB;">
+                            class="w-full sm:w-auto px-6 py-2.5 text-white font-medium rounded-xl transition-colors shadow-lg hover:shadow-xl inline-flex items-center justify-center gap-2" style="background-color: #1B3C35;">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
                         </svg>

@@ -1,7 +1,7 @@
-<x-layouts.admin>
+﻿<x-layouts.admin>
     <div class="max-w-4xl mx-auto space-y-6">
         <!-- Header avec gradient -->
-        <div class="relative overflow-hidden rounded-2xl shadow-xl animate-fade-in-up" style="background: linear-gradient(135deg, #5680E9, #84CEEB) !important;">
+        <div class="relative overflow-hidden rounded-2xl shadow-xl animate-fade-in-up" style="background: linear-gradient(135deg, #1B3C35, #3D7A6A) !important;">
             <div class="absolute inset-0 bg-black/10"></div>
             <div class="absolute -top-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
             <div class="absolute -bottom-24 -left-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
@@ -27,7 +27,7 @@
                         </div>
                     </div>
                     <a href="{{ route('admin.global-documents.download', $globalDocument) }}"
-                       class="px-5 py-2.5 bg-white font-semibold rounded-xl hover:bg-purple-50 transition-all shadow-lg flex items-center gap-2" style="color: #5680E9;">
+                       class="px-5 py-2.5 bg-white font-semibold rounded-xl hover:bg-[#FBF7F0] transition-all shadow-lg flex items-center gap-2" style="color: #1B3C35;">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
                         </svg>
@@ -41,7 +41,7 @@
             <!-- Détails du document -->
             <div class="md:col-span-2">
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                    <div class="px-6 py-4 border-b border-gray-100" style="background: linear-gradient(135deg, #5680E9, #84CEEB);">
+                    <div class="px-6 py-4 border-b border-gray-100" style="background: linear-gradient(135deg, #1B3C35, #3D7A6A);">
                         <h2 class="font-semibold text-white flex items-center gap-2">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
@@ -54,7 +54,7 @@
                             <div>
                                 <span class="text-gray-500">Fichier :</span>
                                 <p class="font-medium text-gray-900 flex items-center gap-2 mt-1">
-                                    <svg class="w-5 h-5" style="color: #5680E9;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-5 h-5" style="color: #1B3C35;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
                                     </svg>
                                     {{ $globalDocument->original_filename }}
@@ -84,7 +84,7 @@
                         <div class="pt-4 border-t border-gray-100">
                             <span class="text-sm text-gray-500">Statut :</span>
                             @if($globalDocument->is_active)
-                                <span class="ml-2 px-2 py-1 text-xs font-medium rounded-full" style="background-color: #5680E920; color: #5680E9;">Actif</span>
+                                <span class="ml-2 px-2 py-1 text-xs font-medium rounded-full" style="background-color: #1B3C3520; color: #1B3C35;">Actif</span>
                             @else
                                 <span class="ml-2 px-2 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-500">Inactif</span>
                             @endif
@@ -96,7 +96,7 @@
             <!-- Statistiques d'accusé -->
             <div>
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                    <div class="px-6 py-4 border-b border-gray-100" style="background: linear-gradient(135deg, #8860D0, #C1C8E4);">
+                    <div class="px-6 py-4 border-b border-gray-100" style="background: linear-gradient(135deg, #C8A96E, #D4BC8B);">
                         <h2 class="font-semibold text-white flex items-center gap-2">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
@@ -112,12 +112,12 @@
                         @endphp
 
                         <div class="text-center mb-4">
-                            <div class="text-4xl font-bold" style="color: #5680E9;">{{ $acknowledgedCount }}/{{ $totalEmployees }}</div>
+                            <div class="text-4xl font-bold" style="color: #1B3C35;">{{ $acknowledgedCount }}/{{ $totalEmployees }}</div>
                             <p class="text-gray-500 text-sm mt-1">employés ont accusé réception</p>
                         </div>
 
                         <div class="w-full bg-gray-200 rounded-full h-2 mb-4">
-                            <div class="h-2 rounded-full transition-all" style="width: {{ $percentage }}%; background: linear-gradient(90deg, #5680E9, #84CEEB);"></div>
+                            <div class="h-2 rounded-full transition-all" style="width: {{ $percentage }}%; background: linear-gradient(90deg, #1B3C35, #3D7A6A);"></div>
                         </div>
 
                         @if($usersNotAcknowledged->count() > 0)
@@ -126,7 +126,7 @@
                                 <div class="space-y-2 max-h-40 overflow-y-auto">
                                     @foreach($usersNotAcknowledged->take(10) as $user)
                                         <div class="flex items-center gap-2 text-sm">
-                                            <div class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium text-white" style="background: linear-gradient(135deg, #5680E9, #84CEEB);">
+                                            <div class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium text-white" style="background: linear-gradient(135deg, #1B3C35, #3D7A6A);">
                                                 {{ strtoupper(substr($user->name, 0, 1)) }}
                                             </div>
                                             <span class="text-gray-700">{{ $user->name }}</span>
@@ -138,7 +138,7 @@
                                 </div>
                             </div>
                         @else
-                            <p class="text-center text-sm" style="color: #5680E9;">
+                            <p class="text-center text-sm" style="color: #1B3C35;">
                                 <svg class="w-5 h-5 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                                 </svg>
@@ -153,7 +153,7 @@
         <!-- Actions -->
         <div class="flex justify-between items-center bg-white rounded-xl shadow-sm border border-gray-100 p-4 animate-fade-in-up animation-delay-200">
             <a href="{{ route('admin.global-documents.edit', $globalDocument) }}"
-               class="flex items-center gap-2 font-medium transition hover:opacity-80" style="color: #5680E9;">
+               class="flex items-center gap-2 font-medium transition hover:opacity-80" style="color: #1B3C35;">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                 </svg>
@@ -163,7 +163,7 @@
                   onsubmit="return confirm('Supprimer ce document ?')">
                 @csrf
                 @method('DELETE')
-                <button type="submit" class="flex items-center gap-2 text-red-600 hover:text-red-800 font-medium transition">
+                <button type="submit" class="flex items-center gap-2 text-[#1B3C35] hover:text-[#0F2A25] font-medium transition">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
                     </svg>

@@ -1,7 +1,7 @@
 ﻿<x-layouts.admin>
     <x-slot name="header">
         <!-- Header moderne avec gradient -->
-        <div class="bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 -mx-4 sm:-mx-6 lg:-mx-8 -mt-4 px-4 sm:px-6 lg:px-8 py-6 mb-4">
+        <div class="bg-gradient-to-r from-[#1B3C35] via-[#1B3C35] to-[#2D5A4E] -mx-4 sm:-mx-6 lg:-mx-8 -mt-4 px-4 sm:px-6 lg:px-8 py-6 mb-4">
             <div class="max-w-7xl mx-auto">
                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div class="flex items-center gap-4">
@@ -21,7 +21,7 @@
                                 </div>
                                 <div>
                                     <h2 class="text-xl sm:text-2xl font-bold text-white">{{ $geolocationZone->name }}</h2>
-                                    <p class="text-emerald-100 text-sm mt-0.5">Détails de la zone de géolocalisation</p>
+                                    <p class="text-[#E8F0ED] text-sm mt-0.5">Détails de la zone de géolocalisation</p>
                                 </div>
                             </div>
                         </div>
@@ -50,7 +50,7 @@
                             @endif
                         </div>
                         <a href="{{ route('admin.geolocation-zones.edit', $geolocationZone) }}"
-                           class="inline-flex items-center gap-2 px-4 py-2 bg-white text-emerald-700 font-semibold rounded-lg hover:bg-emerald-50 transition-colors shadow-sm">
+                           class="inline-flex items-center gap-2 px-4 py-2 bg-white text-[#163530] font-semibold rounded-lg hover:bg-[#F0F5F3] transition-colors shadow-sm">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                             </svg>
@@ -73,7 +73,7 @@
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
                     <div class="bg-gradient-to-r from-gray-50 to-white px-5 py-4 border-b border-gray-100">
                         <h3 class="font-semibold text-gray-800 flex items-center gap-2">
-                            <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-5 h-5 text-[#1B3C35]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
                             Informations générales
@@ -94,7 +94,7 @@
                             <div>
                                 <label class="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Adresse</label>
                                 <p class="text-gray-800 flex items-start gap-2">
-                                    <svg class="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-5 h-5 text-[#2D5A4E] flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                     </svg>
@@ -123,7 +123,7 @@
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
                     <div class="bg-gradient-to-r from-gray-50 to-white px-5 py-4 border-b border-gray-100">
                         <h3 class="font-semibold text-gray-800 flex items-center gap-2">
-                            <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-5 h-5 text-[#1B3C35]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
                             </svg>
                             Paramétres GPS
@@ -133,9 +133,9 @@
                     <div class="p-5">
                         <div class="space-y-3">
                             <!-- Latitude -->
-                            <div class="flex items-center gap-4 bg-gradient-to-r from-emerald-50 to-teal-50 rounded-lg p-3 border border-emerald-100">
-                                <div class="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center flex-shrink-0">
-                                    <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div class="flex items-center gap-4 bg-gradient-to-r from-[#F0F5F3] to-[#F0F5F3] rounded-lg p-3 border border-[#E8F0ED]">
+                                <div class="w-10 h-10 bg-[#E8F0ED] rounded-full flex items-center justify-center flex-shrink-0">
+                                    <svg class="w-5 h-5 text-[#1B3C35]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path>
                                     </svg>
                                 </div>
@@ -146,9 +146,9 @@
                             </div>
 
                             <!-- Longitude -->
-                            <div class="flex items-center gap-4 bg-gradient-to-r from-teal-50 to-cyan-50 rounded-lg p-3 border border-teal-100">
-                                <div class="w-10 h-10 bg-teal-100 rounded-full flex items-center justify-center flex-shrink-0">
-                                    <svg class="w-5 h-5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div class="flex items-center gap-4 bg-gradient-to-r from-[#F0F5F3] to-[#F0F5F3] rounded-lg p-3 border border-[#E8F0ED]">
+                                <div class="w-10 h-10 bg-[#E8F0ED] rounded-full flex items-center justify-center flex-shrink-0">
+                                    <svg class="w-5 h-5 text-[#1B3C35]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12M8 12h12M8 17h12M4 7h.01M4 12h.01M4 17h.01"></path>
                                     </svg>
                                 </div>
@@ -159,9 +159,9 @@
                             </div>
 
                             <!-- Rayon -->
-                            <div class="flex items-center gap-4 bg-gradient-to-r from-cyan-50 to-blue-50 rounded-lg p-3 border border-cyan-100">
-                                <div class="w-10 h-10 bg-cyan-100 rounded-full flex items-center justify-center flex-shrink-0">
-                                    <svg class="w-5 h-5 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div class="flex items-center gap-4 bg-gradient-to-r from-[#F0F5F3] to-[#F0F5F3] rounded-lg p-3 border border-[#E8F0ED]">
+                                <div class="w-10 h-10 bg-[#E8F0ED] rounded-full flex items-center justify-center flex-shrink-0">
+                                    <svg class="w-5 h-5 text-[#2D5A4E]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>
                                     </svg>
                                 </div>
@@ -177,7 +177,7 @@
                 <!-- Actions rapides (mobile) -->
                 <div class="flex flex-col gap-3 lg:hidden">
                     <a href="{{ route('admin.geolocation-zones.edit', $geolocationZone) }}"
-                       class="w-full px-4 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-lg text-sm font-semibold hover:from-emerald-700 hover:to-teal-700 transition-all shadow-sm flex items-center justify-center gap-2">
+                       class="w-full px-4 py-3 bg-gradient-to-r from-[#1B3C35] to-[#1B3C35] text-white rounded-lg text-sm font-semibold hover:from-[#163530] hover:to-[#163530] transition-all shadow-sm flex items-center justify-center gap-2">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                         </svg>
@@ -195,7 +195,7 @@
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
                     <div class="bg-gradient-to-r from-gray-50 to-white px-5 py-4 border-b border-gray-100">
                         <h3 class="font-semibold text-gray-800 flex items-center gap-2">
-                            <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-5 h-5 text-[#1B3C35]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>
                             </svg>
                             Visualisation de la zone
@@ -205,8 +205,8 @@
 
                     <div class="p-4">
                         <div id="map" class="rounded-lg border-2 border-gray-200 shadow-inner" style="height: 450px; min-height: 350px;"></div>
-                        <div class="mt-3 flex items-start gap-2 text-sm text-gray-600 bg-emerald-50 p-3 rounded-lg">
-                            <svg class="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                        <div class="mt-3 flex items-start gap-2 text-sm text-gray-600 bg-[#F0F5F3] p-3 rounded-lg">
+                            <svg class="w-5 h-5 text-[#2D5A4E] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
                             </svg>
                             <span>Le cercle représente la zone de <strong>{{ $geolocationZone->radius }} métres</strong> dans laquelle les employés peuvent pointer leur présence.</span>
@@ -224,7 +224,7 @@
                         </a>
                         <div class="flex gap-3">
                             <a href="{{ route('admin.geolocation-zones.edit', $geolocationZone) }}"
-                               class="px-5 py-2.5 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-lg text-sm font-semibold hover:from-emerald-700 hover:to-teal-700 transition-all shadow-sm flex items-center gap-2">
+                               class="px-5 py-2.5 bg-gradient-to-r from-[#1B3C35] to-[#1B3C35] text-white rounded-lg text-sm font-semibold hover:from-[#163530] hover:to-[#163530] transition-all shadow-sm flex items-center gap-2">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                 </svg>

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
@@ -6,13 +6,14 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ config('app.name', 'ManageX') }} - Espace Employé</title>
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
     
     <!-- PWA -->
-    <meta name="theme-color" content="#3B8BEB">
+    <meta name="theme-color" content="#1B3C35">
     <link rel="manifest" href="{{ route('manifest') }}">
     <link rel="apple-touch-icon" href="{{ asset('icons/icon-192x192.png') }}">
     <meta name="mobile-web-app-capable" content="yes">
@@ -142,9 +143,9 @@
         to { opacity: 1; transform: translateY(0) scale(1); }
     }
     #onesignal-custom-prompt .notif-card {
-        background: linear-gradient(135deg, #312e81 0%, #4338ca 50%, #6366f1 100%);
+        background: linear-gradient(135deg, #1B3C35 0%, #2D5A4E 50%, #3D7A6A 100%);
         border-radius: 20px; padding: 28px 24px; color: white;
-        box-shadow: 0 25px 60px -12px rgba(67, 56, 202, 0.5), 0 0 0 1px rgba(255,255,255,0.1) inset;
+        box-shadow: 0 25px 60px -12px rgba(27, 60, 53, 0.5), 0 0 0 1px rgba(255,255,255,0.1) inset;
         backdrop-filter: blur(10px); position: relative; overflow: hidden;
     }
     #onesignal-custom-prompt .notif-card::before {
@@ -176,7 +177,7 @@
     }
     #onesignal-custom-prompt .btn-accept {
         width: 100%; padding: 12px 20px; border-radius: 12px;
-        background: white; color: #4338ca; font-weight: 600;
+        background: white; color: #2D5A4E; font-weight: 600;
         font-size: 15px; border: none; cursor: pointer;
         transition: all 0.2s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
@@ -205,7 +206,7 @@
     </style>
     <div id="onesignal-custom-prompt" class="hidden">
         <div class="notif-card">
-            <button class="close-btn" onclick="dismissNotifications()">✕</button>
+            <button class="close-btn" onclick="dismissNotifications()">?</button>
             <div class="bell-icon">
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
@@ -214,19 +215,19 @@
             </div>
             <!-- Default message (Chrome, Firefox, Safari macOS, PWA) -->
             <div id="default-notif-message">
-                <h3>🔔 Restez informé !</h3>
-                <p>Activez les notifications pour ne rien manquer : pointage, tâches, congés et messages importants.</p>
+                <h3>?? Restez informé !</h3>
+                <p>Activez les notifications pour ne rien manquer : pointage, téches, congés et messages importants.</p>
                 <button class="btn-accept" onclick="acceptNotifications()">
-                    ✓ Activer les notifications
+                    ? Activer les notifications
                 </button>
             </div>
             <!-- iOS Safari message (not in PWA mode) -->
             <div id="ios-pwa-message" class="hidden">
-                <h3>📱 Installer ManageX</h3>
-                <p>Pour recevoir les notifications sur iPhone/iPad, ajoutez ManageX à votre écran d'accueil :<br>
-                <strong>Appuyez sur</strong> <span style="font-size:18px">⬆️</span> <strong>puis "Sur l'écran d'accueil"</strong></p>
+                <h3>?? Installer ManageX</h3>
+                <p>Pour recevoir les notifications sur iPhone/iPad, ajoutez ManageX é votre écran d'accueil :<br>
+                <strong>Appuyez sur</strong> <span style="font-size:18px">??</span> <strong>puis "Sur l'écran d'accueil"</strong></p>
                 <button class="btn-accept" onclick="dismissNotifications()">
-                    ✓ J'ai compris
+                    ? J'ai compris
                 </button>
             </div>
             <button class="btn-dismiss" onclick="dismissNotifications()">
@@ -242,8 +243,8 @@
     <div class="min-h-screen bg-gray-50">
         <!-- Decorative Background -->
         <div class="fixed inset-0 overflow-hidden pointer-events-none">
-            <div class="absolute -top-40 -right-40 w-80 h-80 rounded-full blur-3xl" style="background-color: rgba(59, 139, 235, 0.05);"></div>
-            <div class="absolute -bottom-40 -left-40 w-80 h-80 rounded-full blur-3xl" style="background-color: rgba(178, 56, 80, 0.05);"></div>
+            <div class="absolute -top-40 -right-40 w-80 h-80 rounded-full blur-3xl" style="background-color: rgba(27, 60, 53, 0.05);"></div>
+            <div class="absolute -bottom-40 -left-40 w-80 h-80 rounded-full blur-3xl" style="background-color: rgba(200, 169, 110, 0.05);"></div>
         </div>
 
         <!-- Mobile Sidebar Backdrop -->
@@ -251,8 +252,11 @@
 
         <!-- Sidebar -->
         <aside class="fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 transform transition-transform duration-200 ease-in-out lg:translate-x-0 -translate-x-full flex flex-col" id="sidebar">
-            <div class="flex items-center justify-between h-16 px-4" style="background-color: #3B8BEB;">
-                <span class="text-xl font-bold text-white">ManageX</span>
+            <div class="flex items-center justify-between h-16 px-4" style="background-color: #1b3c3505;">
+                <a href="{{ route('employee.dashboard') }}" class="flex items-center gap-2">
+                    <img src="{{ asset('images/logo.png') }}"  alt="ManageX Logo" class="h-25 w-full rounded-lg object-contain">
+                   
+                </a>
                 <button class="lg:hidden p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white transition-colors" 
                         onclick="document.getElementById('sidebar').classList.add('-translate-x-full'); document.getElementById('sidebarBackdrop').classList.add('hidden')">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -363,7 +367,7 @@
                             <button @click="open = !open" @click.away="open = false" 
                                     class="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 transition-colors">
                                 <!-- Avatar -->
-                                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white text-sm font-semibold overflow-hidden">
+                                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-[#1B3C35] to-[#2D5A4E] flex items-center justify-center text-white text-sm font-semibold overflow-hidden">
                                     @if(auth()->user()->avatar && avatar_url(auth()->user()->avatar))
                                         <img src="{{ avatar_url(auth()->user()->avatar) }}" alt="{{ auth()->user()->name }}" class="w-full h-full object-cover" onerror="this.style.display='none'; this.parentElement.textContent=@js(strtoupper(substr(auth()->user()->name, 0, 1)));">
                                     @else
@@ -497,7 +501,7 @@
                         <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
                             <h3 class="text-base font-semibold leading-6 text-gray-900" id="modal-title">Déconnexion</h3>
                             <div class="mt-2">
-                                <p class="text-sm text-gray-500">Êtes-vous sûr de vouloir vous déconnecter ?</p>
+                                <p class="text-sm text-gray-500">étes-vous sér de vouloir vous déconnecter ?</p>
                             </div>
                         </div>
                     </div>
@@ -571,7 +575,7 @@
                     progressBg: 'bg-amber-300/50'
                 },
                 info: {
-                    bg: 'bg-gradient-to-r from-blue-500 to-indigo-600',
+                    bg: 'bg-gradient-to-r from-[#1B3C35] to-[#2D5A4E]',
                     icon: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>`,
                     title: 'Info',
                     progressBg: 'bg-blue-300/50'
@@ -768,10 +772,10 @@
 
             {{-- Header --}}
             <div class="px-6 py-5 border-b border-gray-200 flex-shrink-0"
-                 style="background: linear-gradient(135deg, rgba(59, 139, 235, 0.08), rgba(196, 219, 246, 0.15));">
+                 style="background: linear-gradient(135deg, rgba(27, 60, 53, 0.08), rgba(196, 219, 246, 0.15));">
                 <div class="flex items-center gap-4">
                     <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
-                         style="background: linear-gradient(135deg, #3B8BEB, #2563eb);">
+                         style="background: linear-gradient(135deg, #1B3C35, #2D5A4E);">
                         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                   d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
@@ -787,8 +791,8 @@
             {{-- Contract Actions --}}
             <div class="flex-1 min-h-0 bg-gray-100 p-6 flex flex-col items-center justify-center">
                 <div class="bg-white rounded-xl border border-gray-200 p-8 max-w-md w-full text-center shadow-sm">
-                    <div class="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center" style="background-color: rgba(59, 139, 235, 0.1);">
-                        <svg class="w-8 h-8" style="color: #3B8BEB;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center" style="background-color: rgba(27, 60, 53, 0.1);">
+                        <svg class="w-8 h-8" style="color: #1B3C35;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                         </svg>
                     </div>
@@ -807,7 +811,7 @@
                         </a>
                         <a href="{{ route('employee.documents.download-contract') }}" 
                            class="inline-flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-medium rounded-xl text-white transition-all"
-                           style="background: linear-gradient(135deg, #3B8BEB, #2563eb);">
+                           style="background: linear-gradient(135deg, #1B3C35, #2D5A4E);">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
                             </svg>
@@ -838,7 +842,7 @@
                             <button type="submit"
                                     :disabled="loading"
                                     class="px-6 py-2.5 text-sm font-medium rounded-xl text-white transition-all disabled:opacity-50"
-                                    style="background: linear-gradient(135deg, #3B8BEB, #2563eb); box-shadow: 0 4px 14px rgba(59, 139, 235, 0.4);">
+                                    style="background: linear-gradient(135deg, #1B3C35, #2D5A4E); box-shadow: 0 4px 14px rgba(27, 60, 53, 0.4);">
                                 <span x-show="!loading">Lu et Accepté</span>
                                 <span x-show="loading" x-cloak class="flex items-center gap-2">
                                     <svg class="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
@@ -859,7 +863,7 @@
 
     {{-- OneSignal handles push notifications and service worker --}}
 
-    {{-- 🔔 Alarme globale pré-pointage - fonctionne sur toutes les pages --}}
+    {{-- ?? Alarme globale pré-pointage - fonctionne sur toutes les pages --}}
     <script nonce="{{ $cspNonce ?? '' }}">
     (function() {
         let alarmPlaying = false;
@@ -877,17 +881,17 @@
             bar.id = 'notif-permission-bar';
             bar.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:100001;';
             bar.innerHTML = `
-                <div style="background:linear-gradient(135deg,#3B8BEB,#2563eb);padding:10px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;box-shadow:0 4px 15px rgba(59,139,235,0.4);">
+                <div style="background:linear-gradient(135deg,#1B3C35,#2D5A4E);padding:10px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;box-shadow:0 4px 15px rgba(59,139,235,0.4);">
                     <div style="display:flex;align-items:center;gap:10px;color:white;">
-                        <span style="font-size:20px;">🔔</span>
+                        <span style="font-size:20px;">??</span>
                         <p style="font-size:13px;margin:0;font-weight:500;">Activez les notifications pour recevoir les alertes de pointage sur votre bureau</p>
                     </div>
                     <div style="display:flex;gap:8px;flex-shrink:0;">
-                        <button id="notif-perm-btn" style="background:white;color:#2563eb;padding:6px 16px;border-radius:8px;font-weight:600;font-size:12px;border:none;cursor:pointer;white-space:nowrap;">
-                            ✅ Activer
+                        <button id="notif-perm-btn" style="background:white;color:#2D5A4E;padding:6px 16px;border-radius:8px;font-weight:600;font-size:12px;border:none;cursor:pointer;white-space:nowrap;">
+                            ? Activer
                         </button>
                         <button id="notif-perm-dismiss" style="background:rgba(255,255,255,0.2);color:white;padding:6px 12px;border-radius:8px;font-size:12px;border:none;cursor:pointer;">
-                            ✕
+                            ?
                         </button>
                     </div>
                 </div>
@@ -903,13 +907,13 @@
                             showToast('success', 'Notifications activées ! Vous recevrez les alertes de pointage.', 5000);
                         }
                         // Tester immédiatement
-                        new Notification('✅ Notifications ManageX activées', {
+                        new Notification('? Notifications ManageX activées', {
                             body: 'Vous recevrez les alertes de pointage directement sur votre bureau.',
                             icon: '{{ asset("icons/icon-192x192.png") }}'
                         });
                     } else if (perm === 'denied') {
                         if (typeof showToast === 'function') {
-                            showToast('warning', 'Notifications bloquées. Pour les activer : cliquez sur l\'icône 🔒 dans la barre d\'adresse → Notifications → Autoriser.', 10000);
+                            showToast('warning', 'Notifications bloquées. Pour les activer : cliquez sur l\'icéne ?? dans la barre d\'adresse ? Notifications ? Autoriser.', 10000);
                         }
                     }
                 });
@@ -920,7 +924,7 @@
             });
         }
 
-        // ===== 2. PRÉ-CHECK-IN STATUS =====
+        // ===== 2. PRé-CHECK-IN STATUS =====
         async function checkPreCheckInStatus() {
             try {
                 const resp = await fetch('{{ route("employee.presences.pre-check-in-status") }}', {
@@ -954,7 +958,7 @@
         // ===== 3. ALARM TRIGGER =====
         function triggerAlarm(data) {
             alarmPlaying = true;
-            console.log('[ManageX Alarm] 🔔 TRIGGERING ALARM!');
+            console.log('[ManageX Alarm] ?? TRIGGERING ALARM!');
 
             // Son
             playAlarmSound();
@@ -967,7 +971,7 @@
 
             // Toast comme backup supplémentaire
             if (typeof showToast === 'function') {
-                showToast('warning', '⏰ Il est ' + data.work_start_time + ' — Confirmez votre présence ! Arrivé(e) à ' + data.pre_check_in_time, 15000);
+                showToast('warning', '? Il est ' + data.work_start_time + ' é Confirmez votre présence ! Arrivé(e) é ' + data.pre_check_in_time, 15000);
             }
 
             // Relancer le son toutes les 60 secondes
@@ -1019,8 +1023,8 @@
                 if ('serviceWorker' in navigator) {
                     navigator.serviceWorker.ready.then(function(reg) {
                         console.log('[ManageX Alarm] Sending SW notification');
-                        reg.showNotification('⏰ ManageX — Confirmez votre présence !', {
-                            body: 'Il est ' + data.work_start_time + '. Vous êtes arrivé(e) à ' + data.pre_check_in_time + '. Cliquez pour confirmer.',
+                        reg.showNotification('? ManageX é Confirmez votre présence !', {
+                            body: 'Il est ' + data.work_start_time + '. Vous étes arrivé(e) é ' + data.pre_check_in_time + '. Cliquez pour confirmer.',
                             icon: '{{ asset("icons/icon-192x192.png") }}',
                             badge: '{{ asset("icons/icon-72x72.png") }}',
                             tag: 'pre-checkin-confirm',
@@ -1050,8 +1054,8 @@
         function sendFallbackNotification(data) {
             try {
                 console.log('[ManageX Alarm] Sending fallback Notification');
-                const n = new Notification('⏰ ManageX — Confirmez votre présence !', {
-                    body: 'Il est ' + data.work_start_time + '. Arrivé(e) à ' + data.pre_check_in_time + '.',
+                const n = new Notification('? ManageX é Confirmez votre présence !', {
+                    body: 'Il est ' + data.work_start_time + '. Arrivé(e) é ' + data.pre_check_in_time + '.',
                     icon: '{{ asset("icons/icon-192x192.png") }}',
                     tag: 'pre-checkin-confirm',
                     requireInteraction: true
@@ -1073,14 +1077,14 @@
             b.innerHTML = `
                 <div style="background:linear-gradient(135deg,#059669,#10b981);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;box-shadow:0 4px 20px rgba(5,150,105,0.4);">
                     <div style="display:flex;align-items:center;gap:12px;color:white;">
-                        <span style="font-size:28px;animation:pulse 1s infinite;">⏰</span>
+                        <span style="font-size:28px;animation:pulse 1s infinite;">?</span>
                         <div>
-                            <p style="font-weight:700;font-size:15px;margin:0;">Il est ${data.work_start_time} — Confirmez votre présence !</p>
-                            <p style="font-size:12px;opacity:0.9;margin:3px 0 0;">Arrivé(e) à ${data.pre_check_in_time} · Cliquez pour confirmer votre pointage</p>
+                            <p style="font-weight:700;font-size:15px;margin:0;">Il est ${data.work_start_time} é Confirmez votre présence !</p>
+                            <p style="font-size:12px;opacity:0.9;margin:3px 0 0;">Arrivé(e) é ${data.pre_check_in_time} é Cliquez pour confirmer votre pointage</p>
                         </div>
                     </div>
                     <a href="${data.confirm_url}" style="background:white;color:#059669;padding:10px 24px;border-radius:12px;font-weight:700;font-size:14px;text-decoration:none;white-space:nowrap;box-shadow:0 2px 10px rgba(0,0,0,0.2);">
-                        ✅ Confirmer
+                        ? Confirmer
                     </a>
                 </div>
             `;
@@ -1094,13 +1098,13 @@
             b.id = 'global-precheckin-waiting';
             b.style.cssText = 'position:fixed;bottom:20px;right:20px;z-index:100000;';
             b.innerHTML = `
-                <div style="background:linear-gradient(135deg,#6366f1,#8b5cf6);padding:12px 16px;border-radius:14px;display:flex;align-items:center;gap:10px;color:white;box-shadow:0 8px 30px rgba(99,102,241,0.4);max-width:320px;">
-                    <span style="font-size:20px;">🌅</span>
+                <div style="background:linear-gradient(135deg,#3D7A6A,#8b5cf6);padding:12px 16px;border-radius:14px;display:flex;align-items:center;gap:10px;color:white;box-shadow:0 8px 30px rgba(99,102,241,0.4);max-width:320px;">
+                    <span style="font-size:20px;">??</span>
                     <div style="flex:1;">
                         <p style="font-weight:600;font-size:12px;margin:0;">Pré-pointage actif</p>
-                        <p style="font-size:11px;opacity:0.85;margin:2px 0 0;">Arrivé(e) à ${data.pre_check_in_time} · Alarme à ${data.work_start_time}</p>
+                        <p style="font-size:11px;opacity:0.85;margin:2px 0 0;">Arrivé(e) é ${data.pre_check_in_time} é Alarme é ${data.work_start_time}</p>
                     </div>
-                    <button onclick="this.closest('#global-precheckin-waiting').remove()" style="background:rgba(255,255,255,0.2);border:none;color:white;width:24px;height:24px;border-radius:6px;cursor:pointer;font-size:14px;">✕</button>
+                    <button onclick="this.closest('#global-precheckin-waiting').remove()" style="background:rgba(255,255,255,0.2);border:none;color:white;width:24px;height:24px;border-radius:6px;cursor:pointer;font-size:14px;">?</button>
                 </div>
             `;
             document.body.appendChild(b);
@@ -1136,7 +1140,7 @@
 
     <script>
     if ('serviceWorker' in navigator) {
-        // Écouter les messages du SW pour jouer des sons d'alarme
+        // écouter les messages du SW pour jouer des sons d'alarme
         navigator.serviceWorker.addEventListener('message', function(event) {
             if (event.data && event.data.type === 'PLAY_ALARM_SOUND') {
                 console.log('[ManageX] SW demande de jouer le son:', event.data.soundType);

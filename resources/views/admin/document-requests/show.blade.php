@@ -1,4 +1,4 @@
-<x-layouts.admin>
+﻿<x-layouts.admin>
     <div class="space-y-6">
         <!-- Header -->
         <div class="flex items-center gap-4 animate-fade-in-up">
@@ -15,7 +15,7 @@
         </div>
 
         @if($errors->any())
-            <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+            <div class="bg-[#F0F5F3] border border-[#B8D1C7] text-[#163530] px-4 py-3 rounded-lg">
                 <ul class="list-disc list-inside">
                     @foreach($errors->all() as $error)
                         <li>{{ $error }}</li>
@@ -43,7 +43,7 @@
                             <p class="text-sm text-gray-500">Statut</p>
                             <span class="inline-flex px-2 py-1 text-xs rounded-full
                                 @if($documentRequest->status === 'approved') bg-green-100 text-green-700
-                                @elseif($documentRequest->status === 'rejected') bg-red-100 text-red-700
+                                @elseif($documentRequest->status === 'rejected') bg-[#E8F0ED] text-[#163530]
                                 @else bg-amber-100 text-amber-700 @endif">
                                 {{ $documentRequest->status_label }}
                             </span>
@@ -70,17 +70,17 @@
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Message de réponse *</label>
                                 <textarea name="admin_response" rows="3" required
                                           placeholder="Ex: Voici votre attestation de travail..."
-                                          class="w-full rounded-lg border-gray-300 focus:border-emerald-500 focus:ring-emerald-500">{{ old('admin_response') }}</textarea>
+                                          class="w-full rounded-lg border-gray-300 focus:border-[#2D5A4E] focus:ring-[#2D5A4E]">{{ old('admin_response') }}</textarea>
                             </div>
 
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Document à joindre *</label>
                                 <input type="file" name="document" required accept=".pdf,.doc,.docx"
-                                       class="w-full rounded-lg border border-gray-300 p-2 focus:border-emerald-500 focus:ring-emerald-500">
+                                       class="w-full rounded-lg border border-gray-300 p-2 focus:border-[#2D5A4E] focus:ring-[#2D5A4E]">
                                 <p class="text-sm text-gray-500 mt-1">PDF, DOC ou DOCX - Max 10 Mo</p>
                             </div>
 
-                            <button type="submit" class="w-full px-4 py-2 bg-emerald-600 text-white font-medium rounded-lg hover:bg-emerald-700">
+                            <button type="submit" class="w-full px-4 py-2 bg-[#1B3C35] text-white font-medium rounded-lg hover:bg-[#163530]">
                                 ✅ Approuver et envoyer le document
                             </button>
                         </form>
@@ -96,10 +96,10 @@
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Motif du refus *</label>
                                 <textarea name="admin_response" rows="3" required
                                           placeholder="Ex: Nous ne pouvons pas fournir ce document car..."
-                                          class="w-full rounded-lg border-gray-300 focus:border-red-500 focus:ring-red-500"></textarea>
+                                          class="w-full rounded-lg border-gray-300 focus:border-[#2D5A4E] focus:ring-[#2D5A4E]"></textarea>
                             </div>
 
-                            <button type="submit" class="w-full px-4 py-2 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700"
+                            <button type="submit" class="w-full px-4 py-2 bg-[#1B3C35] text-white font-medium rounded-lg hover:bg-[#163530]"
                                     onclick="return confirm('Êtes-vous sûr de vouloir refuser cette demande ?')">
                                 ❌ Refuser la demande
                             </button>
@@ -110,19 +110,19 @@
                     <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                         <h2 class="text-lg font-semibold text-gray-900 mb-4">Réponse</h2>
                         
-                        <div class="p-4 rounded-lg @if($documentRequest->isApproved()) bg-green-50 @else bg-red-50 @endif">
+                        <div class="p-4 rounded-lg @if($documentRequest->isApproved()) bg-green-50 @else bg-[#F0F5F3] @endif">
                             <p class="text-sm text-gray-500 mb-1">Par {{ $documentRequest->admin->name ?? 'Admin' }}</p>
-                            <p class="@if($documentRequest->isApproved()) text-green-800 @else text-red-800 @endif">{{ $documentRequest->admin_response }}</p>
+                            <p class="@if($documentRequest->isApproved()) text-green-800 @else text-[#0F2A25] @endif">{{ $documentRequest->admin_response }}</p>
                             @if($documentRequest->responded_at)
                                 <p class="text-xs text-gray-400 mt-2">{{ $documentRequest->responded_at->format('d/m/Y à H:i') }}</p>
                             @endif
                         </div>
 
                         @if($documentRequest->hasDocument())
-                            <div class="mt-4 p-4 bg-blue-50 rounded-lg flex items-center justify-between">
+                            <div class="mt-4 p-4 bg-[#F0F5F3] rounded-lg flex items-center justify-between">
                                 <div class="flex items-center gap-3">
                                     <span class="text-2xl">📄</span>
-                                    <span class="text-blue-800">{{ $documentRequest->document_name }}</span>
+                                    <span class="text-[#163530]">{{ $documentRequest->document_name }}</span>
                                 </div>
                             </div>
                         @endif
@@ -135,7 +135,7 @@
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                     <h3 class="font-semibold text-gray-900 mb-4">👤 Employé</h3>
                     <div class="text-center">
-                        <div class="w-16 h-16 bg-gradient-to-br from-emerald-400 to-green-500 rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto mb-3">
+                        <div class="w-16 h-16 bg-gradient-to-br from-[#3D7A6A] to-green-500 rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto mb-3">
                             {{ strtoupper(substr($documentRequest->user->name, 0, 1)) }}
                         </div>
                         <p class="font-medium text-gray-900">{{ $documentRequest->user->name }}</p>

@@ -1,4 +1,4 @@
-ï»¿<x-layouts.employee>
+<x-layouts.employee>
     <style>
         [x-cloak] { display: none !important; }
 
@@ -62,7 +62,7 @@
                 <div class="flex items-center justify-between mb-3">
                     <h2 class="text-lg font-bold text-gray-800">Messages</h2>
                     <button @click="showNewConversation = true"
-                            class="p-2 text-white rounded-xl hover:shadow-md transition-all" style="background-color: #3B8BEB;">
+                            class="p-2 text-white rounded-xl hover:shadow-md transition-all" style="background-color: #1B3C35;">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                         </svg>
@@ -75,7 +75,7 @@
                            @input.debounce.300ms="filterConversations()"
                            placeholder="Rechercher..."
                            class="w-full pl-10 pr-4 py-2.5 bg-gray-50 border-0 rounded-xl text-sm focus:ring-2 focus:bg-white transition-colors"
-                           style="--tw-ring-color: #3B8BEB;">
+                           style="--tw-ring-color: #1B3C35;">
                     <svg class="w-5 h-5 text-gray-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                     </svg>
@@ -85,20 +85,20 @@
             <!-- Tabs -->
             <div class="flex border-b border-gray-200 bg-white px-1">
                 <button @click="activeTab = 'all'"
-                        :class="activeTab === 'all' ? 'text-[#3B8BEB] border-[#3B8BEB]' : 'border-transparent text-gray-500 hover:bg-gray-50'"
-                        :style="activeTab === 'all' ? 'background-color: rgba(59, 139, 235, 0.1);' : ''"
+                        :class="activeTab === 'all' ? 'text-[#1B3C35] border-[#1B3C35]' : 'border-transparent text-gray-500 hover:bg-gray-50'"
+                        :style="activeTab === 'all' ? 'background-color: rgba(27, 60, 53, 0.1);' : ''"
                         class="flex-1 py-2.5 text-sm font-medium rounded-t-lg border-b-2 transition-all">
                     Tous
                 </button>
                 <button @click="activeTab = 'direct'"
-                        :class="activeTab === 'direct' ? 'text-[#3B8BEB] border-[#3B8BEB]' : 'border-transparent text-gray-500 hover:bg-gray-50'"
-                        :style="activeTab === 'direct' ? 'background-color: rgba(59, 139, 235, 0.1);' : ''"
+                        :class="activeTab === 'direct' ? 'text-[#1B3C35] border-[#1B3C35]' : 'border-transparent text-gray-500 hover:bg-gray-50'"
+                        :style="activeTab === 'direct' ? 'background-color: rgba(27, 60, 53, 0.1);' : ''"
                         class="flex-1 py-2.5 text-sm font-medium rounded-t-lg border-b-2 transition-all">
                     Directs
                 </button>
                 <button @click="activeTab = 'group'"
-                        :class="activeTab === 'group' ? 'text-[#3B8BEB] border-[#3B8BEB]' : 'border-transparent text-gray-500 hover:bg-gray-50'"
-                        :style="activeTab === 'group' ? 'background-color: rgba(59, 139, 235, 0.1);' : ''"
+                        :class="activeTab === 'group' ? 'text-[#1B3C35] border-[#1B3C35]' : 'border-transparent text-gray-500 hover:bg-gray-50'"
+                        :style="activeTab === 'group' ? 'background-color: rgba(27, 60, 53, 0.1);' : ''"
                         class="flex-1 py-2.5 text-sm font-medium rounded-t-lg border-b-2 transition-all">
                     Groupes
                 </button>
@@ -118,12 +118,12 @@
                 <template x-for="conv in filteredConversations" :key="conv.id">
                     <div @click="selectConversation(conv)"
                          :class="selectedConversation?.id === conv.id ? 'border-l-4' : 'hover:bg-white border-l-4 border-transparent'"
-                         :style="selectedConversation?.id === conv.id ? 'background-color: rgba(59, 139, 235, 0.1); border-color: #3B8BEB;' : ''"
+                         :style="selectedConversation?.id === conv.id ? 'background-color: rgba(27, 60, 53, 0.1); border-color: #1B3C35;' : ''"
                          class="p-4 cursor-pointer transition-all">
                         <div class="flex items-start gap-3">
                             <!-- Avatar -->
                             <div class="relative flex-shrink-0">
-                                <div class="w-11 h-11 rounded-xl flex items-center justify-center text-white font-semibold shadow-sm" style="background-color: #3B8BEB;">
+                                <div class="w-11 h-11 rounded-xl flex items-center justify-center text-white font-semibold shadow-sm" style="background-color: #1B3C35;">
                                     <span x-text="(conv.name || 'C').charAt(0).toUpperCase()"></span>
                                 </div>
                                 <template x-if="conv.is_pinned">
@@ -144,7 +144,7 @@
                             </div>
                             <!-- Unread Badge -->
                             <template x-if="conv.unread_count > 0">
-                                <span class="text-white text-xs font-bold px-2 py-0.5 rounded-full shadow-sm flex-shrink-0" style="background-color: #3B8BEB;" x-text="conv.unread_count"></span>
+                                <span class="text-white text-xs font-bold px-2 py-0.5 rounded-full shadow-sm flex-shrink-0" style="background-color: #1B3C35;" x-text="conv.unread_count"></span>
                             </template>
                         </div>
                     </div>
@@ -177,8 +177,8 @@
                         <svg class="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
                         </svg>
-                        <h3 class="text-lg font-medium text-gray-600">SÃ©lectionnez une conversation</h3>
-                        <p class="text-sm text-gray-400 mt-1">Choisissez une conversation ou crÃ©ez-en une nouvelle</p>
+                        <h3 class="text-lg font-medium text-gray-600">Sélectionnez une conversation</h3>
+                        <p class="text-sm text-gray-400 mt-1">Choisissez une conversation ou créez-en une nouvelle</p>
                     </div>
                 </div>
             </template>
@@ -195,7 +195,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
                                 </svg>
                             </button>
-                            <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold flex-shrink-0" style="background-color: #3B8BEB;">
+                            <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold flex-shrink-0" style="background-color: #1B3C35;">
                                 <span x-text="(selectedConversation?.name || 'C').charAt(0).toUpperCase()"></span>
                             </div>
                             <div class="min-w-0">
@@ -228,10 +228,10 @@
                                 <div :class="[
                                     (message.sender?.id || message.sender_id) === currentUserId ? 'text-white rounded-tl-xl rounded-tr-xl rounded-bl-xl rounded-br-md shadow-[0_2px_8px_rgba(59,139,235,0.25)]' : 'bg-white text-gray-900 rounded-tl-xl rounded-tr-xl rounded-br-xl rounded-bl-md shadow-sm',
                                     'max-w-[85%] sm:max-w-md px-3 py-2'
-                                ]" :style="(message.sender?.id || message.sender_id) === currentUserId ? 'background-color: #3B8BEB;' : ''">
+                                ]" :style="(message.sender?.id || message.sender_id) === currentUserId ? 'background-color: #1B3C35;' : ''">
                                     <!-- Sender name for others -->
                                     <template x-if="(message.sender?.id || message.sender_id) !== currentUserId && message.sender">
-                                        <p class="text-xs font-semibold mb-0.5" style="color: #3B8BEB;" x-text="message.sender.name"></p>
+                                        <p class="text-xs font-semibold mb-0.5" style="color: #1B3C35;" x-text="message.sender.name"></p>
                                     </template>
 
                                     <!-- Attachments (images, audio, files) -->
@@ -293,12 +293,12 @@
 
                     <!-- Message Input -->
                     <div class="p-3 sm:p-4 border-t border-gray-100 bg-white">
-                        <!-- Preview images Ã  envoyer -->
+                        <!-- Preview images à envoyer -->
                         <div x-show="pendingImages.length > 0" class="flex gap-2 mb-3 overflow-x-auto pb-2">
                             <template x-for="(file, idx) in pendingImages" :key="idx">
                                 <div class="relative flex-shrink-0">
                                     <img :src="file.preview" class="w-16 h-16 object-cover rounded-lg border border-gray-200"/>
-                                    <button type="button" @click="removePendingImage(idx)" class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center text-xs hover:bg-red-600">Ã—</button>
+                                    <button type="button" @click="removePendingImage(idx)" class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center text-xs hover:bg-red-600">×</button>
                                 </div>
                             </template>
                         </div>
@@ -317,7 +317,7 @@
                                     @touchend.prevent="stopVoiceRecord()"
                                     :class="isRecording ? 'bg-red-500 hover:bg-red-600 text-white scale-110 animate-pulse' : 'text-gray-500 hover:text-blue-600 hover:bg-blue-50'" 
                                     class="p-3 rounded-xl transition-all flex-shrink-0 select-none" 
-                                    :title="isRecording ? 'RelÃ¢chez pour envoyer' : 'Maintenez pour enregistrer'">
+                                    :title="isRecording ? 'Relâchez pour envoyer' : 'Maintenez pour enregistrer'">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v3m0 0V6a7 7 0 0114 0v3m-7 4a7 7 0 009.5 1.5"/>
                                 </svg>
@@ -326,7 +326,7 @@
                                 <textarea x-model="newMessage"
                                           @keydown.enter.meta="sendMessageOrAttachments()"
                                           @keydown.enter.ctrl="sendMessageOrAttachments()"
-                                          placeholder="Ã©crivez votre message..."
+                                          placeholder="écrivez votre message..."
                                           rows="1"
                                           class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl resize-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:bg-white transition-all text-sm sm:text-base"
                                           x-ref="messageInput"></textarea>
@@ -334,7 +334,7 @@
                             <button type="submit"
                                     :disabled="!canSend()"
                                     class="p-3 text-white rounded-xl hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
-                                    style="background-color: #3B8BEB;">
+                                    style="background-color: #1B3C35;">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
                                 </svg>
@@ -382,15 +382,15 @@
                                 <option value="{{ $user->id }}">{{ $user->name }}</option>
                             @endforeach
                         </select>
-                        <p class="text-xs text-gray-500 mt-1">Maintenez Ctrl pour sÃ©lectionner plusieurs</p>
+                        <p class="text-xs text-gray-500 mt-1">Maintenez Ctrl pour sélectionner plusieurs</p>
                     </div>
                 </div>
                 <div class="flex gap-3 mt-6">
                     <button type="button" @click="closeNewConversationModal()" class="flex-1 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
                         Annuler
                     </button>
-                    <button type="submit" class="flex-1 px-4 py-2 text-white rounded-lg hover:opacity-90 transition-colors" style="background-color: #3B8BEB;">
-                        CrÃ©er
+                    <button type="submit" class="flex-1 px-4 py-2 text-white rounded-lg hover:opacity-90 transition-colors" style="background-color: #1B3C35;">
+                        Créer
                     </button>
                 </div>
             </form>
@@ -768,7 +768,7 @@
                         this.isRecording = true;
                     } catch (err) {
                         console.error('Microphone error:', err);
-                        alert('AccÃ¨s au micro refusÃ© ou indisponible.');
+                        alert('Accès au micro refusé ou indisponible.');
                     }
                 },
 
@@ -807,7 +807,7 @@
 
                 async createConversation() {
                     if (this.selectedParticipants.length === 0) {
-                        alert('Veuillez sÃ©lectionner au moins un participant.');
+                        alert('Veuillez sélectionner au moins un participant.');
                         return;
                     }
 
@@ -826,7 +826,7 @@
                         });
 
                         if (!response.ok) {
-                            throw new Error('Erreur lors de la crÃ©ation');
+                            throw new Error('Erreur lors de la création');
                         }
 
                         const data = await response.json();
@@ -838,7 +838,7 @@
                         }
                     } catch (error) {
                         console.error('Error creating conversation:', error);
-                        alert('Erreur lors de la crÃ©ation de la conversation.');
+                        alert('Erreur lors de la création de la conversation.');
                     }
                 },
 

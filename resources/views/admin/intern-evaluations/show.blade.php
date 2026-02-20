@@ -3,13 +3,13 @@
         <!-- Header -->
         <x-table-header title="Détails du Stagiaire" subtitle="{{ $intern->name }}" class="animate-fade-in-up">
             <x-slot:icon>
-                <div class="w-12 h-12 bg-gradient-to-br from-violet-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-violet-500/20">
+                <div class="w-12 h-12 bg-gradient-to-br from-[#C8A96E] to-[#2D5A4E] rounded-xl flex items-center justify-center shadow-lg shadow-[#C8A96E]/20">
                     <x-icon name="user" class="w-6 h-6 text-white" />
                 </div>
             </x-slot:icon>
             <x-slot:actions>
                 <div class="flex gap-2">
-                    <a href="{{ route('admin.intern-evaluations.create', $intern) }}" class="inline-flex items-center px-4 py-2.5 bg-violet-600 text-white font-medium rounded-xl hover:bg-violet-700 transition-all text-sm shadow-md">
+                    <a href="{{ route('admin.intern-evaluations.create', $intern) }}" class="inline-flex items-center px-4 py-2.5 bg-[#C8A96E] text-white font-medium rounded-xl hover:bg-[#B8955A] transition-all text-sm shadow-md">
                         <x-icon name="plus" class="w-4 h-4 mr-2" />
                         Nouvelle évaluation
                     </a>
@@ -19,7 +19,7 @@
                     </a>
                     <button type="button" 
                             onclick="window.dispatchEvent(new CustomEvent('start-download', { detail: { url: @js(route('admin.intern-evaluations.export-pdf', ['intern_id' => $intern->id])), filename: @js('evaluation-' . $intern->name . '.pdf'), type: 'pdf' } }))"
-                            class="inline-flex items-center px-4 py-2.5 bg-red-50 text-red-700 font-medium rounded-xl border border-red-200 hover:bg-red-100 transition-all text-sm">
+                            class="inline-flex items-center px-4 py-2.5 bg-[#F0F5F3] text-[#163530] font-medium rounded-xl border border-[#B8D1C7] hover:bg-[#E8F0ED] transition-all text-sm">
                         <x-icon name="file-text" class="w-4 h-4 mr-2" />
                         Export PDF
                     </button>
@@ -32,7 +32,7 @@
             <!-- Profil -->
             <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
                 <div class="flex items-center gap-4 mb-6">
-                    <div class="w-16 h-16 bg-gradient-to-br from-violet-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-2xl">
+                    <div class="w-16 h-16 bg-gradient-to-br from-[#C8A96E] to-[#2D5A4E] rounded-full flex items-center justify-center text-white font-bold text-2xl">
                         {{ strtoupper(substr($intern->name, 0, 1)) }}
                     </div>
                     <div>
@@ -61,7 +61,7 @@
                 <h3 class="text-lg font-semibold text-gray-900 mb-4">Moyennes globales</h3>
                 @if($averages['total'] > 0)
                     <div class="text-center mb-6">
-                        <div class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-br from-violet-500 to-purple-600 text-white">
+                        <div class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-br from-[#C8A96E] to-[#2D5A4E] text-white">
                             <span class="text-3xl font-bold">{{ $averages['total'] }}</span>
                             <span class="text-lg">/10</span>
                         </div>
@@ -74,7 +74,7 @@
                                     <span class="font-medium">{{ $averages[$key] }}/2.5</span>
                                 </div>
                                 <div class="w-full bg-gray-200 rounded-full h-2">
-                                    <div class="bg-violet-600 h-2 rounded-full" style="width: {{ ($averages[$key] / 2.5) * 100 }}%"></div>
+                                    <div class="bg-[#C8A96E] h-2 rounded-full" style="width: {{ ($averages[$key] / 2.5) * 100 }}%"></div>
                                 </div>
                             </div>
                         @endforeach
@@ -127,17 +127,17 @@
                                 <td class="px-6 py-4 text-center">
                                     <span class="inline-flex items-center px-2.5 py-1 rounded-full text-sm font-semibold
                                         @if($evaluation->grade_letter === 'A') bg-green-100 text-green-700
-                                        @elseif($evaluation->grade_letter === 'B') bg-blue-100 text-blue-700
+                                        @elseif($evaluation->grade_letter === 'B') bg-[#E8F0ED] text-[#163530]
                                         @elseif($evaluation->grade_letter === 'C') bg-yellow-100 text-yellow-700
-                                        @elseif($evaluation->grade_letter === 'D') bg-orange-100 text-orange-700
-                                        @else bg-red-100 text-red-700
+                                        @elseif($evaluation->grade_letter === 'D') bg-[#FAF3E8] text-[#B8955A]
+                                        @else bg-[#E8F0ED] text-[#163530]
                                         @endif">
                                         {{ $evaluation->total_score }}/10
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 text-sm text-gray-600">{{ $evaluation->tutor->name ?? 'Admin' }}</td>
                                 <td class="px-6 py-4 text-right">
-                                    <a href="{{ route('admin.intern-evaluations.edit', $evaluation) }}" class="text-violet-600 hover:text-violet-900 font-medium text-sm">Modifier</a>
+                                    <a href="{{ route('admin.intern-evaluations.edit', $evaluation) }}" class="text-[#C8A96E] hover:text-[#8A6B3E] font-medium text-sm">Modifier</a>
                                 </td>
                             </tr>
                         @empty

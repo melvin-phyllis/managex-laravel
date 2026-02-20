@@ -9,7 +9,7 @@
         </div>
 
         @if(session('success'))
-            <div class="px-4 py-3 rounded-lg flex items-center gap-3" style="background-color: rgba(59, 139, 235, 0.1); border: 1px solid #3B8BEB; color: #3B8BEB;">
+            <div class="px-4 py-3 rounded-lg flex items-center gap-3" style="background-color: rgba(27, 60, 53, 0.1); border: 1px solid #1B3C35; color: #1B3C35;">
                 <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 </svg>
@@ -18,7 +18,7 @@
         @endif
 
         @if(session('error'))
-            <div class="px-4 py-3 rounded-lg flex items-center gap-3" style="background-color: rgba(178, 56, 80, 0.1); border: 1px solid #B23850; color: #B23850;">
+            <div class="px-4 py-3 rounded-lg flex items-center gap-3" style="background-color: rgba(200, 169, 110, 0.1); border: 1px solid #C8A96E; color: #C8A96E;">
                 <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 </svg>
@@ -31,7 +31,7 @@
             <nav class="flex space-x-8" aria-label="Tabs">
                 <button @click="activeTab = 'security'"
                         :class="activeTab === 'security' ? 'text-blue-600 border-b-2' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
-                        :style="activeTab === 'security' ? 'border-color: #3B8BEB; color: #3B8BEB;' : ''"
+                        :style="activeTab === 'security' ? 'border-color: #1B3C35; color: #1B3C35;' : ''"
                         class="whitespace-nowrap py-4 px-1 font-medium text-sm flex items-center gap-2 transition-colors">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
@@ -40,7 +40,7 @@
                 </button>
                 <button @click="activeTab = 'workdays'"
                         :class="activeTab === 'workdays' ? 'text-blue-600 border-b-2' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
-                        :style="activeTab === 'workdays' ? 'border-color: #3B8BEB; color: #3B8BEB;' : ''"
+                        :style="activeTab === 'workdays' ? 'border-color: #1B3C35; color: #1B3C35;' : ''"
                         class="whitespace-nowrap py-4 px-1 font-medium text-sm flex items-center gap-2 transition-colors">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
@@ -49,7 +49,7 @@
                 </button>
                 <button @click="activeTab = 'notifications'"
                         :class="activeTab === 'notifications' ? 'text-blue-600 border-b-2' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
-                        :style="activeTab === 'notifications' ? 'border-color: #3B8BEB; color: #3B8BEB;' : ''"
+                        :style="activeTab === 'notifications' ? 'border-color: #1B3C35; color: #1B3C35;' : ''"
                         class="whitespace-nowrap py-4 px-1 font-medium text-sm flex items-center gap-2 transition-colors">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
@@ -62,8 +62,8 @@
             <div x-show="activeTab === 'security'" x-cloak class="py-6">
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                     <div class="flex items-center mb-6">
-                        <div class="p-3 rounded-full mr-4" style="background-color: rgba(59, 139, 235, 0.1);">
-                            <svg class="w-6 h-6" style="color: #3B8BEB;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="p-3 rounded-full mr-4" style="background-color: rgba(27, 60, 53, 0.1);">
+                            <svg class="w-6 h-6" style="color: #1B3C35;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
                             </svg>
                         </div>
@@ -83,7 +83,7 @@
                                     Mot de passe actuel
                                 </label>
                                 <input type="password" name="current_password" id="current_password" required
-                                       class="w-full rounded-lg border-gray-300 focus:ring-opacity-50 focus:border-[#3B8BEB] focus:ring-[#3B8BEB]">
+                                       class="w-full rounded-lg border-gray-300 focus:ring-opacity-50 focus:border-[#1B3C35] focus:ring-[#1B3C35]">
                                 @error('current_password')
                                     <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                                 @enderror
@@ -94,7 +94,7 @@
                                     Nouveau mot de passe
                                 </label>
                                 <input type="password" name="password" id="password" required minlength="8"
-                                       class="w-full rounded-lg border-gray-300 focus:ring-opacity-50 focus:border-[#3B8BEB] focus:ring-[#3B8BEB]">
+                                       class="w-full rounded-lg border-gray-300 focus:ring-opacity-50 focus:border-[#1B3C35] focus:ring-[#1B3C35]">
                                 <p class="text-xs text-gray-500 mt-1">Minimum 8 caractères, avec majuscule, minuscule et chiffre</p>
                                 @error('password')
                                     <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
@@ -106,12 +106,12 @@
                                     Confirmer le nouveau mot de passe
                                 </label>
                                 <input type="password" name="password_confirmation" id="password_confirmation" required
-                                       class="w-full rounded-lg border-gray-300 focus:ring-opacity-50 focus:border-[#3B8BEB] focus:ring-[#3B8BEB]">
+                                       class="w-full rounded-lg border-gray-300 focus:ring-opacity-50 focus:border-[#1B3C35] focus:ring-[#1B3C35]">
                             </div>
                         </div>
 
                         <div class="mt-6">
-                            <button type="submit" class="px-6 py-2.5 text-white font-medium rounded-lg hover:opacity-90 transition-opacity" style="background-color: #3B8BEB;">
+                            <button type="submit" class="px-6 py-2.5 text-white font-medium rounded-lg hover:opacity-90 transition-opacity" style="background-color: #1B3C35;">
                                 Mettre à jour le mot de passe
                             </button>
                         </div>
@@ -135,8 +135,8 @@
                     <div class="bg-gray-50 rounded-lg p-4">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 rounded-full flex items-center justify-center" style="background-color: rgba(59, 139, 235, 0.1);">
-                                    <svg class="w-5 h-5" style="color: #3B8BEB;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <div class="w-10 h-10 rounded-full flex items-center justify-center" style="background-color: rgba(27, 60, 53, 0.1);">
+                                    <svg class="w-5 h-5" style="color: #1B3C35;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                     </svg>
                                 </div>
@@ -145,7 +145,7 @@
                                     <p class="text-xs text-gray-500">Connecté depuis {{ request()->ip() }}</p>
                                 </div>
                             </div>
-                            <span class="px-2 py-1 text-xs font-medium rounded-full" style="background-color: rgba(59, 139, 235, 0.1); color: #3B8BEB;">Active</span>
+                            <span class="px-2 py-1 text-xs font-medium rounded-full" style="background-color: rgba(27, 60, 53, 0.1); color: #1B3C35;">Active</span>
                         </div>
                     </div>
                 </div>
@@ -179,8 +179,8 @@
             <div x-show="activeTab === 'workdays'" x-cloak class="py-6" x-data="settingsWorkDays">
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                     <div class="flex items-center mb-6">
-                        <div class="p-3 rounded-full mr-4" style="background-color: rgba(59, 139, 235, 0.1);">
-                            <svg class="w-6 h-6" style="color: #3B8BEB;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="p-3 rounded-full mr-4" style="background-color: rgba(27, 60, 53, 0.1);">
+                            <svg class="w-6 h-6" style="color: #1B3C35;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                             </svg>
                         </div>
@@ -264,7 +264,7 @@
                                     class="px-6 py-2.5 text-white font-medium rounded-lg transition-all duration-200"
                                     :disabled="!canSubmit"
                                     :class="canSubmit ? 'hover:opacity-90 cursor-pointer' : 'opacity-50 cursor-not-allowed'"
-                                    :style="canSubmit ? 'background-color: #3B8BEB;' : 'background-color: #9CA3AF;'">
+                                    :style="canSubmit ? 'background-color: #1B3C35;' : 'background-color: #9CA3AF;'">
                                 Mettre à jour mes jours
                             </button>
                             <p class="text-sm text-gray-500">
@@ -279,8 +279,8 @@
             <div x-show="activeTab === 'notifications'" x-cloak class="py-6">
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                     <div class="flex items-center mb-6">
-                        <div class="p-3 rounded-full mr-4" style="background-color: rgba(59, 139, 235, 0.1);">
-                            <svg class="w-6 h-6" style="color: #3B8BEB;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="p-3 rounded-full mr-4" style="background-color: rgba(27, 60, 53, 0.1);">
+                            <svg class="w-6 h-6" style="color: #1B3C35;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
                             </svg>
                         </div>
@@ -320,7 +320,7 @@
                             </div>
                             <label class="relative inline-flex items-center cursor-pointer">
                                 <input type="checkbox" class="sr-only peer" checked>
-                                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all" style="background-color: #3B8BEB;"></div>
+                                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all" style="background-color: #1B3C35;"></div>
                             </label>
                         </div>
                     </div>

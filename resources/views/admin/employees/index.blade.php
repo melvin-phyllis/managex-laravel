@@ -4,7 +4,7 @@
         <nav class="flex animate-fade-in-up" aria-label="Breadcrumb">
             <ol class="inline-flex items-center space-x-1 md:space-x-3">
                 <li class="inline-flex items-center">
-                    <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600">
+                    <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-[#1B3C35]">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
                         </svg>
@@ -24,7 +24,7 @@
         <!-- Header -->
         <x-table-header title="Gestion des Employés" subtitle="Gérez et suivez toute votre équipe de maniére centralisée" class="animate-fade-in-up animation-delay-100">
             <x-slot:icon>
-                <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg transform transition-transform" style="background-image: linear-gradient(135deg, #5680E9, #84CEEB) !important; box-shadow: 0 10px 15px -3px rgba(86, 128, 233, 0.3) !important;">
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg transform transition-transform" style="background-image: linear-gradient(135deg, #1B3C35, #3D7A6A) !important; box-shadow: 0 10px 15px -3px rgba(27, 60, 53, 0.3) !important;">
                     <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
                     </svg>
@@ -39,14 +39,14 @@
                         Exporter CSV
                     </a>
                     @if(Route::has('admin.employee-invitations.create'))
-                    <a href="{{ route('admin.employee-invitations.create') }}" class="inline-flex items-center px-4 py-2.5 bg-white text-blue-700 font-medium rounded-xl border border-blue-200 hover:bg-blue-50 transition-all shadow-sm">
+                    <a href="{{ route('admin.employee-invitations.create') }}" class="inline-flex items-center px-4 py-2.5 bg-white text-[#163530] font-medium rounded-xl border border-[#B8D1C7] hover:bg-[#F0F5F3] transition-all shadow-sm">
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
                         </svg>
                         Inviter par email
                     </a>
                     @endif
-                    <a href="{{ route('admin.employees.create') }}" class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-medium rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg shadow-blue-500/25">
+                    <a href="{{ route('admin.employees.create') }}" class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-[#1B3C35] to-[#2D5A4E] text-white font-medium rounded-xl hover:from-[#163530] hover:to-[#163530] transition-all shadow-lg shadow-[#1B3C35]/25">
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
                         </svg>
@@ -65,14 +65,14 @@
                         <p class="text-sm font-medium text-gray-500">Total employés</p>
                         <p class="text-3xl font-bold text-gray-900 mt-1">{{ $stats['total'] }}</p>
                     </div>
-                    <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform" style="background-image: linear-gradient(135deg, #5680E9, #5AB9EA) !important; box-shadow: 0 10px 15px -3px rgba(86, 128, 233, 0.3) !important;">
+                    <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform" style="background-image: linear-gradient(135deg, #1B3C35, #2D5A4E) !important; box-shadow: 0 10px 15px -3px rgba(27, 60, 53, 0.3) !important;">
                         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
                         </svg>
                     </div>
                 </div>
                 <div class="mt-4 flex items-center text-sm">
-                    <span class="text-[#5AB9EA] flex items-center bg-[#5AB9EA]/10 px-2 py-0.5 rounded-full">
+                    <span class="text-[#2D5A4E] flex items-center bg-[#2D5A4E]/10 px-2 py-0.5 rounded-full">
                         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
                         </svg>
@@ -92,14 +92,14 @@
                         <p class="text-sm font-medium text-gray-500">En congé</p>
                         <p class="text-3xl font-bold text-gray-900 mt-1">{{ $stats['on_leave'] }}</p>
                     </div>
-                    <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform" style="background-image: linear-gradient(135deg, #8860D0, #5680E9) !important; box-shadow: 0 10px 15px -3px rgba(136, 96, 208, 0.3) !important;">
+                    <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform" style="background-image: linear-gradient(135deg, #C8A96E, #1B3C35) !important; box-shadow: 0 10px 15px -3px rgba(200, 169, 110, 0.3) !important;">
                         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                         </svg>
                     </div>
                 </div>
                 <div class="mt-4 flex items-center text-sm">
-                    <span class="text-[#8860D0] bg-[#8860D0]/10 px-2 py-0.5 rounded-full font-medium">
+                    <span class="text-[#C8A96E] bg-[#C8A96E]/10 px-2 py-0.5 rounded-full font-medium">
                         Planifiés
                     </span>
                     <span class="text-gray-400 mx-2"></span>
@@ -114,14 +114,14 @@
                         <p class="text-sm font-medium text-gray-500">Nouveaux (Mois)</p>
                         <p class="text-3xl font-bold text-gray-900 mt-1">{{ $stats['new_this_month'] }}</p>
                     </div>
-                    <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform" style="background-image: linear-gradient(135deg, #C1C8E4, #84CEEB) !important; box-shadow: 0 10px 15px -3px rgba(193, 200, 228, 0.3) !important;">
+                    <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform" style="background-image: linear-gradient(135deg, #D4BC8B, #3D7A6A) !important; box-shadow: 0 10px 15px -3px rgba(212, 188, 139, 0.3) !important;">
                         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
                         </svg>
                     </div>
                 </div>
                 <div class="mt-4 flex items-center text-sm">
-                    <span class="text-[#5680E9] bg-[#C1C8E4]/20 px-2 py-0.5 rounded-full font-medium">
+                    <span class="text-[#1B3C35] bg-[#D4BC8B]/20 px-2 py-0.5 rounded-full font-medium">
                         +{{ $stats['new_this_month'] }}
                     </span>
                     <span class="text-gray-400 mx-2">•</span>
@@ -143,12 +143,12 @@
                     </svg>
                     <input type="text" name="search" value="{{ request('search') }}" 
                            placeholder="Rechercher un employé..." 
-                           class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
+                           class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2D5A4E] focus:border-[#2D5A4E] text-sm">
                 </div>
 
                 <!-- Department -->
                 <div class="w-full sm:w-auto">
-                    <select name="department_id" class="w-full sm:w-48 px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm bg-white">
+                    <select name="department_id" class="w-full sm:w-48 px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2D5A4E] focus:border-[#2D5A4E] text-sm bg-white">
                         <option value="">Tous les départements</option>
                         @foreach($departments as $department)
                             <option value="{{ $department->id }}" {{ request('department_id') == $department->id ? 'selected' : '' }}>
@@ -160,7 +160,7 @@
 
                 <!-- Status -->
                 <div class="w-full sm:w-auto">
-                    <select name="status" class="w-full sm:w-40 px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm bg-white">
+                    <select name="status" class="w-full sm:w-40 px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2D5A4E] focus:border-[#2D5A4E] text-sm bg-white">
                         <option value="">Tous statuts</option>
                         <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Actif</option>
                         <option value="on_leave" {{ request('status') == 'on_leave' ? 'selected' : '' }}>En congé</option>
@@ -171,7 +171,7 @@
 
                 <!-- Contract -->
                 <div class="w-full sm:w-auto">
-                    <select name="contract_type" class="w-full sm:w-40 px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm bg-white">
+                    <select name="contract_type" class="w-full sm:w-40 px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2D5A4E] focus:border-[#2D5A4E] text-sm bg-white">
                         <option value="">Type contrat</option>
                         <option value="cdi" {{ request('contract_type') == 'cdi' ? 'selected' : '' }}>CDI</option>
                         <option value="cdd" {{ request('contract_type') == 'cdd' ? 'selected' : '' }}>CDD</option>
@@ -181,7 +181,7 @@
 
                 <!-- Buttons -->
                 <div class="flex gap-2">
-                    <button type="submit" class="px-6 py-2.5 bg-blue-600 text-white font-medium rounded-xl hover:bg-blue-700 transition-colors shadow-lg shadow-blue-500/25 flex items-center">
+                    <button type="submit" class="px-6 py-2.5 bg-[#1B3C35] text-white font-medium rounded-xl hover:bg-[#163530] transition-colors shadow-lg shadow-[#1B3C35]/25 flex items-center">
                         Filtrer
                     </button>
                     @if(request()->hasAny(['search', 'department_id', 'status', 'contract_type']))
@@ -196,20 +196,20 @@
 
             <x-slot:activeFilters>
                 @if(request('search'))
-                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-100">
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-[#F0F5F3] text-[#163530] border border-[#E8F0ED]">
                         Recherche: {{ request('search') }}
                     </span>
                 @endif
                 @if(request('department_id'))
                     @php $dept = $departments->find(request('department_id')); @endphp
                     @if($dept)
-                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-[#5680E9]/10 text-[#5680E9] border border-[#5680E9]/20">
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-[#1B3C35]/10 text-[#1B3C35] border border-[#1B3C35]/20">
                             Dépt: {{ $dept->name }}
                         </span>
                     @endif
                 @endif
                 @if(request('status'))
-                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-[#5AB9EA]/10 text-[#5AB9EA] border border-[#5AB9EA]/20">
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-[#2D5A4E]/10 text-[#2D5A4E] border border-[#2D5A4E]/20">
                         Statut: {{ request('status') }}
                     </span>
                 @endif
@@ -219,14 +219,14 @@
         <!-- Table -->
         <x-data-table class="animate-fade-in-up animation-delay-300">
             <x-slot:bulkActions>
-                <button @click="deleteSelected" class="text-red-600 hover:text-red-800 font-medium text-sm flex items-center">
+                <button @click="deleteSelected" class="text-[#1B3C35] hover:text-[#0F2A25] font-medium text-sm flex items-center">
                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
                     </svg>
                     Supprimer la sélection
                 </button>
-                <div class="h-4 w-px bg-blue-200 mx-3"></div>
-                <button @click="exportSelected" class="text-blue-700 hover:text-blue-900 font-medium text-sm flex items-center">
+                <div class="h-4 w-px bg-[#B8D1C7] mx-3"></div>
+                <button @click="exportSelected" class="text-[#163530] hover:text-[#0F2A25] font-medium text-sm flex items-center">
                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
                     </svg>
@@ -237,7 +237,7 @@
             <x-slot:header>
                 <tr>
                     <th class="w-12 px-6 py-4">
-                        <input type="checkbox" @change="toggleAll" x-model="selectAll" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                        <input type="checkbox" @change="toggleAll" x-model="selectAll" class="rounded border-gray-300 text-[#1B3C35] focus:ring-[#2D5A4E]">
                     </th>
                     <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors">
                         <div class="flex items-center gap-1">
@@ -255,9 +255,9 @@
 
             <x-slot:body>
                 @forelse($employees as $employee)
-                    <tr class="hover:bg-blue-50/50 transition-colors group">
+                    <tr class="hover:bg-[#F0F5F3]/50 transition-colors group">
                         <td class="px-6 py-4">
-                            <input type="checkbox" value="{{ $employee->id }}" x-model="selected" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                            <input type="checkbox" value="{{ $employee->id }}" x-model="selected" class="rounded border-gray-300 text-[#1B3C35] focus:ring-[#2D5A4E]">
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="flex items-center gap-3">
@@ -265,7 +265,7 @@
                                     @if($employee->avatar)
                                         <img class="h-10 w-10 rounded-full object-cover ring-2 ring-white shadow-sm" src="{{ avatar_url($employee->avatar) }}" alt="{{ $employee->name }}">
                                     @else
-                                        <div class="h-10 w-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center ring-2 ring-white shadow-sm">
+                                        <div class="h-10 w-10 rounded-full bg-gradient-to-br from-[#1B3C35] to-[#2D5A4E] flex items-center justify-center ring-2 ring-white shadow-sm">
                                             <span class="text-white font-bold text-xs">{{ strtoupper(substr($employee->name, 0, 2)) }}</span>
                                         </div>
                                     @endif
@@ -281,11 +281,11 @@
                                     <div class="flex items-center gap-2">
                                         <span class="font-medium text-gray-900 {{ in_array($employee->status, ['suspended', 'terminated']) ? 'line-through opacity-60' : '' }}">{{ $employee->name }}</span>
                                         @if($employee->status === 'suspended')
-                                            <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-orange-100 text-orange-700 border border-orange-200" title="Ce compte est suspendu">
+                                            <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-[#FAF3E8] text-[#B8955A] border border-[#ECE0C8]" title="Ce compte est suspendu">
                                                 Suspendu
                                             </span>
                                         @elseif($employee->status === 'terminated')
-                                            <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-red-100 text-red-700 border border-red-200" title="Ce compte est désactivé">
+                                            <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-[#E8F0ED] text-[#163530] border border-[#B8D1C7]" title="Ce compte est désactivé">
                                                 Parti
                                             </span>
                                         @endif
@@ -305,10 +305,10 @@
                         <td class="px-6 py-4 whitespace-nowrap">
                             @php
                                 $badges = [
-                                    'cdi' => 'bg-[#5680E9]/10 text-[#5680E9] border-[#5680E9]/20',
-                                    'cdd' => 'bg-[#84CEEB]/10 text-[#5680E9] border-[#84CEEB]/20',
-                                    'stage' => 'bg-[#C1C8E4]/20 text-[#5680E9] border-[#C1C8E4]/30',
-                                    'alternance' => 'bg-[#5AB9EA]/10 text-[#5AB9EA] border-[#5AB9EA]/20',
+                                    'cdi' => 'bg-[#1B3C35]/10 text-[#1B3C35] border-[#1B3C35]/20',
+                                    'cdd' => 'bg-[#3D7A6A]/10 text-[#1B3C35] border-[#3D7A6A]/20',
+                                    'stage' => 'bg-[#D4BC8B]/20 text-[#1B3C35] border-[#D4BC8B]/30',
+                                    'alternance' => 'bg-[#2D5A4E]/10 text-[#2D5A4E] border-[#2D5A4E]/20',
                                 ];
                             @endphp
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border {{ $badges[$employee->contract_type] ?? 'bg-gray-100 text-gray-700 border-gray-200' }}">
@@ -320,16 +320,16 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             @if($employee->presence_status === 'present')
-                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-[#5AB9EA]/10 text-[#5AB9EA] border border-[#5AB9EA]/20">
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-[#2D5A4E]/10 text-[#2D5A4E] border border-[#2D5A4E]/20">
                                     <span class="relative flex h-2 w-2">
-                                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#5AB9EA] opacity-75"></span>
-                                      <span class="relative inline-flex rounded-full h-2 w-2 bg-[#5AB9EA]"></span>
+                                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#2D5A4E] opacity-75"></span>
+                                      <span class="relative inline-flex rounded-full h-2 w-2 bg-[#2D5A4E]"></span>
                                     </span>
                                     Présent
                                 </span>
                             @elseif($employee->presence_status === 'on_leave')
-                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-[#8860D0]/10 text-[#8860D0] border border-[#8860D0]/20">
-                                    <span class="h-2 w-2 bg-[#8860D0] rounded-full"></span>
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-[#C8A96E]/10 text-[#C8A96E] border border-[#C8A96E]/20">
+                                    <span class="h-2 w-2 bg-[#C8A96E] rounded-full"></span>
                                     En congé
                                 </span>
                             @else
@@ -342,12 +342,12 @@
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="flex items-center gap-1">
                                 @if($employee->email)
-                                    <a href="mailto:{{ $employee->email }}" class="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="{{ $employee->email }}">
+                                    <a href="mailto:{{ $employee->email }}" class="p-1.5 text-gray-400 hover:text-[#1B3C35] hover:bg-[#F0F5F3] rounded-lg transition-colors" title="{{ $employee->email }}">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 00-2-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
                                     </a>
                                 @endif
                                 @if($employee->telephone)
-                                    <a href="tel:{{ $employee->telephone }}" class="p-1.5 text-gray-400 hover:text-[#5AB9EA] hover:bg-[#5AB9EA]/10 rounded-lg transition-colors" title="{{ $employee->telephone }}">
+                                    <a href="tel:{{ $employee->telephone }}" class="p-1.5 text-gray-400 hover:text-[#2D5A4E] hover:bg-[#2D5A4E]/10 rounded-lg transition-colors" title="{{ $employee->telephone }}">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
                                     </a>
                                 @endif
@@ -355,31 +355,31 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                             <div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                <a href="{{ route('admin.employees.show', $employee) }}" class="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Voir">
+                                <a href="{{ route('admin.employees.show', $employee) }}" class="p-1.5 text-gray-500 hover:text-[#1B3C35] hover:bg-[#F0F5F3] rounded-lg transition-colors" title="Voir">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                                 </a>
-                                <a href="{{ route('admin.employees.edit', $employee) }}" class="p-1.5 text-gray-500 hover:text-[#8860D0] hover:bg-[#8860D0]/10 rounded-lg transition-colors" title="éditer">
+                                <a href="{{ route('admin.employees.edit', $employee) }}" class="p-1.5 text-gray-500 hover:text-[#C8A96E] hover:bg-[#C8A96E]/10 rounded-lg transition-colors" title="éditer">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
                                 </a>
                                 {{-- Bouton Activer/Suspendre --}}
                                 @if($employee->status === 'active')
                                     <button type="button" 
                                             @click="confirmStatusChange('{{ route('admin.employees.toggle-status', $employee) }}', 'suspend', {{ Js::from($employee->name) }})"
-                                            class="p-1.5 text-gray-500 hover:text-[#5680E9] hover:bg-[#5680E9]/10 rounded-lg transition-colors" 
+                                            class="p-1.5 text-gray-500 hover:text-[#1B3C35] hover:bg-[#1B3C35]/10 rounded-lg transition-colors" 
                                             title="Suspendre le compte">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
                                     </button>
                                 @else
                                     <button type="button" 
                                             @click="confirmStatusChange('{{ route('admin.employees.toggle-status', $employee) }}', 'activate', {{ Js::from($employee->name) }})"
-                                            class="p-1.5 text-[#5AB9EA] hover:text-[#5AB9EA] hover:bg-[#5AB9EA]/10 rounded-lg transition-colors" 
+                                            class="p-1.5 text-[#2D5A4E] hover:text-[#2D5A4E] hover:bg-[#2D5A4E]/10 rounded-lg transition-colors" 
                                             title="Activer le compte">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                                     </button>
                                 @endif
                                 <button type="button" 
                                         @click="confirmDelete('{{ route('admin.employees.destroy', $employee) }}')"
-                                        class="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" 
+                                        class="p-1.5 text-gray-500 hover:text-[#1B3C35] hover:bg-[#F0F5F3] rounded-lg transition-colors" 
                                         title="Supprimer">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                                 </button>
@@ -494,8 +494,8 @@
                 
                 <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                     <div class="sm:flex sm:items-start">
-                        <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
-                            <svg class="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                        <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-[#E8F0ED] sm:mx-0 sm:h-10 sm:w-10">
+                            <svg class="h-6 w-6 text-[#1B3C35]" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
                             </svg>
                         </div>
@@ -512,7 +512,7 @@
                         @csrf
                         @method('DELETE')
                         <button type="submit" 
-                                class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto">
+                                class="inline-flex w-full justify-center rounded-md bg-[#1B3C35] px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[#2D5A4E] sm:ml-3 sm:w-auto">
                             Supprimer
                         </button>
                     </form>
@@ -559,8 +559,8 @@
                     <div class="sm:flex sm:items-start">
                         <!-- Icône dynamique selon l'action -->
                         <template x-if="statusAction === 'suspend'">
-                            <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-orange-100 sm:mx-0 sm:h-10 sm:w-10">
-                                <svg class="h-6 w-6 text-orange-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-[#FAF3E8] sm:mx-0 sm:h-10 sm:w-10">
+                                <svg class="h-6 w-6 text-[#C8A96E]" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/>
                                 </svg>
                             </div>
@@ -580,7 +580,7 @@
                             <div class="mt-2">
                                 <p class="text-sm text-gray-500" x-show="statusAction === 'suspend'">
                                     Êtes-vous sûr de vouloir suspendre le compte de <span class="font-medium text-gray-700" x-text="statusEmployeeName"></span> ?
-                                    <br><span class="text-orange-600">L'employé ne pourra plus se connecter à l'application.</span>
+                                    <br><span class="text-[#C8A96E]">L'employé ne pourra plus se connecter à l'application.</span>
                                 </p>
                                 <p class="text-sm text-gray-500" x-show="statusAction === 'activate'">
                                     Êtes-vous sûr de vouloir réactiver le compte de <span class="font-medium text-gray-700" x-text="statusEmployeeName"></span> ?
@@ -595,7 +595,7 @@
                         @csrf
                         <button type="submit" 
                                 class="inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm sm:ml-3 sm:w-auto"
-                                :class="statusAction === 'suspend' ? 'bg-orange-600 hover:bg-orange-500' : 'bg-green-600 hover:bg-green-500'">
+                                :class="statusAction === 'suspend' ? 'bg-[#C8A96E] hover:bg-[#D4BC8B]' : 'bg-green-600 hover:bg-green-500'">
                             <span x-show="statusAction === 'suspend'">Suspendre</span>
                             <span x-show="statusAction === 'activate'">Activer</span>
                         </button>

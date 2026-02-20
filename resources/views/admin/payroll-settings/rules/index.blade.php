@@ -1,7 +1,7 @@
-<x-layouts.admin>
+﻿<x-layouts.admin>
     <div class="space-y-6">
         <!-- Header comme sur tasks -->
-        <div class="relative overflow-hidden rounded-2xl shadow-xl animate-fade-in-up" style="background: linear-gradient(135deg, #5680E9, #84CEEB) !important;">
+        <div class="relative overflow-hidden rounded-2xl shadow-xl animate-fade-in-up" style="background: linear-gradient(135deg, #1B3C35, #3D7A6A) !important;">
             <div class="absolute inset-0 bg-black/10"></div>
             <div class="absolute -top-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
             <div class="absolute -bottom-24 -left-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
@@ -31,7 +31,7 @@
                         <p class="text-white/80 mt-2">Gérez les règles fiscales et cotisations</p>
                     </div>
                     <a href="{{ route('admin.payroll-settings.rules.create', $country) }}" 
-                       class="px-4 py-2.5 bg-white font-semibold rounded-xl hover:bg-purple-50 transition-all shadow-lg flex items-center" style="color: #5680E9;">
+                       class="px-4 py-2.5 bg-white font-semibold rounded-xl hover:bg-[#FBF7F0] transition-all shadow-lg flex items-center" style="color: #1B3C35;">
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                         </svg>
@@ -70,7 +70,7 @@
                     </thead>
                     <tbody class="divide-y divide-gray-100">
                         @forelse($rules as $rule)
-                            <tr class="hover:bg-purple-50/50 transition-colors group">
+                            <tr class="hover:bg-[#FBF7F0]/50 transition-colors group">
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $rule->display_order }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-sm font-medium bg-gray-100 text-gray-800">
@@ -87,10 +87,10 @@
                                     @php
                                         $typeColors = [
                                             'tax' => 'background-color: rgba(239, 68, 68, 0.15); color: #ef4444;',
-                                            'contribution' => 'background-color: rgba(86, 128, 233, 0.15); color: #5680E9;',
-                                            'allowance' => 'background-color: rgba(90, 185, 234, 0.15); color: #5AB9EA;',
-                                            'deduction' => 'background-color: rgba(136, 96, 208, 0.15); color: #8860D0;',
-                                            'earning' => 'background-color: rgba(132, 206, 235, 0.15); color: #5680E9;',
+                                            'contribution' => 'background-color: rgba(27, 60, 53, 0.15); color: #1B3C35;',
+                                            'allowance' => 'background-color: rgba(45, 90, 78, 0.15); color: #2D5A4E;',
+                                            'deduction' => 'background-color: rgba(200, 169, 110, 0.15); color: #C8A96E;',
+                                            'earning' => 'background-color: rgba(132, 206, 235, 0.15); color: #1B3C35;',
                                         ];
                                         $typeLabels = [
                                             'tax' => 'Taxe',
@@ -109,7 +109,7 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                     @if($rule->calculation_type === 'percentage')
-                                        <span style="color: #5680E9;">{{ number_format($rule->rate, 2) }}%</span>
+                                        <span style="color: #1B3C35;">{{ number_format($rule->rate, 2) }}%</span>
                                     @elseif($rule->calculation_type === 'fixed')
                                         {{ number_format($rule->fixed_amount, 0, ',', ' ') }} {{ $country->currency_symbol }}
                                     @elseif($rule->calculation_type === 'bracket')
@@ -121,11 +121,11 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     @if($rule->rule_category === 'employee')
-                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium" style="background-color: rgba(86, 128, 233, 0.15); color: #5680E9;">Employé</span>
+                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium" style="background-color: rgba(27, 60, 53, 0.15); color: #1B3C35;">Employé</span>
                                     @elseif($rule->rule_category === 'employer')
-                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium" style="background-color: rgba(136, 96, 208, 0.15); color: #8860D0;">Employeur</span>
+                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium" style="background-color: rgba(200, 169, 110, 0.15); color: #C8A96E;">Employeur</span>
                                     @else
-                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium" style="background-color: rgba(193, 200, 228, 0.3); color: #5680E9;">Les deux</span>
+                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium" style="background-color: rgba(212, 188, 139, 0.3); color: #1B3C35;">Les deux</span>
                                     @endif
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -138,7 +138,7 @@
                                         <form action="{{ route('admin.payroll-settings.rules.destroy', [$country, $rule]) }}" method="POST" class="inline" onsubmit="return confirm('Supprimer cette règle ?')">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Supprimer">
+                                            <button type="submit" class="p-1.5 text-gray-500 hover:text-[#1B3C35] hover:bg-[#F0F5F3] rounded-lg transition-colors" title="Supprimer">
                                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
                                                 </svg>

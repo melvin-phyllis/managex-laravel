@@ -1,10 +1,10 @@
-<x-layouts.admin>
+﻿<x-layouts.admin>
     <div class="space-y-6">
         <!-- Breadcrumbs -->
         <nav class="flex animate-fade-in-up" aria-label="Breadcrumb">
             <ol class="inline-flex items-center space-x-1 md:space-x-3">
                 <li class="inline-flex items-center">
-                    <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600">
+                    <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-[#1B3C35]">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
                         </svg>
@@ -16,7 +16,7 @@
                         <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                         </svg>
-                        <a href="{{ route('admin.tasks.index') }}" class="ml-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ml-2">Tâches</a>
+                        <a href="{{ route('admin.tasks.index') }}" class="ml-1 text-sm font-medium text-gray-700 hover:text-[#1B3C35] md:ml-2">Tâches</a>
                     </div>
                 </li>
                 <li aria-current="page">
@@ -73,16 +73,16 @@
                             @foreach($task->documents as $doc)
                                 @php
                                     $iconColors = [
-                                        'pdf' => ['bg' => 'bg-red-100', 'text' => 'text-red-600'],
-                                        'doc' => ['bg' => 'bg-blue-100', 'text' => 'text-blue-600'],
-                                        'docx' => ['bg' => 'bg-blue-100', 'text' => 'text-blue-600'],
+                                        'pdf' => ['bg' => 'bg-[#E8F0ED]', 'text' => 'text-[#1B3C35]'],
+                                        'doc' => ['bg' => 'bg-[#E8F0ED]', 'text' => 'text-[#1B3C35]'],
+                                        'docx' => ['bg' => 'bg-[#E8F0ED]', 'text' => 'text-[#1B3C35]'],
                                         'xls' => ['bg' => 'bg-green-100', 'text' => 'text-green-600'],
                                         'xlsx' => ['bg' => 'bg-green-100', 'text' => 'text-green-600'],
-                                        'ppt' => ['bg' => 'bg-orange-100', 'text' => 'text-orange-600'],
-                                        'pptx' => ['bg' => 'bg-orange-100', 'text' => 'text-orange-600'],
-                                        'jpg' => ['bg' => 'bg-purple-100', 'text' => 'text-purple-600'],
-                                        'jpeg' => ['bg' => 'bg-purple-100', 'text' => 'text-purple-600'],
-                                        'png' => ['bg' => 'bg-purple-100', 'text' => 'text-purple-600'],
+                                        'ppt' => ['bg' => 'bg-[#FAF3E8]', 'text' => 'text-[#C8A96E]'],
+                                        'pptx' => ['bg' => 'bg-[#FAF3E8]', 'text' => 'text-[#C8A96E]'],
+                                        'jpg' => ['bg' => 'bg-[#FAF3E8]', 'text' => 'text-[#C8A96E]'],
+                                        'jpeg' => ['bg' => 'bg-[#FAF3E8]', 'text' => 'text-[#C8A96E]'],
+                                        'png' => ['bg' => 'bg-[#FAF3E8]', 'text' => 'text-[#C8A96E]'],
                                     ];
                                     $ext = $doc->file_extension;
                                     $color = $iconColors[$ext] ?? ['bg' => 'bg-gray-100', 'text' => 'text-gray-600'];
@@ -98,7 +98,7 @@
                                         </div>
                                     </div>
                                     <div class="flex items-center space-x-2 flex-shrink-0 ml-3">
-                                        <a href="{{ route('admin.tasks.document.download', $doc) }}" class="p-2 text-gray-400 hover:text-blue-600 transition-colors" title="Télécharger">
+                                        <a href="{{ route('admin.tasks.document.download', $doc) }}" class="p-2 text-gray-400 hover:text-[#1B3C35] transition-colors" title="Télécharger">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                                             </svg>
@@ -106,7 +106,7 @@
                                         <form action="{{ route('admin.tasks.document.delete', $doc) }}" method="POST" onsubmit="return confirm('Supprimer ce document ?')">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="p-2 text-gray-400 hover:text-red-600 transition-colors" title="Supprimer">
+                                            <button type="submit" class="p-2 text-gray-400 hover:text-[#1B3C35] transition-colors" title="Supprimer">
                                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                                                 </svg>
@@ -135,7 +135,7 @@
                             </form>
                             <form action="{{ route('admin.tasks.reject', $task) }}" method="POST" class="flex-1">
                                 @csrf
-                                <button type="submit" class="w-full px-4 py-3 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition-colors flex items-center justify-center">
+                                <button type="submit" class="w-full px-4 py-3 bg-[#1B3C35] text-white font-medium rounded-lg hover:bg-[#163530] transition-colors flex items-center justify-center">
                                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                                     </svg>
@@ -148,7 +148,7 @@
                     <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                         <h3 class="text-lg font-semibold text-gray-900 mb-4">Actions d'administration</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <a href="{{ route('admin.tasks.edit', $task) }}" class="flex items-center justify-center px-4 py-2 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transition-colors">
+                            <a href="{{ route('admin.tasks.edit', $task) }}" class="flex items-center justify-center px-4 py-2 bg-[#1B3C35] text-white font-medium rounded-lg hover:bg-[#163530] transition-colors">
                                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                                 Modifier
                             </a>
@@ -169,7 +169,7 @@
                                 <input type="hidden" name="titre" value="{{ $task->titre }}">
                                 <input type="hidden" name="priorite" value="{{ $task->priorite }}">
                                 
-                                <button type="submit" class="w-full flex items-center justify-center px-4 py-2 bg-emerald-600 text-white font-medium rounded-lg hover:bg-emerald-700 transition-colors" onclick="return confirm('Forcer la fin de cette tâche ?')">
+                                <button type="submit" class="w-full flex items-center justify-center px-4 py-2 bg-[#1B3C35] text-white font-medium rounded-lg hover:bg-[#163530] transition-colors" onclick="return confirm('Forcer la fin de cette tâche ?')">
                                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
                                     Marquer terminée
                                 </button>
@@ -177,7 +177,7 @@
                 
                             <form action="{{ route('admin.tasks.reject', $task) }}" method="POST">
                                 @csrf
-                                <button type="submit" class="w-full flex items-center justify-center px-4 py-2 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition-colors" onclick="return confirm('Annuler cette tâche ?')">
+                                <button type="submit" class="w-full flex items-center justify-center px-4 py-2 bg-[#1B3C35] text-white font-medium rounded-lg hover:bg-[#163530] transition-colors" onclick="return confirm('Annuler cette tâche ?')">
                                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                                     Annuler / Rejeter
                                 </button>
@@ -196,7 +196,7 @@
                                     <label for="rating" class="block text-sm font-medium text-gray-700">Note</label>
                                     <div class="mt-1 flex items-center">
                                         <input type="number" name="rating" id="rating" min="0" max="10" required
-                                               class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                               class="block w-full rounded-md border-gray-300 shadow-sm focus:border-[#2D5A4E] focus:ring-[#2D5A4E] sm:text-sm"
                                                placeholder="0-10">
                                         <span class="ml-2 text-gray-500 text-sm">/ 10</span>
                                     </div>
@@ -206,11 +206,11 @@
                             <div>
                                 <label for="rating_comment" class="block text-sm font-medium text-gray-700">Commentaire (Optionnel)</label>
                                 <textarea name="rating_comment" id="rating_comment" rows="3"
-                                          class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                          class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#2D5A4E] focus:ring-[#2D5A4E] sm:text-sm"
                                           placeholder="Pourquoi cette note ?"></textarea>
                             </div>
 
-                            <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-colors">
+                            <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#1B3C35] hover:bg-[#163530] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#2D5A4E] transition-colors">
                                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                                 Valider et Noter
                             </button>
@@ -219,7 +219,7 @@
                         <div class="mt-4 pt-4 border-t border-gray-100">
                             <form action="{{ route('admin.tasks.reject', $task) }}" method="POST">
                                 @csrf
-                                <button type="submit" class="w-full flex justify-center py-2 px-4 border border-red-300 rounded-md shadow-sm text-sm font-medium text-red-700 bg-white hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors" onclick="return confirm('Êtes-vous sûr de vouloir rejeter cette tâche ? Cela la marquera comme rejetée.')">
+                                <button type="submit" class="w-full flex justify-center py-2 px-4 border border-[#8FB5A8] rounded-md shadow-sm text-sm font-medium text-[#163530] bg-white hover:bg-[#F0F5F3] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#2D5A4E] transition-colors" onclick="return confirm('Êtes-vous sûr de vouloir rejeter cette tâche ? Cela la marquera comme rejetée.')">
                                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                                     Rejeter (Non satisfaisant)
                                 </button>
@@ -232,7 +232,7 @@
                     <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                         <h3 class="text-lg font-semibold text-gray-900 mb-4">Évaluation</h3>
                         <div class="flex items-start space-x-4">
-                            <div class="flex items-center justify-center w-16 h-16 rounded-full {{ $task->rating >= 7 ? 'bg-emerald-100 text-emerald-700' : ($task->rating >= 5 ? 'bg-amber-100 text-amber-700' : 'bg-red-100 text-red-700') }} text-2xl font-bold flex-shrink-0">
+                            <div class="flex items-center justify-center w-16 h-16 rounded-full {{ $task->rating >= 7 ? 'bg-[#E8F0ED] text-[#163530]' : ($task->rating >= 5 ? 'bg-amber-100 text-amber-700' : 'bg-[#E8F0ED] text-[#163530]') }} text-2xl font-bold flex-shrink-0">
                                 {{ $task->rating }}<span class="text-sm font-normal ml-0.5">/10</span>
                             </div>
                             <div>
@@ -253,8 +253,8 @@
                         @if($task->user->avatar)
                             <img src="{{ avatar_url($task->user->avatar) }}" alt="{{ $task->user->name }}" class="w-12 h-12 rounded-full object-cover">
                         @else
-                            <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
-                                <span class="text-blue-600 font-medium">{{ strtoupper(substr($task->user->name, 0, 2)) }}</span>
+                            <div class="w-12 h-12 rounded-full bg-[#E8F0ED] flex items-center justify-center">
+                                <span class="text-[#1B3C35] font-medium">{{ strtoupper(substr($task->user->name, 0, 2)) }}</span>
                             </div>
                         @endif
                         <div class="ml-3">
@@ -297,7 +297,7 @@
                     <form action="{{ route('admin.tasks.destroy', $task) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette tâche ?')">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="w-full px-4 py-2 bg-red-100 text-red-700 font-medium rounded-lg hover:bg-red-200 transition-colors">
+                        <button type="submit" class="w-full px-4 py-2 bg-[#E8F0ED] text-[#163530] font-medium rounded-lg hover:bg-[#B8D1C7] transition-colors">
                             Supprimer la tâche
                         </button>
                     </form>

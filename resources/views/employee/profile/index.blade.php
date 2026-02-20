@@ -1,8 +1,8 @@
-ï»¿<x-layouts.employee>
+<x-layouts.employee>
     <div class="w-full mx-auto space-y-6">
         <!-- Header -->
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden animate-fade-in-up">
-            <div class="px-6 py-8" style="background-color: #3B8BEB;">
+            <div class="px-6 py-8" style="background-color: #1B3C35;">
                 <div class="flex items-center gap-6">
                     <!-- Avatar -->
                     <div class="relative">
@@ -24,8 +24,8 @@
                     <!-- Info -->
                     <div class="text-white">
                         <h1 class="text-2xl font-bold">{{ $user->name }}</h1>
-                        <p class="text-blue-100" style="color: rgba(255, 255, 255, 0.9);">{{ $user->position?->name ?? $user->poste ?? 'EmployÃ©' }}</p>
-                        <p class="text-blue-200 text-sm mt-1" style="color: rgba(255, 255, 255, 0.7);">{{ $user->department?->name ?? 'Non assignÃ©' }}</p>
+                        <p class="text-blue-100" style="color: rgba(255, 255, 255, 0.9);">{{ $user->position?->name ?? $user->poste ?? 'Employé' }}</p>
+                        <p class="text-blue-200 text-sm mt-1" style="color: rgba(255, 255, 255, 0.7);">{{ $user->department?->name ?? 'Non assigné' }}</p>
                     </div>
                 </div>
             </div>
@@ -34,16 +34,16 @@
             <div class="grid grid-cols-3 divide-x divide-gray-100 bg-gray-50">
                 <div class="px-6 py-4 text-center">
                     <p class="text-2xl font-bold text-gray-900">{{ $user->leave_balance ?? 0 }}</p>
-                    <p class="text-xs text-gray-500">CongÃ©s restants</p>
+                    <p class="text-xs text-gray-500">Congés restants</p>
                 </div>
                 <div class="px-6 py-4 text-center">
                     <p class="text-2xl font-bold text-gray-900">{{ $user->hire_date ? (int) $user->hire_date->diffInYears(now()) : '-' }}</p>
-                    <p class="text-xs text-gray-500">AnnÃ©es d'anciennetÃ©</p>
+                    <p class="text-xs text-gray-500">Années d'ancienneté</p>
                 </div>
                 <div class="px-6 py-4 text-center">
                     <p class="text-2xl font-bold text-gray-900">
                         <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium {{ $user->status === 'active' ? 'text-white' : 'bg-gray-100 text-gray-800' }}"
-                              style="{{ $user->status === 'active' ? 'background-color: #3B8BEB;' : '' }}">
+                              style="{{ $user->status === 'active' ? 'background-color: #1B3C35;' : '' }}">
                             {{ $user->status === 'active' ? 'Actif' : ($user->status ?? 'Actif') }}
                         </span>
                     </p>
@@ -57,7 +57,7 @@
             <div class="flex items-center justify-between mb-6">
                 <h2 class="text-lg font-semibold text-gray-900">Informations Personnelles</h2>
                 <button onclick="document.getElementById('personalModal').classList.remove('hidden')" 
-                        class="text-sm font-medium flex items-center gap-1 hover:opacity-80 transition-opacity" style="color: #3B8BEB;">
+                        class="text-sm font-medium flex items-center gap-1 hover:opacity-80 transition-opacity" style="color: #1B3C35;">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
                     </svg>
@@ -75,7 +75,7 @@
                     <p class="font-medium text-gray-900">{{ $user->email }}</p>
                 </div>
                 <div>
-                    <p class="text-sm text-gray-500">TÃ©lÃ©phone</p>
+                    <p class="text-sm text-gray-500">Téléphone</p>
                     <p class="font-medium text-gray-900">{{ $user->telephone ?? '-' }}</p>
                 </div>
                 <div>
@@ -107,9 +107,9 @@
                     <p class="text-sm text-gray-500">Situation Familiale</p>
                     <p class="font-medium text-gray-900">
                         @switch($user->marital_status)
-                            @case('single') CÃ©libataire @break
-                            @case('married') MariÃ©(e) @break
-                            @case('divorced') DivorcÃ©(e) @break
+                            @case('single') Célibataire @break
+                            @case('married') Marié(e) @break
+                            @case('divorced') Divorcé(e) @break
                             @case('widowed') Veuf/Veuve @break
                             @default -
                         @endswitch
@@ -117,7 +117,7 @@
                     </p>
                 </div>
                 <div>
-                    <p class="text-sm text-gray-500">NumÃ©ro CNPS</p>
+                    <p class="text-sm text-gray-500">Numéro CNPS</p>
                     <p class="font-medium text-gray-900">{{ $user->cnps_number ?? '-' }}</p>
                 </div>
             </div>
@@ -128,7 +128,7 @@
             <div class="flex items-center justify-between mb-6">
                 <h2 class="text-lg font-semibold text-gray-900">Contact d'Urgence</h2>
                 <button onclick="document.getElementById('emergencyModal').classList.remove('hidden')" 
-                        class="text-sm font-medium flex items-center gap-1 hover:opacity-80 transition-opacity" style="color: #3B8BEB;">
+                        class="text-sm font-medium flex items-center gap-1 hover:opacity-80 transition-opacity" style="color: #1B3C35;">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
                     </svg>
@@ -143,7 +143,7 @@
                         <p class="font-medium text-gray-900">{{ $user->emergency_contact_name }}</p>
                     </div>
                     <div>
-                        <p class="text-sm text-gray-500">TÃ©lÃ©phone</p>
+                        <p class="text-sm text-gray-500">Téléphone</p>
                         <p class="font-medium text-gray-900">{{ $user->emergency_contact_phone ?? '-' }}</p>
                     </div>
                     <div>
@@ -156,9 +156,9 @@
                     <svg class="w-12 h-12 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"/>
                     </svg>
-                    <p>Aucun contact d'urgence renseignÃ©</p>
+                    <p>Aucun contact d'urgence renseigné</p>
                     <button onclick="document.getElementById('emergencyModal').classList.remove('hidden')" 
-                            class="mt-4 hover:underline" style="color: #3B8BEB;">
+                            class="mt-4 hover:underline" style="color: #1B3C35;">
                         Ajouter un contact
                     </button>
                 </div>
@@ -171,11 +171,11 @@
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                    <p class="text-sm text-gray-500">NumÃ©ro employÃ©</p>
+                    <p class="text-sm text-gray-500">Numéro employé</p>
                     <p class="font-medium text-gray-900">{{ $user->employee_id ?? '-' }}</p>
                 </div>
                 <div>
-                    <p class="text-sm text-gray-500">DÃ©partement</p>
+                    <p class="text-sm text-gray-500">Département</p>
                     <p class="font-medium text-gray-900">{{ $user->department?->name ?? '-' }}</p>
                 </div>
                 <div>
@@ -196,19 +196,19 @@
                 </div>
             </div>
             
-            <p class="text-xs text-gray-400 mt-4">Ces informations sont gÃ©rÃ©es par les RH et ne peuvent pas Ã©Âªtre modifiÃ©es.</p>
+            <p class="text-xs text-gray-400 mt-4">Ces informations sont gérées par les RH et ne peuvent pas éªtre modifiées.</p>
         </div>
 
         <!-- Security -->
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 animate-fade-in-up animation-delay-400">
             <div class="flex items-center justify-between mb-6">
-                <h2 class="text-lg font-semibold text-gray-900">SÃ©curitÃ©</h2>
+                <h2 class="text-lg font-semibold text-gray-900">Sécurité</h2>
             </div>
             
             <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                 <div>
                     <p class="font-medium text-gray-900">Mot de passe</p>
-                    <p class="text-sm text-gray-500">DerniÃ©re modification : {{ $user->updated_at->diffForHumans() }}</p>
+                    <p class="text-sm text-gray-500">Derniére modification : {{ $user->updated_at->diffForHumans() }}</p>
                 </div>
                 <button onclick="document.getElementById('passwordModal').classList.remove('hidden')" 
                         class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">
@@ -229,22 +229,22 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Nom complet</label>
                         <input type="text" name="name" value="{{ $user->name }}" required
-                               class="w-full rounded-lg border-gray-300 focus:ring-opacity-50 focus:border-[#3B8BEB] focus:ring-[#3B8BEB]">
+                               class="w-full rounded-lg border-gray-300 focus:ring-opacity-50 focus:border-[#1B3C35] focus:ring-[#1B3C35]">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">TÃ©lÃ©phone</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
                         <input type="tel" name="telephone" value="{{ $user->telephone }}"
-                               class="w-full rounded-lg border-gray-300 focus:border-[#3B8BEB] focus:ring-[#3B8BEB]">
+                               class="w-full rounded-lg border-gray-300 focus:border-[#1B3C35] focus:ring-[#1B3C35]">
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Date de naissance</label>
                         <input type="date" name="date_of_birth" value="{{ old('date_of_birth', $user->date_of_birth?->format('Y-m-d')) }}"
-                               class="w-full rounded-lg border-gray-300 focus:border-[#3B8BEB] focus:ring-[#3B8BEB]">
+                               class="w-full rounded-lg border-gray-300 focus:border-[#1B3C35] focus:ring-[#1B3C35]">
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Genre</label>
-                        <select name="gender" class="w-full rounded-lg border-gray-300 focus:border-[#3B8BEB] focus:ring-[#3B8BEB]">
-                            <option value="">Non spÃ©cifiÃ©</option>
+                        <select name="gender" class="w-full rounded-lg border-gray-300 focus:border-[#1B3C35] focus:ring-[#1B3C35]">
+                            <option value="">Non spécifié</option>
                             <option value="male" {{ $user->gender === 'male' ? 'selected' : '' }}>Homme</option>
                             <option value="female" {{ $user->gender === 'female' ? 'selected' : '' }}>Femme</option>
                             <option value="other" {{ $user->gender === 'other' ? 'selected' : '' }}>Autre</option>
@@ -253,23 +253,23 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Adresse</label>
                         <input type="text" name="address" value="{{ $user->address }}"
-                               class="w-full rounded-lg border-gray-300 focus:border-[#3B8BEB] focus:ring-[#3B8BEB]">
+                               class="w-full rounded-lg border-gray-300 focus:border-[#1B3C35] focus:ring-[#1B3C35]">
                     </div>
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Code postal</label>
                             <input type="text" name="postal_code" value="{{ $user->postal_code }}"
-                                   class="w-full rounded-lg border-gray-300 focus:border-[#3B8BEB] focus:ring-[#3B8BEB]">
+                                   class="w-full rounded-lg border-gray-300 focus:border-[#1B3C35] focus:ring-[#1B3C35]">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Ville</label>
                             <input type="text" name="city" value="{{ $user->city }}"
-                                   class="w-full rounded-lg border-gray-300 focus:border-[#3B8BEB] focus:ring-[#3B8BEB]">
+                                   class="w-full rounded-lg border-gray-300 focus:border-[#1B3C35] focus:ring-[#1B3C35]">
                         </div>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Pays</label>
-                        <select name="country" class="w-full rounded-lg border-gray-300 focus:border-[#3B8BEB] focus:ring-[#3B8BEB]">
+                        <select name="country" class="w-full rounded-lg border-gray-300 focus:border-[#1B3C35] focus:ring-[#1B3C35]">
                             @include('partials.country-options', ['selected' => $user->country ?? 'CI'])
                         </select>
                     </div>
@@ -278,10 +278,10 @@
                         <div class="space-y-4">
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Situation familiale</label>
-                                <select name="marital_status" class="w-full rounded-lg border-gray-300 focus:border-[#3B8BEB] focus:ring-[#3B8BEB]">
-                                    <option value="single" {{ $user->marital_status === 'single' ? 'selected' : '' }}>CÃ©libataire</option>
-                                    <option value="married" {{ $user->marital_status === 'married' ? 'selected' : '' }}>MariÃ©(e)</option>
-                                    <option value="divorced" {{ $user->marital_status === 'divorced' ? 'selected' : '' }}>DivorcÃ©(e)</option>
+                                <select name="marital_status" class="w-full rounded-lg border-gray-300 focus:border-[#1B3C35] focus:ring-[#1B3C35]">
+                                    <option value="single" {{ $user->marital_status === 'single' ? 'selected' : '' }}>Célibataire</option>
+                                    <option value="married" {{ $user->marital_status === 'married' ? 'selected' : '' }}>Marié(e)</option>
+                                    <option value="divorced" {{ $user->marital_status === 'divorced' ? 'selected' : '' }}>Divorcé(e)</option>
                                     <option value="widowed" {{ $user->marital_status === 'widowed' ? 'selected' : '' }}>Veuf/Veuve</option>
                                 </select>
                             </div>
@@ -289,12 +289,12 @@
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-1">Enfants</label>
                                     <input type="number" name="children_count" value="{{ $user->children_count }}" min="0"
-                                           class="w-full rounded-lg border-gray-300 focus:border-[#3B8BEB] focus:ring-[#3B8BEB]">
+                                           class="w-full rounded-lg border-gray-300 focus:border-[#1B3C35] focus:ring-[#1B3C35]">
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">NÂ° CNPS</label>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">N° CNPS</label>
                                     <input type="text" name="cnps_number" value="{{ $user->cnps_number }}"
-                                           class="w-full rounded-lg border-gray-300 focus:border-[#3B8BEB] focus:ring-[#3B8BEB]">
+                                           class="w-full rounded-lg border-gray-300 focus:border-[#1B3C35] focus:ring-[#1B3C35]">
                                 </div>
                             </div>
                         </div>
@@ -305,7 +305,7 @@
                             class="flex-1 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200">
                         Annuler
                     </button>
-                    <button type="submit" class="flex-1 px-4 py-2 text-white rounded-lg hover:opacity-90 transition-opacity" style="background-color: #3B8BEB;">
+                    <button type="submit" class="flex-1 px-4 py-2 text-white rounded-lg hover:opacity-90 transition-opacity" style="background-color: #1B3C35;">
                         Enregistrer
                     </button>
                 </div>
@@ -324,17 +324,17 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Nom du contact</label>
                         <input type="text" name="emergency_contact_name" value="{{ $user->emergency_contact_name }}"
-                               class="w-full rounded-lg border-gray-300 focus:border-[#3B8BEB] focus:ring-[#3B8BEB]">
+                               class="w-full rounded-lg border-gray-300 focus:border-[#1B3C35] focus:ring-[#1B3C35]">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">TÃ©lÃ©phone</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
                         <input type="tel" name="emergency_contact_phone" value="{{ $user->emergency_contact_phone }}"
-                               class="w-full rounded-lg border-gray-300 focus:border-[#3B8BEB] focus:ring-[#3B8BEB]">
+                               class="w-full rounded-lg border-gray-300 focus:border-[#1B3C35] focus:ring-[#1B3C35]">
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Relation (ex: Conjoint, Parent)</label>
                         <input type="text" name="emergency_contact_relationship" value="{{ $user->emergency_contact_relationship }}"
-                               class="w-full rounded-lg border-gray-300 focus:border-[#3B8BEB] focus:ring-[#3B8BEB]">
+                               class="w-full rounded-lg border-gray-300 focus:border-[#1B3C35] focus:ring-[#1B3C35]">
                     </div>
                 </div>
                 <div class="flex gap-3 mt-6">
@@ -342,7 +342,7 @@
                             class="flex-1 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200">
                         Annuler
                     </button>
-                    <button type="submit" class="flex-1 px-4 py-2 text-white rounded-lg hover:opacity-90 transition-opacity" style="background-color: #3B8BEB;">
+                    <button type="submit" class="flex-1 px-4 py-2 text-white rounded-lg hover:opacity-90 transition-opacity" style="background-color: #1B3C35;">
                         Enregistrer
                     </button>
                 </div>
@@ -368,7 +368,7 @@
                         </div>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">SÃ©lectionner une image</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Sélectionner une image</label>
                         <input type="file" name="avatar" accept="image/*" required
                                onchange="previewAvatar(this)"
                                class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
@@ -380,7 +380,7 @@
                             class="flex-1 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200">
                         Annuler
                     </button>
-                    <button type="submit" class="flex-1 px-4 py-2 text-white rounded-lg hover:opacity-90 transition-opacity" style="background-color: #3B8BEB;">
+                    <button type="submit" class="flex-1 px-4 py-2 text-white rounded-lg hover:opacity-90 transition-opacity" style="background-color: #1B3C35;">
                         Enregistrer
                     </button>
                 </div>
@@ -399,18 +399,18 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Mot de passe actuel</label>
                         <input type="password" name="current_password" required
-                               class="w-full rounded-lg border-gray-300 focus:border-[#3B8BEB] focus:ring-[#3B8BEB]">
+                               class="w-full rounded-lg border-gray-300 focus:border-[#1B3C35] focus:ring-[#1B3C35]">
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Nouveau mot de passe</label>
                         <input type="password" name="password" required minlength="8"
-                               class="w-full rounded-lg border-gray-300 focus:border-[#3B8BEB] focus:ring-[#3B8BEB]">
-                        <p class="text-xs text-gray-500 mt-1">Min 8 caractÃ©res, majuscule, minuscule et chiffre</p>
+                               class="w-full rounded-lg border-gray-300 focus:border-[#1B3C35] focus:ring-[#1B3C35]">
+                        <p class="text-xs text-gray-500 mt-1">Min 8 caractéres, majuscule, minuscule et chiffre</p>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Confirmer le mot de passe</label>
                         <input type="password" name="password_confirmation" required
-                               class="w-full rounded-lg border-gray-300 focus:border-[#3B8BEB] focus:ring-[#3B8BEB]">
+                               class="w-full rounded-lg border-gray-300 focus:border-[#1B3C35] focus:ring-[#1B3C35]">
                     </div>
                 </div>
                 <div class="flex gap-3 mt-6">
@@ -418,7 +418,7 @@
                             class="flex-1 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200">
                         Annuler
                     </button>
-                    <button type="submit" class="flex-1 px-4 py-2 text-white rounded-lg hover:opacity-90 transition-opacity" style="background-color: #3B8BEB;">
+                    <button type="submit" class="flex-1 px-4 py-2 text-white rounded-lg hover:opacity-90 transition-opacity" style="background-color: #1B3C35;">
                         Modifier
                     </button>
                 </div>

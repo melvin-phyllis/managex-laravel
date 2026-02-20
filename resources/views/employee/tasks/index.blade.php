@@ -1,7 +1,7 @@
 <x-layouts.employee>
     <div class="space-y-6" x-data="{ viewMode: localStorage.getItem('employeeTaskView') || 'cards' }" x-init="$watch('viewMode', v => localStorage.setItem('employeeTaskView', v))">
         <!-- Header avec Tolia Blue -->
-        <div class="relative overflow-hidden rounded-2xl p-6 text-white shadow-xl" style="background-color: #3B8BEB;">
+        <div class="relative overflow-hidden rounded-2xl p-6 text-white shadow-xl" style="background-color: #1B3C35;">
             <div class="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full" style="transform: translate(30%, -50%);"></div>
             <div class="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full" style="transform: translate(-30%, 50%);"></div>
             
@@ -14,13 +14,13 @@
                     <!-- Toggle View -->
                     <div class="bg-white/20 backdrop-blur-sm rounded-xl p-1 flex">
                         <button @click="viewMode = 'cards'" 
-                                :class="viewMode === 'cards' ? 'bg-white text-[#3B8BEB]' : 'text-white hover:bg-white/20'"
+                                :class="viewMode === 'cards' ? 'bg-white text-[#1B3C35]' : 'text-white hover:bg-white/20'"
                                 class="px-3 py-2 rounded-lg font-medium text-sm transition-all flex items-center gap-1">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
                             Cartes
                         </button>
                         <button @click="viewMode = 'calendar'; $nextTick(() => initEmployeeCalendar())" 
-                                :class="viewMode === 'calendar' ? 'bg-white text-[#3B8BEB]' : 'text-white hover:bg-white/20'"
+                                :class="viewMode === 'calendar' ? 'bg-white text-[#1B3C35]' : 'text-white hover:bg-white/20'"
                                 class="px-3 py-2 rounded-lg font-medium text-sm transition-all flex items-center gap-1">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                             Calendrier
@@ -40,7 +40,7 @@
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
             <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background-color: #3B8BEB;">
+                    <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background-color: #1B3C35;">
                         <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
                         </svg>
@@ -53,8 +53,8 @@
             </div>
             <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background-color: rgba(59, 139, 235, 0.15);">
-                        <svg class="w-5 h-5" style="color: #3B8BEB;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background-color: rgba(27, 60, 53, 0.15);">
+                        <svg class="w-5 h-5" style="color: #1B3C35;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                         </svg>
                     </div>
@@ -67,7 +67,7 @@
             <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background-color: #E7E3D4;">
-                        <svg class="w-5 h-5" style="color: #8590AA;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-5 h-5" style="color: #5C6E68;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                         </svg>
                     </div>
@@ -79,8 +79,8 @@
             </div>
             <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background-color: rgba(59, 139, 235, 0.2);">
-                        <svg class="w-5 h-5" style="color: #3B8BEB;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background-color: rgba(27, 60, 53, 0.2);">
+                        <svg class="w-5 h-5" style="color: #1B3C35;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                         </svg>
                     </div>
@@ -96,7 +96,7 @@
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
             <div class="px-5 py-3 border-b border-gray-100" style="background-color: rgba(231, 227, 212, 0.3);">
                 <h3 class="font-semibold text-gray-800 flex items-center gap-2">
-                    <svg class="w-4 h-4" style="color: #3B8BEB;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-4 h-4" style="color: #1B3C35;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
                     </svg>
                     Filtres
@@ -106,7 +106,7 @@
                 <form action="{{ route('employee.tasks.index') }}" method="GET" class="flex flex-col sm:flex-row gap-4">
                     <div class="flex-1">
                         <label for="statut" class="block text-sm font-medium text-gray-700 mb-1">Statut</label>
-                        <select name="statut" id="statut" class="w-full rounded-xl border-gray-300 focus:border-[#3B8BEB] focus:ring-[#3B8BEB]">
+                        <select name="statut" id="statut" class="w-full rounded-xl border-gray-300 focus:border-[#1B3C35] focus:ring-[#1B3C35]">
                             <option value="">Tous les statuts</option>
                             <option value="pending" {{ request('statut') == 'pending' ? 'selected' : '' }}>En attente</option>
                             <option value="approved" {{ request('statut') == 'approved' ? 'selected' : '' }}>En cours</option>
@@ -117,7 +117,7 @@
                     </div>
                     <div class="flex-1">
                         <label for="priorite" class="block text-sm font-medium text-gray-700 mb-1">Priorité</label>
-                        <select name="priorite" id="priorite" class="w-full rounded-xl border-gray-300 focus:border-[#3B8BEB] focus:ring-[#3B8BEB]">
+                        <select name="priorite" id="priorite" class="w-full rounded-xl border-gray-300 focus:border-[#1B3C35] focus:ring-[#1B3C35]">
                             <option value="">Toutes les priorités</option>
                             <option value="high" {{ request('priorite') == 'high' ? 'selected' : '' }}>Haute</option>
                             <option value="medium" {{ request('priorite') == 'medium' ? 'selected' : '' }}>Moyenne</option>
@@ -125,7 +125,7 @@
                         </select>
                     </div>
                     <div class="flex items-end gap-2">
-                        <button type="submit" class="px-5 py-2 text-white rounded-xl transition-all shadow-sm" style="background-color: #3B8BEB;">
+                        <button type="submit" class="px-5 py-2 text-white rounded-xl transition-all shadow-sm" style="background-color: #1B3C35;">
                             Filtrer
                         </button>
                         @if(request('statut') || request('priorite'))
@@ -150,18 +150,18 @@
             @forelse($tasks as $task)
                 @php
                     $priorityColors = [
-                        'high' => ['bg' => 'rgba(178, 56, 80, 0.1)', 'text' => '#B23850', 'border' => 'rgba(178, 56, 80, 0.2)', 'dot' => '#B23850'],
-                        'medium' => ['bg' => '#E7E3D4', 'text' => '#8590AA', 'border' => 'rgba(133, 144, 170, 0.3)', 'dot' => '#8590AA'],
-                        'low' => ['bg' => 'rgba(59, 139, 235, 0.1)', 'text' => '#3B8BEB', 'border' => 'rgba(59, 139, 235, 0.2)', 'dot' => '#3B8BEB'],
+                        'high' => ['bg' => 'rgba(200, 169, 110, 0.1)', 'text' => '#C8A96E', 'border' => 'rgba(200, 169, 110, 0.2)', 'dot' => '#C8A96E'],
+                        'medium' => ['bg' => '#E7E3D4', 'text' => '#5C6E68', 'border' => 'rgba(133, 144, 170, 0.3)', 'dot' => '#5C6E68'],
+                        'low' => ['bg' => 'rgba(27, 60, 53, 0.1)', 'text' => '#1B3C35', 'border' => 'rgba(27, 60, 53, 0.2)', 'dot' => '#1B3C35'],
                     ];
                     $priority = $priorityColors[$task->priorite] ?? $priorityColors['medium'];
                     
                     $statusConfig = [
-                        'pending' => ['bg' => '#E7E3D4', 'text' => '#8590AA', 'icon' => 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z', 'label' => 'En attente'],
-                        'approved' => ['bg' => 'rgba(59, 139, 235, 0.15)', 'text' => '#3B8BEB', 'icon' => 'M13 10V3L4 14h7v7l9-11h-7z', 'label' => 'En cours'],
-                        'completed' => ['bg' => 'rgba(133, 144, 170, 0.15)', 'text' => '#8590AA', 'icon' => 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z', 'label' => 'A valider'],
-                        'validated' => ['bg' => 'rgba(59, 139, 235, 0.2)', 'text' => '#3B8BEB', 'icon' => 'M5 13l4 4L19 7', 'label' => 'Validée'],
-                        'rejected' => ['bg' => 'rgba(178, 56, 80, 0.15)', 'text' => '#B23850', 'icon' => 'M6 18L18 6M6 6l12 12', 'label' => 'Rejetée'],
+                        'pending' => ['bg' => '#E7E3D4', 'text' => '#5C6E68', 'icon' => 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z', 'label' => 'En attente'],
+                        'approved' => ['bg' => 'rgba(27, 60, 53, 0.15)', 'text' => '#1B3C35', 'icon' => 'M13 10V3L4 14h7v7l9-11h-7z', 'label' => 'En cours'],
+                        'completed' => ['bg' => 'rgba(133, 144, 170, 0.15)', 'text' => '#5C6E68', 'icon' => 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z', 'label' => 'A valider'],
+                        'validated' => ['bg' => 'rgba(27, 60, 53, 0.2)', 'text' => '#1B3C35', 'icon' => 'M5 13l4 4L19 7', 'label' => 'Validée'],
+                        'rejected' => ['bg' => 'rgba(200, 169, 110, 0.15)', 'text' => '#C8A96E', 'icon' => 'M6 18L18 6M6 6l12 12', 'label' => 'Rejetée'],
                     ];
                     $status = $statusConfig[$task->statut] ?? $statusConfig['pending'];
                 @endphp
@@ -170,7 +170,7 @@
                     <!-- En-tête de la carte -->
                     <div class="p-5">
                         <div class="flex items-start justify-between gap-3 mb-3">
-                            <h3 class="font-semibold text-gray-900 group-hover:text-[#3B8BEB] transition-colors line-clamp-2">
+                            <h3 class="font-semibold text-gray-900 group-hover:text-[#1B3C35] transition-colors line-clamp-2">
                                 {{ $task->titre }}
                             </h3>
                             <span class="flex-shrink-0 inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium border" 
@@ -186,11 +186,11 @@
                         <div class="mb-4">
                             <div class="flex items-center justify-between text-xs mb-1">
                                 <span class="text-gray-500">Progression</span>
-                                <span class="font-semibold" style="color: #3B8BEB;">{{ $task->progression }}%</span>
+                                <span class="font-semibold" style="color: #1B3C35;">{{ $task->progression }}%</span>
                             </div>
                             <div class="w-full bg-gray-100 rounded-full h-2">
                                 <div class="h-2 rounded-full transition-all duration-500" 
-                                     style="width: {{ $task->progression }}%; background-color: #3B8BEB;"></div>
+                                     style="width: {{ $task->progression }}%; background-color: #1B3C35;"></div>
                             </div>
                         </div>
                         
@@ -204,7 +204,7 @@
                                 {{ $status['label'] }}
                             </span>
                             @if($task->date_fin)
-                                <span class="flex items-center gap-1 text-xs" style="color: {{ $task->date_fin->isPast() && $task->statut !== 'validated' ? '#B23850' : '#8590AA' }}; {{ $task->date_fin->isPast() && $task->statut !== 'validated' ? 'font-weight: 500;' : '' }}">
+                                <span class="flex items-center gap-1 text-xs" style="color: {{ $task->date_fin->isPast() && $task->statut !== 'validated' ? '#C8A96E' : '#5C6E68' }}; {{ $task->date_fin->isPast() && $task->statut !== 'validated' ? 'font-weight: 500;' : '' }}">
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                                     </svg>
@@ -218,14 +218,14 @@
                     @if($task->statut === 'approved')
                         <div class="px-5 py-4 border-t border-gray-100" style="background-color: rgba(231, 227, 212, 0.3);">
                             <div x-data="{ progress: {{ $task->progression }}, saving: false, saved: false }" class="space-y-3">
-                                <label class="text-sm font-medium" style="color: #3B8BEB;">Mettre à jour la progression</label>
+                                <label class="text-sm font-medium" style="color: #1B3C35;">Mettre à jour la progression</label>
                                 <div class="flex items-center gap-3">
                                     <input type="range" min="0" max="100" step="5" x-model="progress" 
-                                           class="flex-1 h-2 rounded-lg appearance-none cursor-pointer" style="accent-color: #3B8BEB;">
-                                    <span class="text-sm font-bold w-12 text-right" style="color: #3B8BEB;" x-text="progress + '%'"></span>
+                                           class="flex-1 h-2 rounded-lg appearance-none cursor-pointer" style="accent-color: #1B3C35;">
+                                    <span class="text-sm font-bold w-12 text-right" style="color: #1B3C35;" x-text="progress + '%'"></span>
                                 </div>
                                 <template x-if="progress == 100">
-                                    <p class="text-xs p-2 rounded-lg border" style="background-color: rgba(59, 139, 235, 0.1); color: #3B8BEB; border-color: rgba(59, 139, 235, 0.2);">
+                                    <p class="text-xs p-2 rounded-lg border" style="background-color: rgba(27, 60, 53, 0.1); color: #1B3C35; border-color: rgba(27, 60, 53, 0.2);">
                                         <span class="font-semibold">A 100%</span>, la tache sera envoyée à l'admin pour validation.
                                     </p>
                                 </template>
@@ -255,7 +255,7 @@
                                         alert('Erreur réseau ou serveur: ' + error); 
                                     })"
                                     class="w-full px-4 py-2 text-white text-sm font-medium rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
-                                    style="background-color: #3B8BEB;">
+                                    style="background-color: #1B3C35;">
                                     <span x-show="!saving && !saved">Sauvegarder</span>
                                     <span x-show="saving" x-cloak>Enregistrement...</span>
                                     <span x-show="saved" x-cloak>✓ Enregistré !</span>
@@ -266,44 +266,44 @@
                         <div class="px-5 py-3 border-t border-gray-100" style="background-color: rgba(231, 227, 212, 0.3);">
                             <div class="flex items-center gap-2">
                                 <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: rgba(133, 144, 170, 0.15);">
-                                    <svg class="w-4 h-4" style="color: #8590AA;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-4 h-4" style="color: #5C6E68;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                     </svg>
                                 </div>
-                                <span class="text-sm font-medium" style="color: #8590AA;">En attente de validation admin</span>
+                                <span class="text-sm font-medium" style="color: #5C6E68;">En attente de validation admin</span>
                             </div>
                         </div>
                     @elseif($task->statut === 'validated')
-                        <div class="px-5 py-3 border-t border-gray-100" style="background-color: rgba(59, 139, 235, 0.1);">
+                        <div class="px-5 py-3 border-t border-gray-100" style="background-color: rgba(27, 60, 53, 0.1);">
                             <div class="flex items-center gap-2">
-                                <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: rgba(59, 139, 235, 0.2);">
-                                    <svg class="w-4 h-4" style="color: #3B8BEB;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: rgba(27, 60, 53, 0.2);">
+                                    <svg class="w-4 h-4" style="color: #1B3C35;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                                     </svg>
                                 </div>
-                                <span class="text-sm font-medium" style="color: #3B8BEB;">Tache validée avec succès</span>
+                                <span class="text-sm font-medium" style="color: #1B3C35;">Tache validée avec succès</span>
                             </div>
                         </div>
                     @elseif($task->statut === 'rejected')
-                        <div class="px-5 py-3 border-t" style="border-color: rgba(178, 56, 80, 0.2); background-color: rgba(178, 56, 80, 0.1);">
+                        <div class="px-5 py-3 border-t" style="border-color: rgba(200, 169, 110, 0.2); background-color: rgba(200, 169, 110, 0.1);">
                             <div class="flex items-center gap-2">
-                                <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: rgba(178, 56, 80, 0.2);">
-                                    <svg class="w-4 h-4" style="color: #B23850;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: rgba(200, 169, 110, 0.2);">
+                                    <svg class="w-4 h-4" style="color: #C8A96E;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                                     </svg>
                                 </div>
-                                <span class="text-sm font-medium" style="color: #B23850;">Tache rejetée</span>
+                                <span class="text-sm font-medium" style="color: #C8A96E;">Tache rejetée</span>
                             </div>
                         </div>
                     @elseif($task->statut === 'pending')
                         <div class="px-5 py-3 border-t border-gray-200" style="background-color: rgba(231, 227, 212, 0.3);">
                             <div class="flex items-center gap-2">
                                 <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: #E7E3D4;">
-                                    <svg class="w-4 h-4" style="color: #8590AA;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-4 h-4" style="color: #5C6E68;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                     </svg>
                                 </div>
-                                <span class="text-sm font-medium" style="color: #8590AA;">En attente d'approbation</span>
+                                <span class="text-sm font-medium" style="color: #5C6E68;">En attente d'approbation</span>
                             </div>
                         </div>
                     @endif
@@ -311,15 +311,15 @@
             @empty
                 <div class="col-span-full">
                     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-12 text-center">
-                        <div class="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-4" style="background-color: rgba(59, 139, 235, 0.1);">
-                            <svg class="w-10 h-10" style="color: #3B8BEB;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-4" style="background-color: rgba(27, 60, 53, 0.1);">
+                            <svg class="w-10 h-10" style="color: #1B3C35;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
                             </svg>
                         </div>
                         <h3 class="text-lg font-semibold text-gray-900 mb-2">Aucune tache trouvée</h3>
                         <p class="text-gray-500 mb-4">Les taches vous seront assignées par l'administration</p>
                         @if(request('statut') || request('priorite'))
-                            <a href="{{ route('employee.tasks.index') }}" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl transition-colors" style="background-color: rgba(59, 139, 235, 0.1); color: #3B8BEB;">
+                            <a href="{{ route('employee.tasks.index') }}" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl transition-colors" style="background-color: rgba(27, 60, 53, 0.1); color: #1B3C35;">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
                                 </svg>
@@ -359,14 +359,14 @@
             const tasks = @json($tasks->items());
             const events = tasks.map(task => {
                 const statusColors = {
-                    pending: { bg: '#8590AA', border: '#6B7280' },
-                    approved: { bg: '#3B8BEB', border: '#2563EB' },
-                    in_progress: { bg: '#3B8BEB', border: '#2563EB' },
-                    completed: { bg: '#8590AA', border: '#6B7280' },
-                    validated: { bg: '#3B8BEB', border: '#1D4ED8' },
-                    rejected: { bg: '#B23850', border: '#9F1239' }
+                    pending: { bg: '#5C6E68', border: '#6B7280' },
+                    approved: { bg: '#1B3C35', border: '#2D5A4E' },
+                    in_progress: { bg: '#1B3C35', border: '#2D5A4E' },
+                    completed: { bg: '#5C6E68', border: '#6B7280' },
+                    validated: { bg: '#1B3C35', border: '#1B3C35' },
+                    rejected: { bg: '#C8A96E', border: '#9F1239' }
                 };
-                const colors = statusColors[task.statut] || { bg: '#8590AA', border: '#6B7280' };
+                const colors = statusColors[task.statut] || { bg: '#5C6E68', border: '#6B7280' };
                 
                 return {
                     id: task.id,

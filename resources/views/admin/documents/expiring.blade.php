@@ -1,4 +1,4 @@
-<x-layouts.admin>
+﻿<x-layouts.admin>
     <div class="space-y-6">
         <!-- Header -->
         <div class="flex items-center gap-4">
@@ -52,15 +52,15 @@
                             </td>
                             <td class="px-4 py-4">
                                 @if($daysLeft < 0)
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#E8F0ED] text-[#0F2A25]">
                                         ❌ Expiré
                                     </span>
                                 @elseif($daysLeft <= 7)
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#E8F0ED] text-[#0F2A25]">
                                         🔴 {{ $daysLeft }} jour(s)
                                     </span>
                                 @elseif($daysLeft <= 30)
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800">
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#FAF3E8] text-[#A07D4A]">
                                         🟠 {{ $daysLeft }} jours
                                     </span>
                                 @else
@@ -72,7 +72,7 @@
                             </td>
                             <td class="px-4 py-4 text-right">
                                 <a href="{{ route('admin.documents.download', $document) }}" 
-                                   class="text-blue-600 hover:underline text-sm">
+                                   class="text-[#1B3C35] hover:underline text-sm">
                                     Télécharger
                                 </a>
                             </td>

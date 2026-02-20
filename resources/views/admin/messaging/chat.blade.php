@@ -61,7 +61,7 @@
                 <div class="flex items-center justify-between mb-3">
                     <h2 class="text-lg font-bold text-gray-900">Messages</h2>
                     <button @click="showNewConversation = true"
-                            class="p-2 text-white rounded-lg transition-colors" style="background: linear-gradient(135deg, #5680E9, #5AB9EA);">
+                            class="p-2 text-white rounded-lg transition-colors" style="background: linear-gradient(135deg, #1B3C35, #2D5A4E);">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                         </svg>
@@ -73,7 +73,7 @@
                            x-model="searchQuery"
                            @input.debounce.300ms="filterConversations()"
                            placeholder="Rechercher..."
-                           class="w-full pl-10 pr-4 py-2 bg-gray-100 border-0 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500">
+                           class="w-full pl-10 pr-4 py-2 bg-gray-100 border-0 rounded-lg text-sm focus:ring-2 focus:ring-[#2D5A4E]">
                     <svg class="w-5 h-5 text-gray-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                     </svg>
@@ -84,19 +84,19 @@
             <div class="flex border-b border-gray-200 bg-white">
                 <button @click="activeTab = 'all'"
                         :class="activeTab === 'all' ? 'border-b-2 text-white' : 'border-transparent text-gray-500'"
-                        :style="activeTab === 'all' ? 'border-color: #5680E9; background: linear-gradient(135deg, #5680E9, #84CEEB);' : ''"
+                        :style="activeTab === 'all' ? 'border-color: #1B3C35; background: linear-gradient(135deg, #1B3C35, #3D7A6A);' : ''"
                         class="flex-1 py-2 text-sm font-medium hover:text-gray-700 transition-colors">
                     Tous
                 </button>
                 <button @click="activeTab = 'direct'"
                         :class="activeTab === 'direct' ? 'border-b-2 text-white' : 'border-transparent text-gray-500'"
-                        :style="activeTab === 'direct' ? 'border-color: #5680E9; background: linear-gradient(135deg, #5680E9, #84CEEB);' : ''"
+                        :style="activeTab === 'direct' ? 'border-color: #1B3C35; background: linear-gradient(135deg, #1B3C35, #3D7A6A);' : ''"
                         class="flex-1 py-2 text-sm font-medium hover:text-gray-700 transition-colors">
                     Directs
                 </button>
                 <button @click="activeTab = 'group'"
                         :class="activeTab === 'group' ? 'border-b-2 text-white' : 'border-transparent text-gray-500'"
-                        :style="activeTab === 'group' ? 'border-color: #5680E9; background: linear-gradient(135deg, #5680E9, #84CEEB);' : ''"
+                        :style="activeTab === 'group' ? 'border-color: #1B3C35; background: linear-gradient(135deg, #1B3C35, #3D7A6A);' : ''"
                         class="flex-1 py-2 text-sm font-medium hover:text-gray-700 transition-colors">
                     Groupes
                 </button>
@@ -107,7 +107,7 @@
                 <template x-for="conv in filteredConversations" :key="conv.id">
                     <div @click="selectConversation(conv)"
                          :class="selectedConversation?.id === conv.id ? 'border-l-4' : 'hover:bg-gray-100'"
-                         :style="selectedConversation?.id === conv.id ? 'background: linear-gradient(90deg, #5680E920, transparent); border-color: #5680E9;' : ''"
+                         :style="selectedConversation?.id === conv.id ? 'background: linear-gradient(90deg, #1B3C3520, transparent); border-color: #1B3C35;' : ''"
                          class="p-3 cursor-pointer transition-colors border-b border-gray-100">
                         <div class="flex items-center gap-3">
                             <!-- Avatar -->
@@ -124,7 +124,7 @@
                                     </div>
                                 </template>
                                 <template x-if="conv.type === 'group' || conv.type === 'channel'">
-                                    <div class="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold" style="background: linear-gradient(135deg, #8860D0, #5680E9);">
+                                    <div class="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold" style="background: linear-gradient(135deg, #C8A96E, #1B3C35);">
                                         <span x-text="conv.type === 'channel' ? '#' : getInitials(conv.name)"></span>
                                     </div>
                                 </template>
@@ -140,7 +140,7 @@
                             </div>
                             <!-- Unread badge -->
                             <template x-if="conv.unread_count > 0">
-                                <span class="text-white text-xs font-bold px-2 py-1 rounded-full flex-shrink-0" style="background: linear-gradient(135deg, #5680E9, #5AB9EA);" x-text="conv.unread_count"></span>
+                                <span class="text-white text-xs font-bold px-2 py-1 rounded-full flex-shrink-0" style="background: linear-gradient(135deg, #1B3C35, #2D5A4E);" x-text="conv.unread_count"></span>
                             </template>
                         </div>
                     </div>
@@ -187,7 +187,7 @@
                                 </div>
                             </template>
                             <template x-if="selectedConversation.type !== 'direct'">
-                                <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold" style="background: linear-gradient(135deg, #8860D0, #5680E9);">
+                                <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold" style="background: linear-gradient(135deg, #C8A96E, #1B3C35);">
                                     <span x-text="selectedConversation.type === 'channel' ? '#' : getInitials(selectedConversation.name)"></span>
                                 </div>
                             </template>
@@ -204,7 +204,7 @@
                         <!-- Loading spinner -->
                         <div x-show="isLoadingMessages" x-transition.opacity class="flex items-center justify-center h-full">
                             <div class="text-center">
-                                <svg class="w-10 h-10 mx-auto animate-spin text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <svg class="w-10 h-10 mx-auto animate-spin text-[#2D5A4E]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                 </svg>
@@ -220,7 +220,7 @@
                                     'max-w-[85%] sm:max-w-md px-3 py-2 shadow-md'
                                 ]">
                                     <template x-if="(message.sender_id || message.user_id) != currentUserId && selectedConversation.type !== 'direct'">
-                                        <p class="text-xs font-semibold text-emerald-700 mb-0.5" x-text="message.sender?.name || message.user?.name"></p>
+                                        <p class="text-xs font-semibold text-[#163530] mb-0.5" x-text="message.sender?.name || message.user?.name"></p>
                                     </template>
                                     <template x-if="message.attachments && message.attachments.length">
                                         <div class="space-y-2 mt-1">
@@ -234,7 +234,7 @@
                                                     <template x-if="isAudioAtt(att)">
                                                         <div class="flex items-center gap-2 py-1 px-2 rounded-xl min-w-[200px] max-w-[260px]"
                                                              :class="(message.sender_id || message.user_id) == currentUserId ? 'bg-white/60' : 'bg-gray-100'">
-                                                            <button type="button" @click="playPauseVoice(att)" class="flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center transition bg-emerald-500/80 text-white hover:bg-emerald-600">
+                                                            <button type="button" @click="playPauseVoice(att)" class="flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center transition bg-[#2D5A4E]/80 text-white hover:bg-[#1B3C35]">
                                                                 <template x-if="voicePlayingId === att.id">
                                                                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
                                                                 </template>
@@ -246,7 +246,7 @@
                                                                 <template x-for="(h, i) in voiceWaveBars" :key="i">
                                                                     <div class="voice-wave-bar w-1 rounded-full flex-shrink-0 transition-colors duration-150"
                                                                          :style="'height: ' + (h * 100) + '%'"
-                                                                         :class="(voicePlayingId === att.id && voiceDuration > 0 && (i / voiceWaveBars.length) < (voiceCurrentTime / voiceDuration)) ? 'bg-emerald-600' : 'bg-gray-400/60'"></div>
+                                                                         :class="(voicePlayingId === att.id && voiceDuration > 0 && (i / voiceWaveBars.length) < (voiceCurrentTime / voiceDuration)) ? 'bg-[#1B3C35]' : 'bg-gray-400/60'"></div>
                                                                 </template>
                                                             </div>
                                                             <span class="text-xs font-medium w-9 text-right flex-shrink-0" x-text="voicePlayingId === att.id ? formatVoiceDuration(voiceCurrentTime) : formatVoiceDuration(voiceDurations[att.id] || 0)"></span>
@@ -263,7 +263,7 @@
                                         </div>
                                     </template>
                                     <p class="text-sm break-words mt-1" x-show="message.content" x-text="message.content"></p>
-                                    <div class="flex items-center justify-end gap-1 mt-0.5" :class="(message.sender_id || message.user_id) == currentUserId ? 'text-emerald-700/80' : 'text-gray-500'">
+                                    <div class="flex items-center justify-end gap-1 mt-0.5" :class="(message.sender_id || message.user_id) == currentUserId ? 'text-[#163530]/80' : 'text-gray-500'">
                                         <span class="text-[11px]" x-text="formatMessageTime(message.created_at)"></span>
                                         <template x-if="(message.sender_id || message.user_id) == currentUserId">
                                             <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M18.7 7.3l-6.9 6.9-2.8-2.8-1.4 1.4 4.2 4.2 8.3-8.3zM12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2z"/></svg>
@@ -281,13 +281,13 @@
                             <template x-for="(file, idx) in pendingImages" :key="idx">
                                 <div class="relative flex-shrink-0">
                                     <img :src="file.preview" class="w-16 h-16 object-cover rounded-lg border border-gray-200"/>
-                                    <button type="button" @click="removePendingImage(idx)" class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center text-xs hover:bg-red-600">×</button>
+                                    <button type="button" @click="removePendingImage(idx)" class="absolute -top-1 -right-1 w-5 h-5 bg-[#2D5A4E] text-white rounded-full flex items-center justify-center text-xs hover:bg-[#1B3C35]">×</button>
                                 </div>
                             </template>
                         </div>
                         <form @submit.prevent="sendMessageOrAttachments()" class="flex items-center gap-2 sm:gap-3">
                             <input type="file" x-ref="imageInput" @change="onImageSelected($event)" accept="image/*" multiple class="hidden"/>
-                            <button type="button" @click="$refs.imageInput.click()" class="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-colors flex-shrink-0" title="Envoyer une image">
+                            <button type="button" @click="$refs.imageInput.click()" class="p-2 text-gray-500 hover:text-[#1B3C35] hover:bg-[#F0F5F3] rounded-full transition-colors flex-shrink-0" title="Envoyer une image">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                                 </svg>
@@ -298,7 +298,7 @@
                                     @mouseleave="isRecording && stopVoiceRecord()"
                                     @touchstart.prevent="startVoiceRecord()" 
                                     @touchend.prevent="stopVoiceRecord()"
-                                    :class="isRecording ? 'bg-red-500 hover:bg-red-600 text-white scale-110 animate-pulse' : 'text-gray-500 hover:text-blue-600 hover:bg-blue-50'" 
+                                    :class="isRecording ? 'bg-[#2D5A4E] hover:bg-[#1B3C35] text-white scale-110 animate-pulse' : 'text-gray-500 hover:text-[#1B3C35] hover:bg-[#F0F5F3]'" 
                                     class="p-2 rounded-full transition-all flex-shrink-0 select-none" 
                                     :title="isRecording ? 'Relâchez pour envoyer' : 'Maintenez pour enregistrer'">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -308,10 +308,10 @@
                             <input type="text"
                                    x-model="newMessage"
                                    placeholder="écrivez un message..."
-                                   class="flex-1 px-4 py-2 border border-gray-300 rounded-full focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm sm:text-base">
+                                   class="flex-1 px-4 py-2 border border-gray-300 rounded-full focus:ring-2 focus:ring-[#2D5A4E] focus:border-[#2D5A4E] text-sm sm:text-base">
                             <button type="submit"
                                     :disabled="!canSend()"
-                                    class="p-2 sm:px-6 sm:py-2 text-white rounded-full disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex-shrink-0" style="background: linear-gradient(135deg, #5680E9, #5AB9EA);">
+                                    class="p-2 sm:px-6 sm:py-2 text-white rounded-full disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex-shrink-0" style="background: linear-gradient(135deg, #1B3C35, #2D5A4E);">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
                                 </svg>
@@ -362,7 +362,7 @@
                         <div class="max-h-48 overflow-y-auto border border-gray-200 rounded-lg">
                             <template x-for="user in availableUsers" :key="user.id">
                                 <label class="flex items-center gap-3 p-2 hover:bg-gray-50 cursor-pointer">
-                                    <input type="checkbox" :value="user.id" x-model="selectedParticipants" class="rounded border-gray-300 text-indigo-600">
+                                    <input type="checkbox" :value="user.id" x-model="selectedParticipants" class="rounded border-gray-300 text-[#1B3C35]">
                                     <span x-text="user.name" class="text-sm"></span>
                                 </label>
                             </template>
@@ -372,7 +372,7 @@
 
                 <div class="flex justify-end gap-3 mt-6">
                     <button @click="showNewConversation = false" class="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">Annuler</button>
-                    <button @click="createConversation()" class="px-4 py-2 text-white rounded-lg" style="background: linear-gradient(135deg, #5680E9, #5AB9EA);">Créer</button>
+                    <button @click="createConversation()" class="px-4 py-2 text-white rounded-lg" style="background: linear-gradient(135deg, #1B3C35, #2D5A4E);">Créer</button>
                 </div>
             </div>
         </div>
@@ -878,7 +878,7 @@
                 },
 
                 getAvatarColor(name) {
-                    const colors = ['bg-blue-500', 'bg-green-500', 'bg-purple-500', 'bg-pink-500', 'bg-indigo-500', 'bg-yellow-500'];
+                    const colors = ['bg-[#2D5A4E]', 'bg-green-500', 'bg-[#C8A96E]', 'bg-pink-500', 'bg-[#2D5A4E]', 'bg-yellow-500'];
                     const index = name ? name.charCodeAt(0) % colors.length : 0;
                     return colors[index];
                 },

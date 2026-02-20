@@ -1,7 +1,7 @@
-<x-layouts.admin>
+﻿<x-layouts.admin>
     <div class="space-y-6">
         <!-- Header avec gradient -->
-        <div class="relative overflow-hidden bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 rounded-2xl shadow-xl">
+        <div class="relative overflow-hidden bg-gradient-to-r from-[#1B3C35] via-[#2D5A4E] to-[#2D5A4E] rounded-2xl shadow-xl">
             <div class="absolute inset-0 bg-black/10"></div>
             <div class="absolute -top-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
             <div class="absolute -bottom-24 -left-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
@@ -27,7 +27,7 @@
                             <p class="text-white font-bold text-xl">{{ $evaluations->total() }}</p>
                         </div>
                         <a href="{{ route('admin.intern-evaluations.index') }}" 
-                           class="inline-flex items-center px-5 py-2.5 bg-white text-indigo-700 font-semibold rounded-xl hover:bg-indigo-50 transition-all shadow-lg">
+                           class="inline-flex items-center px-5 py-2.5 bg-white text-[#163530] font-semibold rounded-xl hover:bg-[#F0F5F3] transition-all shadow-lg">
                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
                             </svg>
@@ -52,7 +52,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Département</label>
-                        <select name="department_id" class="w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+                        <select name="department_id" class="w-full rounded-xl border-gray-300 focus:border-[#2D5A4E] focus:ring-[#2D5A4E] text-sm">
                             <option value="">Tous les départements</option>
                             @foreach($departments as $dept)
                                 <option value="{{ $dept->id }}" {{ request('department_id') == $dept->id ? 'selected' : '' }}>{{ $dept->name }}</option>
@@ -61,7 +61,7 @@
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Tuteur</label>
-                        <select name="tutor_id" class="w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+                        <select name="tutor_id" class="w-full rounded-xl border-gray-300 focus:border-[#2D5A4E] focus:ring-[#2D5A4E] text-sm">
                             <option value="">Tous les tuteurs</option>
                             @foreach($tutors as $tutor)
                                 <option value="{{ $tutor->id }}" {{ request('tutor_id') == $tutor->id ? 'selected' : '' }}>{{ $tutor->name }}</option>
@@ -71,15 +71,15 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Date début</label>
                         <input type="date" name="date_from" value="{{ request('date_from') }}" 
-                               class="w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+                               class="w-full rounded-xl border-gray-300 focus:border-[#2D5A4E] focus:ring-[#2D5A4E] text-sm">
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Date fin</label>
                         <input type="date" name="date_to" value="{{ request('date_to') }}" 
-                               class="w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+                               class="w-full rounded-xl border-gray-300 focus:border-[#2D5A4E] focus:ring-[#2D5A4E] text-sm">
                     </div>
                     <div class="flex items-end gap-2">
-                        <button type="submit" class="flex-1 px-4 py-2.5 bg-blue-500 text-white font-medium rounded-xl hover:bg-blue-600 transition-all shadow-lg shadow-blue-500/30">
+                        <button type="submit" class="flex-1 px-4 py-2.5 bg-[#2D5A4E] text-white font-medium rounded-xl hover:bg-[#1B3C35] transition-all shadow-lg shadow-[#1B3C35]/30">
                             <span class="flex items-center justify-center gap-2">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
@@ -109,19 +109,19 @@
                             <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Semaine</th>
                             <th class="px-6 py-4 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">
                                 <span class="inline-flex items-center gap-1" title="Discipline">
-                                    <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+                                    <span class="w-2 h-2 rounded-full bg-[#2D5A4E]"></span>
                                     Disc.
                                 </span>
                             </th>
                             <th class="px-6 py-4 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">
                                 <span class="inline-flex items-center gap-1" title="Comportement">
-                                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                                    <span class="w-2 h-2 rounded-full bg-[#2D5A4E]"></span>
                                     Comp.
                                 </span>
                             </th>
                             <th class="px-6 py-4 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">
                                 <span class="inline-flex items-center gap-1" title="Compétences Techniques">
-                                    <span class="w-2 h-2 rounded-full bg-violet-500"></span>
+                                    <span class="w-2 h-2 rounded-full bg-[#C8A96E]"></span>
                                     Tech.
                                 </span>
                             </th>
@@ -139,15 +139,15 @@
                         @forelse($evaluations as $evaluation)
                             @php
                                 $gradeConfig = [
-                                    'A' => ['bg' => 'bg-emerald-100', 'text' => 'text-emerald-700', 'gradient' => 'from-emerald-400 to-teal-500'],
-                                    'B' => ['bg' => 'bg-blue-100', 'text' => 'text-blue-700', 'gradient' => 'from-blue-400 to-indigo-500'],
-                                    'C' => ['bg' => 'bg-amber-100', 'text' => 'text-amber-700', 'gradient' => 'from-amber-400 to-orange-500'],
-                                    'D' => ['bg' => 'bg-orange-100', 'text' => 'text-orange-700', 'gradient' => 'from-orange-400 to-red-500'],
-                                    'E' => ['bg' => 'bg-red-100', 'text' => 'text-red-700', 'gradient' => 'from-red-400 to-rose-500'],
+                                    'A' => ['bg' => 'bg-[#E8F0ED]', 'text' => 'text-[#163530]', 'gradient' => 'from-[#3D7A6A] to-[#2D5A4E]'],
+                                    'B' => ['bg' => 'bg-[#E8F0ED]', 'text' => 'text-[#163530]', 'gradient' => 'from-[#3D7A6A] to-[#2D5A4E]'],
+                                    'C' => ['bg' => 'bg-amber-100', 'text' => 'text-amber-700', 'gradient' => 'from-[#D4BC8B] to-[#C8A96E]'],
+                                    'D' => ['bg' => 'bg-[#FAF3E8]', 'text' => 'text-[#B8955A]', 'gradient' => 'from-[#D4BC8B] to-[#2D5A4E]'],
+                                    'E' => ['bg' => 'bg-[#E8F0ED]', 'text' => 'text-[#163530]', 'gradient' => 'from-[#2D5A4E] to-[#2D5A4E]'],
                                 ];
                                 $config = $gradeConfig[$evaluation->grade_letter] ?? $gradeConfig['E'];
                             @endphp
-                            <tr class="hover:bg-indigo-50/50 transition-colors">
+                            <tr class="hover:bg-[#F0F5F3]/50 transition-colors">
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="flex items-center gap-3">
                                         <div class="w-10 h-10 bg-gradient-to-br {{ $config['gradient'] }} rounded-xl flex items-center justify-center text-white font-bold text-sm shadow-md">
@@ -168,17 +168,17 @@
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 text-center">
-                                    <span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-blue-100 text-blue-700 font-bold text-sm">
+                                    <span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-[#E8F0ED] text-[#163530] font-bold text-sm">
                                         {{ $evaluation->discipline_score }}
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 text-center">
-                                    <span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 font-bold text-sm">
+                                    <span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-[#E8F0ED] text-[#163530] font-bold text-sm">
                                         {{ $evaluation->behavior_score }}
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 text-center">
-                                    <span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-violet-100 text-violet-700 font-bold text-sm">
+                                    <span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-[#FAF3E8] text-[#B8955A] font-bold text-sm">
                                         {{ $evaluation->skills_score }}
                                     </span>
                                 </td>
@@ -196,7 +196,7 @@
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     @if($evaluation->tutor)
                                         <div class="flex items-center gap-2">
-                                            <div class="w-7 h-7 bg-gradient-to-br from-indigo-400 to-violet-500 rounded-lg flex items-center justify-center text-white font-bold text-xs">
+                                            <div class="w-7 h-7 bg-gradient-to-br from-[#3D7A6A] to-[#3D7A6A] rounded-lg flex items-center justify-center text-white font-bold text-xs">
                                                 {{ strtoupper(substr($evaluation->tutor->name, 0, 1)) }}
                                             </div>
                                             <span class="text-sm font-medium text-gray-700">{{ $evaluation->tutor->name }}</span>
@@ -210,8 +210,8 @@
                             <tr>
                                 <td colspan="8" class="px-6 py-16 text-center">
                                     <div class="flex flex-col items-center">
-                                        <div class="w-20 h-20 rounded-full bg-gradient-to-br from-indigo-100 to-violet-100 flex items-center justify-center mb-4">
-                                            <svg class="w-10 h-10 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <div class="w-20 h-20 rounded-full bg-gradient-to-br from-[#E8F0ED] to-[#E8F0ED] flex items-center justify-center mb-4">
+                                            <svg class="w-10 h-10 text-[#3D7A6A]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
                                             </svg>
                                         </div>

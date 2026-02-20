@@ -1,7 +1,7 @@
-<x-layouts.admin>
+﻿<x-layouts.admin>
     <div class="space-y-6" x-data="taskManager()">
         <!-- Header amélioré -->
-        <div class="relative overflow-hidden rounded-2xl shadow-xl animate-fade-in-up" style="background: linear-gradient(135deg, #5680E9, #84CEEB) !important;">
+        <div class="relative overflow-hidden rounded-2xl shadow-xl animate-fade-in-up" style="background: linear-gradient(135deg, #1B3C35, #3D7A6A) !important;">
             <div class="absolute inset-0 bg-black/10"></div>
             <div class="absolute -top-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
             <div class="absolute -bottom-24 -left-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
@@ -31,27 +31,27 @@
                         <div class="bg-white/20 backdrop-blur-sm rounded-xl p-1 flex">
                             <button @click="viewMode = 'table'" 
                                     :class="viewMode === 'table' ? 'bg-white' : 'text-white hover:bg-white/20'"
-                                    :style="viewMode === 'table' ? 'color: #5680E9;' : ''"
+                                    :style="viewMode === 'table' ? 'color: #1B3C35;' : ''"
                                     class="px-3 py-2 rounded-lg font-medium text-sm transition-all flex items-center gap-1">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
                                 Liste
                             </button>
                             <button @click="viewMode = 'kanban'" 
                                     :class="viewMode === 'kanban' ? 'bg-white' : 'text-white hover:bg-white/20'"
-                                    :style="viewMode === 'kanban' ? 'color: #5680E9;' : ''"
+                                    :style="viewMode === 'kanban' ? 'color: #1B3C35;' : ''"
                                     class="px-3 py-2 rounded-lg font-medium text-sm transition-all flex items-center gap-1">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/></svg>
                                 flux
                             </button>
                             <button @click="viewMode = 'calendar'; $nextTick(() => initCalendar())" 
                                     :class="viewMode === 'calendar' ? 'bg-white' : 'text-white hover:bg-white/20'"
-                                    :style="viewMode === 'calendar' ? 'color: #5680E9;' : ''"
+                                    :style="viewMode === 'calendar' ? 'color: #1B3C35;' : ''"
                                     class="px-3 py-2 rounded-lg font-medium text-sm transition-all flex items-center gap-1">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                                 Calendrier
                             </button>
                         </div>
-                        <a href="{{ route('admin.tasks.create') }}" class="px-4 py-2.5 bg-white font-semibold rounded-xl hover:bg-purple-50 transition-all shadow-lg flex items-center" style="color: #5680E9;">
+                        <a href="{{ route('admin.tasks.create') }}" class="px-4 py-2.5 bg-white font-semibold rounded-xl hover:bg-[#FBF7F0] transition-all shadow-lg flex items-center" style="color: #1B3C35;">
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
                             </svg>
@@ -67,11 +67,11 @@
             @php
                 $stats = [
                     ['label' => 'Total', 'value' => $taskStats->total ?? 0, 'color' => '#6B7280', 'bg' => 'rgba(107, 114, 128, 0.1)', 'icon' => 'clipboard-list'],
-                    ['label' => 'En attente', 'value' => $taskStats->pending_count ?? 0, 'color' => '#5680E9', 'bg' => 'rgba(86, 128, 233, 0.1)', 'icon' => 'clock'],
-                    ['label' => 'En cours', 'value' => $taskStats->in_progress_count ?? 0, 'color' => '#5AB9EA', 'bg' => 'rgba(90, 185, 234, 0.15)', 'icon' => 'play'],
-                    ['label' => 'Terminées', 'value' => $taskStats->completed_count ?? 0, 'color' => '#84CEEB', 'bg' => 'rgba(132, 206, 235, 0.2)', 'icon' => 'check'],
-                    ['label' => 'Validées', 'value' => $taskStats->validated_count ?? 0, 'color' => '#5AB9EA', 'bg' => 'rgba(90, 185, 234, 0.2)', 'icon' => 'badge-check'],
-                    ['label' => 'En retard', 'value' => $taskStats->overdue_count ?? 0, 'color' => '#8860D0', 'bg' => 'rgba(136, 96, 208, 0.15)', 'icon' => 'exclamation'],
+                    ['label' => 'En attente', 'value' => $taskStats->pending_count ?? 0, 'color' => '#1B3C35', 'bg' => 'rgba(27, 60, 53, 0.1)', 'icon' => 'clock'],
+                    ['label' => 'En cours', 'value' => $taskStats->in_progress_count ?? 0, 'color' => '#2D5A4E', 'bg' => 'rgba(45, 90, 78, 0.15)', 'icon' => 'play'],
+                    ['label' => 'Terminées', 'value' => $taskStats->completed_count ?? 0, 'color' => '#3D7A6A', 'bg' => 'rgba(132, 206, 235, 0.2)', 'icon' => 'check'],
+                    ['label' => 'Validées', 'value' => $taskStats->validated_count ?? 0, 'color' => '#2D5A4E', 'bg' => 'rgba(45, 90, 78, 0.2)', 'icon' => 'badge-check'],
+                    ['label' => 'En retard', 'value' => $taskStats->overdue_count ?? 0, 'color' => '#C8A96E', 'bg' => 'rgba(200, 169, 110, 0.15)', 'icon' => 'exclamation'],
                 ];
             @endphp
             @foreach($stats as $stat)
@@ -109,12 +109,12 @@
                     </svg>
                     <input type="text" name="search" value="{{ request('search') }}" 
                            placeholder="Rechercher une tache..." 
-                           class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 text-sm" style="--tw-ring-color: #5680E9; border-color: #5680E9 on focus;">
+                           class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 text-sm" style="--tw-ring-color: #1B3C35; border-color: #1B3C35 on focus;">
                 </div>
 
                 <!-- Employé -->
                 <div class="w-full sm:w-auto">
-                    <select name="user_id" class="w-full sm:w-48 px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-sm bg-white">
+                    <select name="user_id" class="w-full sm:w-48 px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#C8A96E] focus:border-[#C8A96E] text-sm bg-white">
                         <option value="">Tous les employés</option>
                         @foreach($employees as $emp)
                             <option value="{{ $emp->id }}" {{ request('user_id') == $emp->id ? 'selected' : '' }}>{{ $emp->name }}</option>
@@ -124,7 +124,7 @@
 
                 <!-- Statut -->
                 <div class="w-full sm:w-auto">
-                    <select name="statut" class="w-full sm:w-40 px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-sm bg-white">
+                    <select name="statut" class="w-full sm:w-40 px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#C8A96E] focus:border-[#C8A96E] text-sm bg-white">
                         <option value="">Tous statuts</option>
                         <option value="pending" {{ request('statut') == 'pending' ? 'selected' : '' }}>En attente</option>
                         <option value="approved" {{ request('statut') == 'approved' ? 'selected' : '' }}>En cours</option>
@@ -136,7 +136,7 @@
 
                 <!-- Priorité -->
                 <div class="w-full sm:w-auto">
-                    <select name="priorite" class="w-full sm:w-40 px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-sm bg-white">
+                    <select name="priorite" class="w-full sm:w-40 px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#C8A96E] focus:border-[#C8A96E] text-sm bg-white">
                         <option value="">Toutes priorités</option>
                         <option value="low" {{ request('priorite') == 'low' ? 'selected' : '' }}>Basse</option>
                         <option value="medium" {{ request('priorite') == 'medium' ? 'selected' : '' }}>Moyenne</option>
@@ -146,7 +146,7 @@
 
                 <!-- Buttons -->
                 <div class="flex gap-2">
-                    <button type="submit" class="px-6 py-2.5 text-white font-medium rounded-xl transition-colors shadow-lg flex items-center" style="background: linear-gradient(135deg, #5680E9, #5AB9EA);">
+                    <button type="submit" class="px-6 py-2.5 text-white font-medium rounded-xl transition-colors shadow-lg flex items-center" style="background: linear-gradient(135deg, #1B3C35, #2D5A4E);">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
                         Filtrer
                     </button>
@@ -162,14 +162,14 @@
 
             <x-slot:activeFilters>
                 @if(request('search'))
-                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-purple-50 text-purple-700 border border-purple-100">
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-[#FBF7F0] text-[#B8955A] border border-[#FAF3E8]">
                         Recherche: {{ request('search') }}
                     </span>
                 @endif
                 @if(request('user_id'))
                     @php $emp = $employees->find(request('user_id')); @endphp
                     @if($emp)
-                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-100">
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-[#F0F5F3] text-[#163530] border border-[#E8F0ED]">
                             Employé: {{ $emp->name }}
                         </span>
                     @endif
@@ -197,7 +197,7 @@
                  x-transition:leave="transition ease-in duration-200"
                  x-transition:leave-start="opacity-100"
                  x-transition:leave-end="opacity-0"
-                 :class="toast.type === 'success' ? 'bg-emerald-500' : 'bg-red-500'"
+                 :class="toast.type === 'success' ? 'bg-[#2D5A4E]' : 'bg-[#2D5A4E]'"
                  class="fixed bottom-4 right-4 text-white px-4 py-3 rounded-xl shadow-lg z-50 flex items-center gap-2">
                 <svg x-show="toast.type === 'success'" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
                 <svg x-show="toast.type === 'error'" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
@@ -205,11 +205,11 @@
             </div>
 
             <!-- Help text -->
-            <div class="bg-indigo-50 border border-indigo-100 rounded-xl p-3 mb-4 flex items-center gap-3">
-                <div class="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <div class="bg-[#F0F5F3] border border-[#E8F0ED] rounded-xl p-3 mb-4 flex items-center gap-3">
+                <div class="w-8 h-8 bg-[#E8F0ED] rounded-lg flex items-center justify-center flex-shrink-0">
+                    <svg class="w-4 h-4 text-[#1B3C35]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                 </div>
-                <p class="text-sm text-indigo-700">Glissez-déposez les taches entre les colonnes pour changer leur statut</p>
+                <p class="text-sm text-[#163530]">Glissez-déposez les taches entre les colonnes pour changer leur statut</p>
             </div>
 
             @php
@@ -229,7 +229,7 @@
                          @dragover.prevent="onDragOver($event, '{{ $status }}')"
                          @dragleave="onDragLeave($event, '{{ $status }}')"
                          @drop="onDrop($event, '{{ $status }}')"
-                         :class="{ 'ring-2 ring-indigo-400 ring-offset-2 bg-indigo-50': dragOverColumn === '{{ $status }}' }">
+                         :class="{ 'ring-2 ring-[#3D7A6A] ring-offset-2 bg-[#F0F5F3]': dragOverColumn === '{{ $status }}' }">
                         <div class="flex items-center justify-between mb-3">
                             <div class="flex items-center gap-2">
                                 <div class="w-8 h-8 bg-{{ $config['color'] }}-100 rounded-lg flex items-center justify-center">
@@ -270,7 +270,7 @@
                                     </div>
                                     <div class="flex items-start justify-between gap-2">
                                         <h4 class="font-medium text-gray-900 text-sm line-clamp-2">{{ $task->titre }}</h4>
-                                        <span class="flex-shrink-0 px-1.5 py-0.5 text-[10px] font-bold rounded {{ $task->priorite === 'high' ? 'bg-red-100 text-red-700' : ($task->priorite === 'medium' ? 'bg-amber-100 text-amber-700' : 'bg-gray-100 text-gray-600') }}">
+                                        <span class="flex-shrink-0 px-1.5 py-0.5 text-[10px] font-bold rounded {{ $task->priorite === 'high' ? 'bg-[#E8F0ED] text-[#163530]' : ($task->priorite === 'medium' ? 'bg-amber-100 text-amber-700' : 'bg-gray-100 text-gray-600') }}">
                                             {{ strtoupper(substr($task->priorite, 0, 1)) }}
                                         </span>
                                     </div>
@@ -282,24 +282,24 @@
                                             @if($task->user->avatar)
                                                 <img class="w-6 h-6 rounded-full object-cover ring-2 ring-white" src="{{ avatar_url($task->user->avatar) }}" alt="{{ $task->user->name }}">
                                             @else
-                                                <div class="w-6 h-6 rounded-full flex items-center justify-center ring-2 ring-white" style="background: linear-gradient(135deg, #5680E9, #84CEEB);">
+                                                <div class="w-6 h-6 rounded-full flex items-center justify-center ring-2 ring-white" style="background: linear-gradient(135deg, #1B3C35, #3D7A6A);">
                                                     <span class="text-white font-bold text-[10px]">{{ strtoupper(substr($task->user->name, 0, 2)) }}</span>
                                                 </div>
                                             @endif
                                             <span class="text-xs text-gray-600">{{ Str::limit($task->user->name, 12) }}</span>
                                         </div>
                                         @if($task->date_fin)
-                                            <span class="text-[10px] {{ $task->date_fin->isPast() && !in_array($task->statut, ['validated', 'completed']) ? 'text-red-600 font-bold' : 'text-gray-400' }}">
+                                            <span class="text-[10px] {{ $task->date_fin->isPast() && !in_array($task->statut, ['validated', 'completed']) ? 'text-[#1B3C35] font-bold' : 'text-gray-400' }}">
                                                 {{ $task->date_fin->format('d/m') }}
                                             </span>
                                         @endif
                                     </div>
                                     <div class="w-full bg-gray-100 rounded-full h-1 mt-2">
-                                        <div class="h-1 rounded-full transition-all" style="width: {{ $task->progression }}%; background-color: {{ $task->progression < 30 ? '#8860D0' : ($task->progression < 70 ? '#84CEEB' : '#5AB9EA') }};"></div>
+                                        <div class="h-1 rounded-full transition-all" style="width: {{ $task->progression }}%; background-color: {{ $task->progression < 30 ? '#C8A96E' : ($task->progression < 70 ? '#3D7A6A' : '#2D5A4E') }};"></div>
                                     </div>
                                     <!-- Actions on hover -->
                                     <div class="hidden group-hover:flex items-center justify-end gap-1 mt-2 pt-2 border-t border-gray-100">
-                                        <a href="{{ route('admin.tasks.show', $task) }}" class="p-1 text-gray-400 hover:text-blue-600 rounded" @click.stop>
+                                        <a href="{{ route('admin.tasks.show', $task) }}" class="p-1 text-gray-400 hover:text-[#1B3C35] rounded" @click.stop>
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                                         </a>
                                         <a href="{{ route('admin.tasks.edit', $task) }}" class="p-1 text-gray-400 hover:text-amber-600 rounded" @click.stop>
@@ -344,11 +344,11 @@
 
             <x-slot:body>
                 @forelse($tasks as $task)
-                    <tr class="hover:bg-purple-50/50 transition-colors group">
+                    <tr class="hover:bg-[#FBF7F0]/50 transition-colors group">
                         <td class="px-6 py-4">
                             <div class="flex items-start gap-3">
-                                <div class="w-10 h-10 bg-gradient-to-br from-indigo-50 to-purple-50 rounded-lg flex items-center justify-center flex-shrink-0 border border-indigo-100">
-                                    <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <div class="w-10 h-10 bg-gradient-to-br from-[#F0F5F3] to-[#FBF7F0] rounded-lg flex items-center justify-center flex-shrink-0 border border-[#E8F0ED]">
+                                    <svg class="w-5 h-5 text-[#1B3C35]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
                                     </svg>
                                 </div>
@@ -364,7 +364,7 @@
                                     @if($task->user->avatar)
                                         <img class="h-8 w-8 rounded-full object-cover ring-2 ring-white shadow-sm" src="{{ avatar_url($task->user->avatar) }}" alt="{{ $task->user->name }}">
                                     @else
-                                        <div class="h-8 w-8 rounded-full flex items-center justify-center ring-2 ring-white shadow-sm" style="background: linear-gradient(135deg, #5680E9, #84CEEB);">
+                                        <div class="h-8 w-8 rounded-full flex items-center justify-center ring-2 ring-white shadow-sm" style="background: linear-gradient(135deg, #1B3C35, #3D7A6A);">
                                             <span class="text-white font-bold text-xs">{{ strtoupper(substr($task->user->name, 0, 2)) }}</span>
                                         </div>
                                     @endif
@@ -376,7 +376,7 @@
                             <div class="flex items-center gap-3">
                                 <div class="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
                                     <div class="h-full rounded-full transition-all duration-500"
-                                         style="width: {{ $task->progression }}%; background-color: {{ $task->progression < 30 ? '#8860D0' : ($task->progression < 70 ? '#84CEEB' : '#5AB9EA') }};"></div>
+                                         style="width: {{ $task->progression }}%; background-color: {{ $task->progression < 30 ? '#C8A96E' : ($task->progression < 70 ? '#3D7A6A' : '#2D5A4E') }};"></div>
                                 </div>
                                 <span class="text-xs font-semibold text-gray-700 w-8 text-right">{{ $task->progression }}%</span>
                             </div>
@@ -389,7 +389,7 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             @if($task->date_fin && $task->date_fin->isPast() && !in_array($task->statut, ['validated', 'completed']))
-                                <div class="flex items-center gap-1.5 text-red-600 bg-red-50 px-2 py-1 rounded-lg w-fit">
+                                <div class="flex items-center gap-1.5 text-[#1B3C35] bg-[#F0F5F3] px-2 py-1 rounded-lg w-fit">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                                     <span class="text-xs font-bold">{{ $task->date_fin->format('d/m/Y') }}</span>
                                 </div>
@@ -404,7 +404,7 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                             <div class="flex items-center justify-end space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                <a href="{{ route('admin.tasks.show', $task) }}" class="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Voir">
+                                <a href="{{ route('admin.tasks.show', $task) }}" class="p-1.5 text-gray-500 hover:text-[#1B3C35] hover:bg-[#F0F5F3] rounded-lg transition-colors" title="Voir">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                                 </a>
                                 <a href="{{ route('admin.tasks.edit', $task) }}" class="p-1.5 text-gray-500 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors" title="Modifier">
@@ -423,28 +423,28 @@
                                         @csrf
                                         <div class="relative group/rating">
                                             <input type="number" name="rating" min="0" max="10" placeholder="/10" required
-                                                   class="w-12 px-1 py-1 text-xs border border-gray-300 rounded focus:ring-emerald-500 focus:border-emerald-500 text-center"
+                                                   class="w-12 px-1 py-1 text-xs border border-gray-300 rounded focus:ring-[#2D5A4E] focus:border-[#2D5A4E] text-center"
                                                    title="Note sur 10">
                                             <!-- Tooltip -->
                                             <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 hidden group-hover/rating:block bg-gray-900 text-white text-[10px] px-2 py-1 rounded whitespace-nowrap">
                                                 Note sur 10
                                             </div>
                                         </div>
-                                        <button type="submit" class="p-1.5 text-emerald-600 hover:text-emerald-800 hover:bg-emerald-50 rounded-lg transition-colors" title="Valider et Noter">
+                                        <button type="submit" class="p-1.5 text-[#1B3C35] hover:text-[#0F2A25] hover:bg-[#F0F5F3] rounded-lg transition-colors" title="Valider et Noter">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                                         </button>
                                     </form>
                                 @endif
 
                                 @if($task->rating !== null)
-                                    <div class="flex items-center justify-center w-8 h-8 rounded-full {{ $task->rating >= 7 ? 'bg-emerald-100 text-emerald-700' : ($task->rating >= 5 ? 'bg-amber-100 text-amber-700' : 'bg-red-100 text-red-700') }} font-bold text-xs" title="Note: {{ $task->rating }}/10">
+                                    <div class="flex items-center justify-center w-8 h-8 rounded-full {{ $task->rating >= 7 ? 'bg-[#E8F0ED] text-[#163530]' : ($task->rating >= 5 ? 'bg-amber-100 text-amber-700' : 'bg-[#E8F0ED] text-[#163530]') }} font-bold text-xs" title="Note: {{ $task->rating }}/10">
                                         {{ $task->rating }}
                                     </div>
                                 @endif
 
                                 <button type="button" 
                                         @click="confirmDelete('{{ route('admin.tasks.destroy', $task) }}')"
-                                        class="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" 
+                                        class="p-1.5 text-gray-500 hover:text-[#1B3C35] hover:bg-[#F0F5F3] rounded-lg transition-colors" 
                                         title="Supprimer">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                                 </button>
@@ -671,8 +671,8 @@
                 
                 <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                     <div class="sm:flex sm:items-start">
-                        <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
-                            <svg class="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                        <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-[#E8F0ED] sm:mx-0 sm:h-10 sm:w-10">
+                            <svg class="h-6 w-6 text-[#1B3C35]" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
                             </svg>
                         </div>
@@ -689,7 +689,7 @@
                         @csrf
                         @method('DELETE')
                         <button type="submit" 
-                                class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto">
+                                class="inline-flex w-full justify-center rounded-md bg-[#1B3C35] px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[#2D5A4E] sm:ml-3 sm:w-auto">
                             Supprimer
                         </button>
                     </form>
@@ -722,17 +722,17 @@
             const tasks = @json($tasks->items());
             const events = tasks.map(task => {
                 const priorityColors = {
-                    high: { bg: '#8860D0', border: '#7c3aed' },
-                    medium: { bg: '#84CEEB', border: '#5AB9EA' },
+                    high: { bg: '#C8A96E', border: '#7c3aed' },
+                    medium: { bg: '#3D7A6A', border: '#2D5A4E' },
                     low: { bg: '#6B7280', border: '#4b5563' }
                 };
                 const statusColors = {
-                    pending: { bg: '#5680E9', border: '#4c73d2' },
-                    approved: { bg: '#5AB9EA', border: '#3b82f6' },
-                    in_progress: { bg: '#5AB9EA', border: '#3b82f6' },
-                    completed: { bg: '#84CEEB', border: '#5AB9EA' },
-                    validated: { bg: '#5AB9EA', border: '#3b82f6' },
-                    rejected: { bg: '#8860D0', border: '#7c3aed' }
+                    pending: { bg: '#1B3C35', border: '#4c73d2' },
+                    approved: { bg: '#2D5A4E', border: '#3b82f6' },
+                    in_progress: { bg: '#2D5A4E', border: '#3b82f6' },
+                    completed: { bg: '#3D7A6A', border: '#2D5A4E' },
+                    validated: { bg: '#2D5A4E', border: '#3b82f6' },
+                    rejected: { bg: '#C8A96E', border: '#7c3aed' }
                 };
                 const colors = statusColors[task.statut] || priorityColors[task.priorite] || { bg: '#6b7280', border: '#4b5563' };
                 

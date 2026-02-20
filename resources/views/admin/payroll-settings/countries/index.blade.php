@@ -1,7 +1,7 @@
-<x-layouts.admin>
+﻿<x-layouts.admin>
     <div class="space-y-6">
         <!-- Header comme sur tasks -->
-        <div class="relative overflow-hidden rounded-2xl shadow-xl animate-fade-in-up" style="background: linear-gradient(135deg, #5680E9, #84CEEB) !important;">
+        <div class="relative overflow-hidden rounded-2xl shadow-xl animate-fade-in-up" style="background: linear-gradient(135deg, #1B3C35, #3D7A6A) !important;">
             <div class="absolute inset-0 bg-black/10"></div>
             <div class="absolute -top-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
             <div class="absolute -bottom-24 -left-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
@@ -27,7 +27,7 @@
                         <p class="text-white/80 mt-2">Gérez les réglementations fiscales par pays</p>
                     </div>
                     <a href="{{ route('admin.payroll-settings.countries.create') }}" 
-                       class="px-4 py-2.5 bg-white font-semibold rounded-xl hover:bg-purple-50 transition-all shadow-lg flex items-center" style="color: #5680E9;">
+                       class="px-4 py-2.5 bg-white font-semibold rounded-xl hover:bg-[#FBF7F0] transition-all shadow-lg flex items-center" style="color: #1B3C35;">
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                         </svg>
@@ -56,7 +56,7 @@
                     <div class="p-6">
                         <div class="flex items-center justify-between mb-4">
                             <div class="flex items-center space-x-3">
-                                <div class="w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold text-lg" style="background: linear-gradient(135deg, #5680E9, #84CEEB);">
+                                <div class="w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold text-lg" style="background: linear-gradient(135deg, #1B3C35, #3D7A6A);">
                                     {{ $country->code }}
                                 </div>
                                 <div>
@@ -65,7 +65,7 @@
                                 </div>
                             </div>
                             @if($country->is_active)
-                                <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium" style="background-color: rgba(90, 185, 234, 0.15); color: #5680E9;">
+                                <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium" style="background-color: rgba(45, 90, 78, 0.15); color: #1B3C35;">
                                     <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
                                     </svg>
@@ -80,29 +80,29 @@
 
                         <div class="grid grid-cols-3 gap-3 mb-4">
                             <div class="text-center p-3 bg-gray-50 rounded-xl">
-                                <div class="text-2xl font-bold" style="color: #5680E9;">{{ $country->rules_count }}</div>
+                                <div class="text-2xl font-bold" style="color: #1B3C35;">{{ $country->rules_count }}</div>
                                 <div class="text-xs text-gray-500">Règles</div>
                             </div>
                             <div class="text-center p-3 bg-gray-50 rounded-xl">
-                                <div class="text-2xl font-bold" style="color: #84CEEB;">{{ $country->fields_count }}</div>
+                                <div class="text-2xl font-bold" style="color: #3D7A6A;">{{ $country->fields_count }}</div>
                                 <div class="text-xs text-gray-500">Champs</div>
                             </div>
                             <div class="text-center p-3 bg-gray-50 rounded-xl">
-                                <div class="text-2xl font-bold" style="color: #8860D0;">{{ $country->templates_count }}</div>
+                                <div class="text-2xl font-bold" style="color: #C8A96E;">{{ $country->templates_count }}</div>
                                 <div class="text-xs text-gray-500">Templates</div>
                             </div>
                         </div>
 
                         <div class="flex flex-wrap gap-2">
                             <a href="{{ route('admin.payroll-settings.rules', $country) }}" 
-                               class="flex-1 inline-flex items-center justify-center px-3 py-2.5 text-sm font-medium rounded-xl transition-colors" style="background-color: rgba(86, 128, 233, 0.1); color: #5680E9;">
+                               class="flex-1 inline-flex items-center justify-center px-3 py-2.5 text-sm font-medium rounded-xl transition-colors" style="background-color: rgba(27, 60, 53, 0.1); color: #1B3C35;">
                                 <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
                                 </svg>
                                 Règles
                             </a>
                             <a href="{{ route('admin.payroll-settings.fields', $country) }}" 
-                               class="flex-1 inline-flex items-center justify-center px-3 py-2.5 text-sm font-medium rounded-xl transition-colors" style="background-color: rgba(132, 206, 235, 0.15); color: #5680E9;">
+                               class="flex-1 inline-flex items-center justify-center px-3 py-2.5 text-sm font-medium rounded-xl transition-colors" style="background-color: rgba(132, 206, 235, 0.15); color: #1B3C35;">
                                 <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"/>
                                 </svg>
@@ -128,7 +128,7 @@
                         <h3 class="text-lg font-medium text-gray-900">Aucun pays configuré</h3>
                         <p class="mt-1 text-sm text-gray-500">Commencez par ajouter un pays pour configurer les règles de paie.</p>
                         <a href="{{ route('admin.payroll-settings.countries.create') }}" 
-                           class="mt-4 inline-flex items-center px-4 py-2.5 text-white font-semibold rounded-xl shadow-lg" style="background: linear-gradient(135deg, #5680E9, #5AB9EA);">
+                           class="mt-4 inline-flex items-center px-4 py-2.5 text-white font-semibold rounded-xl shadow-lg" style="background: linear-gradient(135deg, #1B3C35, #2D5A4E);">
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                             </svg>

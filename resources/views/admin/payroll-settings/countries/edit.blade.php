@@ -1,7 +1,7 @@
-<x-layouts.admin>
+﻿<x-layouts.admin>
     <div class="space-y-6">
         <!-- Header comme sur tasks -->
-        <div class="relative overflow-hidden rounded-2xl shadow-xl animate-fade-in-up" style="background: linear-gradient(135deg, #5680E9, #84CEEB) !important;">
+        <div class="relative overflow-hidden rounded-2xl shadow-xl animate-fade-in-up" style="background: linear-gradient(135deg, #1B3C35, #3D7A6A) !important;">
             <div class="absolute inset-0 bg-black/10"></div>
             <div class="absolute -top-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
             <div class="absolute -bottom-24 -left-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
@@ -29,7 +29,7 @@
                         <p class="text-white/80 mt-2">Modifiez les paramètres de ce pays</p>
                     </div>
                     <a href="{{ route('admin.payroll-settings.countries') }}" 
-                       class="px-4 py-2.5 bg-white font-semibold rounded-xl hover:bg-purple-50 transition-all shadow-lg flex items-center" style="color: #5680E9;">
+                       class="px-4 py-2.5 bg-white font-semibold rounded-xl hover:bg-[#FBF7F0] transition-all shadow-lg flex items-center" style="color: #1B3C35;">
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
                         </svg>
@@ -54,25 +54,25 @@
                 <div>
                     <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Nom du Pays *</label>
                     <input type="text" name="name" id="name" value="{{ old('name', $country->name) }}" required
-                           class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                           class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2D5A4E] focus:border-[#2D5A4E]">
                 </div>
 
                 <div>
                     <label for="currency" class="block text-sm font-medium text-gray-700 mb-1">Code Devise *</label>
                     <input type="text" name="currency" id="currency" value="{{ old('currency', $country->currency) }}" required maxlength="3"
-                           class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 uppercase">
+                           class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2D5A4E] focus:border-[#2D5A4E] uppercase">
                 </div>
 
                 <div>
                     <label for="currency_symbol" class="block text-sm font-medium text-gray-700 mb-1">Symbole Devise *</label>
                     <input type="text" name="currency_symbol" id="currency_symbol" value="{{ old('currency_symbol', $country->currency_symbol) }}" required
-                           class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                           class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2D5A4E] focus:border-[#2D5A4E]">
                 </div>
 
                 <div class="md:col-span-2">
                     <label class="inline-flex items-center cursor-pointer">
                         <input type="checkbox" name="is_active" value="1" {{ old('is_active', $country->is_active) ? 'checked' : '' }}
-                               class="rounded border-gray-300 focus:ring-indigo-500" style="color: #5680E9;">
+                               class="rounded border-gray-300 focus:ring-[#2D5A4E]" style="color: #1B3C35;">
                         <span class="ml-2 text-sm text-gray-700">Actif</span>
                     </label>
                 </div>
@@ -82,7 +82,7 @@
                 <form action="{{ route('admin.payroll-settings.countries.destroy', $country) }}" method="POST" onsubmit="return confirm('Supprimer ce pays et toutes ses règles ?')">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="px-4 py-2.5 text-sm font-medium text-red-600 hover:text-red-800 hover:bg-red-50 rounded-xl transition-colors">
+                    <button type="submit" class="px-4 py-2.5 text-sm font-medium text-[#1B3C35] hover:text-[#0F2A25] hover:bg-[#F0F5F3] rounded-xl transition-colors">
                         Supprimer ce pays
                     </button>
                 </form>
@@ -92,7 +92,7 @@
                         Annuler
                     </a>
                     <button type="submit" 
-                            class="px-6 py-2.5 text-sm font-semibold text-white rounded-xl shadow-lg transition-all" style="background: linear-gradient(135deg, #5680E9, #5AB9EA);">
+                            class="px-6 py-2.5 text-sm font-semibold text-white rounded-xl shadow-lg transition-all" style="background: linear-gradient(135deg, #1B3C35, #2D5A4E);">
                         Enregistrer
                     </button>
                 </div>

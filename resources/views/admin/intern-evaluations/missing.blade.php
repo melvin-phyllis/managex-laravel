@@ -1,9 +1,9 @@
-<x-layouts.admin>
+﻿<x-layouts.admin>
     <div class="space-y-6">
         <!-- Header -->
         <x-table-header title="Évaluations Manquantes" subtitle="{{ $lastWeekStart->format('d/m/Y') }} - Semaine écoulée">
             <x-slot:icon>
-                <div class="w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-600 rounded-xl flex items-center justify-center shadow-lg shadow-amber-500/20">
+                <div class="w-12 h-12 bg-gradient-to-br from-[#C8A96E] to-[#B8955A] rounded-xl flex items-center justify-center shadow-lg shadow-[#C8A96E]/20">
                     <x-icon name="alert-triangle" class="w-6 h-6 text-white" />
                 </div>
             </x-slot:icon>
@@ -49,7 +49,7 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                                 @foreach($interns as $intern)
                                     <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
-                                        <div class="w-8 h-8 bg-violet-100 text-violet-600 rounded-full flex items-center justify-center font-semibold text-sm">
+                                        <div class="w-8 h-8 bg-[#FAF3E8] text-[#C8A96E] rounded-full flex items-center justify-center font-semibold text-sm">
                                             {{ strtoupper(substr($intern->name, 0, 1)) }}
                                         </div>
                                         <div>

@@ -1,7 +1,7 @@
 ﻿<x-layouts.admin>
     <div class="space-y-6" x-data="payrollTable()">
         <!-- Header comme sur tasks -->
-        <div class="relative overflow-hidden rounded-2xl shadow-xl animate-fade-in-up" style="background: linear-gradient(135deg, #5680E9, #84CEEB) !important;">
+        <div class="relative overflow-hidden rounded-2xl shadow-xl animate-fade-in-up" style="background: linear-gradient(135deg, #1B3C35, #3D7A6A) !important;">
             <div class="absolute inset-0 bg-black/10"></div>
             <div class="absolute -top-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
             <div class="absolute -bottom-24 -left-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
@@ -33,7 +33,7 @@
                             </svg>
                             Générer en masse
                         </button>
-                        <a href="{{ route('admin.payrolls.create') }}" class="px-4 py-2.5 bg-white font-semibold rounded-xl hover:bg-purple-50 transition-all shadow-lg flex items-center" style="color: #5680E9;">
+                        <a href="{{ route('admin.payrolls.create') }}" class="px-4 py-2.5 bg-white font-semibold rounded-xl hover:bg-[#FBF7F0] transition-all shadow-lg flex items-center" style="color: #1B3C35;">
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
                             </svg>
@@ -49,7 +49,7 @@
             <form action="{{ route('admin.payrolls.index') }}" method="GET" class="flex flex-col md:flex-row gap-4">
                 <div class="flex-1">
                     <label for="employee_id" class="block text-sm font-medium text-gray-700 mb-1">Employé</label>
-                    <select name="employee_id" id="employee_id" class="w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-indigo-500">
+                    <select name="employee_id" id="employee_id" class="w-full rounded-xl border-gray-300 focus:border-[#2D5A4E] focus:ring-[#2D5A4E]">
                         <option value="">Tous les employés</option>
                         @foreach($employees as $emp)
                             <option value="{{ $emp->id }}" {{ request('employee_id') == $emp->id ? 'selected' : '' }}>{{ $emp->name }}</option>
@@ -58,7 +58,7 @@
                 </div>
                 <div>
                     <label for="mois" class="block text-sm font-medium text-gray-700 mb-1">Mois</label>
-                    <select name="mois" id="mois" class="rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-indigo-500">
+                    <select name="mois" id="mois" class="rounded-xl border-gray-300 focus:border-[#2D5A4E] focus:ring-[#2D5A4E]">
                         <option value="">Tous les mois</option>
                         @for($i = 1; $i <= 12; $i++)
                             <option value="{{ $i }}" {{ request('mois') == $i ? 'selected' : '' }}>{{ ucfirst(\Carbon\Carbon::create()->month($i)->translatedFormat('F')) }}</option>
@@ -67,7 +67,7 @@
                 </div>
                 <div>
                     <label for="annee" class="block text-sm font-medium text-gray-700 mb-1">Année</label>
-                    <select name="annee" id="annee" class="rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-indigo-500">
+                    <select name="annee" id="annee" class="rounded-xl border-gray-300 focus:border-[#2D5A4E] focus:ring-[#2D5A4E]">
                         <option value="">Toutes</option>
                         @for($i = now()->year; $i >= now()->year - 5; $i--)
                             <option value="{{ $i }}" {{ request('annee') == $i ? 'selected' : '' }}>{{ $i }}</option>
@@ -76,14 +76,14 @@
                 </div>
                 <div>
                     <label for="statut" class="block text-sm font-medium text-gray-700 mb-1">Statut</label>
-                    <select name="statut" id="statut" class="rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-indigo-500">
+                    <select name="statut" id="statut" class="rounded-xl border-gray-300 focus:border-[#2D5A4E] focus:ring-[#2D5A4E]">
                         <option value="">Tous</option>
                         <option value="paid" {{ request('statut') == 'paid' ? 'selected' : '' }}>Payé</option>
                         <option value="pending" {{ request('statut') == 'pending' ? 'selected' : '' }}>En attente</option>
                     </select>
                 </div>
                 <div class="flex items-end">
-                    <button type="submit" class="px-6 py-2.5 text-white font-medium rounded-xl transition-colors shadow-lg flex items-center" style="background: linear-gradient(135deg, #5680E9, #5AB9EA);">
+                    <button type="submit" class="px-6 py-2.5 text-white font-medium rounded-xl transition-colors shadow-lg flex items-center" style="background: linear-gradient(135deg, #1B3C35, #2D5A4E);">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
                         </svg>
@@ -108,13 +108,13 @@
                     </thead>
                     <tbody class="divide-y divide-gray-100">
                         @forelse($payrolls as $payroll)
-                            <tr class="hover:bg-purple-50/50 transition-colors group">
+                            <tr class="hover:bg-[#FBF7F0]/50 transition-colors group">
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="flex items-center gap-3">
                                         @if($payroll->user->avatar)
                                             <img class="h-9 w-9 rounded-full object-cover ring-2 ring-white shadow-sm" src="{{ avatar_url($payroll->user->avatar) }}" alt="{{ $payroll->user->name }}">
                                         @else
-                                            <div class="h-9 w-9 rounded-full flex items-center justify-center ring-2 ring-white shadow-sm" style="background: linear-gradient(135deg, #5680E9, #84CEEB);">
+                                            <div class="h-9 w-9 rounded-full flex items-center justify-center ring-2 ring-white shadow-sm" style="background: linear-gradient(135deg, #1B3C35, #3D7A6A);">
                                                 <span class="text-white font-bold text-xs">{{ strtoupper(substr($payroll->user->name, 0, 2)) }}</span>
                                             </div>
                                         @endif
@@ -124,21 +124,21 @@
                                     </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm font-medium" style="color: #5680E9;">{{ $payroll->periode }}</div>
+                                    <div class="text-sm font-medium" style="color: #1B3C35;">{{ $payroll->periode }}</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm font-bold text-gray-900">{{ $payroll->net_salary_formatted ?? $payroll->montant_formatted }}</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     @if($payroll->statut === 'paid')
-                                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium" style="background-color: rgba(90, 185, 234, 0.15); color: #5680E9;">
+                                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium" style="background-color: rgba(45, 90, 78, 0.15); color: #1B3C35;">
                                             <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                                                 <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
                                             </svg>
                                             Payé
                                         </span>
                                     @else
-                                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium" style="background-color: rgba(136, 96, 208, 0.15); color: #8860D0;">
+                                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium" style="background-color: rgba(200, 169, 110, 0.15); color: #C8A96E;">
                                             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                             </svg>
@@ -148,7 +148,7 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                     <div class="flex items-center justify-end space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                        <a href="{{ route('admin.payrolls.download', $payroll) }}" class="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Télécharger PDF">
+                                        <a href="{{ route('admin.payrolls.download', $payroll) }}" class="p-1.5 text-gray-500 hover:text-[#1B3C35] hover:bg-[#F0F5F3] rounded-lg transition-colors" title="Télécharger PDF">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
                                             </svg>
@@ -170,7 +170,7 @@
                                         </a>
                                         <button type="button" 
                                                 @click="confirmDelete('{{ route('admin.payrolls.destroy', $payroll) }}')"
-                                                class="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" 
+                                                class="p-1.5 text-gray-500 hover:text-[#1B3C35] hover:bg-[#F0F5F3] rounded-lg transition-colors" 
                                                 title="Supprimer">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
@@ -218,8 +218,8 @@
                         @csrf
                         <div class="bg-white px-6 pt-6 pb-4">
                             <div class="flex items-start gap-4">
-                                <div class="flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-xl" style="background-color: rgba(136, 96, 208, 0.15);">
-                                    <svg class="h-6 w-6" style="color: #8860D0;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <div class="flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-xl" style="background-color: rgba(200, 169, 110, 0.15);">
+                                    <svg class="h-6 w-6" style="color: #C8A96E;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/>
                                     </svg>
                                 </div>
@@ -234,7 +234,7 @@
                                         <div class="mt-4 grid grid-cols-2 gap-4">
                                             <div>
                                                 <label for="bulk_mois" class="block text-sm font-medium text-gray-700 mb-1">Mois</label>
-                                                <select name="mois" id="bulk_mois" class="w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" required>
+                                                <select name="mois" id="bulk_mois" class="w-full rounded-xl border-gray-300 focus:border-[#2D5A4E] focus:ring-[#2D5A4E]" required>
                                                     @for($i = 1; $i <= 12; $i++)
                                                         <option value="{{ $i }}" {{ now()->month == $i ? 'selected' : '' }}>{{ ucfirst(\Carbon\Carbon::create()->month($i)->translatedFormat('F')) }}</option>
                                                     @endfor
@@ -242,7 +242,7 @@
                                             </div>
                                             <div>
                                                 <label for="bulk_annee" class="block text-sm font-medium text-gray-700 mb-1">Année</label>
-                                                <select name="annee" id="bulk_annee" class="w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" required>
+                                                <select name="annee" id="bulk_annee" class="w-full rounded-xl border-gray-300 focus:border-[#2D5A4E] focus:ring-[#2D5A4E]" required>
                                                     @for($i = now()->year; $i >= now()->year - 2; $i--)
                                                         <option value="{{ $i }}" {{ now()->year == $i ? 'selected' : '' }}>{{ $i }}</option>
                                                     @endfor
@@ -257,7 +257,7 @@
                             <button type="button" @click="showBulkModal = false" class="px-4 py-2.5 bg-white text-gray-700 font-medium rounded-xl border border-gray-300 hover:bg-gray-50 transition-colors">
                                 Annuler
                             </button>
-                            <button type="submit" class="px-4 py-2.5 text-white font-semibold rounded-xl shadow-lg transition-all" style="background: linear-gradient(135deg, #8860D0, #5680E9);">
+                            <button type="submit" class="px-4 py-2.5 text-white font-semibold rounded-xl shadow-lg transition-all" style="background: linear-gradient(135deg, #C8A96E, #1B3C35);">
                                 Lancer la génération
                             </button>
                         </div>
@@ -298,8 +298,8 @@
                     
                     <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                         <div class="sm:flex sm:items-start">
-                            <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
-                                <svg class="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                            <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-[#E8F0ED] sm:mx-0 sm:h-10 sm:w-10">
+                                <svg class="h-6 w-6 text-[#1B3C35]" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
                                 </svg>
                             </div>
@@ -316,7 +316,7 @@
                             @csrf
                             @method('DELETE')
                             <button type="submit" 
-                                    class="inline-flex w-full justify-center rounded-xl bg-red-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto">
+                                    class="inline-flex w-full justify-center rounded-xl bg-[#1B3C35] px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#2D5A4E] sm:ml-3 sm:w-auto">
                                 Supprimer
                             </button>
                         </form>

@@ -25,8 +25,8 @@
                     <!-- Employé -->
                     <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                         <h3 class="text-lg font-semibold text-gray-900 mb-4">Employé</h3>
-                        <div class="flex items-center gap-4 p-4 bg-indigo-50 rounded-lg border border-indigo-200">
-                            <div class="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold text-lg">
+                        <div class="flex items-center gap-4 p-4 bg-[#F0F5F3] rounded-lg border border-[#B8D1C7]">
+                            <div class="w-12 h-12 bg-gradient-to-br from-[#2D5A4E] to-[#2D5A4E] rounded-full flex items-center justify-center text-white font-semibold text-lg">
                                 {{ strtoupper(substr($employeeEvaluation->user->name, 0, 2)) }}
                             </div>
                             <div>
@@ -56,7 +56,7 @@
                                                max="{{ $criterion['max'] }}" 
                                                step="0.5"
                                                value="{{ old($key, $employeeEvaluation->{$key}) }}"
-                                               class="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-indigo-600 criteria-input"
+                                               class="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[#1B3C35] criteria-input"
                                                data-max="{{ $criterion['max'] }}">
                                         <div class="w-20 text-center">
                                             <input type="number" 
@@ -65,12 +65,12 @@
                                                    max="{{ $criterion['max'] }}" 
                                                    step="0.5"
                                                    value="{{ old($key, $employeeEvaluation->{$key}) }}"
-                                                   class="w-full text-center font-bold text-lg border-gray-300 rounded-lg focus:border-indigo-500 focus:ring-indigo-500 criteria-display"
+                                                   class="w-full text-center font-bold text-lg border-gray-300 rounded-lg focus:border-[#2D5A4E] focus:ring-[#2D5A4E] criteria-display"
                                                    data-target="{{ $key }}">
                                         </div>
                                     </div>
                                     @error($key)
-                                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                                        <p class="mt-2 text-sm text-[#1B3C35]">{{ $message }}</p>
                                     @enderror
                                 </div>
                             @endforeach
@@ -81,7 +81,7 @@
                     <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                         <h3 class="text-lg font-semibold text-gray-900 mb-4">Commentaires</h3>
                         <textarea name="comments" rows="4" 
-                                  class="w-full rounded-lg border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
+                                  class="w-full rounded-lg border-gray-300 focus:border-[#2D5A4E] focus:ring-[#2D5A4E]"
                                   placeholder="Observations, points d'amélioration, félicitations...">{{ old('comments', $employeeEvaluation->comments) }}</textarea>
                     </div>
                 </div>
@@ -92,20 +92,20 @@
                         <h3 class="text-lg font-semibold text-gray-900 mb-4">Résumé</h3>
                         
                         <!-- Score total -->
-                        <div class="text-center p-6 bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl mb-6">
+                        <div class="text-center p-6 bg-gradient-to-br from-[#F0F5F3] to-[#FBF7F0] rounded-xl mb-6">
                             <p class="text-sm text-gray-500 mb-1">Note totale</p>
                             <div class="flex items-baseline justify-center gap-1">
-                                <span id="totalScore" class="text-4xl font-bold text-indigo-600">{{ number_format($employeeEvaluation->total_score, 1) }}</span>
+                                <span id="totalScore" class="text-4xl font-bold text-[#1B3C35]">{{ number_format($employeeEvaluation->total_score, 1) }}</span>
                                 <span class="text-xl text-gray-400">/5,5</span>
                             </div>
                             <div class="mt-3 w-full bg-gray-200 rounded-full h-2">
-                                <div id="scoreBar" class="h-2 rounded-full bg-indigo-600 transition-all duration-300" style="width: {{ $employeeEvaluation->score_percentage }}%"></div>
+                                <div id="scoreBar" class="h-2 rounded-full bg-[#1B3C35] transition-all duration-300" style="width: {{ $employeeEvaluation->score_percentage }}%"></div>
                             </div>
                             <p id="scorePercentage" class="text-sm text-gray-500 mt-2">{{ $employeeEvaluation->score_percentage }}%</p>
                         </div>
 
                         <!-- Salaire calculé -->
-                        <div class="text-center p-6 bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl mb-6">
+                        <div class="text-center p-6 bg-gradient-to-br from-green-50 to-[#F0F5F3] rounded-xl mb-6">
                             <p class="text-sm text-gray-500 mb-1">Salaire brut calculé</p>
                             <p id="calculatedSalary" class="text-3xl font-bold text-green-600">{{ $employeeEvaluation->calculated_salary_formatted }}</p>
                             <p class="text-xs text-gray-500 mt-2">SMIC minimum garanti : {{ number_format($smic, 0, ',', ' ') }} FCFA</p>
@@ -145,13 +145,13 @@
             document.getElementById('scorePercentage').textContent = percentage.toFixed(1) + '%';
 
             const scoreEl = document.getElementById('totalScore');
-            scoreEl.classList.remove('text-green-600', 'text-yellow-600', 'text-red-600', 'text-indigo-600');
+            scoreEl.classList.remove('text-green-600', 'text-yellow-600', 'text-[#1B3C35]', 'text-[#1B3C35]');
             if (total >= 4) {
                 scoreEl.classList.add('text-green-600');
             } else if (total >= 2.5) {
                 scoreEl.classList.add('text-yellow-600');
             } else {
-                scoreEl.classList.add('text-red-600');
+                scoreEl.classList.add('text-[#1B3C35]');
             }
 
             let salary = total * smic;

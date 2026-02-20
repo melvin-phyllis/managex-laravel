@@ -1,9 +1,9 @@
-<x-layouts.admin>
+﻿<x-layouts.admin>
     <div class="space-y-6" x-data="evaluationForm()">
         <!-- Header -->
         <x-table-header title="Évaluation de {{ $intern->name }}" subtitle="{{ now()->startOfWeek()->format('d/m/Y') }} - Semaine en cours">
             <x-slot:icon>
-                <div class="w-12 h-12 bg-gradient-to-br from-violet-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-violet-500/20">
+                <div class="w-12 h-12 bg-gradient-to-br from-[#C8A96E] to-[#2D5A4E] rounded-xl flex items-center justify-center shadow-lg shadow-[#C8A96E]/20">
                     <x-icon name="edit-3" class="w-6 h-6 text-white" />
                 </div>
             </x-slot:icon>
@@ -27,7 +27,7 @@
                                 <h3 class="text-lg font-semibold text-gray-900">{{ $criterion['label'] }}</h3>
                                 <p class="text-sm text-gray-500">{{ $criterion['description'] }}</p>
                             </div>
-                            <div class="text-2xl font-bold text-violet-600" x-text="scores.{{ $key }}.toFixed(1) + '/2.5'"></div>
+                            <div class="text-2xl font-bold text-[#C8A96E]" x-text="scores.{{ $key }}.toFixed(1) + '/2.5'"></div>
                         </div>
 
                         <!-- Score Slider -->
@@ -39,7 +39,7 @@
                                    step="0.5" 
                                    x-model="scores.{{ $key }}"
                                    value="{{ old($key.'_score', $evaluation->{$key.'_score'} ?? 0) }}"
-                                   class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-violet-600">
+                                   class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[#C8A96E]">
                             <div class="flex justify-between text-xs text-gray-400 mt-1">
                                 <span>0</span>
                                 <span>0.5</span>
@@ -53,14 +53,14 @@
                         <!-- Comment -->
                         <textarea name="{{ $key }}_comment" 
                                   rows="3" 
-                                  class="w-full px-4 py-3 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-violet-500 focus:border-violet-500 resize-none"
+                                  class="w-full px-4 py-3 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-[#C8A96E] focus:border-[#C8A96E] resize-none"
                                   placeholder="Commentaire sur {{ strtolower($criterion['label']) }}...">{{ old($key.'_comment', $evaluation->{$key.'_comment'}) }}</textarea>
                     </div>
                 @endforeach
             </div>
 
             <!-- Total Score Preview -->
-            <div class="bg-gradient-to-r from-violet-500 to-purple-600 rounded-2xl p-6 text-white">
+            <div class="bg-gradient-to-r from-[#C8A96E] to-[#2D5A4E] rounded-2xl p-6 text-white">
                 <div class="flex items-center justify-between">
                     <div>
                         <h3 class="text-lg font-medium opacity-90">Note totale</h3>
@@ -85,7 +85,7 @@
                     <label class="block text-sm font-medium text-gray-700 mb-2">Bilan de la semaine</label>
                     <textarea name="general_comment" 
                               rows="4" 
-                              class="w-full px-4 py-3 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-violet-500 focus:border-violet-500 resize-none"
+                              class="w-full px-4 py-3 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-[#C8A96E] focus:border-[#C8A96E] resize-none"
                               placeholder="Résumé global de la performance cette semaine...">{{ old('general_comment', $evaluation->general_comment) }}</textarea>
                 </div>
 
@@ -93,7 +93,7 @@
                     <label class="block text-sm font-medium text-gray-700 mb-2">Objectifs pour la semaine prochaine</label>
                     <textarea name="objectives_next_week" 
                               rows="3" 
-                              class="w-full px-4 py-3 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-violet-500 focus:border-violet-500 resize-none"
+                              class="w-full px-4 py-3 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-[#C8A96E] focus:border-[#C8A96E] resize-none"
                               placeholder="Points à améliorer, objectifs à atteindre...">{{ old('objectives_next_week', $evaluation->objectives_next_week) }}</textarea>
                 </div>
             </div>
@@ -109,7 +109,7 @@
                         <x-icon name="save" class="w-4 h-4 inline mr-1" />
                         Sauvegarder brouillon
                     </button>
-                    <button type="submit" name="action" value="submit" class="px-6 py-2.5 bg-violet-600 text-white rounded-xl font-medium hover:bg-violet-700 transition-colors">
+                    <button type="submit" name="action" value="submit" class="px-6 py-2.5 bg-[#C8A96E] text-white rounded-xl font-medium hover:bg-[#B8955A] transition-colors">
                         <x-icon name="send" class="w-4 h-4 inline mr-1" />
                         Soumettre l'évaluation
                     </button>

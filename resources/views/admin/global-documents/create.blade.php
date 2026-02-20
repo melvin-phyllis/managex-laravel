@@ -1,7 +1,7 @@
 ﻿<x-layouts.admin>
     <div class="max-w-2xl mx-auto space-y-6">
         <!-- Header avec gradient -->
-        <div class="relative overflow-hidden rounded-2xl shadow-xl animate-fade-in-up" style="background: linear-gradient(135deg, #5680E9, #84CEEB) !important;">
+        <div class="relative overflow-hidden rounded-2xl shadow-xl animate-fade-in-up" style="background: linear-gradient(135deg, #1B3C35, #3D7A6A) !important;">
             <div class="absolute inset-0 bg-black/10"></div>
             <div class="absolute -top-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
             <div class="absolute -bottom-24 -left-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
@@ -34,7 +34,7 @@
             @csrf
 
             @if($errors->any())
-                <div class="bg-red-50 border-l-4 border-red-500 text-red-700 px-4 py-3 m-6 rounded-lg">
+                <div class="bg-[#F0F5F3] border-l-4 border-[#2D5A4E] text-[#163530] px-4 py-3 m-6 rounded-lg">
                     <ul class="list-disc list-inside">
                         @foreach($errors->all() as $error)
                             <li>{{ $error }}</li>
@@ -46,9 +46,9 @@
             <div class="p-6 space-y-6">
                 <!-- Type -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Type de document <span class="text-red-500">*</span></label>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Type de document <span class="text-[#2D5A4E]">*</span></label>
                     <select name="type" id="type-select" required
-                            class="w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-indigo-500">
+                            class="w-full rounded-xl border-gray-300 focus:border-[#2D5A4E] focus:ring-[#2D5A4E]">
                         <option value="">Sélectionnez un type</option>
                         @foreach($types as $key => $label)
                             <option value="{{ $key }}" {{ old('type') == $key ? 'selected' : '' }}>{{ $label }}</option>
@@ -58,9 +58,9 @@
 
                 <!-- Position (for Fiche de poste only) -->
                 <div id="position-container" class="hidden">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Poste associé <span class="text-red-500">*</span></label>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Poste associé <span class="text-[#2D5A4E]">*</span></label>
                     <select name="position_id" id="position-select"
-                            class="w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-indigo-500">
+                            class="w-full rounded-xl border-gray-300 focus:border-[#2D5A4E] focus:ring-[#2D5A4E]">
                         <option value="">Sélectionnez un poste</option>
                         @foreach($positions as $position)
                             <option value="{{ $position->id }}" {{ old('position_id') == $position->id ? 'selected' : '' }}>
@@ -72,10 +72,10 @@
 
                 <!-- Titre -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Titre <span class="text-red-500">*</span></label>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Titre <span class="text-[#2D5A4E]">*</span></label>
                     <input type="text" name="title" value="{{ old('title') }}" required
                            placeholder="Ex: Règlement intérieur 2026"
-                           class="w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-indigo-500">
+                           class="w-full rounded-xl border-gray-300 focus:border-[#2D5A4E] focus:ring-[#2D5A4E]">
                 </div>
 
                 <!-- Description -->
@@ -83,29 +83,29 @@
                     <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
                     <textarea name="description" rows="3"
                               placeholder="Décrivez brièvement le contenu du document..."
-                              class="w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-indigo-500">{{ old('description') }}</textarea>
+                              class="w-full rounded-xl border-gray-300 focus:border-[#2D5A4E] focus:ring-[#2D5A4E]">{{ old('description') }}</textarea>
                 </div>
 
                 <!-- Fichier -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Fichier <span class="text-red-500">*</span></label>
-                    <div class="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-indigo-400 transition cursor-pointer"
-                         style="background: linear-gradient(135deg, #5680E910, #84CEEB10);"
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Fichier <span class="text-[#2D5A4E]">*</span></label>
+                    <div class="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-[#3D7A6A] transition cursor-pointer"
+                         style="background: linear-gradient(135deg, #1B3C3510, #3D7A6A10);"
                          onclick="document.getElementById('file-input').click()">
-                        <svg class="w-10 h-10 mx-auto mb-2" style="color: #5680E9;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-10 h-10 mx-auto mb-2" style="color: #1B3C35;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
                         </svg>
                         <p class="text-gray-600">Cliquez ou glissez un fichier ici</p>
                         <p class="text-sm text-gray-400 mt-1">PDF, DOC, DOCX • Max 10 MB</p>
                         <input type="file" name="file" id="file-input" required accept=".pdf,.doc,.docx" class="hidden">
                     </div>
-                    <p id="file-name" class="text-sm mt-2" style="color: #5680E9;"></p>
+                    <p id="file-name" class="text-sm mt-2" style="color: #1B3C35;"></p>
                 </div>
 
                 <!-- Actif -->
                 <div class="flex items-center gap-3">
                     <input type="checkbox" name="is_active" value="1" checked id="is_active"
-                           class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                           class="rounded border-gray-300 text-[#1B3C35] focus:ring-[#2D5A4E]">
                     <label for="is_active" class="text-sm text-gray-700">Document actif (visible par les employés)</label>
                 </div>
             </div>
@@ -115,7 +115,7 @@
                 <a href="{{ route('admin.global-documents.index') }}"
                    class="px-4 py-2.5 text-gray-600 hover:text-gray-800 font-medium transition">Annuler</a>
                 <button type="submit"
-                        class="px-6 py-2.5 text-white font-semibold rounded-xl transition-all shadow-lg" style="background: linear-gradient(135deg, #5680E9, #5AB9EA);">
+                        class="px-6 py-2.5 text-white font-semibold rounded-xl transition-all shadow-lg" style="background: linear-gradient(135deg, #1B3C35, #2D5A4E);">
                     <span class="flex items-center gap-2">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>

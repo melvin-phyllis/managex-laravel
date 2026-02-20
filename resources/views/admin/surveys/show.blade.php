@@ -1,10 +1,10 @@
-<x-layouts.admin>
+﻿<x-layouts.admin>
     <div class="space-y-6">
         <!-- Breadcrumb -->
         <nav class="flex animate-fade-in-up" aria-label="Breadcrumb">
             <ol class="inline-flex items-center space-x-1 md:space-x-3">
                 <li class="inline-flex items-center">
-                    <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600">
+                    <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-[#1B3C35]">
                         <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
                             <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
                         </svg>
@@ -16,7 +16,7 @@
                         <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
                         </svg>
-                        <a href="{{ route('admin.surveys.index') }}" class="ml-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ml-2">Sondages</a>
+                        <a href="{{ route('admin.surveys.index') }}" class="ml-1 text-sm font-medium text-gray-700 hover:text-[#1B3C35] md:ml-2">Sondages</a>
                     </div>
                 </li>
                 <li aria-current="page">
@@ -39,7 +39,7 @@
                 </p>
             </div>
             <div class="flex items-center gap-3">
-                <a href="{{ route('admin.surveys.results', $survey) }}" class="inline-flex items-center px-4 py-2.5 text-white text-sm font-medium rounded-xl transition-colors shadow-lg" style="background: linear-gradient(135deg, #5AB9EA, #84CEEB); box-shadow: 0 10px 15px -3px rgba(90, 185, 234, 0.25);" onmouseover="this.style.filter='brightness(1.1)'" onmouseout="this.style.filter=''">
+                <a href="{{ route('admin.surveys.results', $survey) }}" class="inline-flex items-center px-4 py-2.5 text-white text-sm font-medium rounded-xl transition-colors shadow-lg" style="background: linear-gradient(135deg, #2D5A4E, #3D7A6A); box-shadow: 0 10px 15px -3px rgba(45, 90, 78, 0.25);" onmouseover="this.style.filter='brightness(1.1)'" onmouseout="this.style.filter=''">
                     <x-icon name="bar-chart-2" class="w-5 h-5 mr-2" />
                     Voir les résultats
                 </a>
@@ -63,8 +63,8 @@
                             <dt class="text-sm text-gray-500">Statut</dt>
                             <dd class="mt-1">
                                 @if($survey->is_active)
-                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border" style="background-color: rgba(90, 185, 234, 0.1); color: #5AB9EA; border-color: rgba(90, 185, 234, 0.2);">
-                                        <span class="w-1.5 h-1.5 rounded-full mr-1.5" style="background-color: #5AB9EA;"></span>
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border" style="background-color: rgba(45, 90, 78, 0.1); color: #2D5A4E; border-color: rgba(45, 90, 78, 0.2);">
+                                        <span class="w-1.5 h-1.5 rounded-full mr-1.5" style="background-color: #2D5A4E;"></span>
                                         Actif
                                     </span>
                                 @else
@@ -95,10 +95,10 @@
                                     <x-icon name="calendar" class="w-4 h-4" />
                                     Date limite
                                 </dt>
-                                <dd class="mt-1 text-sm font-medium ml-5.5 {{ $survey->is_expired ? 'text-red-600' : 'text-gray-900' }}">
+                                <dd class="mt-1 text-sm font-medium ml-5.5 {{ $survey->is_expired ? 'text-[#1B3C35]' : 'text-gray-900' }}">
                                     {{ $survey->date_limite->format('d/m/Y') }}
                                     @if($survey->is_expired)
-                                        <span class="text-red-600 font-normal ml-1">(expiré)</span>
+                                        <span class="text-[#1B3C35] font-normal ml-1">(expiré)</span>
                                     @endif
                                 </dd>
                             </div>
@@ -129,7 +129,7 @@
                     <div class="space-y-3">
                         <form action="{{ route('admin.surveys.toggle', $survey) }}" method="POST">
                             @csrf
-                            <button type="submit" class="w-full px-4 py-2.5 font-medium rounded-xl transition-colors flex items-center justify-center gap-2 border" style="{{ $survey->is_active ? 'background-color: rgba(245, 158, 11, 0.1); color: #F59E0B; border-color: rgba(245, 158, 11, 0.2);' : 'background-color: rgba(90, 185, 234, 0.1); color: #5AB9EA; border-color: rgba(90, 185, 234, 0.2);' }}" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+                            <button type="submit" class="w-full px-4 py-2.5 font-medium rounded-xl transition-colors flex items-center justify-center gap-2 border" style="{{ $survey->is_active ? 'background-color: rgba(245, 158, 11, 0.1); color: #F59E0B; border-color: rgba(245, 158, 11, 0.2);' : 'background-color: rgba(45, 90, 78, 0.1); color: #2D5A4E; border-color: rgba(45, 90, 78, 0.2);' }}" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
                                 @if($survey->is_active)
                                     <x-icon name="pause-circle" class="w-5 h-5" />
                                     Désactiver le sondage
@@ -168,7 +168,7 @@
                         @forelse($survey->questions as $index => $question)
                             <div class="p-6 hover:bg-gray-50 transition-colors">
                                 <div class="flex items-start">
-                                    <span class="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shadow-sm" style="background-color: rgba(90, 185, 234, 0.15); color: #5AB9EA;">
+                                    <span class="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shadow-sm" style="background-color: rgba(45, 90, 78, 0.15); color: #2D5A4E;">
                                         {{ $index + 1 }}
                                     </span>
                                     <div class="ml-4 flex-1">

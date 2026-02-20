@@ -2,12 +2,12 @@
     <div class="space-y-6" x-data="analyticsPage()">
 
         {{-- Header amélioré --}}
-        <div class="relative overflow-hidden bg-gradient-to-r from-[#5680E9] to-[#84CEEB] rounded-2xl shadow-lg">
+        <div class="relative overflow-hidden bg-gradient-to-r from-[#1B3C35] to-[#3D7A6A] rounded-2xl shadow-lg">
             <div class="absolute inset-0 bg-black/10"></div>
             <div class="absolute -top-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
             <div class="absolute -bottom-24 -left-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
             
-            <div class="relative p-6 md:p-8 bg-blue-400/30">
+            <div class="relative p-6 md:p-8 bg-[#3D7A6A]/30">
                 <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                     <div>
                         <h1 class="text-2xl md:text-3xl font-bold text-white flex items-center gap-3">
@@ -21,7 +21,7 @@
                             <span class="px-3 py-1 bg-white/20 backdrop-blur-sm text-white text-xs font-medium rounded-full">
                                 Derniére mise à jour: <span x-text="lastUpdate">-</span>
                             </span>
-                            <span class="px-3 py-1 bg-emerald-500/80 text-white text-xs font-medium rounded-full flex items-center gap-1" x-show="!loading">
+                            <span class="px-3 py-1 bg-[#2D5A4E]/80 text-white text-xs font-medium rounded-full flex items-center gap-1" x-show="!loading">
                                 <span class="w-2 h-2 bg-white rounded-full animate-pulse"></span>
                                 En direct
                             </span>
@@ -32,11 +32,11 @@
                             <x-icon name="file-text" class="w-4 h-4 mr-2"/>
                             Export PDF
                         </button>
-                        <button @click="exportData('excel')" class="px-4 py-2.5 bg-emerald-500/80 backdrop-blur-sm text-white font-medium rounded-xl hover:bg-emerald-600 transition-all flex items-center">
+                        <button @click="exportData('excel')" class="px-4 py-2.5 bg-[#2D5A4E]/80 backdrop-blur-sm text-white font-medium rounded-xl hover:bg-[#1B3C35] transition-all flex items-center">
                             <x-icon name="table" class="w-4 h-4 mr-2"/>
                             Export CSV
                         </button>
-                        <button @click="loadData()" class="px-4 py-2.5 bg-white text-indigo-700 font-semibold rounded-xl hover:bg-indigo-50 transition-all shadow-lg flex items-center">
+                        <button @click="loadData()" class="px-4 py-2.5 bg-white text-[#163530] font-semibold rounded-xl hover:bg-[#F0F5F3] transition-all shadow-lg flex items-center">
                             <x-icon name="refresh-cw" class="w-4 h-4 mr-2" x-bind:class="{'animate-spin': loading}"/>
                             Actualiser
                         </button>
@@ -52,7 +52,7 @@
                 Filtrer par :
             </div>
             
-            <select x-model="filters.period" @change="loadData()" class="rounded-lg border-gray-300 text-sm focus:border-indigo-500 focus:ring-indigo-500">
+            <select x-model="filters.period" @change="loadData()" class="rounded-lg border-gray-300 text-sm focus:border-[#2D5A4E] focus:ring-[#2D5A4E]">
                 <option value="today">Aujourd'hui</option>
                 <option value="week">Cette semaine</option>
                 <option value="month">Ce mois</option>
@@ -63,7 +63,7 @@
             {{-- Sélecteur de mois spécifique --}}
             <template x-if="filters.period === 'custom'">
                 <div class="flex gap-2">
-                    <select x-model="filters.custom_month" @change="loadData()" class="rounded-lg border-gray-300 text-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    <select x-model="filters.custom_month" @change="loadData()" class="rounded-lg border-gray-300 text-sm focus:border-[#2D5A4E] focus:ring-[#2D5A4E]">
                         <option value="1">Janvier</option>
                         <option value="2">Février</option>
                         <option value="3">Mars</option>
@@ -77,7 +77,7 @@
                         <option value="11">Novembre</option>
                         <option value="12">Décembre</option>
                     </select>
-                    <select x-model="filters.custom_year" @change="loadData()" class="rounded-lg border-gray-300 text-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    <select x-model="filters.custom_year" @change="loadData()" class="rounded-lg border-gray-300 text-sm focus:border-[#2D5A4E] focus:ring-[#2D5A4E]">
                         <option value="2026">2026</option>
                         <option value="2025">2025</option>
                         <option value="2024">2024</option>
@@ -85,14 +85,14 @@
                 </div>
             </template>
 
-            <select x-model="filters.department_id" @change="loadData()" class="rounded-lg border-gray-300 text-sm focus:border-indigo-500 focus:ring-indigo-500">
+            <select x-model="filters.department_id" @change="loadData()" class="rounded-lg border-gray-300 text-sm focus:border-[#2D5A4E] focus:ring-[#2D5A4E]">
                 <option value="">Tous les départements</option>
                 @foreach($departments as $dept)
                     <option value="{{ $dept->id }}">{{ $dept->name }}</option>
                 @endforeach
             </select>
 
-            <select x-model="filters.contract_type" @change="loadData()" class="rounded-lg border-gray-300 text-sm focus:border-indigo-500 focus:ring-indigo-500">
+            <select x-model="filters.contract_type" @change="loadData()" class="rounded-lg border-gray-300 text-sm focus:border-[#2D5A4E] focus:ring-[#2D5A4E]">
                 <option value="">Tous les contrats</option>
                 <option value="CDI">CDI</option>
                 <option value="CDD">CDD</option>
@@ -105,14 +105,14 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 animate-fade-in-up animation-delay-200">
             {{-- 1. Effectif total --}}
             <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100 relative overflow-hidden group hover:shadow-md transition-all">
-                <div class="absolute right-0 top-0 w-24 h-24 bg-gradient-to-br from-blue-500/10 to-indigo-500/10 rounded-full -mr-8 -mt-8 group-hover:scale-125 transition-transform"></div>
+                <div class="absolute right-0 top-0 w-24 h-24 bg-gradient-to-br from-[#2D5A4E]/10 to-[#2D5A4E]/10 rounded-full -mr-8 -mt-8 group-hover:scale-125 transition-transform"></div>
                 <div class="relative z-10">
                     <div class="flex items-center justify-between">
-                        <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/30">
+                        <div class="w-12 h-12 bg-gradient-to-br from-[#1B3C35] to-[#2D5A4E] rounded-xl flex items-center justify-center shadow-lg shadow-[#1B3C35]/30">
                             <x-icon name="users" class="w-6 h-6 text-white"/>
                         </div>
                         <div class="flex items-center px-2 py-1 rounded-full text-xs font-semibold" 
-                             :class="kpis.effectif_total?.variation >= 0 ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'">
+                             :class="kpis.effectif_total?.variation >= 0 ? 'bg-[#E8F0ED] text-[#163530]' : 'bg-[#E8F0ED] text-[#163530]'">
                             <x-icon name="trending-up" class="w-3 h-3 mr-1" x-show="kpis.effectif_total?.variation >= 0"/>
                             <x-icon name="trending-down" class="w-3 h-3 mr-1" x-show="kpis.effectif_total?.variation < 0"/>
                             <span x-text="(kpis.effectif_total?.variation > 0 ? '+' : '') + (kpis.effectif_total?.variation || 0) + '%'"></span>
@@ -125,10 +125,10 @@
 
             {{-- 2. Taux de Ponctualité --}}
             <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100 relative overflow-hidden group hover:shadow-md transition-all">
-                <div class="absolute right-0 top-0 w-24 h-24 bg-gradient-to-br from-emerald-500/10 to-teal-500/10 rounded-full -mr-8 -mt-8 group-hover:scale-125 transition-transform"></div>
+                <div class="absolute right-0 top-0 w-24 h-24 bg-gradient-to-br from-[#2D5A4E]/10 to-[#2D5A4E]/10 rounded-full -mr-8 -mt-8 group-hover:scale-125 transition-transform"></div>
                 <div class="relative z-10">
                     <div class="flex items-center justify-between">
-                        <div class="w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-500/30">
+                        <div class="w-12 h-12 bg-gradient-to-br from-[#2D5A4E] to-[#1B3C35] rounded-xl flex items-center justify-center shadow-lg shadow-[#2D5A4E]/30">
                             <x-icon name="clock" class="w-6 h-6 text-white"/>
                         </div>
                         <span class="text-xs font-medium text-gray-500">Aujourd'hui</span>
@@ -136,42 +136,42 @@
                     <p class="text-3xl font-bold text-gray-900 mt-4"><span x-text="kpis.punctuality_today?.percentage || '0'"></span>%</p>
                     <p class="text-sm text-gray-500 mt-1">Taux de ponctualité</p>
                     <div class="w-full bg-gray-200 rounded-full h-2 mt-3">
-                        <div class="bg-gradient-to-r from-emerald-500 to-teal-500 h-2 rounded-full transition-all duration-1000" :style="'width: ' + (kpis.punctuality_today?.percentage || 0) + '%'"></div>
+                        <div class="bg-gradient-to-r from-[#2D5A4E] to-[#2D5A4E] h-2 rounded-full transition-all duration-1000" :style="'width: ' + (kpis.punctuality_today?.percentage || 0) + '%'"></div>
                     </div>
                 </div>
             </div>
 
             {{-- 3. Mouvements du personnel --}}
             <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100 relative overflow-hidden group hover:shadow-md transition-all">
-                <div class="absolute right-0 top-0 w-24 h-24 bg-gradient-to-br from-amber-500/10 to-orange-500/10 rounded-full -mr-8 -mt-8 group-hover:scale-125 transition-transform"></div>
+                <div class="absolute right-0 top-0 w-24 h-24 bg-gradient-to-br from-[#C8A96E]/10 to-[#C8A96E]/10 rounded-full -mr-8 -mt-8 group-hover:scale-125 transition-transform"></div>
                 <div class="relative z-10">
                     <div class="flex items-center justify-between">
-                        <div class="w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-600 rounded-xl flex items-center justify-center shadow-lg shadow-amber-500/30">
+                        <div class="w-12 h-12 bg-gradient-to-br from-[#C8A96E] to-[#B8955A] rounded-xl flex items-center justify-center shadow-lg shadow-[#C8A96E]/30">
                             <x-icon name="user-plus" class="w-6 h-6 text-white"/>
                         </div>
-                         <div class="flex items-center px-2 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-700">
+                         <div class="flex items-center px-2 py-1 rounded-full text-xs font-semibold bg-[#E8F0ED] text-[#163530]">
                             <span x-text="'+' + (kpis.turnover?.entries || 0)"></span>
                         </div>
                     </div>
                     <p class="text-3xl font-bold text-gray-900 mt-4" x-text="(kpis.turnover?.entries || 0) + (kpis.turnover?.exits || 0)"></p>
                     <p class="text-sm text-gray-500 mt-1">Mouvements du personnel</p>
                     <p class="text-xs text-gray-400 mt-1">
-                        <span class="text-emerald-600" x-text="'+' + (kpis.turnover?.entries || 0)"></span> entrées / 
-                        <span class="text-red-600" x-text="'-' + (kpis.turnover?.exits || 0)"></span> sorties
+                        <span class="text-[#1B3C35]" x-text="'+' + (kpis.turnover?.entries || 0)"></span> entrées / 
+                        <span class="text-[#1B3C35]" x-text="'-' + (kpis.turnover?.exits || 0)"></span> sorties
                     </p>
                 </div>
             </div>
 
             {{-- 4. Masse salariale --}}
             <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100 relative overflow-hidden group hover:shadow-md transition-all">
-                <div class="absolute right-0 top-0 w-24 h-24 bg-gradient-to-br from-violet-500/10 to-purple-500/10 rounded-full -mr-8 -mt-8 group-hover:scale-125 transition-transform"></div>
+                <div class="absolute right-0 top-0 w-24 h-24 bg-gradient-to-br from-[#C8A96E]/10 to-[#3D7A6A]/10 rounded-full -mr-8 -mt-8 group-hover:scale-125 transition-transform"></div>
                 <div class="relative z-10">
                     <div class="flex items-center justify-between">
-                        <div class="w-12 h-12 bg-gradient-to-br from-violet-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-violet-500/30">
+                        <div class="w-12 h-12 bg-gradient-to-br from-[#C8A96E] to-[#2D5A4E] rounded-xl flex items-center justify-center shadow-lg shadow-[#C8A96E]/30">
                             <x-icon name="dollar-sign" class="w-6 h-6 text-white"/>
                         </div>
                         <div class="flex items-center px-2 py-1 rounded-full text-xs font-semibold"
-                             :class="kpis.masse_salariale?.variation >= 0 ? 'bg-amber-100 text-amber-700' : 'bg-emerald-100 text-emerald-700'">
+                             :class="kpis.masse_salariale?.variation >= 0 ? 'bg-amber-100 text-amber-700' : 'bg-[#E8F0ED] text-[#163530]'">
                             <span x-text="(kpis.masse_salariale?.variation > 0 ? '+' : '') + (kpis.masse_salariale?.variation || 0) + '%'"></span>
                         </div>
                     </div>
@@ -193,18 +193,18 @@
             <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-100 p-5">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="font-semibold text-gray-900 flex items-center gap-2">
-                        <div class="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center">
-                            <x-icon name="activity" class="w-4 h-4 text-indigo-600"/>
+                        <div class="w-8 h-8 bg-[#E8F0ED] rounded-lg flex items-center justify-center">
+                            <x-icon name="activity" class="w-4 h-4 text-[#1B3C35]"/>
                         </div>
                         évolution des présences
                     </h3>
                     <div class="flex items-center gap-2">
                         <span class="flex items-center text-xs text-gray-500">
-                            <span class="w-3 h-3 rounded-full bg-indigo-500 mr-1"></span>
+                            <span class="w-3 h-3 rounded-full bg-[#2D5A4E] mr-1"></span>
                             Présences
                         </span>
                         <span class="flex items-center text-xs text-gray-500">
-                            <span class="w-3 h-3 rounded-full bg-emerald-500 mr-1"></span>
+                            <span class="w-3 h-3 rounded-full bg-[#2D5A4E] mr-1"></span>
                             Objectif
                         </span>
                     </div>
@@ -217,8 +217,8 @@
             {{-- Repartition departements (Donut) --}}
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
                 <h3 class="font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                    <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
-                        <x-icon name="pie-chart" class="w-4 h-4 text-purple-600"/>
+                    <div class="w-8 h-8 bg-[#FAF3E8] rounded-lg flex items-center justify-center">
+                        <x-icon name="pie-chart" class="w-4 h-4 text-[#C8A96E]"/>
                     </div>
                     Répartition par département
                 </h3>
@@ -236,8 +236,8 @@
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 animate-fade-in-up animation-delay-550">
             <div class="flex items-center justify-between mb-4">
                 <h3 class="font-semibold text-gray-900 flex items-center gap-2">
-                    <div class="w-8 h-8 bg-cyan-100 rounded-lg flex items-center justify-center">
-                        <x-icon name="clock" class="w-4 h-4 text-cyan-600"/>
+                    <div class="w-8 h-8 bg-[#E8F0ED] rounded-lg flex items-center justify-center">
+                        <x-icon name="clock" class="w-4 h-4 text-[#2D5A4E]"/>
                     </div>
                     Heures travaillées (5 derniéres semaines)
                 </h3>
@@ -313,8 +313,8 @@
         </div>
          {{-- Section Démographie --}}
         <h2 class="text-xl font-bold text-gray-800 mt-8 mb-4 flex items-center gap-2">
-            <div class="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center">
-                <x-icon name="users" class="w-4 h-4 text-indigo-600"/>
+            <div class="w-8 h-8 bg-[#E8F0ED] rounded-lg flex items-center justify-center">
+                <x-icon name="users" class="w-4 h-4 text-[#1B3C35]"/>
             </div>
             Démographie & Carrière
         </h2>
@@ -460,7 +460,7 @@
                             datasets: [{
                                 label: 'Présences',
                                 data: this.charts.presence_trend?.data || [],
-                                borderColor: '#4F46E5', // Indigo 600
+                                borderColor: '#1B3C35', // Indigo 600
                                 backgroundColor: 'rgba(79, 70, 229, 0.1)',
                                 borderWidth: 2,
                                 fill: true,
@@ -656,7 +656,7 @@
                                     {
                                         label: 'Créées',
                                         data: this.charts.task_completion_evolution?.created || [],
-                                        borderColor: '#6366F1',
+                                        borderColor: '#3D7A6A',
                                         backgroundColor: 'rgba(99, 102, 241, 0.1)',
                                         fill: true,
                                         tension: 0.4

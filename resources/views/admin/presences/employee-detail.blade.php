@@ -1,10 +1,10 @@
-<x-layouts.admin>
+﻿<x-layouts.admin>
     <div class="space-y-6">
         <!-- Breadcrumbs -->
         <nav class="flex" aria-label="Breadcrumb">
             <ol class="inline-flex items-center space-x-1 md:space-x-3">
                 <li class="inline-flex items-center">
-                    <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600">
+                    <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-[#1B3C35]">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
                         </svg>
@@ -16,7 +16,7 @@
                         <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                         </svg>
-                        <a href="{{ route('admin.presences.index') }}" class="ml-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ml-2">Présences</a>
+                        <a href="{{ route('admin.presences.index') }}" class="ml-1 text-sm font-medium text-gray-700 hover:text-[#1B3C35] md:ml-2">Présences</a>
                     </div>
                 </li>
                 <li aria-current="page">
@@ -38,14 +38,14 @@
                 </a>
                 <div class="flex items-center gap-4">
                     <div class="w-16 h-16 rounded-2xl flex items-center justify-center text-white font-bold text-xl shadow-lg"
-                         style="background: linear-gradient(135deg, #5680E9, #84CEEB) !important; box-shadow: 0 10px 15px -3px rgba(86, 128, 233, 0.3) !important;">
+                         style="background: linear-gradient(135deg, #1B3C35, #3D7A6A) !important; box-shadow: 0 10px 15px -3px rgba(27, 60, 53, 0.3) !important;">
                         {{ strtoupper(substr($user->name, 0, 2)) }}
                     </div>
                     <div>
                         <h1 class="text-2xl font-bold text-gray-900">{{ $user->name }}</h1>
                         <p class="text-gray-500 flex items-center gap-2">
                             @if($user->department && is_object($user->department))
-                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-700">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#E8F0ED] text-[#163530]">
                                     {{ $user->department->name ?? 'N/A' }}
                                 </span>
                                 <span class="text-gray-400">•</span>
@@ -61,7 +61,7 @@
                       id="filterForm" class="flex flex-wrap items-center gap-3">
                     <select name="period" 
                             @change="showCustom = ($event.target.value === 'custom'); if(!showCustom) $el.form.submit()"
-                            class="rounded-lg border-gray-300 text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                            class="rounded-lg border-gray-300 text-sm focus:ring-[#2D5A4E] focus:border-[#2D5A4E]">
                         <option value="week" {{ $period === 'week' ? 'selected' : '' }}>Cette semaine</option>
                         <option value="month" {{ $period === 'month' ? 'selected' : '' }}>Ce mois</option>
                         <option value="quarter" {{ $period === 'quarter' ? 'selected' : '' }}>Ce trimestre</option>
@@ -73,13 +73,13 @@
                     <div x-show="showCustom" x-transition class="flex items-center gap-2">
                         <input type="date" name="start_date" 
                                value="{{ $startDate->format('Y-m-d') }}"
-                               class="rounded-lg border-gray-300 text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                               class="rounded-lg border-gray-300 text-sm focus:ring-[#2D5A4E] focus:border-[#2D5A4E]">
                         <span class="text-gray-400">→</span>
                         <input type="date" name="end_date" 
                                value="{{ $endDate->format('Y-m-d') }}"
-                               class="rounded-lg border-gray-300 text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                               class="rounded-lg border-gray-300 text-sm focus:ring-[#2D5A4E] focus:border-[#2D5A4E]">
                         <button type="submit" 
-                                class="px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors">
+                                class="px-4 py-2 bg-[#1B3C35] text-white text-sm font-medium rounded-lg hover:bg-[#163530] transition-colors">
                             Appliquer
                         </button>
                     </div>
@@ -101,7 +101,7 @@
             <div class="col-span-2 lg:col-span-1 bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
                 <div class="flex items-center justify-between mb-4">
                     <span class="text-sm font-medium text-gray-500">Taux de présence</span>
-                    <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background: linear-gradient(135deg, #5AB9EA, #5680E9);">
+                    <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background: linear-gradient(135deg, #2D5A4E, #1B3C35);">
                         <x-icon name="check-circle" class="w-4 h-4 text-white" />
                     </div>
                 </div>
@@ -110,12 +110,12 @@
                         <svg class="w-20 h-20 transform -rotate-90" viewBox="0 0 36 36">
                             <circle cx="18" cy="18" r="16" fill="none" class="stroke-gray-200" stroke-width="3"></circle>
                             <circle cx="18" cy="18" r="16" fill="none" 
-                                class="{{ $stats['attendance_rate'] >= 95 ? 'stroke-green-500' : ($stats['attendance_rate'] >= 80 ? 'stroke-amber-500' : 'stroke-red-500') }}" 
+                                class="{{ $stats['attendance_rate'] >= 95 ? 'stroke-green-500' : ($stats['attendance_rate'] >= 80 ? 'stroke-[#C8A96E]' : 'stroke-[#C8A96E]') }}" 
                                 stroke-width="3" 
                                 stroke-dasharray="{{ $stats['attendance_rate'] }}, 100"
                                 stroke-linecap="round"></circle>
                         </svg>
-                        <span class="absolute inset-0 flex items-center justify-center text-lg font-bold {{ $stats['attendance_rate'] >= 95 ? 'text-green-600' : ($stats['attendance_rate'] >= 80 ? 'text-amber-600' : 'text-red-600') }}">
+                        <span class="absolute inset-0 flex items-center justify-center text-lg font-bold {{ $stats['attendance_rate'] >= 95 ? 'text-green-600' : ($stats['attendance_rate'] >= 80 ? 'text-amber-600' : 'text-[#1B3C35]') }}">
                             {{ $stats['attendance_rate'] }}%
                         </span>
                     </div>
@@ -127,7 +127,7 @@
 
             {{-- Jours présent --}}
             {{-- Jours présent --}}
-            <div class="rounded-2xl p-6 text-white shadow-lg" style="background: linear-gradient(135deg, #5AB9EA, #5680E9) !important;">
+            <div class="rounded-2xl p-6 text-white shadow-lg" style="background: linear-gradient(135deg, #2D5A4E, #1B3C35) !important;">
                 <div class="flex items-center justify-between mb-2">
                     <span class="text-white/80 text-sm font-medium">Jours Présent</span>
                     <x-icon name="check" class="w-5 h-5 text-white/60" />
@@ -138,7 +138,7 @@
 
             {{-- Retards --}}
             {{-- Retards --}}
-            <div class="rounded-2xl p-6 text-white shadow-lg" style="background: linear-gradient(135deg, #84CEEB, #5AB9EA) !important;">
+            <div class="rounded-2xl p-6 text-white shadow-lg" style="background: linear-gradient(135deg, #3D7A6A, #2D5A4E) !important;">
                 <div class="flex items-center justify-between mb-2">
                     <span class="text-white/80 text-sm font-medium">Retards</span>
                     <x-icon name="clock" class="w-5 h-5 text-white/60" />
@@ -149,7 +149,7 @@
 
             {{-- Absences --}}
             {{-- Absences --}}
-            <div class="rounded-2xl p-6 text-white shadow-lg" style="background: linear-gradient(135deg, #8860D0, #5680E9) !important;">
+            <div class="rounded-2xl p-6 text-white shadow-lg" style="background: linear-gradient(135deg, #C8A96E, #1B3C35) !important;">
                 <div class="flex items-center justify-between mb-2">
                     <span class="text-white/80 text-sm font-medium">Absences</span>
                     <x-icon name="x-circle" class="w-5 h-5 text-white/60" />
@@ -160,7 +160,7 @@
 
             {{-- Heures de travail --}}
             {{-- Heures de travail --}}
-            <div class="rounded-2xl p-6 text-white shadow-lg" style="background: linear-gradient(135deg, #5680E9, #84CEEB) !important;">
+            <div class="rounded-2xl p-6 text-white shadow-lg" style="background: linear-gradient(135deg, #1B3C35, #3D7A6A) !important;">
                 <div class="flex items-center justify-between mb-2">
                     <span class="text-white/80 text-sm font-medium">Heures travaillées</span>
                     <x-icon name="briefcase" class="w-5 h-5 text-white/60" />
@@ -176,7 +176,7 @@
             <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
                 <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
                     <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: rgba(132, 206, 235, 0.2);">
-                        <x-icon name="clock" class="w-4 h-4 text-[#5680E9]" />
+                        <x-icon name="clock" class="w-4 h-4 text-[#1B3C35]" />
                     </div>
                     Cumul des retards
                 </h3>
@@ -205,8 +205,8 @@
             {{-- Heures supplémentaires --}}
             <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
                 <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                    <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: rgba(90, 185, 234, 0.2);">
-                        <x-icon name="trending-up" class="w-4 h-4 text-[#5680E9]" />
+                    <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: rgba(45, 90, 78, 0.2);">
+                        <x-icon name="trending-up" class="w-4 h-4 text-[#1B3C35]" />
                     </div>
                     Heures supplémentaires
                 </h3>
@@ -226,8 +226,8 @@
             {{-- Résumé --}}
             <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
                 <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                    <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: rgba(86, 128, 233, 0.2);">
-                        <x-icon name="bar-chart-2" class="w-4 h-4 text-[#5680E9]" />
+                    <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: rgba(27, 60, 53, 0.2);">
+                        <x-icon name="bar-chart-2" class="w-4 h-4 text-[#1B3C35]" />
                     </div>
                     Bilan
                 </h3>
@@ -249,10 +249,10 @@
                             </div>
                         </div>
                     @else
-                        <div class="flex items-center gap-3 p-4 bg-red-50 rounded-xl">
+                        <div class="flex items-center gap-3 p-4 bg-[#F0F5F3] rounded-xl">
                             <span class="text-3xl">⚠️</span>
                             <div>
-                                <p class="font-bold text-red-600">À surveiller</p>
+                                <p class="font-bold text-[#1B3C35]">À surveiller</p>
                                 <p class="text-gray-500 text-sm">Nécessite une attention particulière</p>
                             </div>
                         </div>
@@ -265,7 +265,7 @@
         <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-100 flex flex-wrap items-center justify-between gap-4">
                 <h3 class="text-lg font-semibold text-gray-900 flex items-center gap-2">
-                    <x-icon name="calendar" class="w-5 h-5 text-indigo-500" />
+                    <x-icon name="calendar" class="w-5 h-5 text-[#2D5A4E]" />
                     Historique des présences 
                     <span class="text-sm font-normal text-gray-500">({{ $pagination->total() }} jours)</span>
                 </h3>
@@ -279,7 +279,7 @@
                         @endif
                         <label class="text-sm text-gray-500">Afficher</label>
                         <select name="per_page" onchange="this.form.submit()" 
-                                class="rounded-lg border-gray-300 text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                class="rounded-lg border-gray-300 text-sm focus:ring-[#2D5A4E] focus:border-[#2D5A4E]">
                             @foreach([10, 20, 30, 40, 50, 100, 150, 200] as $option)
                                 <option value="{{ $option }}" {{ $pagination->perPage() == $option ? 'selected' : '' }}>{{ $option }}</option>
                             @endforeach
@@ -313,11 +313,11 @@
                             <td class="py-3 px-6 text-center font-medium">{{ $presence['work_hours'] }}h</td>
                             <td class="py-3 px-6 text-center">
                                 @if($presence['is_late'])
-                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold text-[#5680E9]" style="background-color: #84CEEB30;">
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold text-[#1B3C35]" style="background-color: #3D7A6A30;">
                                         ⏱ +{{ $presence['late_minutes'] }}min
                                     </span>
                                 @else
-                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold text-[#5680E9]" style="background-color: #5AB9EA20;">
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold text-[#1B3C35]" style="background-color: #2D5A4E20;">
                                         ✓ À l'heure
                                     </span>
                                 @endif
@@ -352,7 +352,7 @@
                     {{-- Page numbers --}}
                     @foreach($pagination->getUrlRange(max(1, $pagination->currentPage() - 2), min($pagination->lastPage(), $pagination->currentPage() + 2)) as $page => $url)
                         @if($page == $pagination->currentPage())
-                            <span class="px-3 py-1.5 text-sm font-bold text-white bg-indigo-600 rounded-lg">{{ $page }}</span>
+                            <span class="px-3 py-1.5 text-sm font-bold text-white bg-[#1B3C35] rounded-lg">{{ $page }}</span>
                         @else
                             <a href="{{ $url }}" class="px-3 py-1.5 text-sm text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors">{{ $page }}</a>
                         @endif

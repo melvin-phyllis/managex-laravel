@@ -4,7 +4,7 @@
         <nav class="flex animate-fade-in-up" aria-label="Breadcrumb">
             <ol class="inline-flex items-center space-x-1 md:space-x-3">
                 <li class="inline-flex items-center">
-                    <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600">
+                    <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-[#1B3C35]">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
                         </svg>
@@ -16,7 +16,7 @@
                         <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                         </svg>
-                        <a href="{{ route('admin.leaves.index') }}" class="ml-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ml-2">Congés</a>
+                        <a href="{{ route('admin.leaves.index') }}" class="ml-1 text-sm font-medium text-gray-700 hover:text-[#1B3C35] md:ml-2">Congés</a>
                     </div>
                 </li>
                 <li aria-current="page">
@@ -80,7 +80,7 @@
                     @if($leave->commentaire_admin)
                         <div class="mt-6 pt-6 border-t border-gray-100">
                             <dt class="text-sm font-medium text-gray-500 mb-2">Commentaire de l'administrateur</dt>
-                            <dd class="text-gray-900 bg-blue-50 p-4 rounded-lg">{{ $leave->commentaire_admin }}</dd>
+                            <dd class="text-gray-900 bg-[#F0F5F3] p-4 rounded-lg">{{ $leave->commentaire_admin }}</dd>
                         </div>
                     @endif
                 </div>
@@ -92,7 +92,7 @@
 
                         <div class="mb-4">
                             <label for="commentaire_admin" class="block text-sm font-medium text-gray-700 mb-1">Commentaire (optionnel)</label>
-                            <textarea id="commentaire_admin" name="commentaire_admin" rows="3" class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500" placeholder="Ajouter un commentaire..."></textarea>
+                            <textarea id="commentaire_admin" name="commentaire_admin" rows="3" class="w-full rounded-lg border-gray-300 focus:border-[#2D5A4E] focus:ring-[#2D5A4E]" placeholder="Ajouter un commentaire..."></textarea>
                         </div>
 
                         <div class="flex items-center space-x-4">
@@ -109,7 +109,7 @@
                             <form action="{{ route('admin.leaves.reject', $leave) }}" method="POST" class="flex-1" id="rejectForm">
                                 @csrf
                                 <input type="hidden" name="commentaire_admin" id="rejectComment">
-                                <button type="submit" class="w-full px-4 py-3 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition-colors flex items-center justify-center">
+                                <button type="submit" class="w-full px-4 py-3 bg-[#1B3C35] text-white font-medium rounded-lg hover:bg-[#163530] transition-colors flex items-center justify-center">
                                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                                     </svg>
@@ -139,8 +139,8 @@
                         @if($leave->user->avatar)
                             <img src="{{ avatar_url($leave->user->avatar) }}" alt="{{ $leave->user->name }}" class="w-12 h-12 rounded-full object-cover">
                         @else
-                            <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
-                                <span class="text-blue-600 font-medium">{{ strtoupper(substr($leave->user->name, 0, 2)) }}</span>
+                            <div class="w-12 h-12 rounded-full bg-[#E8F0ED] flex items-center justify-center">
+                                <span class="text-[#1B3C35] font-medium">{{ strtoupper(substr($leave->user->name, 0, 2)) }}</span>
                             </div>
                         @endif
                         <div class="ml-3">
@@ -148,7 +148,7 @@
                             <p class="text-sm text-gray-500">{{ $leave->user->poste ?? 'Non défini' }}</p>
                         </div>
                     </div>
-                    <a href="{{ route('admin.employees.show', $leave->user) }}" class="mt-4 block text-center text-sm text-blue-600 hover:text-blue-800">
+                    <a href="{{ route('admin.employees.show', $leave->user) }}" class="mt-4 block text-center text-sm text-[#1B3C35] hover:text-[#163530]">
                         Voir le profil complet 
                     </a>
                 </div>

@@ -1,7 +1,7 @@
-<x-layouts.admin>
+﻿<x-layouts.admin>
     <div class="max-w-5xl mx-auto space-y-6">
         <!-- Header comme sur tasks -->
-        <div class="relative overflow-hidden rounded-2xl shadow-xl animate-fade-in-up" style="background: linear-gradient(135deg, #5680E9, #84CEEB) !important;">
+        <div class="relative overflow-hidden rounded-2xl shadow-xl animate-fade-in-up" style="background: linear-gradient(135deg, #1B3C35, #3D7A6A) !important;">
             <div class="absolute inset-0 bg-black/10"></div>
             <div class="absolute -top-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
             <div class="absolute -bottom-24 -left-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
@@ -27,7 +27,7 @@
                         <p class="text-white/80 mt-2">Créée {{ $announcement->created_at->diffForHumans() }} par {{ $announcement->creator?->name }}</p>
                     </div>
                     <a href="{{ route('admin.announcements.edit', $announcement) }}" 
-                       class="px-4 py-2.5 bg-white font-semibold rounded-xl hover:bg-purple-50 transition-all shadow-lg flex items-center" style="color: #5680E9;">
+                       class="px-4 py-2.5 bg-white font-semibold rounded-xl hover:bg-[#FBF7F0] transition-all shadow-lg flex items-center" style="color: #1B3C35;">
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                         </svg>
@@ -48,7 +48,7 @@
                 </span>
             @endif
             @if($announcement->is_active)
-                <span class="inline-flex items-center gap-1 px-3 py-1.5 text-sm font-medium rounded-full" style="background-color: rgba(90, 185, 234, 0.15); color: #5680E9;">
+                <span class="inline-flex items-center gap-1 px-3 py-1.5 text-sm font-medium rounded-full" style="background-color: rgba(45, 90, 78, 0.15); color: #1B3C35;">
                     <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                         <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
                     </svg>
@@ -62,14 +62,14 @@
                     Inactive
                 </span>
             @endif
-            <span class="px-3 py-1.5 text-sm font-medium rounded-full" style="background-color: rgba(86, 128, 233, 0.15); color: #5680E9;">
+            <span class="px-3 py-1.5 text-sm font-medium rounded-full" style="background-color: rgba(27, 60, 53, 0.15); color: #1B3C35;">
                 {{ ucfirst($announcement->type) }}
             </span>
             <span class="px-3 py-1.5 text-sm font-medium rounded-full bg-gray-100 text-gray-700">
                 Priorité {{ $announcement->priority }}
             </span>
             @if($announcement->requires_acknowledgment)
-                <span class="px-3 py-1.5 text-sm font-medium rounded-full" style="background-color: rgba(136, 96, 208, 0.15); color: #8860D0;">
+                <span class="px-3 py-1.5 text-sm font-medium rounded-full" style="background-color: rgba(200, 169, 110, 0.15); color: #C8A96E;">
                     Accusé requis
                 </span>
             @endif
@@ -81,8 +81,8 @@
                 <!-- Announcement Content -->
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                     <h2 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                        <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: rgba(86, 128, 233, 0.15);">
-                            <svg class="w-4 h-4" style="color: #5680E9;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: rgba(27, 60, 53, 0.15);">
+                            <svg class="w-4 h-4" style="color: #1B3C35;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                             </svg>
                         </div>
@@ -96,8 +96,8 @@
                 <!-- Read Users -->
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                     <div class="p-4 border-b border-gray-100 flex items-center gap-2">
-                        <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: rgba(90, 185, 234, 0.15);">
-                            <svg class="w-4 h-4" style="color: #5AB9EA;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: rgba(45, 90, 78, 0.15);">
+                            <svg class="w-4 h-4" style="color: #2D5A4E;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                             </svg>
                         </div>
@@ -105,9 +105,9 @@
                     </div>
                     <div class="max-h-80 overflow-y-auto">
                         @forelse($readUsers as $read)
-                            <div class="flex items-center justify-between p-4 border-b border-gray-50 last:border-0 hover:bg-purple-50/50 transition-colors">
+                            <div class="flex items-center justify-between p-4 border-b border-gray-50 last:border-0 hover:bg-[#FBF7F0]/50 transition-colors">
                                 <div class="flex items-center gap-3">
-                                    <div class="w-10 h-10 rounded-xl flex items-center justify-center overflow-hidden" style="background: linear-gradient(135deg, #5680E9, #84CEEB);">
+                                    <div class="w-10 h-10 rounded-xl flex items-center justify-center overflow-hidden" style="background: linear-gradient(135deg, #1B3C35, #3D7A6A);">
                                         @if($read->user?->avatar)
                                             <img src="{{ avatar_url($read->user->avatar) }}" class="w-full h-full object-cover">
                                         @else
@@ -122,7 +122,7 @@
                                 <div class="text-right text-sm">
                                     <p class="text-gray-500">Lu le {{ $read->read_at->format('d/m/Y H:i') }}</p>
                                     @if($read->acknowledged_at)
-                                        <p style="color: #5AB9EA;">✓ Accusé {{ $read->acknowledged_at->format('d/m/Y H:i') }}</p>
+                                        <p style="color: #2D5A4E;">✓ Accusé {{ $read->acknowledged_at->format('d/m/Y H:i') }}</p>
                                     @endif
                                 </div>
                             </div>
@@ -144,7 +144,7 @@
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                     <div class="p-4 border-b border-gray-100 flex items-center gap-2">
                         <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: rgba(239, 68, 68, 0.15);">
-                            <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-4 h-4 text-[#2D5A4E]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                             </svg>
                         </div>
@@ -152,7 +152,7 @@
                     </div>
                     <div class="max-h-60 overflow-y-auto">
                         @foreach($unreadUsers as $user)
-                            <div class="flex items-center p-4 border-b border-gray-50 last:border-0 hover:bg-purple-50/50 transition-colors">
+                            <div class="flex items-center p-4 border-b border-gray-50 last:border-0 hover:bg-[#FBF7F0]/50 transition-colors">
                                 <div class="flex items-center gap-3">
                                     <div class="w-10 h-10 bg-gray-200 rounded-xl flex items-center justify-center overflow-hidden">
                                         @if($user->avatar)
@@ -179,7 +179,7 @@
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                     <h2 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
                         <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: rgba(132, 206, 235, 0.15);">
-                            <svg class="w-4 h-4" style="color: #84CEEB;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-4 h-4" style="color: #3D7A6A;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
                             </svg>
                         </div>
@@ -191,11 +191,11 @@
                         <div>
                             <div class="flex items-center justify-between mb-2">
                                 <span class="text-sm text-gray-600">Taux de lecture</span>
-                                <span class="text-sm font-semibold" style="color: #5680E9;">{{ $stats['read_percentage'] }}%</span>
+                                <span class="text-sm font-semibold" style="color: #1B3C35;">{{ $stats['read_percentage'] }}%</span>
                             </div>
                             <div class="h-3 bg-gray-200 rounded-full overflow-hidden">
                                 <div class="h-full rounded-full transition-all" 
-                                     style="width: {{ $stats['read_percentage'] }}%; background: linear-gradient(90deg, #5680E9, #5AB9EA);"></div>
+                                     style="width: {{ $stats['read_percentage'] }}%; background: linear-gradient(90deg, #1B3C35, #2D5A4E);"></div>
                             </div>
                             <p class="text-xs text-gray-500 mt-1">{{ $stats['read_count'] }} / {{ $stats['total_target'] }} personnes</p>
                         </div>
@@ -205,11 +205,11 @@
                         <div>
                             <div class="flex items-center justify-between mb-2">
                                 <span class="text-sm text-gray-600">Accusés de réception</span>
-                                <span class="text-sm font-semibold" style="color: #8860D0;">{{ $stats['acknowledged_percentage'] }}%</span>
+                                <span class="text-sm font-semibold" style="color: #C8A96E;">{{ $stats['acknowledged_percentage'] }}%</span>
                             </div>
                             <div class="h-3 bg-gray-200 rounded-full overflow-hidden">
                                 <div class="h-full rounded-full transition-all" 
-                                     style="width: {{ $stats['acknowledged_percentage'] }}%; background: linear-gradient(90deg, #8860D0, #C1C8E4);"></div>
+                                     style="width: {{ $stats['acknowledged_percentage'] }}%; background: linear-gradient(90deg, #C8A96E, #D4BC8B);"></div>
                             </div>
                             <p class="text-xs text-gray-500 mt-1">{{ $stats['acknowledged_count'] }} / {{ $stats['total_target'] }} personnes</p>
                         </div>
@@ -220,11 +220,11 @@
                         <!-- Quick Stats -->
                         <div class="grid grid-cols-2 gap-4">
                             <div class="text-center p-3 bg-gray-50 rounded-xl">
-                                <p class="text-2xl font-bold" style="color: #5680E9;">{{ $stats['read_count'] }}</p>
+                                <p class="text-2xl font-bold" style="color: #1B3C35;">{{ $stats['read_count'] }}</p>
                                 <p class="text-xs text-gray-500">Lecteurs</p>
                             </div>
                             <div class="text-center p-3 bg-gray-50 rounded-xl">
-                                <p class="text-2xl font-bold" style="color: #8860D0;">{{ $stats['total_target'] - $stats['read_count'] }}</p>
+                                <p class="text-2xl font-bold" style="color: #C8A96E;">{{ $stats['total_target'] - $stats['read_count'] }}</p>
                                 <p class="text-xs text-gray-500">Non lus</p>
                             </div>
                         </div>
@@ -234,8 +234,8 @@
                 <!-- Info Card -->
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                     <h2 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                        <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: rgba(86, 128, 233, 0.15);">
-                            <svg class="w-4 h-4" style="color: #5680E9;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: rgba(27, 60, 53, 0.15);">
+                            <svg class="w-4 h-4" style="color: #1B3C35;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                             </svg>
                         </div>

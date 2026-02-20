@@ -1,7 +1,7 @@
 ﻿<x-layouts.admin>
     <div class="max-w-4xl mx-auto space-y-6">
         <!-- Header comme sur tasks -->
-        <div class="relative overflow-hidden rounded-2xl shadow-xl animate-fade-in-up" style="background: linear-gradient(135deg, #5680E9, #84CEEB) !important;">
+        <div class="relative overflow-hidden rounded-2xl shadow-xl animate-fade-in-up" style="background: linear-gradient(135deg, #1B3C35, #3D7A6A) !important;">
             <div class="absolute inset-0 bg-black/10"></div>
             <div class="absolute -top-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
             <div class="absolute -bottom-24 -left-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
@@ -29,7 +29,7 @@
                         <p class="text-white/80 mt-2">{{ $announcement->title }}</p>
                     </div>
                     <a href="{{ route('admin.announcements.index') }}" 
-                       class="px-4 py-2.5 bg-white font-semibold rounded-xl hover:bg-purple-50 transition-all shadow-lg flex items-center" style="color: #5680E9;">
+                       class="px-4 py-2.5 bg-white font-semibold rounded-xl hover:bg-[#FBF7F0] transition-all shadow-lg flex items-center" style="color: #1B3C35;">
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
                         </svg>
@@ -47,8 +47,8 @@
             <!-- Main Content Card -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-6 animate-fade-in-up animation-delay-100">
                 <h2 class="text-lg font-semibold text-gray-900 border-b border-gray-100 pb-3 flex items-center gap-2">
-                    <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: rgba(86, 128, 233, 0.15);">
-                        <svg class="w-4 h-4" style="color: #5680E9;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: rgba(27, 60, 53, 0.15);">
+                        <svg class="w-4 h-4" style="color: #1B3C35;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                         </svg>
                     </div>
@@ -58,12 +58,12 @@
                 <!-- Title -->
                 <div>
                     <label for="title" class="block text-sm font-medium text-gray-700 mb-1">
-                        Titre <span class="text-red-500">*</span>
+                        Titre <span class="text-[#2D5A4E]">*</span>
                     </label>
                     <input type="text" name="title" id="title" value="{{ old('title', $announcement->title) }}" required
-                           class="w-full px-4 py-2.5 rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500">
+                           class="w-full px-4 py-2.5 rounded-xl border-gray-300 focus:border-[#2D5A4E] focus:ring-2 focus:ring-[#2D5A4E]">
                     @error('title')
-                        <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                        <p class="mt-1 text-sm text-[#2D5A4E]">{{ $message }}</p>
                     @enderror
                 </div>
 
@@ -71,10 +71,10 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label for="type" class="block text-sm font-medium text-gray-700 mb-1">
-                            Type <span class="text-red-500">*</span>
+                            Type <span class="text-[#2D5A4E]">*</span>
                         </label>
                         <select name="type" id="type" required
-                                class="w-full px-4 py-2.5 rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500">
+                                class="w-full px-4 py-2.5 rounded-xl border-gray-300 focus:border-[#2D5A4E] focus:ring-2 focus:ring-[#2D5A4E]">
                             <option value="info" {{ old('type', $announcement->type) === 'info' ? 'selected' : '' }}>ℹ️ Information</option>
                             <option value="success" {{ old('type', $announcement->type) === 'success' ? 'selected' : '' }}>✅ Bonne nouvelle</option>
                             <option value="warning" {{ old('type', $announcement->type) === 'warning' ? 'selected' : '' }}>⚠️ Attention</option>
@@ -84,10 +84,10 @@
                     </div>
                     <div>
                         <label for="priority" class="block text-sm font-medium text-gray-700 mb-1">
-                            Priorité <span class="text-red-500">*</span>
+                            Priorité <span class="text-[#2D5A4E]">*</span>
                         </label>
                         <select name="priority" id="priority" required
-                                class="w-full px-4 py-2.5 rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500">
+                                class="w-full px-4 py-2.5 rounded-xl border-gray-300 focus:border-[#2D5A4E] focus:ring-2 focus:ring-[#2D5A4E]">
                             <option value="normal" {{ old('priority', $announcement->priority) === 'normal' ? 'selected' : '' }}>Normale</option>
                             <option value="high" {{ old('priority', $announcement->priority) === 'high' ? 'selected' : '' }}>Haute</option>
                             <option value="critical" {{ old('priority', $announcement->priority) === 'critical' ? 'selected' : '' }}>Critique (bannière)</option>
@@ -98,12 +98,12 @@
                 <!-- Content -->
                 <div>
                     <label for="content" class="block text-sm font-medium text-gray-700 mb-1">
-                        Contenu <span class="text-red-500">*</span>
+                        Contenu <span class="text-[#2D5A4E]">*</span>
                     </label>
                     <textarea name="content" id="content" rows="6" required
-                              class="w-full px-4 py-2.5 rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500">{{ old('content', $announcement->content) }}</textarea>
+                              class="w-full px-4 py-2.5 rounded-xl border-gray-300 focus:border-[#2D5A4E] focus:ring-2 focus:ring-[#2D5A4E]">{{ old('content', $announcement->content) }}</textarea>
                     @error('content')
-                        <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                        <p class="mt-1 text-sm text-[#2D5A4E]">{{ $message }}</p>
                     @enderror
                 </div>
             </div>
@@ -111,8 +111,8 @@
             <!-- Targeting Card -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-6 animate-fade-in-up animation-delay-200">
                 <h2 class="text-lg font-semibold text-gray-900 border-b border-gray-100 pb-3 flex items-center gap-2">
-                    <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: rgba(136, 96, 208, 0.15);">
-                        <svg class="w-4 h-4" style="color: #8860D0;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: rgba(200, 169, 110, 0.15);">
+                        <svg class="w-4 h-4" style="color: #C8A96E;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
                         </svg>
                     </div>
@@ -122,35 +122,35 @@
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-3">Destinataires</label>
                     <div class="space-y-3">
-                        <label class="flex items-center gap-3 p-3 border border-gray-200 rounded-xl cursor-pointer hover:bg-purple-50/50 transition-colors">
+                        <label class="flex items-center gap-3 p-3 border border-gray-200 rounded-xl cursor-pointer hover:bg-[#FBF7F0]/50 transition-colors">
                             <input type="radio" name="target_type" value="all" 
                                    {{ old('target_type', $announcement->target_type) === 'all' ? 'checked' : '' }}
-                                   class="focus:ring-indigo-500" style="color: #5680E9;" onchange="updateTargetFields()">
+                                   class="focus:ring-[#2D5A4E]" style="color: #1B3C35;" onchange="updateTargetFields()">
                             <span class="font-medium text-gray-900">Tous les employés</span>
                         </label>
-                        <label class="flex items-center gap-3 p-3 border border-gray-200 rounded-xl cursor-pointer hover:bg-purple-50/50 transition-colors">
+                        <label class="flex items-center gap-3 p-3 border border-gray-200 rounded-xl cursor-pointer hover:bg-[#FBF7F0]/50 transition-colors">
                             <input type="radio" name="target_type" value="department" 
                                    {{ old('target_type', $announcement->target_type) === 'department' ? 'checked' : '' }}
-                                   class="focus:ring-indigo-500" style="color: #5680E9;" onchange="updateTargetFields()">
+                                   class="focus:ring-[#2D5A4E]" style="color: #1B3C35;" onchange="updateTargetFields()">
                             <span class="font-medium text-gray-900">Un département</span>
                         </label>
-                        <label class="flex items-center gap-3 p-3 border border-gray-200 rounded-xl cursor-pointer hover:bg-purple-50/50 transition-colors">
+                        <label class="flex items-center gap-3 p-3 border border-gray-200 rounded-xl cursor-pointer hover:bg-[#FBF7F0]/50 transition-colors">
                             <input type="radio" name="target_type" value="position" 
                                    {{ old('target_type', $announcement->target_type) === 'position' ? 'checked' : '' }}
-                                   class="focus:ring-indigo-500" style="color: #5680E9;" onchange="updateTargetFields()">
+                                   class="focus:ring-[#2D5A4E]" style="color: #1B3C35;" onchange="updateTargetFields()">
                             <span class="font-medium text-gray-900">Un poste</span>
                         </label>
-                        <label class="flex items-center gap-3 p-3 border border-gray-200 rounded-xl cursor-pointer hover:bg-purple-50/50 transition-colors">
+                        <label class="flex items-center gap-3 p-3 border border-gray-200 rounded-xl cursor-pointer hover:bg-[#FBF7F0]/50 transition-colors">
                             <input type="radio" name="target_type" value="custom" 
                                    {{ old('target_type', $announcement->target_type) === 'custom' ? 'checked' : '' }}
-                                   class="focus:ring-indigo-500" style="color: #5680E9;" onchange="updateTargetFields()">
+                                   class="focus:ring-[#2D5A4E]" style="color: #1B3C35;" onchange="updateTargetFields()">
                             <span class="font-medium text-gray-900">Utilisateurs spécifiques</span>
                         </label>
                     </div>
                 </div>
 
                 <div id="departmentField" class="{{ $announcement->target_type !== 'department' ? 'hidden' : '' }}">
-                    <select name="department_id" class="w-full px-4 py-2.5 rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500">
+                    <select name="department_id" class="w-full px-4 py-2.5 rounded-xl border-gray-300 focus:border-[#2D5A4E] focus:ring-2 focus:ring-[#2D5A4E]">
                         <option value="">Sélectionner un département</option>
                         @foreach($departments as $dept)
                             <option value="{{ $dept->id }}" {{ old('department_id', $announcement->department_id) == $dept->id ? 'selected' : '' }}>
@@ -161,7 +161,7 @@
                 </div>
 
                 <div id="positionField" class="{{ $announcement->target_type !== 'position' ? 'hidden' : '' }}">
-                    <select name="position_id" class="w-full px-4 py-2.5 rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500">
+                    <select name="position_id" class="w-full px-4 py-2.5 rounded-xl border-gray-300 focus:border-[#2D5A4E] focus:ring-2 focus:ring-[#2D5A4E]">
                         <option value="">Sélectionner un poste</option>
                         @foreach($positions as $pos)
                             <option value="{{ $pos->id }}" {{ old('position_id', $announcement->position_id) == $pos->id ? 'selected' : '' }}>
@@ -175,10 +175,10 @@
                     <div class="border border-gray-200 rounded-xl max-h-60 overflow-y-auto p-2">
                         @php $selectedUsers = $announcement->target_user_ids ?? []; @endphp
                         @foreach($employees as $emp)
-                            <label class="flex items-center gap-3 p-2 hover:bg-purple-50/50 rounded-lg cursor-pointer transition-colors">
+                            <label class="flex items-center gap-3 p-2 hover:bg-[#FBF7F0]/50 rounded-lg cursor-pointer transition-colors">
                                 <input type="checkbox" name="target_user_ids[]" value="{{ $emp->id }}"
                                        {{ in_array($emp->id, $selectedUsers) ? 'checked' : '' }}
-                                       class="rounded focus:ring-indigo-500" style="color: #5680E9;">
+                                       class="rounded focus:ring-[#2D5A4E]" style="color: #1B3C35;">
                                 <span class="text-gray-900">{{ $emp->name }}</span>
                             </label>
                         @endforeach
@@ -189,8 +189,8 @@
             <!-- Scheduling Card -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-6 animate-fade-in-up animation-delay-300">
                 <h2 class="text-lg font-semibold text-gray-900 border-b border-gray-100 pb-3 flex items-center gap-2">
-                    <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: rgba(90, 185, 234, 0.15);">
-                        <svg class="w-4 h-4" style="color: #5AB9EA;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: rgba(45, 90, 78, 0.15);">
+                        <svg class="w-4 h-4" style="color: #2D5A4E;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                         </svg>
                     </div>
@@ -200,12 +200,12 @@
                     <div>
                         <label for="start_date" class="block text-sm font-medium text-gray-700 mb-1">Date de début</label>
                         <input type="date" name="start_date" value="{{ old('start_date', $announcement->start_date?->format('Y-m-d')) }}"
-                               class="w-full px-4 py-2.5 rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500">
+                               class="w-full px-4 py-2.5 rounded-xl border-gray-300 focus:border-[#2D5A4E] focus:ring-2 focus:ring-[#2D5A4E]">
                     </div>
                     <div>
                         <label for="end_date" class="block text-sm font-medium text-gray-700 mb-1">Date de fin</label>
                         <input type="date" name="end_date" value="{{ old('end_date', $announcement->end_date?->format('Y-m-d')) }}"
-                               class="w-full px-4 py-2.5 rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500">
+                               class="w-full px-4 py-2.5 rounded-xl border-gray-300 focus:border-[#2D5A4E] focus:ring-2 focus:ring-[#2D5A4E]">
                     </div>
                 </div>
             </div>
@@ -214,23 +214,23 @@
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-4 animate-fade-in-up animation-delay-400">
                 <h2 class="text-lg font-semibold text-gray-900 border-b border-gray-100 pb-3 flex items-center gap-2">
                     <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: rgba(132, 206, 235, 0.15);">
-                        <svg class="w-4 h-4" style="color: #84CEEB;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-4 h-4" style="color: #3D7A6A;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                         </svg>
                     </div>
                     Options
                 </h2>
-                <label class="flex items-center gap-3 cursor-pointer p-2 rounded-lg hover:bg-purple-50/50 transition-colors">
+                <label class="flex items-center gap-3 cursor-pointer p-2 rounded-lg hover:bg-[#FBF7F0]/50 transition-colors">
                     <input type="checkbox" name="is_pinned" value="1" 
                            {{ old('is_pinned', $announcement->is_pinned) ? 'checked' : '' }}
-                           class="rounded focus:ring-indigo-500" style="color: #5680E9;">
+                           class="rounded focus:ring-[#2D5A4E]" style="color: #1B3C35;">
                     <span class="font-medium text-gray-900">📌 Épingler en haut</span>
                 </label>
-                <label class="flex items-center gap-3 cursor-pointer p-2 rounded-lg hover:bg-purple-50/50 transition-colors">
+                <label class="flex items-center gap-3 cursor-pointer p-2 rounded-lg hover:bg-[#FBF7F0]/50 transition-colors">
                     <input type="checkbox" name="requires_acknowledgment" value="1" 
                            {{ old('requires_acknowledgment', $announcement->requires_acknowledgment) ? 'checked' : '' }}
-                           class="rounded focus:ring-indigo-500" style="color: #5680E9;">
+                           class="rounded focus:ring-[#2D5A4E]" style="color: #1B3C35;">
                     <span class="font-medium text-gray-900">✅ Exiger un accusé de réception</span>
                 </label>
             </div>
@@ -242,7 +242,7 @@
                     Annuler
                 </a>
                 <button type="submit" 
-                        class="px-6 py-2.5 text-white font-semibold rounded-xl shadow-lg transition-all" style="background: linear-gradient(135deg, #5680E9, #5AB9EA);">
+                        class="px-6 py-2.5 text-white font-semibold rounded-xl shadow-lg transition-all" style="background: linear-gradient(135deg, #1B3C35, #2D5A4E);">
                     Enregistrer les modifications
                 </button>
             </div>

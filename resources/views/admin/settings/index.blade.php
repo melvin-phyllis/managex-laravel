@@ -1,7 +1,7 @@
 ﻿<x-layouts.admin>
     <div class="space-y-6" x-data="settingsPage()">
         <!-- Header avec gradient -->
-        <div class="relative overflow-hidden rounded-2xl shadow-xl" style="background: linear-gradient(135deg, #5680E9, #84CEEB) !important;">
+        <div class="relative overflow-hidden rounded-2xl shadow-xl" style="background: linear-gradient(135deg, #1B3C35, #3D7A6A) !important;">
             <div class="absolute inset-0 bg-black/10"></div>
             <div class="absolute -top-24 -right-24 w-64 h-64 bg-white/5 rounded-full blur-3xl"></div>
             <div class="absolute -bottom-24 -left-24 w-64 h-64 bg-white/5 rounded-full blur-3xl"></div>
@@ -23,7 +23,7 @@
                     
                     <!-- Admin info -->
                     <div class="flex items-center gap-3 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20">
-                        <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold" style="background: linear-gradient(135deg, #8860D0, #5680E9);">
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold" style="background: linear-gradient(135deg, #C8A96E, #1B3C35);">
                             {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
                         </div>
                         <div>
@@ -46,8 +46,8 @@
         @endif
 
         @if(session('success'))
-            <div class="bg-emerald-50 border border-emerald-200 text-emerald-700 px-4 py-3 rounded-xl flex items-center gap-3">
-                <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="bg-[#F0F5F3] border border-[#B8D1C7] text-[#163530] px-4 py-3 rounded-xl flex items-center gap-3">
+                <svg class="w-5 h-5 text-[#2D5A4E]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 </svg>
                 {{ session('success') }}
@@ -55,8 +55,8 @@
         @endif
 
         @if(session('error'))
-            <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl flex items-center gap-3">
-                <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="bg-[#F0F5F3] border border-[#B8D1C7] text-[#163530] px-4 py-3 rounded-xl flex items-center gap-3">
+                <svg class="w-5 h-5 text-[#2D5A4E]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 </svg>
                 {{ session('error') }}
@@ -68,7 +68,7 @@
             <nav class="flex flex-wrap gap-1" aria-label="Tabs">
                 <button @click="activeTab = 'compte'"
                         :class="activeTab === 'compte' ? 'text-white shadow-lg' : 'text-gray-600 hover:bg-gray-100'"
-                        :style="activeTab === 'compte' ? 'background: linear-gradient(135deg, #5680E9, #84CEEB)' : ''"
+                        :style="activeTab === 'compte' ? 'background: linear-gradient(135deg, #1B3C35, #3D7A6A)' : ''"
                         class="whitespace-nowrap py-2.5 px-4 font-medium text-sm flex items-center gap-2 transition-all rounded-lg">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
@@ -76,7 +76,7 @@
                     Mon compte
                 </button>
                 <button @click="activeTab = 'horaires'"
-                        :class="activeTab === 'horaires' ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-lg shadow-green-500/30' : 'text-gray-600 hover:bg-gray-100'"
+                        :class="activeTab === 'horaires' ? 'bg-gradient-to-r from-green-500 to-[#1B3C35] text-white shadow-lg shadow-green-500/30' : 'text-gray-600 hover:bg-gray-100'"
                         class="whitespace-nowrap py-2.5 px-4 font-medium text-sm flex items-center gap-2 transition-all rounded-lg">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
@@ -84,7 +84,7 @@
                     Horaires
                 </button>
                 <button @click="activeTab = 'pauses'"
-                        :class="activeTab === 'pauses' ? 'bg-gradient-to-r from-orange-500 to-amber-600 text-white shadow-lg shadow-orange-500/30' : 'text-gray-600 hover:bg-gray-100'"
+                        :class="activeTab === 'pauses' ? 'bg-gradient-to-r from-[#C8A96E] to-[#B8955A] text-white shadow-lg shadow-orange-500/30' : 'text-gray-600 hover:bg-gray-100'"
                         class="whitespace-nowrap py-2.5 px-4 font-medium text-sm flex items-center gap-2 transition-all rounded-lg">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707"/>
@@ -92,7 +92,7 @@
                     Pauses
                 </button>
                 <button @click="activeTab = 'retards'"
-                        :class="activeTab === 'retards' ? 'bg-gradient-to-r from-red-500 to-rose-600 text-white shadow-lg shadow-red-500/30' : 'text-gray-600 hover:bg-gray-100'"
+                        :class="activeTab === 'retards' ? 'bg-gradient-to-r from-[#1B3C35] to-[#163530] text-white shadow-lg shadow-[#1B3C35]/30' : 'text-gray-600 hover:bg-gray-100'"
                         class="whitespace-nowrap py-2.5 px-4 font-medium text-sm flex items-center gap-2 transition-all rounded-lg">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
@@ -100,18 +100,18 @@
                     Retards
                 </button>
                 <button @click="activeTab = 'organisation'"
-                        :class="activeTab === 'organisation' ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/30' : 'text-gray-600 hover:bg-gray-100'"
+                        :class="activeTab === 'organisation' ? 'bg-gradient-to-r from-[#1B3C35] to-[#2D5A4E] text-white shadow-lg shadow-[#1B3C35]/30' : 'text-gray-600 hover:bg-gray-100'"
                         class="whitespace-nowrap py-2.5 px-4 font-medium text-sm flex items-center gap-2 transition-all rounded-lg">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
                     </svg>
                     Organisation
-                    <span class="bg-white/20 text-xs font-medium px-2 py-0.5 rounded-full" :class="activeTab === 'organisation' ? 'bg-white/20' : 'bg-blue-100 text-blue-700'">
+                    <span class="bg-white/20 text-xs font-medium px-2 py-0.5 rounded-full" :class="activeTab === 'organisation' ? 'bg-white/20' : 'bg-[#E8F0ED] text-[#163530]'">
                         {{ $departments->count() }}
                     </span>
                 </button>
                 <button @click="activeTab = 'paie'"
-                        :class="activeTab === 'paie' ? 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-lg shadow-emerald-500/30' : 'text-gray-600 hover:bg-gray-100'"
+                        :class="activeTab === 'paie' ? 'bg-gradient-to-r from-[#2D5A4E] to-[#1B3C35] text-white shadow-lg shadow-[#2D5A4E]/30' : 'text-gray-600 hover:bg-gray-100'"
                         class="whitespace-nowrap py-2.5 px-4 font-medium text-sm flex items-center gap-2 transition-all rounded-lg">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/>
@@ -126,7 +126,7 @@
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <!-- Changer l'email -->
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                    <div class="px-5 py-4" style="background: linear-gradient(135deg, #5680E9, #84CEEB);">
+                    <div class="px-5 py-4" style="background: linear-gradient(135deg, #1B3C35, #3D7A6A);">
                         <h3 class="text-white font-semibold flex items-center gap-2">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
@@ -148,26 +148,26 @@
                             <div>
                                 <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Nouvel email</label>
                                 <input type="email" name="email" id="email" required
-                                       class="w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
+                                       class="w-full rounded-xl border-gray-300 focus:border-[#2D5A4E] focus:ring-[#2D5A4E]"
                                        placeholder="nouveau@email.com">
                                 @error('email')
-                                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                                    <p class="mt-1 text-sm text-[#2D5A4E]">{{ $message }}</p>
                                 @enderror
                             </div>
                             
                             <div>
                                 <label for="email_password" class="block text-sm font-medium text-gray-700 mb-1">Mot de passe actuel</label>
                                 <input type="password" name="password" id="email_password" required
-                                       class="w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
+                                       class="w-full rounded-xl border-gray-300 focus:border-[#2D5A4E] focus:ring-[#2D5A4E]"
                                        placeholder="">
                                 @error('password')
-                                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                                    <p class="mt-1 text-sm text-[#2D5A4E]">{{ $message }}</p>
                                 @enderror
                             </div>
                         </div>
                         
                         <div class="mt-6">
-                            <button type="submit" class="w-full px-6 py-2.5 text-white font-medium rounded-xl transition-all shadow-lg" style="background: linear-gradient(135deg, #5680E9, #5AB9EA);">
+                            <button type="submit" class="w-full px-6 py-2.5 text-white font-medium rounded-xl transition-all shadow-lg" style="background: linear-gradient(135deg, #1B3C35, #2D5A4E);">
                                 Mettre à jour l'email
                             </button>
                         </div>
@@ -176,7 +176,7 @@
 
                 <!-- Changer le mot de passe -->
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                    <div class="px-5 py-4" style="background: linear-gradient(135deg, #8860D0, #C1C8E4);">
+                    <div class="px-5 py-4" style="background: linear-gradient(135deg, #C8A96E, #D4BC8B);">
                         <h3 class="text-white font-semibold flex items-center gap-2">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
@@ -195,7 +195,7 @@
                                        class="w-full rounded-xl border-gray-300 focus:border-rose-500 focus:ring-rose-500"
                                        placeholder="">
                                 @error('current_password')
-                                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                                    <p class="mt-1 text-sm text-[#2D5A4E]">{{ $message }}</p>
                                 @enderror
                             </div>
                             
@@ -205,7 +205,7 @@
                                        class="w-full rounded-xl border-gray-300 focus:border-rose-500 focus:ring-rose-500"
                                        placeholder="">
                                 @error('new_password')
-                                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                                    <p class="mt-1 text-sm text-[#2D5A4E]">{{ $message }}</p>
                                 @enderror
                                 <p class="mt-1 text-xs text-gray-500">Minimum 8 caractéres</p>
                             </div>
@@ -219,7 +219,7 @@
                         </div>
                         
                         <div class="mt-6">
-                            <button type="submit" class="w-full px-6 py-2.5 text-white font-medium rounded-xl transition-all shadow-lg" style="background: linear-gradient(135deg, #8860D0, #5680E9);">
+                            <button type="submit" class="w-full px-6 py-2.5 text-white font-medium rounded-xl transition-all shadow-lg" style="background: linear-gradient(135deg, #C8A96E, #1B3C35);">
                                 Mettre à jour le mot de passe
                             </button>
                         </div>
@@ -229,7 +229,7 @@
             
             <!-- Email de réception du rapport quotidien -->
             <div class="mt-6 bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                <div class="px-5 py-4" style="background: linear-gradient(135deg, #5AB9EA, #84CEEB);">
+                <div class="px-5 py-4" style="background: linear-gradient(135deg, #2D5A4E, #3D7A6A);">
                     <h3 class="text-white font-semibold flex items-center gap-2">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
@@ -249,15 +249,15 @@
                         <label for="report_email" class="block text-sm font-medium text-gray-700 mb-1">Email de réception</label>
                         <input type="email" name="report_email" id="report_email" required
                                value="{{ $settings['report_email'] ?? '' }}"
-                               class="w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
+                               class="w-full rounded-xl border-gray-300 focus:border-[#2D5A4E] focus:ring-[#2D5A4E]"
                                placeholder="votre-email@exemple.com">
                         @error('report_email')
-                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                            <p class="mt-1 text-sm text-[#2D5A4E]">{{ $message }}</p>
                         @enderror
                     </div>
 
                     <div class="mt-4">
-                        <button type="submit" class="w-full px-6 py-2.5 text-white font-medium rounded-xl transition-all shadow-lg" style="background: linear-gradient(135deg, #5AB9EA, #84CEEB);">
+                        <button type="submit" class="w-full px-6 py-2.5 text-white font-medium rounded-xl transition-all shadow-lg" style="background: linear-gradient(135deg, #2D5A4E, #3D7A6A);">
                             Enregistrer l'email de rapport
                         </button>
                     </div>
@@ -311,7 +311,7 @@
                                    value="{{ old('work_start_time', $settings['work_start_time']) }}"
                                    class="w-full rounded-lg border-gray-300 focus:border-green-500 focus:ring-green-500 text-lg py-3">
                             @error('work_start_time')
-                                <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                                <p class="mt-1 text-sm text-[#2D5A4E]">{{ $message }}</p>
                             @enderror
                         </div>
 
@@ -323,7 +323,7 @@
                                    value="{{ old('work_end_time', $settings['work_end_time']) }}"
                                    class="w-full rounded-lg border-gray-300 focus:border-green-500 focus:ring-green-500 text-lg py-3">
                             @error('work_end_time')
-                                <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                                <p class="mt-1 text-sm text-[#2D5A4E]">{{ $message }}</p>
                             @enderror
                         </div>
                     </div>
@@ -354,8 +354,8 @@
 
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                     <div class="flex items-center mb-6">
-                        <div class="bg-orange-100 p-3 rounded-full mr-4">
-                            <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="bg-[#FAF3E8] p-3 rounded-full mr-4">
+                            <svg class="w-6 h-6 text-[#C8A96E]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707"></path>
                             </svg>
                         </div>
@@ -374,7 +374,7 @@
                                    value="{{ old('break_start_time', $settings['break_start_time']) }}"
                                    class="w-full rounded-lg border-gray-300 focus:border-orange-500 focus:ring-orange-500 text-lg py-3">
                             @error('break_start_time')
-                                <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                                <p class="mt-1 text-sm text-[#2D5A4E]">{{ $message }}</p>
                             @enderror
                         </div>
 
@@ -386,13 +386,13 @@
                                    value="{{ old('break_end_time', $settings['break_end_time']) }}"
                                    class="w-full rounded-lg border-gray-300 focus:border-orange-500 focus:ring-orange-500 text-lg py-3">
                             @error('break_end_time')
-                                <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                                <p class="mt-1 text-sm text-[#2D5A4E]">{{ $message }}</p>
                             @enderror
                         </div>
                     </div>
 
-                    <div class="mt-6 p-4 bg-orange-50 rounded-lg max-w-2xl">
-                        <p class="text-sm text-orange-800">
+                    <div class="mt-6 p-4 bg-[#FBF7F0] rounded-lg max-w-2xl">
+                        <p class="text-sm text-[#A07D4A]">
                             <strong>Durée de pause :</strong> De
                             <span class="font-mono">{{ $settings['break_start_time'] }}</span> à
                             <span class="font-mono">{{ $settings['break_end_time'] }}</span>
@@ -401,7 +401,7 @@
                     </div>
 
                     <div class="mt-6 flex justify-end">
-                        <button type="submit" class="px-6 py-2.5 bg-orange-600 text-white font-medium rounded-lg hover:bg-orange-700 transition-colors">
+                        <button type="submit" class="px-6 py-2.5 bg-[#C8A96E] text-white font-medium rounded-lg hover:bg-[#B8955A] transition-colors">
                             Enregistrer les pauses
                         </button>
                     </div>
@@ -418,8 +418,8 @@
 
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                     <div class="flex items-center mb-6">
-                        <div class="bg-red-100 p-3 rounded-full mr-4">
-                            <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="bg-[#E8F0ED] p-3 rounded-full mr-4">
+                            <svg class="w-6 h-6 text-[#1B3C35]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
                             </svg>
                         </div>
@@ -438,7 +438,7 @@
                             <input type="range" name="late_tolerance_minutes" id="late_tolerance_minutes"
                                    x-model="tolerance"
                                    min="0" max="60" step="5"
-                                   class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-red-600">
+                                   class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[#1B3C35]">
                             <span class="text-2xl font-bold text-gray-900 w-16 text-center" x-text="tolerance + ' min'"></span>
                         </div>
 
@@ -449,12 +449,12 @@
                         </div>
 
                         @error('late_tolerance_minutes')
-                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                            <p class="mt-1 text-sm text-[#2D5A4E]">{{ $message }}</p>
                         @enderror
                     </div>
 
-                    <div class="mt-6 p-4 bg-red-50 rounded-lg max-w-md">
-                        <p class="text-sm text-red-800">
+                    <div class="mt-6 p-4 bg-[#F0F5F3] rounded-lg max-w-md">
+                        <p class="text-sm text-[#0F2A25]">
                             <strong>Exemple :</strong> Avec une tolérance de {{ $settings['late_tolerance_minutes'] }} min et un début à {{ $settings['work_start_time'] }},
                             un employé est en retard à partir de
                             <span class="font-mono font-bold">
@@ -467,7 +467,7 @@
                     </div>
 
                     <div class="mt-6 flex justify-end">
-                        <button type="submit" class="px-6 py-2.5 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition-colors">
+                        <button type="submit" class="px-6 py-2.5 bg-[#1B3C35] text-white font-medium rounded-lg hover:bg-[#163530] transition-colors">
                             Enregistrer la tolérance
                         </button>
                     </div>
@@ -480,8 +480,8 @@
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                 <div class="flex items-center justify-between mb-6">
                     <div class="flex items-center">
-                        <div class="bg-blue-100 p-3 rounded-full mr-4">
-                            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="bg-[#E8F0ED] p-3 rounded-full mr-4">
+                            <svg class="w-6 h-6 text-[#1B3C35]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
                             </svg>
                         </div>
@@ -491,7 +491,7 @@
                         </div>
                     </div>
                     <button @click="showDepartmentModal = true; editingDepartment = null; departmentForm = { name: '', description: '', color: '#3B82F6', is_active: true }"
-                            class="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2">
+                            class="px-4 py-2 bg-[#1B3C35] text-white font-medium rounded-lg hover:bg-[#163530] transition-colors flex items-center gap-2">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                         </svg>
@@ -519,7 +519,7 @@
                                 </div>
                                 <div class="flex items-center gap-2">
                                     <button type="button" @click.stop="openEditDepartment({{ $department->id }}, '{{ addslashes($department->name) }}', '{{ addslashes($department->description ?? '') }}', '{{ $department->color }}', {{ $department->is_active ? 'true' : 'false' }})"
-                                            class="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
+                                            class="p-2 text-gray-500 hover:text-[#1B3C35] hover:bg-[#F0F5F3] rounded-lg transition-colors">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                         </svg>
@@ -528,7 +528,7 @@
                                         <form action="{{ route('admin.settings.departments.destroy', $department) }}" method="POST" class="inline" onsubmit="return confirm('Supprimer ce département ?')">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" @click.stop class="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors">
+                                            <button type="submit" @click.stop class="p-2 text-gray-500 hover:text-[#1B3C35] hover:bg-[#F0F5F3] rounded-lg transition-colors">
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                                                 </svg>
@@ -551,7 +551,7 @@
                                     <div class="flex items-center justify-between mb-3">
                                         <h4 class="text-sm font-medium text-gray-700">Postes</h4>
                                         <button type="button" @click.stop="openCreatePosition({{ $department->id }}, '{{ addslashes($department->name) }}')"
-                                                class="text-sm text-blue-600 hover:text-blue-800 font-medium flex items-center gap-1">
+                                                class="text-sm text-[#1B3C35] hover:text-[#163530] font-medium flex items-center gap-1">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                                             </svg>
@@ -575,7 +575,7 @@
                                                             <span class="px-2 py-0.5 text-xs font-medium bg-gray-200 text-gray-600 rounded-full mr-2">Inactif</span>
                                                         @endif
                                                         <button type="button" @click.stop="openEditPosition({{ $position->id }}, {{ $department->id }}, '{{ addslashes($position->name) }}', '{{ addslashes($position->description ?? '') }}', {{ $position->is_active ? 'true' : 'false' }})"
-                                                                class="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors">
+                                                                class="p-1.5 text-gray-400 hover:text-[#1B3C35] hover:bg-[#F0F5F3] rounded transition-colors">
                                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                                             </svg>
@@ -584,7 +584,7 @@
                                                             <form action="{{ route('admin.settings.positions.destroy', $position) }}" method="POST" class="inline" onsubmit="return confirm('Supprimer ce poste ?')">
                                                                 @csrf
                                                                 @method('DELETE')
-                                                                <button type="submit" @click.stop class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors">
+                                                                <button type="submit" @click.stop class="p-1.5 text-gray-400 hover:text-[#1B3C35] hover:bg-[#F0F5F3] rounded transition-colors">
                                                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                                                                     </svg>
@@ -629,8 +629,8 @@
                         </template>
 
                         <div>
-                            <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full" :class="editingDepartment ? 'bg-blue-100' : 'bg-green-100'">
-                                <svg class="h-6 w-6" :class="editingDepartment ? 'text-blue-600' : 'text-green-600'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full" :class="editingDepartment ? 'bg-[#E8F0ED]' : 'bg-green-100'">
+                                <svg class="h-6 w-6" :class="editingDepartment ? 'text-[#1B3C35]' : 'text-green-600'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
                                 </svg>
                             </div>
@@ -643,12 +643,12 @@
                             <div>
                                 <label for="dept_name" class="block text-sm font-medium text-gray-700">Nom *</label>
                                 <input type="text" name="name" id="dept_name" x-model="departmentForm.name" required
-                                       class="mt-1 w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+                                       class="mt-1 w-full rounded-lg border-gray-300 focus:border-[#2D5A4E] focus:ring-[#2D5A4E]">
                             </div>
                             <div>
                                 <label for="dept_description" class="block text-sm font-medium text-gray-700">Description</label>
                                 <textarea name="description" id="dept_description" x-model="departmentForm.description" rows="2"
-                                          class="mt-1 w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500"></textarea>
+                                          class="mt-1 w-full rounded-lg border-gray-300 focus:border-[#2D5A4E] focus:ring-[#2D5A4E]"></textarea>
                             </div>
                             <div>
                                 <label for="dept_color" class="block text-sm font-medium text-gray-700">Couleur</label>
@@ -660,7 +660,7 @@
                             </div>
                             <div class="flex items-center">
                                 <input type="checkbox" name="is_active" id="dept_is_active" x-model="departmentForm.is_active" value="1"
-                                       class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                       class="rounded border-gray-300 text-[#1B3C35] focus:ring-[#2D5A4E]">
                                 <label for="dept_is_active" class="ml-2 text-sm text-gray-700">Département actif</label>
                             </div>
                         </div>
@@ -669,7 +669,7 @@
                             <button type="button" @click="showDepartmentModal = false" class="w-full inline-flex justify-center rounded-lg border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none sm:text-sm">
                                 Annuler
                             </button>
-                            <button type="submit" class="w-full inline-flex justify-center rounded-lg border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none sm:text-sm">
+                            <button type="submit" class="w-full inline-flex justify-center rounded-lg border border-transparent shadow-sm px-4 py-2 bg-[#1B3C35] text-base font-medium text-white hover:bg-[#163530] focus:outline-none sm:text-sm">
                                 <span x-text="editingDepartment ? 'Modifier' : 'Créer'"></span>
                             </button>
                         </div>
@@ -694,8 +694,8 @@
                         <input type="hidden" name="department_id" x-model="positionForm.department_id">
 
                         <div>
-                            <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full" :class="editingPosition ? 'bg-blue-100' : 'bg-green-100'">
-                                <svg class="h-6 w-6" :class="editingPosition ? 'text-blue-600' : 'text-green-600'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full" :class="editingPosition ? 'bg-[#E8F0ED]' : 'bg-green-100'">
+                                <svg class="h-6 w-6" :class="editingPosition ? 'text-[#1B3C35]' : 'text-green-600'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                                 </svg>
                             </div>
@@ -709,16 +709,16 @@
                             <div>
                                 <label for="pos_name" class="block text-sm font-medium text-gray-700">Nom du poste *</label>
                                 <input type="text" name="name" id="pos_name" x-model="positionForm.name" required
-                                       class="mt-1 w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+                                       class="mt-1 w-full rounded-lg border-gray-300 focus:border-[#2D5A4E] focus:ring-[#2D5A4E]">
                             </div>
                             <div>
                                 <label for="pos_description" class="block text-sm font-medium text-gray-700">Description</label>
                                 <textarea name="description" id="pos_description" x-model="positionForm.description" rows="2"
-                                          class="mt-1 w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500"></textarea>
+                                          class="mt-1 w-full rounded-lg border-gray-300 focus:border-[#2D5A4E] focus:ring-[#2D5A4E]"></textarea>
                             </div>
                             <div class="flex items-center">
                                 <input type="checkbox" name="is_active" id="pos_is_active" x-model="positionForm.is_active" value="1"
-                                       class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                       class="rounded border-gray-300 text-[#1B3C35] focus:ring-[#2D5A4E]">
                                 <label for="pos_is_active" class="ml-2 text-sm text-gray-700">Poste actif</label>
                             </div>
                         </div>
@@ -727,7 +727,7 @@
                             <button type="button" @click="showPositionModal = false" class="w-full inline-flex justify-center rounded-lg border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none sm:text-sm">
                                 Annuler
                             </button>
-                            <button type="submit" class="w-full inline-flex justify-center rounded-lg border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none sm:text-sm">
+                            <button type="submit" class="w-full inline-flex justify-center rounded-lg border border-transparent shadow-sm px-4 py-2 bg-[#1B3C35] text-base font-medium text-white hover:bg-[#163530] focus:outline-none sm:text-sm">
                                 <span x-text="editingPosition ? 'Modifier' : 'Créer'"></span>
                             </button>
                         </div>
@@ -745,8 +745,8 @@
 
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                     <div class="flex items-center mb-6">
-                        <div class="bg-emerald-100 p-3 rounded-full mr-4">
-                            <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="bg-[#E8F0ED] p-3 rounded-full mr-4">
+                            <svg class="w-6 h-6 text-[#1B3C35]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064"></path>
                             </svg>
                         </div>
@@ -761,7 +761,7 @@
                             Pays de paie par défaut
                         </label>
                         <select name="payroll_country_id" id="payroll_country_id"
-                                class="w-full rounded-lg border-gray-300 focus:border-emerald-500 focus:ring-emerald-500 py-3">
+                                class="w-full rounded-lg border-gray-300 focus:border-[#2D5A4E] focus:ring-[#2D5A4E] py-3">
                             <option value="">-- Sélectionnez un pays --</option>
                             @foreach($payrollCountries as $country)
                                 <option value="{{ $country->id }}" {{ ($settings['payroll_country_id'] ?? null) == $country->id ? 'selected' : '' }}>
@@ -770,7 +770,7 @@
                             @endforeach
                         </select>
                         @error('payroll_country_id')
-                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                            <p class="mt-1 text-sm text-[#2D5A4E]">{{ $message }}</p>
                         @enderror
                         <p class="mt-2 text-xs text-gray-500">
                             Les régles de calcul (IS, CN, IGR, CNPS...) du pays sélectionné seront utilisées pour toutes les fiches de paie.
@@ -778,8 +778,8 @@
                     </div>
 
                     @if(isset($payrollCountries) && $payrollCountries->count() > 0)
-                        <div class="mt-6 p-4 bg-emerald-50 rounded-lg max-w-md">
-                            <p class="text-sm text-emerald-800">
+                        <div class="mt-6 p-4 bg-[#F0F5F3] rounded-lg max-w-md">
+                            <p class="text-sm text-[#0F2A25]">
                                 <strong>{{ $payrollCountries->count() }} pays configuré(s)</strong> dans le systéme.
                                 <a href="{{ route('admin.payroll-settings.countries') }}" class="underline hover:no-underline">Gérer les pays </a>
                             </p>
@@ -794,7 +794,7 @@
                     @endif
 
                     <div class="mt-6 flex justify-end">
-                        <button type="submit" class="px-6 py-2.5 bg-emerald-600 text-white font-medium rounded-lg hover:bg-emerald-700 transition-colors">
+                        <button type="submit" class="px-6 py-2.5 bg-[#1B3C35] text-white font-medium rounded-lg hover:bg-[#163530] transition-colors">
                             Enregistrer
                         </button>
                     </div>

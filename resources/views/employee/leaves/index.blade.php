@@ -1,7 +1,7 @@
 <x-layouts.employee>
     <div class="space-y-6">
         <!-- Header avec Tolia Blue -->
-        <div class="relative overflow-hidden rounded-2xl p-6 text-white shadow-xl" style="background-color: #3B8BEB;">
+        <div class="relative overflow-hidden rounded-2xl p-6 text-white shadow-xl" style="background-color: #1B3C35;">
             <div class="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full" style="transform: translate(30%, -50%);"></div>
             <div class="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full" style="transform: translate(-30%, 50%);"></div>
             
@@ -24,7 +24,7 @@
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
                 <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background-color: #3B8BEB;">
+                    <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background-color: #1B3C35;">
                         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                         </svg>
@@ -38,38 +38,38 @@
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
                 <div class="flex items-center gap-4">
                     <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background-color: #E7E3D4;">
-                        <svg class="w-6 h-6" style="color: #8590AA;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-6 h-6" style="color: #5C6E68;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                         </svg>
                     </div>
                     <div>
-                        <p class="text-2xl font-bold" style="color: #8590AA;">{{ $stats['pending'] ?? 0 }}</p>
+                        <p class="text-2xl font-bold" style="color: #5C6E68;">{{ $stats['pending'] ?? 0 }}</p>
                         <p class="text-sm text-gray-500">En attente</p>
                     </div>
                 </div>
             </div>
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
                 <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background-color: rgba(59, 139, 235, 0.15);">
-                        <svg class="w-6 h-6" style="color: #3B8BEB;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background-color: rgba(27, 60, 53, 0.15);">
+                        <svg class="w-6 h-6" style="color: #1B3C35;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                         </svg>
                     </div>
                     <div>
-                        <p class="text-2xl font-bold" style="color: #3B8BEB;">{{ $stats['approved'] ?? 0 }}</p>
+                        <p class="text-2xl font-bold" style="color: #1B3C35;">{{ $stats['approved'] ?? 0 }}</p>
                         <p class="text-sm text-gray-500">Approuvées</p>
                     </div>
                 </div>
             </div>
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
                 <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background-color: rgba(178, 56, 80, 0.15);">
-                        <svg class="w-6 h-6" style="color: #B23850;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background-color: rgba(200, 169, 110, 0.15);">
+                        <svg class="w-6 h-6" style="color: #C8A96E;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                         </svg>
                     </div>
                     <div>
-                        <p class="text-2xl font-bold" style="color: #B23850;">{{ $stats['rejected'] ?? 0 }}</p>
+                        <p class="text-2xl font-bold" style="color: #C8A96E;">{{ $stats['rejected'] ?? 0 }}</p>
                         <p class="text-sm text-gray-500">Rejetées</p>
                     </div>
                 </div>
@@ -80,7 +80,7 @@
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-100" style="background-color: rgba(231, 227, 212, 0.3);">
                 <h3 class="font-semibold text-gray-800 flex items-center gap-2">
-                    <svg class="w-5 h-5" style="color: #3B8BEB;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-5 h-5" style="color: #1B3C35;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                     </svg>
                     Historique des demandes
@@ -104,16 +104,16 @@
                         @forelse($leaves as $leave)
                             @php
                                 $typeConfig = [
-                                    'conge' => ['bg' => 'rgba(59, 139, 235, 0.15)', 'text' => '#3B8BEB'],
-                                    'maladie' => ['bg' => 'rgba(178, 56, 80, 0.15)', 'text' => '#B23850'],
-                                    'autre' => ['bg' => '#E7E3D4', 'text' => '#8590AA'],
+                                    'conge' => ['bg' => 'rgba(27, 60, 53, 0.15)', 'text' => '#1B3C35'],
+                                    'maladie' => ['bg' => 'rgba(200, 169, 110, 0.15)', 'text' => '#C8A96E'],
+                                    'autre' => ['bg' => '#E7E3D4', 'text' => '#5C6E68'],
                                 ];
                                 $type = $typeConfig[$leave->type] ?? $typeConfig['autre'];
                                 
                                 $statusConfig = [
-                                    'pending' => ['bg' => '#E7E3D4', 'text' => '#8590AA', 'label' => 'En cours'],
-                                    'approved' => ['bg' => 'rgba(59, 139, 235, 0.15)', 'text' => '#3B8BEB', 'label' => 'Approuvé'],
-                                    'rejected' => ['bg' => 'rgba(178, 56, 80, 0.15)', 'text' => '#B23850', 'label' => 'Rejeté'],
+                                    'pending' => ['bg' => '#E7E3D4', 'text' => '#5C6E68', 'label' => 'En cours'],
+                                    'approved' => ['bg' => 'rgba(27, 60, 53, 0.15)', 'text' => '#1B3C35', 'label' => 'Approuvé'],
+                                    'rejected' => ['bg' => 'rgba(200, 169, 110, 0.15)', 'text' => '#C8A96E', 'label' => 'Rejeté'],
                                 ];
                                 $status = $statusConfig[$leave->statut] ?? $statusConfig['pending'];
                             @endphp
@@ -142,7 +142,7 @@
                                     @if($leave->statut !== 'pending')
                                         @if($leave->commentaire_admin)
                                             <div x-data="{ showModal: false }">
-                                                <button @click="showModal = true" class="inline-flex items-center text-sm font-medium transition-colors" style="color: #3B8BEB;">
+                                                <button @click="showModal = true" class="inline-flex items-center text-sm font-medium transition-colors" style="color: #1B3C35;">
                                                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
                                                     </svg>
@@ -179,7 +179,7 @@
 
                                                             <div class="mb-4">
                                                                 <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium" 
-                                                                      style="background-color: {{ $leave->statut === 'approved' ? 'rgba(59, 139, 235, 0.15)' : 'rgba(178, 56, 80, 0.15)' }}; color: {{ $leave->statut === 'approved' ? '#3B8BEB' : '#B23850' }};">
+                                                                      style="background-color: {{ $leave->statut === 'approved' ? 'rgba(27, 60, 53, 0.15)' : 'rgba(200, 169, 110, 0.15)' }}; color: {{ $leave->statut === 'approved' ? '#1B3C35' : '#C8A96E' }};">
                                                                     {{ $leave->statut === 'approved' ? '✓ Approuvé' : '✗ Refusé' }}
                                                                 </span>
                                                             </div>
@@ -189,7 +189,7 @@
                                                             </div>
 
                                                             <div class="mt-4">
-                                                                <button @click="showModal = false" class="w-full px-4 py-2.5 text-sm font-medium text-white rounded-xl transition-colors" style="background-color: #3B8BEB;">
+                                                                <button @click="showModal = false" class="w-full px-4 py-2.5 text-sm font-medium text-white rounded-xl transition-colors" style="background-color: #1B3C35;">
                                                                     Fermer
                                                                 </button>
                                                             </div>
@@ -209,7 +209,7 @@
                                         <form action="{{ route('employee.leaves.destroy', $leave) }}" method="POST" class="inline" onsubmit="return confirm('Êtes-vous sûr de vouloir annuler cette demande ?')">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="font-medium transition-colors" style="color: #B23850;">Annuler</button>
+                                            <button type="submit" class="font-medium transition-colors" style="color: #C8A96E;">Annuler</button>
                                         </form>
                                     @else
                                         <span class="text-gray-400">-</span>
@@ -219,15 +219,15 @@
                         @empty
                             <tr>
                                 <td colspan="7" class="px-6 py-12 text-center text-gray-500">
-                                    <div class="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-4" style="background-color: rgba(59, 139, 235, 0.1);">
-                                        <svg class="w-10 h-10" style="color: #3B8BEB;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <div class="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-4" style="background-color: rgba(27, 60, 53, 0.1);">
+                                        <svg class="w-10 h-10" style="color: #1B3C35;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                                         </svg>
                                     </div>
                                     <h3 class="text-lg font-semibold text-gray-900 mb-2">Aucune demande de congé</h3>
                                     <p class="text-gray-500 mb-4">Vous n'avez pas encore fait de demande de congé.</p>
                                     <a href="{{ route('employee.leaves.create') }}" 
-                                       class="inline-flex items-center gap-2 px-4 py-2 text-white font-medium rounded-xl transition-colors" style="background-color: #3B8BEB;">
+                                       class="inline-flex items-center gap-2 px-4 py-2 text-white font-medium rounded-xl transition-colors" style="background-color: #1B3C35;">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                                         </svg>

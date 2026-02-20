@@ -1,10 +1,10 @@
-<x-layouts.admin>
+﻿<x-layouts.admin>
     <div class="space-y-6">
         <!-- Header -->
         <div class="flex items-center justify-between animate-fade-in-up">
             <div>
                 <nav class="flex items-center text-sm text-gray-500 mb-2">
-                    <a href="{{ route('admin.payrolls.index') }}" class="hover:text-red-600">Fiches de paie</a>
+                    <a href="{{ route('admin.payrolls.index') }}" class="hover:text-[#1B3C35]">Fiches de paie</a>
                     <svg class="w-4 h-4 mx-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                     </svg>
@@ -32,7 +32,7 @@
                     'draft' => 'bg-gray-100 text-gray-800',
                     'pending_review' => 'bg-yellow-100 text-yellow-800',
                     'validated' => 'bg-green-100 text-green-800',
-                    'rejected' => 'bg-red-100 text-red-800',
+                    'rejected' => 'bg-[#E8F0ED] text-[#0F2A25]',
                 ];
                 $statusLabels = [
                     'draft' => 'Brouillon',
@@ -81,19 +81,19 @@
                         <label for="taxable_gross" class="block text-sm font-medium text-gray-700 mb-1">Brut Imposable</label>
                         <input type="number" name="taxable_gross" id="taxable_gross" 
                                value="{{ old('taxable_gross', $payroll->taxable_gross) }}"
-                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2D5A4E] focus:border-[#2D5A4E]">
                     </div>
                     <div>
                         <label for="transport_allowance" class="block text-sm font-medium text-gray-700 mb-1">Indemnité Transport</label>
                         <input type="number" name="transport_allowance" id="transport_allowance" 
                                value="{{ old('transport_allowance', $payroll->transport_allowance) }}"
-                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2D5A4E] focus:border-[#2D5A4E]">
                     </div>
                     <div>
                         <label for="bonuses" class="block text-sm font-medium text-gray-700 mb-1">Primes</label>
                         <input type="number" name="bonuses" id="bonuses" 
                                value="{{ old('bonuses', $payroll->bonuses) }}"
-                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2D5A4E] focus:border-[#2D5A4E]">
                     </div>
                 </div>
             </div>
@@ -106,25 +106,25 @@
                         <label for="tax_is" class="block text-sm font-medium text-gray-700 mb-1">IS (1.2%)</label>
                         <input type="number" name="tax_is" id="tax_is" 
                                value="{{ old('tax_is', $payroll->tax_is) }}"
-                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2D5A4E] focus:border-[#2D5A4E]">
                     </div>
                     <div>
                         <label for="tax_cn" class="block text-sm font-medium text-gray-700 mb-1">CN</label>
                         <input type="number" name="tax_cn" id="tax_cn" 
                                value="{{ old('tax_cn', $payroll->tax_cn) }}"
-                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2D5A4E] focus:border-[#2D5A4E]">
                     </div>
                     <div>
                         <label for="tax_igr" class="block text-sm font-medium text-gray-700 mb-1">IGR</label>
                         <input type="number" name="tax_igr" id="tax_igr" 
                                value="{{ old('tax_igr', $payroll->tax_igr) }}"
-                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2D5A4E] focus:border-[#2D5A4E]">
                     </div>
                     <div>
                         <label for="cnps_employee" class="block text-sm font-medium text-gray-700 mb-1">CNPS (5.4%)</label>
                         <input type="number" name="cnps_employee" id="cnps_employee" 
                                value="{{ old('cnps_employee', $payroll->cnps_employee) }}"
-                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2D5A4E] focus:border-[#2D5A4E]">
                     </div>
                 </div>
             </div>
@@ -137,18 +137,18 @@
                         <label for="total_deductions" class="block text-sm font-medium text-gray-700 mb-1">Total Retenues</label>
                         <input type="number" name="total_deductions" id="total_deductions" 
                                value="{{ old('total_deductions', $payroll->total_deductions) }}"
-                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-gray-50">
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2D5A4E] focus:border-[#2D5A4E] bg-gray-50">
                     </div>
                     <div>
                         <label for="net_salary" class="block text-sm font-medium text-gray-700 mb-1">Net à Payer</label>
                         <input type="number" name="net_salary" id="net_salary" 
                                value="{{ old('net_salary', $payroll->net_salary) }}"
-                               class="w-full px-4 py-2 border border-red-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-red-50 text-red-900 font-bold text-lg">
+                               class="w-full px-4 py-2 border border-[#8FB5A8] rounded-lg focus:ring-2 focus:ring-[#2D5A4E] focus:border-[#2D5A4E] bg-[#F0F5F3] text-[#0A1E1A] font-bold text-lg">
                     </div>
                     <div>
                         <label for="workflow_status" class="block text-sm font-medium text-gray-700 mb-1">Statut</label>
                         <select name="workflow_status" id="workflow_status"
-                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2D5A4E] focus:border-[#2D5A4E]">
                             <option value="draft" {{ ($payroll->workflow_status ?? 'draft') === 'draft' ? 'selected' : '' }}>Brouillon</option>
                             <option value="pending_review" {{ ($payroll->workflow_status ?? '') === 'pending_review' ? 'selected' : '' }}>En attente de validation</option>
                             <option value="validated" {{ ($payroll->workflow_status ?? '') === 'validated' ? 'selected' : '' }}>Validée</option>
@@ -161,7 +161,7 @@
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                 <label for="notes" class="block text-sm font-medium text-gray-700 mb-1">Notes</label>
                 <textarea name="notes" id="notes" rows="3"
-                          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2D5A4E] focus:border-[#2D5A4E]"
                           placeholder="Notes internes (non visibles sur le bulletin)">{{ old('notes', $payroll->notes) }}</textarea>
             </div>
 

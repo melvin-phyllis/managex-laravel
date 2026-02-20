@@ -3,7 +3,7 @@
         <!-- Header avec icône colorée -->
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 animate-fade-in-up">
             <div class="flex items-center gap-4">
-                <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg" style="background-color: #3B8BEB; box-shadow: 0 10px 15px -3px rgba(59, 139, 235, 0.3);">
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg" style="background-color: #1B3C35; box-shadow: 0 10px 15px -3px rgba(27, 60, 53, 0.3);">
                     <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                     </svg>
@@ -14,7 +14,7 @@
                 </div>
             </div>
             <a href="{{ route('employee.document-requests.index') }}"
-               class="inline-flex items-center justify-center gap-2 px-5 py-2.5 text-white text-sm font-medium rounded-xl transition-all duration-200 shadow-lg" style="background-color: #3B8BEB; box-shadow: 0 10px 15px -3px rgba(59, 139, 235, 0.3);">
+               class="inline-flex items-center justify-center gap-2 px-5 py-2.5 text-white text-sm font-medium rounded-xl transition-all duration-200 shadow-lg" style="background-color: #1B3C35; box-shadow: 0 10px 15px -3px rgba(27, 60, 53, 0.3);">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                 </svg>
@@ -27,13 +27,13 @@
             <!-- Contrat -->
             <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow">
                 <div class="flex items-center justify-between">
-                    <div class="p-2 rounded-xl shadow-lg" style="background-color: #B23850; box-shadow: 0 10px 15px -3px rgba(178, 56, 80, 0.3);">
+                    <div class="p-2 rounded-xl shadow-lg" style="background-color: #C8A96E; box-shadow: 0 10px 15px -3px rgba(200, 169, 110, 0.3);">
                         <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                         </svg>
                     </div>
                 </div>
-                <p class="text-2xl font-bold mt-3" style="color: {{ $hasContractDocument ? '#B23850' : '#d1d5db' }}">
+                <p class="text-2xl font-bold mt-3" style="color: {{ $hasContractDocument ? '#C8A96E' : '#d1d5db' }}">
                     {{ $hasContractDocument ? '✓' : '—' }}
                 </p>
                 <p class="text-xs text-gray-500">Contrat</p>
@@ -42,7 +42,7 @@
             <!-- Documents entreprise -->
             <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow">
                 <div class="flex items-center justify-between">
-                    <div class="p-2 rounded-xl shadow-lg" style="background-color: #3B8BEB; box-shadow: 0 10px 15px -3px rgba(59, 139, 235, 0.3);">
+                    <div class="p-2 rounded-xl shadow-lg" style="background-color: #1B3C35; box-shadow: 0 10px 15px -3px rgba(27, 60, 53, 0.3);">
                         <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5"/>
                         </svg>
@@ -55,7 +55,7 @@
             <!-- Documents personnels -->
             <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow">
                 <div class="flex items-center justify-between">
-                    <div class="p-2 rounded-xl shadow-lg" style="background-color: #8590AA; box-shadow: 0 10px 15px -3px rgba(133, 144, 170, 0.3);">
+                    <div class="p-2 rounded-xl shadow-lg" style="background-color: #5C6E68; box-shadow: 0 10px 15px -3px rgba(133, 144, 170, 0.3);">
                         <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                         </svg>
@@ -85,9 +85,9 @@
 
         <!-- Mon Contrat de Travail -->
         <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in-up animation-delay-200">
-            <div class="px-6 py-4 border-b border-gray-100" style="background-color: rgba(178, 56, 80, 0.05);">
+            <div class="px-6 py-4 border-b border-gray-100" style="background-color: rgba(200, 169, 110, 0.05);">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg" style="background-color: #B23850; box-shadow: 0 10px 15px -3px rgba(178, 56, 80, 0.3);">
+                    <div class="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg" style="background-color: #C8A96E; box-shadow: 0 10px 15px -3px rgba(200, 169, 110, 0.3);">
                         <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                         </svg>
@@ -101,10 +101,10 @@
 
             <div class="p-6">
                 @if($hasContractDocument)
-                    <div class="flex items-center justify-between p-4 rounded-xl border" style="background-color: rgba(178, 56, 80, 0.05); border-color: rgba(178, 56, 80, 0.1);">
+                    <div class="flex items-center justify-between p-4 rounded-xl border" style="background-color: rgba(200, 169, 110, 0.05); border-color: rgba(200, 169, 110, 0.1);">
                         <div class="flex items-center gap-4">
-                            <div class="w-12 h-12 rounded-xl bg-white border flex items-center justify-center shadow-sm" style="border-color: rgba(178, 56, 80, 0.2);">
-                                <svg class="w-6 h-6" style="color: #B23850;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div class="w-12 h-12 rounded-xl bg-white border flex items-center justify-center shadow-sm" style="border-color: rgba(200, 169, 110, 0.2);">
+                                <svg class="w-6 h-6" style="color: #C8A96E;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                 </svg>
                             </div>
@@ -114,7 +114,7 @@
                             </div>
                         </div>
                         <a href="{{ route('employee.documents.download-contract') }}" 
-                           class="inline-flex items-center gap-2 px-4 py-2 text-white text-sm font-medium rounded-xl transition-all duration-200 shadow-sm" style="background-color: #B23850;">
+                           class="inline-flex items-center gap-2 px-4 py-2 text-white text-sm font-medium rounded-xl transition-all duration-200 shadow-sm" style="background-color: #C8A96E;">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
                             </svg>
@@ -124,7 +124,7 @@
                 @else
                     <div class="flex items-center gap-4 p-4 rounded-xl border" style="background-color: #E7E3D4; border-color: rgba(133, 144, 170, 0.2);">
                         <div class="w-12 h-12 rounded-xl bg-white border flex items-center justify-center" style="border-color: rgba(133, 144, 170, 0.2);">
-                            <svg class="w-6 h-6" style="color: #8590AA;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-6 h-6" style="color: #5C6E68;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                             </svg>
                         </div>
@@ -141,9 +141,9 @@
             <!-- Documents de l'Entreprise -->
             @if($globalDocuments->count() > 0)
             <div class="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in-up animation-delay-300">
-                <div class="px-6 py-4 border-b border-gray-100" style="background-color: rgba(59, 139, 235, 0.05);">
+                <div class="px-6 py-4 border-b border-gray-100" style="background-color: rgba(27, 60, 53, 0.05);">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg" style="background-color: #3B8BEB; box-shadow: 0 10px 15px -3px rgba(59, 139, 235, 0.3);">
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg" style="background-color: #1B3C35; box-shadow: 0 10px 15px -3px rgba(27, 60, 53, 0.3);">
                             <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
                             </svg>
@@ -163,13 +163,13 @@
                         <div class="p-4 hover:bg-gray-50 transition-colors duration-200">
                             <div class="flex items-center justify-between gap-4">
                                 <div class="flex items-center gap-4 flex-1 min-w-0">
-                                    <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background-color: {{ $isAcknowledged ? 'rgba(59, 139, 235, 0.1)' : 'rgba(178, 56, 80, 0.1)' }}">
+                                    <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background-color: {{ $isAcknowledged ? 'rgba(27, 60, 53, 0.1)' : 'rgba(200, 169, 110, 0.1)' }}">
                                         @if($isAcknowledged)
-                                            <svg class="w-5 h-5" style="color: #3B8BEB;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <svg class="w-5 h-5" style="color: #1B3C35;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                                             </svg>
                                         @else
-                                            <svg class="w-5 h-5" style="color: #B23850;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <svg class="w-5 h-5" style="color: #C8A96E;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
                                             </svg>
                                         @endif
@@ -181,7 +181,7 @@
                                 </div>
                                 <div class="flex items-center gap-2 flex-shrink-0">
                                     <a href="{{ route('employee.global-documents.download', $doc) }}" 
-                                       class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors duration-200" style="color: #3B8BEB;">
+                                       class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors duration-200" style="color: #1B3C35;">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
                                         </svg>
@@ -191,7 +191,7 @@
                                         <form action="{{ route('employee.global-documents.acknowledge', $doc) }}" method="POST" class="inline">
                                             @csrf
                                             <button type="submit" 
-                                                    class="inline-flex items-center gap-1.5 px-3 py-1.5 text-white text-sm font-medium rounded-lg transition-colors duration-200 shadow-sm" style="background-color: #3B8BEB;">
+                                                    class="inline-flex items-center gap-1.5 px-3 py-1.5 text-white text-sm font-medium rounded-lg transition-colors duration-200 shadow-sm" style="background-color: #1B3C35;">
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                                                 </svg>
@@ -199,7 +199,7 @@
                                             </button>
                                         </form>
                                     @else
-                                        <span class="inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-lg" style="background-color: rgba(59, 139, 235, 0.1); color: #3B8BEB;">
+                                        <span class="inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-lg" style="background-color: rgba(27, 60, 53, 0.1); color: #1B3C35;">
                                             <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                                             </svg>
@@ -218,7 +218,7 @@
             <div class="{{ $globalDocuments->count() > 0 ? 'lg:col-span-1' : 'lg:col-span-3' }} bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in-up animation-delay-400">
                 <div class="px-6 py-4 border-b border-gray-100" style="background-color: rgba(133, 144, 170, 0.05);">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg" style="background-color: #8590AA; box-shadow: 0 10px 15px -3px rgba(133, 144, 170, 0.3);">
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg" style="background-color: #5C6E68; box-shadow: 0 10px 15px -3px rgba(133, 144, 170, 0.3);">
                             <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                             </svg>
@@ -240,13 +240,13 @@
                             <div class="flex items-center justify-between gap-3">
                                 <div class="flex items-center gap-3 flex-1 min-w-0">
                                     <!-- Status -->
-                                    <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style="background-color: {{ $doc ? 'rgba(59, 139, 235, 0.1)' : ($type->is_required ? 'rgba(178, 56, 80, 0.1)' : 'rgba(231, 227, 212, 0.5)') }}">
+                                    <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style="background-color: {{ $doc ? 'rgba(27, 60, 53, 0.1)' : ($type->is_required ? 'rgba(200, 169, 110, 0.1)' : 'rgba(231, 227, 212, 0.5)') }}">
                                         @if($doc)
-                                            <svg class="w-4 h-4" style="color: #3B8BEB;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <svg class="w-4 h-4" style="color: #1B3C35;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                                             </svg>
                                         @elseif($type->is_required)
-                                            <svg class="w-4 h-4 text-red-500" style="color: #B23850;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <svg class="w-4 h-4 text-red-500" style="color: #C8A96E;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
                                             </svg>
                                         @else
@@ -258,11 +258,11 @@
                                         <div class="flex items-center gap-2">
                                             <span class="font-medium text-gray-900 text-sm truncate">{{ $type->name }}</span>
                                             @if($type->is_required && !$doc)
-                                                <span class="text-xs font-medium" style="color: #B23850;">Requis</span>
+                                                <span class="text-xs font-medium" style="color: #C8A96E;">Requis</span>
                                             @endif
                                         </div>
                                         @if($doc)
-                                            <p class="text-xs mt-0.5" style="color: #3B8BEB;">
+                                            <p class="text-xs mt-0.5" style="color: #1B3C35;">
                                                 ✓ Fourni le {{ $doc->created_at->format('d/m/Y') }}
                                             </p>
                                         @else
@@ -287,7 +287,7 @@
 
                                     @if($type->employee_can_upload && !$doc)
                                         <a href="{{ route('employee.documents.create', $type) }}" 
-                                           class="p-2 text-white rounded-lg transition-colors shadow-sm" style="background-color: #3B8BEB;"
+                                           class="p-2 text-white rounded-lg transition-colors shadow-sm" style="background-color: #1B3C35;"
                                            title="Ajouter">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
@@ -318,7 +318,7 @@
         </div>
 
         <!-- Lien vers Bulletins -->
-        <div class="rounded-2xl shadow-lg overflow-hidden animate-fade-in-up animation-delay-500" style="background-color: #3B8BEB;">
+        <div class="rounded-2xl shadow-lg overflow-hidden animate-fade-in-up animation-delay-500" style="background-color: #1B3C35;">
             <div class="p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div class="flex items-center gap-4">
                     <div class="w-12 h-12 rounded-xl bg-white/20 backdrop-blur flex items-center justify-center">
@@ -332,7 +332,7 @@
                     </div>
                 </div>
                 <a href="{{ route('employee.payrolls.index') }}" 
-                   class="inline-flex items-center gap-2 px-5 py-2.5 bg-white text-sm font-medium rounded-xl hover:bg-gray-50 transition-colors duration-200 shadow-sm" style="color: #3B8BEB;">
+                   class="inline-flex items-center gap-2 px-5 py-2.5 bg-white text-sm font-medium rounded-xl hover:bg-gray-50 transition-colors duration-200 shadow-sm" style="color: #1B3C35;">
                     Voir mes bulletins
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>

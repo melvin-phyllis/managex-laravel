@@ -1,4 +1,4 @@
-<x-layouts.admin>
+﻿<x-layouts.admin>
     <div class="space-y-6">
         <!-- Header -->
         <div class="flex items-center justify-between animate-fade-in-up">
@@ -23,7 +23,7 @@
                     <!-- Employé -->
                     <div class="md:col-span-2">
                         <label for="user_id" class="block text-sm font-medium text-gray-700 mb-1">Employé *</label>
-                        <select name="user_id" id="user_id" required class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 @error('user_id') border-red-500 @enderror">
+                        <select name="user_id" id="user_id" required class="w-full rounded-lg border-gray-300 focus:border-[#2D5A4E] focus:ring-[#2D5A4E] @error('user_id') border-[#2D5A4E] @enderror">
                             <option value="">Sélectionner un employé</option>
                             @foreach($employees as $employee)
                                 <option value="{{ $employee->id }}" {{ old('user_id') == $employee->id ? 'selected' : '' }}>
@@ -32,14 +32,14 @@
                             @endforeach
                         </select>
                         @error('user_id')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            <p class="mt-1 text-sm text-[#1B3C35]">{{ $message }}</p>
                         @enderror
                     </div>
 
                     <!-- Mois -->
                     <div>
                         <label for="mois" class="block text-sm font-medium text-gray-700 mb-1">Mois *</label>
-                        <select name="mois" id="mois" required class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 @error('mois') border-red-500 @enderror">
+                        <select name="mois" id="mois" required class="w-full rounded-lg border-gray-300 focus:border-[#2D5A4E] focus:ring-[#2D5A4E] @error('mois') border-[#2D5A4E] @enderror">
                             @for($i = 1; $i <= 12; $i++)
                                 <option value="{{ $i }}" {{ old('mois', now()->month) == $i ? 'selected' : '' }}>
                                     {{ ucfirst(\Carbon\Carbon::create()->month($i)->translatedFormat('F')) }}
@@ -47,41 +47,41 @@
                             @endfor
                         </select>
                         @error('mois')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            <p class="mt-1 text-sm text-[#1B3C35]">{{ $message }}</p>
                         @enderror
                     </div>
 
                     <!-- Année -->
                     <div>
                         <label for="annee" class="block text-sm font-medium text-gray-700 mb-1">Année *</label>
-                        <select name="annee" id="annee" required class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 @error('annee') border-red-500 @enderror">
+                        <select name="annee" id="annee" required class="w-full rounded-lg border-gray-300 focus:border-[#2D5A4E] focus:ring-[#2D5A4E] @error('annee') border-[#2D5A4E] @enderror">
                             @for($i = now()->year; $i >= now()->year - 2; $i--)
                                 <option value="{{ $i }}" {{ old('annee', now()->year) == $i ? 'selected' : '' }}>{{ $i }}</option>
                             @endfor
                         </select>
                         @error('annee')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            <p class="mt-1 text-sm text-[#1B3C35]">{{ $message }}</p>
                         @enderror
                     </div>
 
                     <!-- Montant -->
                     <div>
                         <label for="montant" class="block text-sm font-medium text-gray-700 mb-1">Montant (FCFA) *</label>
-                        <input type="number" name="montant" id="montant" value="{{ old('montant') }}" step="0.01" min="0" required class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 @error('montant') border-red-500 @enderror">
+                        <input type="number" name="montant" id="montant" value="{{ old('montant') }}" step="0.01" min="0" required class="w-full rounded-lg border-gray-300 focus:border-[#2D5A4E] focus:ring-[#2D5A4E] @error('montant') border-[#2D5A4E] @enderror">
                         @error('montant')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            <p class="mt-1 text-sm text-[#1B3C35]">{{ $message }}</p>
                         @enderror
                     </div>
 
                     <!-- Statut -->
                     <div>
                         <label for="statut" class="block text-sm font-medium text-gray-700 mb-1">Statut *</label>
-                        <select name="statut" id="statut" required class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 @error('statut') border-red-500 @enderror">
+                        <select name="statut" id="statut" required class="w-full rounded-lg border-gray-300 focus:border-[#2D5A4E] focus:ring-[#2D5A4E] @error('statut') border-[#2D5A4E] @enderror">
                             <option value="pending" {{ old('statut', 'pending') === 'pending' ? 'selected' : '' }}>En attente</option>
                             <option value="paid" {{ old('statut') === 'paid' ? 'selected' : '' }}>Payé</option>
                         </select>
                         @error('statut')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            <p class="mt-1 text-sm text-[#1B3C35]">{{ $message }}</p>
                         @enderror
                     </div>
                 </div>
@@ -89,16 +89,16 @@
                 <!-- Notes -->
                 <div>
                     <label for="notes" class="block text-sm font-medium text-gray-700 mb-1">Notes</label>
-                    <textarea name="notes" id="notes" rows="3" class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 @error('notes') border-red-500 @enderror" placeholder="Notes additionnelles...">{{ old('notes') }}</textarea>
+                    <textarea name="notes" id="notes" rows="3" class="w-full rounded-lg border-gray-300 focus:border-[#2D5A4E] focus:ring-[#2D5A4E] @error('notes') border-[#2D5A4E] @enderror" placeholder="Notes additionnelles...">{{ old('notes') }}</textarea>
                     @error('notes')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        <p class="mt-1 text-sm text-[#1B3C35]">{{ $message }}</p>
                     @enderror
                 </div>
 
                 <!-- Submit -->
                 <div class="flex items-center justify-end space-x-4 pt-4 border-t border-gray-200">
                     <a href="{{ route('admin.payrolls.index') }}" class="px-4 py-2 text-gray-700 hover:text-gray-900">Annuler</a>
-                    <button type="submit" class="px-6 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors">
+                    <button type="submit" class="px-6 py-2 bg-[#1B3C35] text-white font-medium rounded-lg hover:bg-[#163530] transition-colors">
                         Créer la fiche de paie
                     </button>
                 </div>

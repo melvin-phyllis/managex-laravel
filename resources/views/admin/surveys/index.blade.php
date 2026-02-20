@@ -4,7 +4,7 @@
         <nav class="flex animate-fade-in-up" aria-label="Breadcrumb">
             <ol class="inline-flex items-center space-x-1 md:space-x-3">
                 <li class="inline-flex items-center">
-                    <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600">
+                    <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-[#1B3C35]">
                         <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
                             <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
                         </svg>
@@ -24,12 +24,12 @@
         <!-- Header -->
         <x-table-header title="Sondages Internes" subtitle="Créez et analysez les sondages de votre équipe avec des outils simples" class="animate-fade-in-up animation-delay-100">
             <x-slot:icon>
-                <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg" style="background: linear-gradient(135deg, #5680E9, #5AB9EA); box-shadow: 0 10px 15px -3px rgba(86, 128, 233, 0.2);">
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg" style="background: linear-gradient(135deg, #1B3C35, #2D5A4E); box-shadow: 0 10px 15px -3px rgba(27, 60, 53, 0.2);">
                     <x-icon name="clipboard-list" class="w-6 h-6 text-white" />
                 </div>
             </x-slot:icon>
             <x-slot:actions>
-                <a href="{{ route('admin.surveys.create') }}" class="inline-flex items-center px-4 py-2.5 text-white font-medium rounded-xl transition-all shadow-lg" style="background: linear-gradient(135deg, #5680E9, #5AB9EA); box-shadow: 0 10px 15px -3px rgba(86, 128, 233, 0.25);" onmouseover="this.style.filter='brightness(1.1)'" onmouseout="this.style.filter=''">
+                <a href="{{ route('admin.surveys.create') }}" class="inline-flex items-center px-4 py-2.5 text-white font-medium rounded-xl transition-all shadow-lg" style="background: linear-gradient(135deg, #1B3C35, #2D5A4E); box-shadow: 0 10px 15px -3px rgba(27, 60, 53, 0.25);" onmouseover="this.style.filter='brightness(1.1)'" onmouseout="this.style.filter=''">
                     <x-icon name="plus" class="w-5 h-5 mr-2" />
                     Nouveau sondage
                 </a>
@@ -45,7 +45,7 @@
                         <p class="text-sm font-medium text-gray-500">Total Sondages</p>
                         <p class="text-3xl font-bold text-gray-900 mt-1">{{ $stats['total'] ?? 0 }}</p>
                     </div>
-                    <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background: linear-gradient(135deg, #5680E9, #5AB9EA);">
+                    <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background: linear-gradient(135deg, #1B3C35, #2D5A4E);">
                         <x-icon name="clipboard-list" class="w-6 h-6 text-white" />
                     </div>
                 </div>
@@ -62,7 +62,7 @@
                     <div class="p-5 border-b border-gray-100">
                         <div class="flex items-start justify-between">
                             <div class="flex-1 min-w-0 pr-4">
-                                <h3 class="text-lg font-semibold text-gray-900 transition-colors truncate" style="" onmouseover="this.style.color='#5680E9'" onmouseout="this.style.color=''" title="{{ $survey->titre }}">
+                                <h3 class="text-lg font-semibold text-gray-900 transition-colors truncate" style="" onmouseover="this.style.color='#1B3C35'" onmouseout="this.style.color=''" title="{{ $survey->titre }}">
                                     {{ $survey->titre }}
                                 </h3>
                                 <p class="mt-1 text-sm text-gray-500 line-clamp-2">{{ $survey->description ?? 'Aucune description disponible.' }}</p>
@@ -94,8 +94,8 @@
                             {{ $survey->respondents_count }} réponse(s)
                         </div>
                         @if($survey->date_limite)
-                            <div class="flex items-center font-medium {{ $survey->is_expired ? 'text-red-600' : 'text-gray-600' }}">
-                                <x-icon name="calendar" class="w-4 h-4 mr-1.5 {{ $survey->is_expired ? 'text-red-400' : 'text-gray-400' }}" />
+                            <div class="flex items-center font-medium {{ $survey->is_expired ? 'text-[#1B3C35]' : 'text-gray-600' }}">
+                                <x-icon name="calendar" class="w-4 h-4 mr-1.5 {{ $survey->is_expired ? 'text-[#3D7A6A]' : 'text-gray-400' }}" />
                                 {{ $survey->date_limite->format('d/m/Y') }}
                             </div>
                         @endif
@@ -104,10 +104,10 @@
                     <!-- Card Actions -->
                     <div class="px-5 py-4 flex items-center justify-between">
                         <div class="flex items-center gap-2">
-                            <a href="{{ route('admin.surveys.show', $survey) }}" class="p-2 text-gray-500 rounded-lg transition-colors" style="" onmouseover="this.style.color='#5680E9'; this.style.backgroundColor='rgba(86, 128, 233, 0.05)'" onmouseout="this.style.color=''; this.style.backgroundColor=''" title="Voir les détails">
+                            <a href="{{ route('admin.surveys.show', $survey) }}" class="p-2 text-gray-500 rounded-lg transition-colors" style="" onmouseover="this.style.color='#1B3C35'; this.style.backgroundColor='rgba(27, 60, 53, 0.05)'" onmouseout="this.style.color=''; this.style.backgroundColor=''" title="Voir les détails">
                                 <x-icon name="eye" class="w-5 h-5" />
                             </a>
-                            <a href="{{ route('admin.surveys.results', $survey) }}" class="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Voir les résultats">
+                            <a href="{{ route('admin.surveys.results', $survey) }}" class="p-2 text-gray-500 hover:text-[#1B3C35] hover:bg-[#F0F5F3] rounded-lg transition-colors" title="Voir les résultats">
                                 <x-icon name="bar-chart-2" class="w-5 h-5" />
                             </a>
                         </div>
@@ -125,7 +125,7 @@
                             </form>
                             <button type="button" 
                                     @click="confirmDelete('{{ route('admin.surveys.destroy', $survey) }}')"
-                                    class="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" 
+                                    class="p-2 text-gray-500 hover:text-[#1B3C35] hover:bg-[#F0F5F3] rounded-lg transition-colors" 
                                     title="Supprimer">
                                 <x-icon name="trash-2" class="w-5 h-5" />
                             </button>
@@ -140,7 +140,7 @@
                         </div>
                         <h3 class="text-lg font-medium text-gray-900">Aucun sondage créé</h3>
                         <p class="mt-2 text-gray-500 max-w-sm mx-auto">Commencez par créer votre premier sondage pour recueillir les avis de votre équipe.</p>
-                        <a href="{{ route('admin.surveys.create') }}" class="mt-6 inline-flex items-center px-4 py-2 text-white text-sm font-medium rounded-lg transition-colors" style="background: linear-gradient(135deg, #5680E9, #5AB9EA);" onmouseover="this.style.filter='brightness(1.1)'" onmouseout="this.style.filter=''">
+                        <a href="{{ route('admin.surveys.create') }}" class="mt-6 inline-flex items-center px-4 py-2 text-white text-sm font-medium rounded-lg transition-colors" style="background: linear-gradient(135deg, #1B3C35, #2D5A4E);" onmouseover="this.style.filter='brightness(1.1)'" onmouseout="this.style.filter=''">
                             <x-icon name="plus" class="w-4 h-4 mr-2" />
                             Créer un sondage
                         </a>
@@ -188,8 +188,8 @@
                 
                 <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                     <div class="sm:flex sm:items-start">
-                        <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
-                            <svg class="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                        <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-[#E8F0ED] sm:mx-0 sm:h-10 sm:w-10">
+                            <svg class="h-6 w-6 text-[#1B3C35]" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
                             </svg>
                         </div>
@@ -206,7 +206,7 @@
                         @csrf
                         @method('DELETE')
                         <button type="submit" 
-                                class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto">
+                                class="inline-flex w-full justify-center rounded-md bg-[#1B3C35] px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[#2D5A4E] sm:ml-3 sm:w-auto">
                             Supprimer
                         </button>
                     </form>

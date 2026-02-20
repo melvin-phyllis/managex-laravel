@@ -1,7 +1,7 @@
-<x-layouts.admin>
+﻿<x-layouts.admin>
     <div class="space-y-6">
         <!-- Header avec gradient -->
-        <div class="relative overflow-hidden rounded-2xl shadow-xl animate-fade-in-up" style="background: linear-gradient(135deg, #5680E9, #84CEEB) !important;">
+        <div class="relative overflow-hidden rounded-2xl shadow-xl animate-fade-in-up" style="background: linear-gradient(135deg, #1B3C35, #3D7A6A) !important;">
             <div class="absolute inset-0 bg-black/10"></div>
             <div class="absolute -top-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
             <div class="absolute -bottom-24 -left-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
@@ -27,7 +27,7 @@
                         <p class="text-white/80 mt-2">Gérez le règlement intérieur et les documents de l'entreprise</p>
                     </div>
                     <a href="{{ route('admin.global-documents.create') }}"
-                       class="px-5 py-2.5 bg-white font-semibold rounded-xl hover:bg-purple-50 transition-all shadow-lg flex items-center gap-2" style="color: #5680E9;">
+                       class="px-5 py-2.5 bg-white font-semibold rounded-xl hover:bg-[#FBF7F0] transition-all shadow-lg flex items-center gap-2" style="color: #1B3C35;">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
                         </svg>
@@ -38,8 +38,8 @@
         </div>
 
         @if(session('success'))
-            <div class="bg-emerald-50 border border-emerald-200 text-emerald-700 px-4 py-3 rounded-xl flex items-center gap-3 animate-fade-in-up">
-                <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="bg-[#F0F5F3] border border-[#B8D1C7] text-[#163530] px-4 py-3 rounded-xl flex items-center gap-3 animate-fade-in-up">
+                <svg class="w-5 h-5 text-[#2D5A4E]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 </svg>
                 {{ session('success') }}
@@ -49,17 +49,17 @@
         <!-- Documents par type -->
         @php
             $typeColors = [
-                'reglement_interieur' => ['bg' => 'linear-gradient(135deg, #5680E9, #84CEEB)', 'icon' => '#5680E9'],
-                'fiche_de_poste' => ['bg' => 'linear-gradient(135deg, #8860D0, #C1C8E4)', 'icon' => '#8860D0'],
-                'charte_informatique' => ['bg' => 'linear-gradient(135deg, #5AB9EA, #84CEEB)', 'icon' => '#5AB9EA'],
-                'politique_conges' => ['bg' => 'linear-gradient(135deg, #5680E9, #8860D0)', 'icon' => '#5680E9'],
+                'reglement_interieur' => ['bg' => 'linear-gradient(135deg, #1B3C35, #3D7A6A)', 'icon' => '#1B3C35'],
+                'fiche_de_poste' => ['bg' => 'linear-gradient(135deg, #C8A96E, #D4BC8B)', 'icon' => '#C8A96E'],
+                'charte_informatique' => ['bg' => 'linear-gradient(135deg, #2D5A4E, #3D7A6A)', 'icon' => '#2D5A4E'],
+                'politique_conges' => ['bg' => 'linear-gradient(135deg, #1B3C35, #C8A96E)', 'icon' => '#1B3C35'],
             ];
             $typeIndex = 0;
         @endphp
 
         @forelse($types as $typeKey => $typeLabel)
             @php
-                $colors = $typeColors[$typeKey] ?? ['bg' => 'linear-gradient(135deg, #5680E9, #84CEEB)', 'icon' => '#5680E9'];
+                $colors = $typeColors[$typeKey] ?? ['bg' => 'linear-gradient(135deg, #1B3C35, #3D7A6A)', 'icon' => '#1B3C35'];
             @endphp
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden animate-fade-in-up" style="animation-delay: {{ $typeIndex * 100 }}ms">
                 <div class="px-6 py-4 border-b border-gray-100" style="background: {{ $colors['bg'] }};">
@@ -91,7 +91,7 @@
                                 </div>
                                 <div class="flex items-center gap-2">
                                     @if($doc->is_active)
-                                        <span class="px-2 py-1 text-xs font-medium rounded-full" style="background-color: #5680E920; color: #5680E9;">Actif</span>
+                                        <span class="px-2 py-1 text-xs font-medium rounded-full" style="background-color: #1B3C3520; color: #1B3C35;">Actif</span>
                                     @else
                                         <span class="px-2 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-500">Inactif</span>
                                     @endif
@@ -103,13 +103,13 @@
                                         </svg>
                                     </a>
                                     <a href="{{ route('admin.global-documents.download', $doc) }}"
-                                       class="p-2 text-gray-400 hover:text-emerald-600 transition rounded-lg hover:bg-emerald-50" title="Télécharger">
+                                       class="p-2 text-gray-400 hover:text-[#1B3C35] transition rounded-lg hover:bg-[#F0F5F3]" title="Télécharger">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
                                         </svg>
                                     </a>
                                     <a href="{{ route('admin.global-documents.edit', $doc) }}"
-                                       class="p-2 text-gray-400 hover:text-blue-600 transition rounded-lg hover:bg-blue-50" title="Modifier">
+                                       class="p-2 text-gray-400 hover:text-[#1B3C35] transition rounded-lg hover:bg-[#F0F5F3]" title="Modifier">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                                         </svg>
@@ -118,7 +118,7 @@
                                           onsubmit="return confirm('Supprimer ce document ?')" class="inline">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="p-2 text-gray-400 hover:text-red-600 transition rounded-lg hover:bg-red-50" title="Supprimer">
+                                        <button type="submit" class="p-2 text-gray-400 hover:text-[#1B3C35] transition rounded-lg hover:bg-[#F0F5F3]" title="Supprimer">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
                                             </svg>

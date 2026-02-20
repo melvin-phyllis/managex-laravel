@@ -77,7 +77,7 @@
 
                     <div class="border-t border-gray-100 p-4 bg-gray-50 flex items-center justify-between gap-2">
                         <a href="{{ route('admin.documents.download', $document) }}" 
-                           class="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-800">
+                           class="flex items-center gap-1 text-sm text-[#1B3C35] hover:text-[#163530]">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
                             </svg>
@@ -89,7 +89,7 @@
                                 … Approuver
                             </button>
                             <button onclick="showReject({{ $document->id }})" 
-                                    class="px-3 py-1 bg-red-100 text-red-700 text-sm rounded-lg hover:bg-red-200">
+                                    class="px-3 py-1 bg-[#E8F0ED] text-[#163530] text-sm rounded-lg hover:bg-[#B8D1C7]">
                                 âŒ Rejeter
                             </button>
                         </div>
@@ -128,7 +128,7 @@
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Motif du rejet *</label>
                     <textarea name="rejection_reason" rows="3" required
-                              class="w-full rounded-lg border-gray-300 focus:border-red-500 focus:ring-red-500"
+                              class="w-full rounded-lg border-gray-300 focus:border-[#2D5A4E] focus:ring-[#2D5A4E]"
                               placeholder="Ex: Image floue, document illisible..."></textarea>
                 </div>
                 <div class="flex justify-end gap-3">
@@ -136,7 +136,7 @@
                             class="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200">
                         Annuler
                     </button>
-                    <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
+                    <button type="submit" class="px-4 py-2 bg-[#1B3C35] text-white rounded-lg hover:bg-[#163530]">
                         Rejeter
                     </button>
                 </div>

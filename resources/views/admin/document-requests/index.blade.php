@@ -1,7 +1,7 @@
-<x-layouts.admin>
+﻿<x-layouts.admin>
     <div class="space-y-6">
         <!-- Header comme sur tasks -->
-        <div class="relative overflow-hidden rounded-2xl shadow-xl animate-fade-in-up" style="background: linear-gradient(135deg, #5680E9, #84CEEB) !important;">
+        <div class="relative overflow-hidden rounded-2xl shadow-xl animate-fade-in-up" style="background: linear-gradient(135deg, #1B3C35, #3D7A6A) !important;">
             <div class="absolute inset-0 bg-black/10"></div>
             <div class="absolute -top-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
             <div class="absolute -bottom-24 -left-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
@@ -29,7 +29,7 @@
                         <p class="text-white/80 mt-2">Gérez les demandes des employés</p>
                     </div>
                     <a href="{{ route('admin.documents.index') }}" 
-                       class="px-4 py-2.5 bg-white font-semibold rounded-xl hover:bg-purple-50 transition-all shadow-lg flex items-center" style="color: #5680E9;">
+                       class="px-4 py-2.5 bg-white font-semibold rounded-xl hover:bg-[#FBF7F0] transition-all shadow-lg flex items-center" style="color: #1B3C35;">
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
                         </svg>
@@ -67,26 +67,26 @@
             </div>
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
                 <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background-color: rgba(90, 185, 234, 0.15);">
-                        <svg class="w-6 h-6" style="color: #5AB9EA;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background-color: rgba(45, 90, 78, 0.15);">
+                        <svg class="w-6 h-6" style="color: #2D5A4E;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                         </svg>
                     </div>
                     <div>
-                        <p class="text-2xl font-bold" style="color: #5AB9EA;">{{ $stats['approved'] }}</p>
+                        <p class="text-2xl font-bold" style="color: #2D5A4E;">{{ $stats['approved'] }}</p>
                         <p class="text-sm text-gray-500">Approuvées</p>
                     </div>
                 </div>
             </div>
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
                 <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background-color: rgba(86, 128, 233, 0.15);">
-                        <svg class="w-6 h-6" style="color: #5680E9;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background-color: rgba(27, 60, 53, 0.15);">
+                        <svg class="w-6 h-6" style="color: #1B3C35;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
                         </svg>
                     </div>
                     <div>
-                        <p class="text-2xl font-bold" style="color: #5680E9;">{{ $stats['total'] }}</p>
+                        <p class="text-2xl font-bold" style="color: #1B3C35;">{{ $stats['total'] }}</p>
                         <p class="text-sm text-gray-500">Total</p>
                     </div>
                 </div>
@@ -96,7 +96,7 @@
         <!-- Filtres -->
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 animate-fade-in-up animation-delay-200">
             <form method="GET" class="flex items-center gap-4">
-                <select name="status" class="rounded-xl border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                <select name="status" class="rounded-xl border-gray-300 focus:ring-2 focus:ring-[#2D5A4E] focus:border-[#2D5A4E]">
                     <option value="">En attente</option>
                     @foreach($statuses as $key => $label)
                         <option value="{{ $key }}" {{ request('status') == $key ? 'selected' : '' }}>{{ $label }}</option>
@@ -129,10 +129,10 @@
                     </thead>
                     <tbody class="divide-y divide-gray-100">
                         @foreach($requests as $request)
-                            <tr class="hover:bg-purple-50/50 transition-colors group">
+                            <tr class="hover:bg-[#FBF7F0]/50 transition-colors group">
                                 <td class="px-4 py-4">
                                     <div class="flex items-center gap-3">
-                                        <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold" style="background: linear-gradient(135deg, #5680E9, #84CEEB);">
+                                        <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold" style="background: linear-gradient(135deg, #1B3C35, #3D7A6A);">
                                             {{ strtoupper(substr($request->user->name, 0, 1)) }}
                                         </div>
                                         <div>
@@ -142,7 +142,7 @@
                                     </div>
                                 </td>
                                 <td class="px-4 py-4">
-                                    <span class="inline-flex items-center px-2.5 py-1 text-xs font-medium rounded-full" style="background-color: rgba(136, 96, 208, 0.15); color: #8860D0;">
+                                    <span class="inline-flex items-center px-2.5 py-1 text-xs font-medium rounded-full" style="background-color: rgba(200, 169, 110, 0.15); color: #C8A96E;">
                                         {{ $request->type_label }}
                                     </span>
                                 </td>
@@ -154,14 +154,14 @@
                                 </td>
                                 <td class="px-4 py-4 text-center">
                                     @if($request->status === 'approved')
-                                        <span class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-full" style="background-color: rgba(90, 185, 234, 0.15); color: #5AB9EA;">
+                                        <span class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-full" style="background-color: rgba(45, 90, 78, 0.15); color: #2D5A4E;">
                                             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                                             </svg>
                                             {{ $request->status_label }}
                                         </span>
                                     @elseif($request->status === 'rejected')
-                                        <span class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-full bg-red-50 text-red-600">
+                                        <span class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-full bg-[#F0F5F3] text-[#1B3C35]">
                                             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                                             </svg>
@@ -179,7 +179,7 @@
                                 <td class="px-4 py-4 text-right">
                                     @if($request->isPending())
                                         <a href="{{ route('admin.document-requests.show', $request) }}" 
-                                           class="inline-flex items-center px-3 py-1.5 text-white text-sm font-medium rounded-xl shadow-lg transition-all" style="background: linear-gradient(135deg, #5680E9, #5AB9EA);">
+                                           class="inline-flex items-center px-3 py-1.5 text-white text-sm font-medium rounded-xl shadow-lg transition-all" style="background: linear-gradient(135deg, #1B3C35, #2D5A4E);">
                                             Traiter
                                         </a>
                                     @else
@@ -198,8 +198,8 @@
                 </div>
             @else
                 <div class="p-12 text-center">
-                    <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style="background-color: rgba(86, 128, 233, 0.15);">
-                        <svg class="w-8 h-8" style="color: #5680E9;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style="background-color: rgba(27, 60, 53, 0.15);">
+                        <svg class="w-8 h-8" style="color: #1B3C35;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
                         </svg>
                     </div>
