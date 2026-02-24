@@ -355,6 +355,9 @@
                         
                         <div x-show="open" x-cloak x-transition class="space-y-1 mt-1">
                             <x-sidebar-link :href="route('admin.geolocation-zones.index')" :active="request()->routeIs('admin.geolocation-zones.*')" class="pl-12 text-sm">Zones Géoloc.</x-sidebar-link>
+                            <x-sidebar-link :href="route('admin.trainings.index')" :active="request()->routeIs('admin.trainings.*')" class="pl-12 text-sm">Formations</x-sidebar-link>
+                            <x-sidebar-link :href="route('admin.skills.manage')" :active="request()->routeIs('admin.skills.*')" class="pl-12 text-sm">Compétences</x-sidebar-link>
+                            <x-sidebar-link :href="route('admin.bts-evaluations.index')" :active="request()->routeIs('admin.bts-evaluations.*')" class="pl-12 text-sm">Fiches BTS</x-sidebar-link>
                         </div>
                     </div>
 

@@ -65,6 +65,10 @@ class User extends Authenticatable
         // Statut
         'status',
         'notes',
+        // Onboarding
+        'onboarding_completed_at',
+        'onboarding_steps',
+        'intern_type',
     ];
 
     /**
@@ -102,6 +106,9 @@ class User extends Authenticatable
             'social_security_number' => 'encrypted',
             'bank_iban' => 'encrypted',
             'bank_bic' => 'encrypted',
+            // Onboarding
+            'onboarding_completed_at' => 'datetime',
+            'onboarding_steps' => 'array',
         ];
     }
 
@@ -162,6 +169,14 @@ class User extends Authenticatable
     public function leaves(): HasMany
     {
         return $this->hasMany(Leave::class);
+    }
+
+    /**
+     * Get user's skills
+     */
+    public function userSkills(): HasMany
+    {
+        return $this->hasMany(UserSkill::class);
     }
 
     /**
@@ -361,6 +376,14 @@ class User extends Authenticatable
     public function internEvaluations(): HasMany
     {
         return $this->hasMany(InternEvaluation::class, 'intern_id');
+    }
+
+    /**
+     * Get BTS evaluations for this intern
+     */
+    public function btsEvaluations(): HasMany
+    {
+        return $this->hasMany(BtsEvaluation::class, 'intern_id');
     }
 
     /**

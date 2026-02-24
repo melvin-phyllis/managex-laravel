@@ -1402,6 +1402,10 @@
                 iconEl.innerHTML = spinnerSVG;
                 hideError();
 
+                // Safari/iOS : essayer d'abord avec haute précision, puis fallback basse précision
+                const highAccuracyOptions = { enableHighAccuracy: true, timeout: 30000, maximumAge: 60000 };
+                const lowAccuracyOptions = { enableHighAccuracy: false, timeout: 15000, maximumAge: 120000 };
+
                 navigator.geolocation.getCurrentPosition(
                     function(position) {
                         latInput.value = position.coords.latitude;
@@ -1410,25 +1414,42 @@
                         form.submit();
                     },
                     function(error) {
-                        btn.disabled = false;
-                        textEl.textContent = originalText;
-                        iconEl.innerHTML = originalIconHTML;
+                        // Première tentative échouée → essayer sans haute précision (fix Safari/iOS)
+                        console.warn('Géoloc haute précision échouée, tentative basse précision...', error.message);
+                        textEl.textContent = 'Nouvelle tentative...';
 
-                        switch(error.code) {
-                            case error.PERMISSION_DENIED:
-                                showError('Géolocalisation refusée', 'Veuillez autoriser l\'accés à votre position.');
-                                break;
-                            case error.POSITION_UNAVAILABLE:
-                                showError(' Position indisponible', 'Impossible de déterminer votre position.');
-                                break;
-                            case error.TIMEOUT:
-                                showError('⭐ Délai dépassé', 'La recherche de position a pris trop de temps.');
-                                break;
-                            default:
-                                showError('Erreur', 'Une erreur inattendue s\'est produite.');
-                        }
+                        navigator.geolocation.getCurrentPosition(
+                            function(position) {
+                                latInput.value = position.coords.latitude;
+                                lngInput.value = position.coords.longitude;
+                                textEl.textContent = 'Envoi en cours...';
+                                form.submit();
+                            },
+                            function(error2) {
+                                console.warn('Géoloc basse précision échouée aussi', error2.message);
+
+                                // Dernier recours : soumettre sans coordonnées plutôt que bloquer l'utilisateur
+                                if (error2.code === 1) {
+                                    // PERMISSION_DENIED → montrer l'erreur, ne pas auto-soumettre
+                                    btn.disabled = false;
+                                    textEl.textContent = originalText;
+                                    iconEl.innerHTML = originalIconHTML;
+                                    showError('📍 Géolocalisation refusée',
+                                        'Veuillez autoriser l\'accès à votre position dans les réglages de Safari. ' +
+                                        'Sur iPhone : Réglages → Safari → Position → Autoriser.');
+                                } else {
+                                    btn.disabled = false;
+                                    textEl.textContent = originalText;
+                                    iconEl.innerHTML = originalIconHTML;
+                                    showError('📍 Position non détectée',
+                                        'Impossible d\'obtenir votre position GPS exacte. ' +
+                                        'Le pointage nécessite obligatoirement votre position.');
+                                }
+                            },
+                            lowAccuracyOptions
+                        );
                     },
-                    { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+                    highAccuracyOptions
                 );
             }
 
@@ -1460,6 +1481,9 @@
                     preCheckInBtn.querySelector('span').textContent = 'Recherche de position...';
                     hideError();
 
+                    const highAccuracyOptions = { enableHighAccuracy: true, timeout: 30000, maximumAge: 60000 };
+                    const lowAccuracyOptions = { enableHighAccuracy: false, timeout: 15000, maximumAge: 120000 };
+
                     navigator.geolocation.getCurrentPosition(
                         function(position) {
                             preCheckInLat.value = position.coords.latitude;
@@ -1468,11 +1492,35 @@
                             preCheckInForm.submit();
                         },
                         function(error) {
-                            preCheckInBtn.disabled = false;
-                            preCheckInBtn.querySelector('span').textContent = '🌅 Je suis arrivé(e) — Pré-pointage';
-                            showError('Erreur de géolocalisation', 'Veuillez autoriser l\'accès à votre position.');
+                            // Fallback basse précision (fix Safari/iOS)
+                            console.warn('Pré-pointage: géoloc haute précision échouée, tentative basse précision...', error.message);
+                            preCheckInBtn.querySelector('span').textContent = 'Nouvelle tentative...';
+
+                            navigator.geolocation.getCurrentPosition(
+                                function(position) {
+                                    preCheckInLat.value = position.coords.latitude;
+                                    preCheckInLng.value = position.coords.longitude;
+                                    preCheckInBtn.querySelector('span').textContent = 'Envoi en cours...';
+                                    preCheckInForm.submit();
+                                },
+                                function(error2) {
+                                    if (error2.code === 1) {
+                                        preCheckInBtn.disabled = false;
+                                        preCheckInBtn.querySelector('span').textContent = '🌅 Je suis arrivé(e) — Pré-pointage';
+                                        showError('📍 Géolocalisation refusée',
+                                            'Veuillez autoriser l\'accès à votre position. ' +
+                                            'Sur iPhone : Réglages → Safari → Position → Autoriser.');
+                                    } else {
+                                        preCheckInBtn.disabled = false;
+                                        preCheckInBtn.querySelector('span').textContent = '🌅 Je suis arrivé(e) — Pré-pointage';
+                                        showError('📍 Position non détectée',
+                                            'Impossible d\'obtenir votre position GPS exacte. Obligatoire pour le pointage.');
+                                    }
+                                },
+                                lowAccuracyOptions
+                            );
                         },
-                        { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+                        highAccuracyOptions
                     );
                 });
             }
@@ -1502,6 +1550,9 @@
                     urgencyCheckOutBtn.textContent = 'Recherche...';
                     hideError();
 
+                    const highOpts = { enableHighAccuracy: true, timeout: 30000, maximumAge: 60000 };
+                    const lowOpts = { enableHighAccuracy: false, timeout: 15000, maximumAge: 120000 };
+
                     navigator.geolocation.getCurrentPosition(
                         function(position) {
                             urgencyCheckOutLat.value = position.coords.latitude;
@@ -1510,11 +1561,30 @@
                             urgencyCheckOutForm.submit();
                         },
                         function(error) {
-                            urgencyCheckOutBtn.disabled = false;
-                            urgencyCheckOutBtn.textContent = 'Confirmer';
-                            showError('Erreur de géolocalisation', 'Veuillez autoriser l\'accés à votre position.');
+                            navigator.geolocation.getCurrentPosition(
+                                function(position) {
+                                    urgencyCheckOutLat.value = position.coords.latitude;
+                                    urgencyCheckOutLng.value = position.coords.longitude;
+                                    urgencyCheckOutBtn.textContent = 'Envoi...';
+                                    urgencyCheckOutForm.submit();
+                                },
+                                function(error2) {
+                                    if (error2.code === 1) {
+                                        urgencyCheckOutBtn.disabled = false;
+                                        urgencyCheckOutBtn.textContent = 'Confirmer';
+                                        showError('📍 Géolocalisation refusée',
+                                            'Veuillez autoriser l\'accès à votre position.');
+                                    } else {
+                                        urgencyCheckOutBtn.disabled = false;
+                                        urgencyCheckOutBtn.textContent = 'Confirmer';
+                                        showError('📍 Position non détectée',
+                                            'Impossible d\'obtenir votre position GPS exacte.');
+                                    }
+                                },
+                                lowOpts
+                            );
                         },
-                        { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+                        highOpts
                     );
                 });
             }

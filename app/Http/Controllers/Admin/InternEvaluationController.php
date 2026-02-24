@@ -18,6 +18,9 @@ class InternEvaluationController extends Controller
     {
         // Get all interns
         $interns = User::interns()
+            ->where(function ($q) {
+                $q->whereNull('intern_type')->orWhere('intern_type', 'normal');
+            })
             ->with(['supervisor', 'department', 'internEvaluations' => function ($q) {
                 $q->submitted()->latest('week_start');
             }])
@@ -217,6 +220,9 @@ class InternEvaluationController extends Controller
 
         // Get interns with supervisors who don't have last week's evaluation
         $internsWithMissing = User::interns()
+            ->where(function ($q) {
+                $q->whereNull('intern_type')->orWhere('intern_type', 'normal');
+            })
             ->withSupervisor()
             ->with(['supervisor', 'department'])
             ->get()
@@ -447,7 +453,11 @@ class InternEvaluationController extends Controller
     {
         $currentWeekStart = now()->startOfWeek();
 
-        $internsWithSupervisor = User::interns()->withSupervisor()->count();
+        $internsWithSupervisor = User::interns()
+            ->where(function ($q) {
+                $q->whereNull('intern_type')->orWhere('intern_type', 'normal');
+            })
+            ->withSupervisor()->count();
 
         $evaluationsThisWeek = InternEvaluation::currentWeek()->submitted()->count();
 

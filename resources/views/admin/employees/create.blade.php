@@ -276,6 +276,17 @@
                                    class="w-full rounded-lg border-gray-300 focus:border-[#2D5A4E] focus:ring-[#2D5A4E]">
                         </div>
 
+                        <!-- Type de stagiaire (visible seulement pour les stages) -->
+                        <div x-show="contractType === 'stage'" x-transition>
+                            <label for="intern_type" class="block text-sm font-medium text-gray-700 mb-1">Type de stagiaire</label>
+                            <select name="intern_type" id="intern_type"
+                                    class="w-full rounded-lg border-gray-300 focus:border-[#2D5A4E] focus:ring-[#2D5A4E]">
+                                <option value="normal" {{ old('intern_type') == 'normal' ? 'selected' : '' }}>Normal</option>
+                                <option value="bts" {{ old('intern_type') == 'bts' ? 'selected' : '' }}>BTS</option>
+                            </select>
+                            <p class="mt-1 text-xs text-gray-400">Les stagiaires BTS seront évalués via les Fiches BTS (/20)</p>
+                        </div>
+
                         <!-- Salaire de base -->
                         <div>
                             <label for="base_salary" class="block text-sm font-medium text-gray-700 mb-1">Salaire brut mensuel (FCFA)</label>

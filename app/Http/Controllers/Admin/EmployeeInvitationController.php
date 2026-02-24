@@ -32,6 +32,7 @@ class EmployeeInvitationController extends Controller
             'work_days' => ['required', 'array', 'size:3'],
             'work_days.*' => ['integer', 'between:1,5'],
             'base_salary' => ['nullable', 'numeric', 'min:0'],
+        'intern_type' => ['nullable', 'in:normal,bts'],
         ], [
             'name.required' => 'Le nom est obligatoire.',
             'email.required' => 'L\'email est obligatoire.',
@@ -68,6 +69,7 @@ class EmployeeInvitationController extends Controller
             'contract_end_date' => $validated['contract_end_date'] ?? null,
             'work_days' => $validated['work_days'],
             'base_salary' => $validated['base_salary'] ?? null,
+            'intern_type' => ($validated['contract_type'] === 'stage') ? ($request->intern_type ?? 'normal') : null,
             'invited_by' => auth()->id(),
             'expires_at' => now()->addHours(48),
         ]);

@@ -72,4 +72,22 @@
             <a href="https://www.linkedin.com/in/melvin-akou/" target="_blank" rel="noopener noreferrer" title="LinkedIn">LinkedIn</a>
         </p>
     </div>
+    {{-- Auto-refresh CSRF token to prevent 419 "Page Expired" --}}
+    <script>
+        setInterval(function() {
+            fetch('/ManageX/public/sanctum/csrf-cookie', { method: 'GET', credentials: 'same-origin' })
+                .catch(function() {
+                    // If sanctum not available, just reload the page
+                    var token = document.querySelector('input[name="_token"]');
+                    if (token) {
+                        fetch(window.location.href, { credentials: 'same-origin' })
+                            .then(function(r) { return r.text(); })
+                            .then(function(html) {
+                                var match = html.match(/name="_token"[^>]*value="([^"]+)"/);
+                                if (match) token.value = match[1];
+                            }).catch(function() { window.location.reload(); });
+                    }
+                });
+        }, 30 * 60 * 1000); // Toutes les 30 minutes
+    </script>
 </x-guest-layout>

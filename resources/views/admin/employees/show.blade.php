@@ -360,6 +360,62 @@
                     </div>
                 </div>
 
+                {{-- Compétences (Radar) --}}
+                @if($allSkills->count())
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="px-5 py-3" style="background: linear-gradient(135deg, #5C6E68, #1B3C35);">
+                        <h3 class="text-white font-semibold flex items-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                            </svg>
+                            Compétences
+                        </h3>
+                    </div>
+                    <div class="p-4">
+                        <canvas id="employeeSkillsRadar" width="260" height="260"></canvas>
+                    </div>
+                    {{-- Skill levels list --}}
+                    <div class="divide-y divide-gray-50 border-t border-gray-100">
+                        @foreach($allSkills as $skill)
+                            @php $us = $employeeSkills->get($skill->id); @endphp
+                            <div class="px-4 py-2.5 flex items-center justify-between">
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-xs font-medium text-gray-900 truncate">{{ $skill->name }}</p>
+                                    <p class="text-[10px] text-gray-400">{{ $skill->category_label }}</p>
+                                </div>
+                                <div class="flex items-center gap-1">
+                                    @if($us)
+                                        @for($i = 1; $i <= 5; $i++)
+                                            <span class="w-5 h-5 rounded text-[10px] font-bold flex items-center justify-center
+                                                {{ $us->level >= $i
+                                                    ? 'text-white'
+                                                    : 'bg-gray-100 text-gray-300' }}"
+                                                @if($us->level >= $i)
+                                                    style="background: {{ ['#ef4444','#f97316','#eab308','#22c55e','#1B3C35'][$i - 1] }}"
+                                                @endif>
+                                                {{ $i }}
+                                            </span>
+                                        @endfor
+                                        @if($us->is_validated)
+                                            <span class="ml-1 text-emerald-500" title="Validé">✓</span>
+                                        @else
+                                            <form action="{{ route('admin.skills.validate-level', $us) }}" method="POST" class="ml-1">
+                                                @csrf
+                                                <button type="submit" class="text-[10px] px-1.5 py-0.5 rounded bg-blue-50 text-blue-600 hover:bg-blue-100" title="Valider ce niveau">
+                                                    Valider
+                                                </button>
+                                            </form>
+                                        @endif
+                                    @else
+                                        <span class="text-xs text-gray-300">Non évalué</span>
+                                    @endif
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+                @endif
+
                 <!-- Contact d'urgence -->
                 @if($employee->emergency_contact_name)
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
@@ -571,4 +627,48 @@
             </div>
         </div>
     </div>
+
+@if($allSkills->count())
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('employeeSkillsRadar');
+    if (!ctx) return;
+
+    const categories = @json($radarData);
+
+    new Chart(ctx, {
+        type: 'radar',
+        data: {
+            labels: categories.map(c => c.label),
+            datasets: [{
+                label: '{{ $employee->name }}',
+                data: categories.map(c => c.avg),
+                backgroundColor: 'rgba(27, 60, 53, 0.2)',
+                borderColor: '#1B3C35',
+                borderWidth: 2,
+                pointBackgroundColor: '#C8A96E',
+                pointBorderColor: '#1B3C35',
+                pointHoverRadius: 6,
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                r: {
+                    beginAtZero: true,
+                    max: 5,
+                    ticks: { stepSize: 1, display: true, font: { size: 10 } },
+                    grid: { color: 'rgba(0,0,0,0.05)' },
+                    pointLabels: { font: { size: 10, weight: '600' } },
+                }
+            },
+            plugins: { legend: { display: false } }
+        }
+    });
+});
+</script>
+@endif
+
 </x-layouts.admin>
+

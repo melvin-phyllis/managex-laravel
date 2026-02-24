@@ -494,6 +494,18 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
         Route::get('/intern/{intern}', [AdminInternEvaluationController::class, 'show'])->name('show');
     });
 
+    // Fiche d'évaluation BTS (note de stage officielle /20)
+    Route::prefix('bts-evaluations')->name('bts-evaluations.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\BtsEvaluationController::class, 'index'])->name('index');
+        Route::get('/create/{intern}', [\App\Http\Controllers\Admin\BtsEvaluationController::class, 'create'])->name('create');
+        Route::post('/{intern}', [\App\Http\Controllers\Admin\BtsEvaluationController::class, 'store'])->name('store');
+        Route::get('/{evaluation}', [\App\Http\Controllers\Admin\BtsEvaluationController::class, 'show'])->name('show');
+        Route::get('/{evaluation}/edit', [\App\Http\Controllers\Admin\BtsEvaluationController::class, 'edit'])->name('edit');
+        Route::put('/{evaluation}', [\App\Http\Controllers\Admin\BtsEvaluationController::class, 'update'])->name('update');
+        Route::get('/{evaluation}/pdf', [\App\Http\Controllers\Admin\BtsEvaluationController::class, 'exportPdf'])->name('pdf');
+        Route::post('/{evaluation}/submit', [\App\Http\Controllers\Admin\BtsEvaluationController::class, 'submit'])->name('submit');
+    });
+
     // Paramètres de paie multi-pays
     Route::prefix('payroll-settings')->name('payroll-settings.')->group(function () {
         // Pays
@@ -522,6 +534,27 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::post('/ai/chat', [AdminAIAssistantController::class, 'chat'])
         ->middleware('throttle:ai')
         ->name('ai.chat');
+
+    // Formations
+    Route::prefix('trainings')->name('trainings.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\TrainingController::class, 'index'])->name('index');
+        Route::get('/create', [\App\Http\Controllers\Admin\TrainingController::class, 'create'])->name('create');
+        Route::post('/', [\App\Http\Controllers\Admin\TrainingController::class, 'store'])->name('store');
+        Route::get('/{training}', [\App\Http\Controllers\Admin\TrainingController::class, 'show'])->name('show');
+        Route::get('/{training}/edit', [\App\Http\Controllers\Admin\TrainingController::class, 'edit'])->name('edit');
+        Route::put('/{training}', [\App\Http\Controllers\Admin\TrainingController::class, 'update'])->name('update');
+        Route::delete('/{training}', [\App\Http\Controllers\Admin\TrainingController::class, 'destroy'])->name('destroy');
+        Route::post('/{training}/mark-completed/{user}', [\App\Http\Controllers\Admin\TrainingController::class, 'markCompleted'])->name('mark-completed');
+    });
+
+    // Compétences
+    Route::prefix('skills')->name('skills.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\SkillController::class, 'index'])->name('index');
+        Route::get('/manage', [\App\Http\Controllers\Admin\SkillController::class, 'manage'])->name('manage');
+        Route::post('/', [\App\Http\Controllers\Admin\SkillController::class, 'store'])->name('store');
+        Route::delete('/{skill}', [\App\Http\Controllers\Admin\SkillController::class, 'destroy'])->name('destroy');
+        Route::post('/validate-level/{userSkill}', [\App\Http\Controllers\Admin\SkillController::class, 'validateLevel'])->name('validate-level');
+    });
 });
 
 // Routes Employee
@@ -530,6 +563,10 @@ Route::middleware(['auth', 'role:employee', 'contract.accepted'])->prefix('emplo
     Route::get('/contract/view-pdf', [ContractAcceptanceController::class, 'viewPdf'])->name('contract.view-pdf');
     Route::post('/contract/accept', [ContractAcceptanceController::class, 'accept'])->name('contract.accept');
     Route::post('/contract/refuse', [ContractAcceptanceController::class, 'refuse'])->name('contract.refuse');
+
+    // Onboarding
+    Route::get('/onboarding', [\App\Http\Controllers\Employee\OnboardingController::class, 'index'])->name('onboarding.index');
+    Route::post('/onboarding/{step}', [\App\Http\Controllers\Employee\OnboardingController::class, 'completeStep'])->name('onboarding.complete-step');
 
     // Dashboard
     Route::get('/dashboard', [EmployeeDashboardController::class, 'index'])->name('dashboard');
@@ -646,6 +683,19 @@ Route::middleware(['auth', 'role:employee', 'contract.accepted'])->prefix('emplo
     });
 
 
+
+    // Formations (Employee)
+    Route::prefix('trainings')->name('trainings.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Employee\TrainingController::class, 'index'])->name('index');
+        Route::post('/{training}/enroll', [\App\Http\Controllers\Employee\TrainingController::class, 'enroll'])->name('enroll');
+        Route::delete('/{training}/unenroll', [\App\Http\Controllers\Employee\TrainingController::class, 'unenroll'])->name('unenroll');
+    });
+
+    // Compétences (Employee)
+    Route::prefix('skills')->name('skills.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Employee\SkillController::class, 'index'])->name('index');
+        Route::post('/update', [\App\Http\Controllers\Employee\SkillController::class, 'update'])->name('update');
+    });
 
     // Assistant IA RH
     Route::post('/ai/chat', [AIAssistantController::class, 'chat'])

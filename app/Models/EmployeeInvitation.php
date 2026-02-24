@@ -23,6 +23,7 @@ class EmployeeInvitation extends Model
         'expires_at',
         'completed_at',
         'user_id',
+        'intern_type',
     ];
 
     protected function casts(): array

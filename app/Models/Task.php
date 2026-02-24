@@ -22,6 +22,8 @@ class Task extends Model
         'priorite',
         'rating',
         'rating_comment',
+        'presentation_rating',
+        'rejection_reason',
     ];
 
     protected $casts = [

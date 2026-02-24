@@ -27,6 +27,16 @@ class DashboardController extends Controller
         // Objectifs mensuels
         $monthlyGoals = $this->getMonthlyGoals($user);
 
+        // Calendrier mensuel
+        $monthlyCalendar = $this->getMonthlyCalendar($user);
+
+        // Soldes de congés
+        $leaveBalances = [
+            'annual' => $user->leave_balance ?? 0,
+            'sick' => $user->sick_leave_balance ?? 0,
+            'rtt' => $user->rtt_balance ?? 0,
+        ];
+
         $todayPresence = $user->todayPresence();
         $recentTasks = $user->tasks()->latest()->take(5)->get();
         $recentLeaves = $user->leaves()->latest()->take(3)->get();
@@ -95,7 +105,9 @@ class DashboardController extends Controller
             'documentRequests',
             'unreadGlobalDocs',
             'contract',
-            'hasContractDocument'
+            'hasContractDocument',
+            'monthlyCalendar',
+            'leaveBalances'
         ));
     }
 
@@ -483,6 +495,89 @@ class DashboardController extends Controller
             ],
         ];
     }
+
+    private function getMonthlyCalendar($user): array
+    {
+        $startOfMonth = now()->startOfMonth();
+        $endOfMonth = now()->endOfMonth();
+        
+        $presences = $user->presences()
+            ->whereBetween('date', [$startOfMonth, $endOfMonth])
+            ->get()
+            ->keyBy(fn ($p) => $p->date->format('Y-m-d'));
+
+        $leaves = $user->leaves()
+            ->where('statut', 'approved')
+            ->where(function ($q) use ($startOfMonth, $endOfMonth) {
+                $q->whereBetween('date_debut', [$startOfMonth, $endOfMonth])
+                  ->orWhereBetween('date_fin', [$startOfMonth, $endOfMonth])
+                  ->orWhere(function ($q2) use ($startOfMonth, $endOfMonth) {
+                      $q2->where('date_debut', '<=', $startOfMonth)
+                         ->where('date_fin', '>=', $endOfMonth);
+                  });
+            })
+            ->get();
+
+        $workWorkDays = $user->getWorkDayNumbers() ?: [1, 2, 3, 4, 5];
+
+        $calendar = [];
+        $currentDate = $startOfMonth->copy();
+        $today = now()->format('Y-m-d');
+
+        while ($currentDate <= $endOfMonth) {
+            $dateStr = $currentDate->format('Y-m-d');
+            $isWeekend = !in_array($currentDate->dayOfWeekIso, $workWorkDays);
+            
+            $status = 'pending';
+            $label = '';
+
+            if ($isWeekend) {
+                $status = 'weekend';
+            } else {
+                // Check if there is an approved leave
+                $isLeave = false;
+                foreach ($leaves as $leave) {
+                    if ($currentDate >= $leave->date_debut && $currentDate <= $leave->date_fin) {
+                        $isLeave = true;
+                        break;
+                    }
+                }
+
+                if ($isLeave) {
+                    $status = 'leave';
+                    $label = 'Congé';
+                } elseif (isset($presences[$dateStr])) {
+                    $p = $presences[$dateStr];
+                    if ($p->is_absent) {
+                        $status = 'absent';
+                        $label = 'Absent';
+                    } elseif ($p->check_in) {
+                        $status = 'present';
+                        $label = 'Présent';
+                    }
+                } elseif ($dateStr < $today) {
+                    $status = 'absent'; // Past working day without presence or leave
+                    $label = 'Non pointé';
+                }
+            }
+
+            $calendar[] = [
+                'date' => $currentDate->copy(),
+                'day' => $currentDate->day,
+                'is_today' => $dateStr === $today,
+                'status' => $status,
+                'label' => $label,
+            ];
+
+            $currentDate->addDay();
+        }
+
+        return [
+            'days' => $calendar,
+            'start_padding' => $startOfMonth->dayOfWeekIso - 1, // To pad the first week row
+        ];
+    }
+
 
     private function getWorkingDaysInMonth(int $month, int $year, array $userWorkDays = [1, 2, 3, 4, 5]): int
     {

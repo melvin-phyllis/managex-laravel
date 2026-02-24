@@ -476,45 +476,25 @@
         <h2 class="section-title reveal">Ne remplacez rien. <em style="font-style:italic;color:var(--gold)">Intégrez.</em></h2>
         <p class="section-desc reveal" style="margin-top:1rem">ManageX s'intègre nativement avec vos outils existants pour un écosystème RH unifié.</p>
         <div class="integrations-grid reveal">
-          <!-- Gmail -->
-          <div class="integration-icon" title="Gmail">
+          <!-- Email -->
+          <div class="integration-icon" title="Email & Notifications">
             <svg viewBox="0 0 24 24" width="32" height="32"><path d="M2 6l10 7 10-7v12H2z" fill="none" stroke="#EA4335" stroke-width="1.5"/><path d="M22 6L12 13 2 6" fill="none" stroke="#EA4335" stroke-width="1.5"/><rect x="2" y="6" width="20" height="12" rx="2" fill="none" stroke="#EA4335" stroke-width="1.5"/></svg>
           </div>
-          <!-- Google -->
-          <div class="integration-icon" title="Google">
-            <svg viewBox="0 0 24 24" width="32" height="32"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18A10.96 10.96 0 001 12c0 1.77.42 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
-          </div>
-          <!-- Slack -->
-          <div class="integration-icon" title="Slack">
-            <svg viewBox="0 0 24 24" width="32" height="32"><path d="M5.04 15.16a2.26 2.26 0 01-2.26 2.26 2.26 2.26 0 01-2.26-2.26 2.26 2.26 0 012.26-2.26h2.26v2.26zm1.14 0a2.26 2.26 0 012.26-2.26 2.26 2.26 0 012.26 2.26v5.66a2.26 2.26 0 01-2.26 2.26 2.26 2.26 0 01-2.26-2.26v-5.66z" fill="#E01E5A"/><path d="M8.44 5.04a2.26 2.26 0 01-2.26-2.26A2.26 2.26 0 018.44.52a2.26 2.26 0 012.26 2.26v2.26H8.44zm0 1.14a2.26 2.26 0 012.26 2.26 2.26 2.26 0 01-2.26 2.26H2.78A2.26 2.26 0 01.52 8.44a2.26 2.26 0 012.26-2.26h5.66z" fill="#36C5F0"/><path d="M18.96 8.44a2.26 2.26 0 012.26-2.26 2.26 2.26 0 012.26 2.26 2.26 2.26 0 01-2.26 2.26h-2.26V8.44zm-1.14 0a2.26 2.26 0 01-2.26 2.26 2.26 2.26 0 01-2.26-2.26V2.78A2.26 2.26 0 0115.56.52a2.26 2.26 0 012.26 2.26v5.66z" fill="#2EB67D"/><path d="M15.56 18.96a2.26 2.26 0 012.26 2.26 2.26 2.26 0 01-2.26 2.26 2.26 2.26 0 01-2.26-2.26v-2.26h2.26zm0-1.14a2.26 2.26 0 01-2.26-2.26 2.26 2.26 0 012.26-2.26h5.66a2.26 2.26 0 012.26 2.26 2.26 2.26 0 01-2.26 2.26h-5.66z" fill="#ECB22E"/></svg>
-          </div>
-          <!-- Microsoft Excel -->
-          <div class="integration-icon" title="Excel">
+          <!-- Excel -->
+          <div class="integration-icon" title="Export Excel">
             <svg viewBox="0 0 24 24" width="32" height="32"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z" fill="none" stroke="#217346" stroke-width="1.5"/><path d="M14 2v6h6" fill="none" stroke="#217346" stroke-width="1.5"/><path d="M8 13l3 5m0-5l-3 5M15 13v5m-2-5h4" fill="none" stroke="#217346" stroke-width="1.5" stroke-linecap="round"/></svg>
           </div>
-          <!-- Google Calendar -->
-          <div class="integration-icon" title="Google Calendar">
-            <svg viewBox="0 0 24 24" width="32" height="32"><rect x="3" y="4" width="18" height="18" rx="2" fill="none" stroke="#4285F4" stroke-width="1.5"/><line x1="16" y1="2" x2="16" y2="6" stroke="#4285F4" stroke-width="1.5"/><line x1="8" y1="2" x2="8" y2="6" stroke="#4285F4" stroke-width="1.5"/><line x1="3" y1="10" x2="21" y2="10" stroke="#4285F4" stroke-width="1.5"/><text x="12" y="17" text-anchor="middle" font-size="6" font-weight="700" fill="#4285F4">31</text></svg>
-          </div>
           <!-- PDF -->
-          <div class="integration-icon" title="PDF">
+          <div class="integration-icon" title="Génération PDF">
             <svg viewBox="0 0 24 24" width="32" height="32"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z" fill="none" stroke="#E53935" stroke-width="1.5"/><path d="M14 2v6h6" fill="none" stroke="#E53935" stroke-width="1.5"/><text x="12" y="17" text-anchor="middle" font-size="5" font-weight="700" fill="#E53935">PDF</text></svg>
           </div>
-          <!-- WhatsApp -->
-          <div class="integration-icon" title="WhatsApp">
-            <svg viewBox="0 0 24 24" width="32" height="32"><path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07a8.16 8.16 0 01-2.4-1.48 9 9 0 01-1.66-2.07c-.17-.3-.02-.46.13-.61.14-.14.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.51h-.58a1.11 1.11 0 00-.8.38A3.37 3.37 0 006.6 9.1a5.85 5.85 0 001.23 3.1 13.4 13.4 0 005.15 4.55c.72.31 1.28.5 1.72.63.72.23 1.38.2 1.9.12.58-.09 1.76-.72 2.01-1.41.25-.7.25-1.29.17-1.41-.07-.12-.27-.2-.57-.34z" fill="#25D366"/><path d="M12 2a10 10 0 00-8.6 15.07L2 22l5.04-1.32A10 10 0 1012 2z" fill="none" stroke="#25D366" stroke-width="1.5"/></svg>
-          </div>
-          <!-- Google Maps -->
-          <div class="integration-icon" title="GPS / Maps">
+          <!-- Géolocalisation -->
+          <div class="integration-icon" title="Géolocalisation GPS">
             <svg viewBox="0 0 24 24" width="32" height="32"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 1118 0z" fill="none" stroke="#EA4335" stroke-width="1.5"/><circle cx="12" cy="10" r="3" fill="none" stroke="#EA4335" stroke-width="1.5"/></svg>
           </div>
-          <!-- Push Notifications / Firebase -->
+          <!-- Push Notifications -->
           <div class="integration-icon" title="Push Notifications">
             <svg viewBox="0 0 24 24" width="32" height="32"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" fill="none" stroke="#FFCA28" stroke-width="1.5"/><path d="M13.73 21a2 2 0 01-3.46 0" fill="none" stroke="#FFCA28" stroke-width="1.5"/><line x1="12" y1="2" x2="12" y2="4" stroke="#FFCA28" stroke-width="1.5"/></svg>
-          </div>
-          <!-- Cloud / AWS -->
-          <div class="integration-icon" title="Cloud Storage">
-            <svg viewBox="0 0 24 24" width="32" height="32"><path d="M18 10h-1.26A8 8 0 109 20h9a5 5 0 000-10z" fill="none" stroke="#FF9900" stroke-width="1.5"/></svg>
           </div>
           <!-- SSL / Security -->
           <div class="integration-icon" title="Sécurité SSL">

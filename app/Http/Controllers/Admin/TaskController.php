@@ -179,12 +179,21 @@ class TaskController extends Controller
 
     public function reject(Request $request, Task $task)
     {
-        $task->update(['statut' => 'rejected']);
+        $request->validate([
+            'rejection_reason' => 'required|string|max:1000',
+        ]);
+
+        $task->update([
+            'statut' => 'rejected',
+            'rating' => 0,
+            'presentation_rating' => 0,
+            'rejection_reason' => $request->rejection_reason,
+        ]);
 
         // Envoyer notification
         $task->user->notify(new TaskStatusNotification($task, 'rejected'));
 
-        return redirect()->back()->with('success', 'Tâche rejetée.');
+        return redirect()->back()->with('success', 'Tâche rejetée. Notes mises à zéro.');
     }
 
     public function validate(Task $task)
@@ -206,13 +215,21 @@ class TaskController extends Controller
         $request->validate([
             'rating' => 'required|integer|min:0|max:10',
             'rating_comment' => 'nullable|string|max:1000',
+            'presentation_rating' => 'nullable|integer|min:0|max:5',
         ]);
 
-        $task->update([
+        $updateData = [
             'statut' => 'validated',
             'rating' => $request->rating,
             'rating_comment' => $request->rating_comment,
-        ]);
+        ];
+
+        // Save presentation rating if provided (for BTS interns)
+        if ($request->filled('presentation_rating')) {
+            $updateData['presentation_rating'] = $request->presentation_rating;
+        }
+
+        $task->update($updateData);
 
         // Notifier l'employé
         if ($task->user) {

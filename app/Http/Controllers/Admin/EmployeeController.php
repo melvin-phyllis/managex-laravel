@@ -225,6 +225,7 @@ class EmployeeController extends Controller
             // Soldes
             'leave_balance' => ['nullable', 'numeric', 'min:0'],
             'rtt_balance' => ['nullable', 'numeric', 'min:0'],
+            'intern_type' => ['nullable', 'in:normal,bts'],
         ], [
             'work_days.required' => 'Veuillez sélectionner les jours de travail.',
             'work_days.size' => 'Vous devez sélectionner exactement 3 jours de travail.',
@@ -261,6 +262,7 @@ class EmployeeController extends Controller
                 'hire_date' => $request->hire_date ?? now(),
                 'contract_end_date' => $request->contract_end_date,
                 'contract_type' => $request->contract_type ?? 'cdi',
+                'intern_type' => $request->contract_type === 'stage' ? ($request->intern_type ?? 'normal') : null,
                 'base_salary' => $request->base_salary,
                 'employee_id' => $request->employee_id ?? $this->generateEmployeeId(),
                 'social_security_number' => $request->social_security_number,
@@ -274,6 +276,15 @@ class EmployeeController extends Controller
             // Définir password et role explicitement (hors mass assignment)
             $employee->password = Hash::make($password);
             $employee->role = 'employee';
+
+            // Auto-assigner l'admin comme tuteur pour les stagiaires
+            if ($request->contract_type === 'stage' && !$employee->supervisor_id) {
+                $admin = User::where('role', 'admin')->first();
+                if ($admin) {
+                    $employee->supervisor_id = $admin->id;
+                }
+            }
+
             $employee->save();
 
             // Enregistrer les jours de travail
@@ -315,9 +326,27 @@ class EmployeeController extends Controller
             'presences' => fn ($q) => $q->latest()->take(10),
             'tasks' => fn ($q) => $q->latest()->take(5),
             'leaves' => fn ($q) => $q->latest()->take(5),
-            'payrolls' => fn ($q) => $q->latest()->take(6)]);
+            'payrolls' => fn ($q) => $q->latest()->take(6),
+            'userSkills.skill']);
 
-        return view('admin.employees.show', compact('employee'));
+        // Skills data for radar chart
+        $allSkills = \App\Models\Skill::orderBy('category')->orderBy('name')->get();
+        $employeeSkills = $employee->userSkills->keyBy('skill_id');
+
+        // Pre-compute radar chart data (category averages)
+        $radarData = $allSkills->groupBy('category')->map(function($skills, $cat) use ($employeeSkills) {
+            $total = 0; $count = 0;
+            foreach ($skills as $skill) {
+                $us = $employeeSkills->get($skill->id);
+                if ($us) { $total += $us->level; $count++; }
+            }
+            return [
+                'label' => \App\Models\Skill::CATEGORIES[$cat] ?? $cat,
+                'avg' => $count > 0 ? round($total / $count, 1) : 0,
+            ];
+        })->values();
+
+        return view('admin.employees.show', compact('employee', 'allSkills', 'employeeSkills', 'radarData'));
     }
 
     public function edit(User $employee)
@@ -369,6 +398,7 @@ class EmployeeController extends Controller
             'rtt_balance' => ['nullable', 'numeric', 'min:0'],
             'status' => ['nullable', 'in:active,on_leave,suspended,terminated'],
             'avatar' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:2048'],
+            'intern_type' => ['nullable', 'in:normal,bts'],
         ], [
             'work_days.required' => 'Veuillez sélectionner les jours de travail.',
             'work_days.size' => 'Vous devez sélectionner exactement 3 jours de travail.',
@@ -397,6 +427,7 @@ class EmployeeController extends Controller
             'hire_date' => $request->hire_date,
             'contract_end_date' => $request->contract_end_date,
             'contract_type' => $request->contract_type,
+            'intern_type' => $request->contract_type === 'stage' ? ($request->intern_type ?? 'normal') : null,
             'base_salary' => $request->base_salary,
             'employee_id' => $request->employee_id,
             'social_security_number' => $request->social_security_number,

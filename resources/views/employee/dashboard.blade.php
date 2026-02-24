@@ -536,51 +536,138 @@
             </div>
         </div>
 
-        <!-- Charts Row -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <!-- Weekly Hours Chart -->
-            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in-up flex flex-col">
-                <div class="px-6 py-4 border-b border-gray-100" style="background: linear-gradient(90deg, rgba(27, 60, 53, 0.1), rgba(133, 144, 170, 0.08));">
+        <!-- SIRH Priority 1 Modules -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-fade-in-up">
+            
+            <!-- Calendrier de Présence Mensuel (Col span 2 on large screens) -->
+            <div class="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden flex flex-col">
+                <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between" style="background: linear-gradient(90deg, rgba(27, 60, 53, 0.1), rgba(133, 144, 170, 0.08));">
                     <div class="flex items-center gap-3">
                         <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: linear-gradient(135deg, #1B3C35, #5C6E68); box-shadow: 0 10px 15px -3px rgba(27, 60, 53, 0.3);">
                             <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                             </svg>
                         </div>
                         <div>
-                            <h3 class="font-semibold text-gray-900">Heures cette semaine</h3>
-                            <p class="text-sm text-gray-500">Vos heures de travail quotidiennes</p>
+                            <h3 class="font-semibold text-gray-900">Calendrier Mensuel</h3>
+                            <p class="text-sm text-gray-500">{{ now()->translatedFormat('F Y') }}</p>
                         </div>
                     </div>
+                    <div class="flex gap-2 text-xs font-medium">
+                        <div class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-emerald-500"></span> Présent</div>
+                        <div class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-red-500"></span> Absent</div>
+                        <div class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-blue-500"></span> Congé</div>
+                    </div>
                 </div>
-                <div class="p-6 flex-1 flex items-center">
-                    <div class="w-full h-72">
-                        <canvas id="weeklyHoursChart"></canvas>
+                <div class="px-4 py-3 flex-1 bg-gray-50/50">
+                    <div class="grid grid-cols-7 gap-1 mb-1">
+                        @foreach(['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'] as $dayName)
+                            <div class="text-center text-xs font-semibold text-gray-500 py-0.5">{{ $dayName }}</div>
+                        @endforeach
+                    </div>
+                    <div class="grid grid-cols-7 gap-1">
+                        @for($i = 0; $i < $monthlyCalendar['start_padding']; $i++)
+                            <div class="h-9 rounded-lg bg-transparent"></div>
+                        @endfor
+
+                        @foreach($monthlyCalendar['days'] as $day)
+                            <div class="h-9 rounded-lg flex items-center justify-center text-sm relative group
+                                @if($day['status'] === 'weekend') bg-gray-100/50 text-gray-400
+                                @elseif($day['status'] === 'present') bg-emerald-50 text-emerald-700 border border-emerald-200
+                                @elseif($day['status'] === 'absent') bg-red-50 text-red-700 border border-red-200
+                                @elseif($day['status'] === 'leave') bg-blue-50 text-blue-700 border border-blue-200
+                                @else bg-white text-gray-700 border border-gray-100 shadow-sm @endif
+                                @if($day['is_today']) ring-2 ring-offset-1 ring-[#C8A96E] font-bold @endif
+                            " title="{{ $day['label'] }}">
+                                <span class="@if($day['is_today']) text-[#C8A96E] @endif">{{ $day['day'] }}</span>
+                            </div>
+                        @endforeach
                     </div>
                 </div>
             </div>
 
-            <!-- Tasks Distribution Chart -->
-            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in-up flex flex-col">
-                <div class="px-6 py-4 border-b border-gray-100" style="background: linear-gradient(90deg, rgba(133, 144, 170, 0.1), rgba(196, 219, 246, 0.08));">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: linear-gradient(135deg, #5C6E68, #C4DBF6); box-shadow: 0 10px 15px -3px rgba(133, 144, 170, 0.3);">
-                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"/>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"/>
+            <!-- Soldes de Congés & Prochaines Deadlines -->
+            <div class="grid grid-rows-2 gap-6">
+                
+                <!-- Soldes de Congés -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden flex flex-col">
+                    <div class="px-5 py-3 border-b border-gray-100 flex items-center gap-3" style="background: linear-gradient(90deg, rgba(133, 144, 170, 0.1), rgba(196, 219, 246, 0.08));">
+                        <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background: linear-gradient(135deg, #5C6E68, #C4DBF6); box-shadow: 0 4px 6px -1px rgba(133, 144, 170, 0.3);">
+                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                             </svg>
                         </div>
+                        <h3 class="font-semibold text-gray-900 text-sm">Soldes de Congés</h3>
+                    </div>
+                    <div class="p-5 flex-1 flex flex-col justify-center space-y-4">
+                        <!-- Congés Annuels -->
                         <div>
-                            <h3 class="font-semibold text-gray-900">Mes tâches par statut</h3>
-                            <p class="text-sm text-gray-500">Répartition de vos tâches</p>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span class="text-gray-600 font-medium">Congés Annuels</span>
+                                <span class="font-bold text-gray-900">{{ $leaveBalances['annual'] }} j</span>
+                            </div>
+                            <div class="w-full bg-gray-100 rounded-full h-2">
+                                <div class="bg-[#1B3C35] h-2 rounded-full" style="width: {{ min(100, ($leaveBalances['annual'] / max(1, $leaveBalances['annual'] + 5)) * 100) }}%"></div>
+                            </div>
+                        </div>
+                        <!-- RTT -->
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span class="text-gray-600 font-medium">RTT / Repos</span>
+                                <span class="font-bold text-gray-900">{{ $leaveBalances['rtt'] }} j</span>
+                            </div>
+                            <div class="w-full bg-gray-100 rounded-full h-2">
+                                <div class="bg-[#C8A96E] h-2 rounded-full" style="width: {{ min(100, ($leaveBalances['rtt'] / max(1, $leaveBalances['rtt'] + 5)) * 100) }}%"></div>
+                            </div>
+                        </div>
+                        <!-- Maladie -->
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span class="text-gray-600 font-medium">Congé Maladie</span>
+                                <span class="font-bold text-gray-900">{{ $leaveBalances['sick'] }} j</span>
+                            </div>
+                            <div class="w-full bg-gray-100 rounded-full h-2">
+                                <div class="bg-[#5C6E68] h-2 rounded-full" style="width: {{ min(100, ($leaveBalances['sick'] / max(1, $leaveBalances['sick'] + 5)) * 100) }}%"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="p-6 flex-1 flex items-center justify-center">
-                    <div class="w-full max-w-sm h-72">
-                        <canvas id="tasksChart"></canvas>
+
+                <!-- Prochaines Deadlines / Événements (remplaçant les tâches par statut) -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden flex flex-col">
+                    <div class="px-5 py-3 border-b border-gray-100 flex items-center justify-between" style="background: linear-gradient(90deg, rgba(196, 219, 246, 0.1), rgba(231, 227, 212, 0.08));">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background: linear-gradient(135deg, #1B3C35, #C8A96E); box-shadow: 0 4px 6px -1px rgba(27, 60, 53, 0.3);">
+                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                            </div>
+                            <h3 class="font-semibold text-gray-900 text-sm">Deadlines</h3>
+                        </div>
+                    </div>
+                    <div class="p-0 flex-1 overflow-y-auto">
+                        <div class="divide-y divide-gray-50">
+                            @forelse(collect($upcomingEvents)->take(3) as $event)
+                                <a href="{{ $event['link'] }}" class="block p-4 hover:bg-gray-50 transition-colors">
+                                    <div class="flex items-start justify-between">
+                                        <div class="pr-2">
+                                            <p class="text-sm font-medium text-gray-900 truncate">{{ $event['title'] }}</p>
+                                            <p class="text-xs text-gray-500">{{ $event['subtitle'] }}</p>
+                                        </div>
+                                        <span class="text-xs px-2 py-1 rounded-md font-medium shrink-0 bg-[#C4DBF6]/20 text-[#1B3C35]">
+                                            {{ \Carbon\Carbon::parse($event['date'])->format('d M') }}
+                                        </span>
+                                    </div>
+                                </a>
+                            @empty
+                                <div class="p-6 text-center">
+                                    <p class="text-sm text-gray-500">Aucune deadline imminente</p>
+                                </div>
+                            @endforelse
+                        </div>
                     </div>
                 </div>
+
             </div>
         </div>
 

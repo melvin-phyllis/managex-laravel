@@ -549,7 +549,7 @@ class PresenceController extends Controller
 
         if ($geolocationEnabled) {
             if (! $latitude || ! $longitude) {
-                return redirect()->back()->with('error', 'La géolocalisation est obligatoire.');
+                return redirect()->back()->with('error', 'La géolocalisation est obligatoire. Veuillez autoriser l\'accès à votre position.');
             }
 
             foreach ($zones as $zone) {
@@ -563,7 +563,7 @@ class PresenceController extends Controller
                 $defaultZone = GeolocationZone::getDefault();
                 $zoneName = $defaultZone ? $defaultZone->name : 'la zone autorisée';
 
-                return redirect()->back()->with('error', "Pointage refusé : vous n'êtes pas dans $zoneName.");
+                return redirect()->back()->with('error', "Pointage refusé : vous n'êtes pas dans $zoneName. Veuillez vous rapprocher de votre lieu de travail.");
             }
         }
 
@@ -687,7 +687,7 @@ class PresenceController extends Controller
             $defaultZone = GeolocationZone::getDefault();
             $zoneName = $defaultZone ? $defaultZone->name : 'la zone autorisée';
 
-            return redirect()->back()->with('error', "Pré-pointage refusé : vous n'êtes pas dans $zoneName.");
+            return redirect()->back()->with('error', "Pré-pointage refusé : vous n'êtes pas dans $zoneName. Veuillez vous rapprocher de votre lieu de travail.");
         }
 
         $workEndTime = Setting::getWorkEndTime();

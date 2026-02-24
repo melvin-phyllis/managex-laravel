@@ -101,6 +101,7 @@ class EmployeeOnboardingController extends Controller
                     'hire_date' => $invitation->hire_date,
                     'contract_end_date' => $invitation->contract_end_date,
                     'base_salary' => $invitation->base_salary,
+                'intern_type' => $invitation->intern_type,
                     'employee_id' => $this->generateEmployeeId(),
                     'leave_balance' => 25,
                     'rtt_balance' => 0,
@@ -120,6 +121,14 @@ class EmployeeOnboardingController extends Controller
 
                 $employee->password = Hash::make($validated['password']);
                 $employee->role = 'employee';
+
+                // Auto-assigner l'admin comme tuteur pour les stagiaires
+                if ($invitation->contract_type === 'stage') {
+                    $admin = User::where('role', 'admin')->first();
+                    if ($admin) {
+                        $employee->supervisor_id = $admin->id;
+                    }
+                }
 
                 if ($request->hasFile('avatar')) {
                     $employee->avatar = $request->file('avatar')->store('avatars', 'public');

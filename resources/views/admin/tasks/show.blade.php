@@ -135,7 +135,8 @@
                             </form>
                             <form action="{{ route('admin.tasks.reject', $task) }}" method="POST" class="flex-1">
                                 @csrf
-                                <button type="submit" class="w-full px-4 py-3 bg-[#1B3C35] text-white font-medium rounded-lg hover:bg-[#163530] transition-colors flex items-center justify-center">
+                                <input type="hidden" name="rejection_reason" value="Tâche non approuvée">
+                                <button type="submit" class="w-full px-4 py-3 bg-[#1B3C35] text-white font-medium rounded-lg hover:bg-[#163530] transition-colors flex items-center justify-center" onclick="var r=prompt('Motif du rejet :'); if(!r) return false; this.form.rejection_reason.value=r;">
                                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                                     </svg>
@@ -177,7 +178,8 @@
                 
                             <form action="{{ route('admin.tasks.reject', $task) }}" method="POST">
                                 @csrf
-                                <button type="submit" class="w-full flex items-center justify-center px-4 py-2 bg-[#1B3C35] text-white font-medium rounded-lg hover:bg-[#163530] transition-colors" onclick="return confirm('Annuler cette tâche ?')">
+                                <input type="hidden" name="rejection_reason" value="Tâche annulée">
+                                <button type="submit" class="w-full flex items-center justify-center px-4 py-2 bg-[#1B3C35] text-white font-medium rounded-lg hover:bg-[#163530] transition-colors" onclick="var r=prompt('Motif du rejet / annulation :'); if(!r) return false; this.form.rejection_reason.value=r;">
                                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                                     Annuler / Rejeter
                                 </button>
@@ -201,6 +203,20 @@
                                         <span class="ml-2 text-gray-500 text-sm">/ 10</span>
                                     </div>
                                 </div>
+                                @if($task->user && $task->user->is_intern)
+                                <div>
+                                    <label for="presentation_rating" class="block text-sm font-medium text-gray-700">
+                                        Présentation <span class="text-xs text-amber-600">(BTS)</span>
+                                    </label>
+                                    <div class="mt-1 flex items-center">
+                                        <input type="number" name="presentation_rating" id="presentation_rating" min="0" max="5"
+                                               class="block w-full rounded-md border-gray-300 shadow-sm focus:border-[#C8A96E] focus:ring-[#C8A96E] sm:text-sm"
+                                               placeholder="0-5">
+                                        <span class="ml-2 text-gray-500 text-sm">/ 5</span>
+                                    </div>
+                                    <p class="mt-1 text-xs text-gray-400">Qualité de la présentation du travail par le stagiaire</p>
+                                </div>
+                                @endif
                             </div>
                             
                             <div>
@@ -217,9 +233,15 @@
                         </form>
 
                         <div class="mt-4 pt-4 border-t border-gray-100">
-                            <form action="{{ route('admin.tasks.reject', $task) }}" method="POST">
+                            <form action="{{ route('admin.tasks.reject', $task) }}" method="POST" class="space-y-3">
                                 @csrf
-                                <button type="submit" class="w-full flex justify-center py-2 px-4 border border-[#8FB5A8] rounded-md shadow-sm text-sm font-medium text-[#163530] bg-white hover:bg-[#F0F5F3] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#2D5A4E] transition-colors" onclick="return confirm('Êtes-vous sûr de vouloir rejeter cette tâche ? Cela la marquera comme rejetée.')">
+                                <div>
+                                    <label for="rejection_reason" class="block text-sm font-medium text-red-600">Motif du rejet *</label>
+                                    <textarea name="rejection_reason" id="rejection_reason" rows="2" required
+                                              class="mt-1 block w-full rounded-md border-red-300 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm"
+                                              placeholder="Pourquoi cette tâche est rejetée ?"></textarea>
+                                </div>
+                                <button type="submit" class="w-full flex justify-center py-2 px-4 border border-red-300 rounded-md shadow-sm text-sm font-medium text-red-700 bg-red-50 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors" onclick="return confirm('Rejeter cette tâche ? Les notes seront mises à zéro.')">
                                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                                     Rejeter (Non satisfaisant)
                                 </button>
@@ -235,9 +257,16 @@
                             <div class="flex items-center justify-center w-16 h-16 rounded-full {{ $task->rating >= 7 ? 'bg-[#E8F0ED] text-[#163530]' : ($task->rating >= 5 ? 'bg-amber-100 text-amber-700' : 'bg-[#E8F0ED] text-[#163530]') }} text-2xl font-bold flex-shrink-0">
                                 {{ $task->rating }}<span class="text-sm font-normal ml-0.5">/10</span>
                             </div>
-                            <div>
+                            <div class="flex-1">
                                 <h4 class="text-sm font-medium text-gray-900">Commentaire du manager</h4>
                                 <p class="mt-1 text-gray-600 text-sm">{{ $task->rating_comment ?? 'Aucun commentaire.' }}</p>
+                                @if($task->presentation_rating !== null)
+                                <div class="mt-3 pt-3 border-t border-gray-100 flex items-center gap-3">
+                                    <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-700">BTS</span>
+                                    <span class="text-sm text-gray-700">Présentation :</span>
+                                    <span class="text-lg font-bold" style="color: #1B3C35;">{{ $task->presentation_rating }}/5</span>
+                                </div>
+                                @endif
                             </div>
                         </div>
                     </div>
