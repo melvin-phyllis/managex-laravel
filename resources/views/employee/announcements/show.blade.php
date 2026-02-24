@@ -27,21 +27,21 @@
                                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                     <path d="M10 2a1 1 0 011 1v1.323l3.954 1.582 1.599-.8a1 1 0 01.894 1.79l-1.233.616 1.738 5.42a1 1 0 01-.285 1.05A3.989 3.989 0 0115 15a3.989 3.989 0 01-2.667-1.019 1 1 0 01-.285-1.05l1.715-5.349L11 6.477V16h2a1 1 0 110 2H7a1 1 0 110-2h2V6.477L6.237 7.582l1.715 5.349a1 1 0 01-.285 1.05A3.989 3.989 0 015 15a3.989 3.989 0 01-2.667-1.019 1 1 0 01-.285-1.05l1.738-5.42-1.233-.617a1 1 0 01.894-1.788l1.599.799L9 4.323V3a1 1 0 011-1z"/>
                                 </svg>
-                                …pinglÈe
+                                √âpingl√©e
                             </span>
                         @endif
                         @if($announcement->priority === 'critical')
                             <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium" style="background-color: #C8A96E; color: white;">
-                                ?? Critique
+                                ‚ö†Ô∏è Critique
                             </span>
                         @elseif($announcement->priority === 'high')
                             <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-white text-sm font-medium">
-                                ? Haute prioritÈ
+                                ‚ö° Haute priorit√©
                             </span>
                         @endif
                         @if($announcement->requires_acknowledgment)
                             <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-white text-sm font-medium">
-                                ? AccusÈ requis
+                                üìù Accus√© requis
                             </span>
                         @endif
                         <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-white text-sm font-medium">
@@ -79,7 +79,7 @@
             <!-- Content Section -->
             <div class="p-8">
                 <div class="prose prose-lg max-w-none text-gray-700 leading-relaxed">
-                    {!! nl2br(e($announcement->content)) !!}
+                    {!! $announcement->content !!}
                 </div>
             </div>
 
@@ -95,15 +95,15 @@
                                     </svg>
                                 </div>
                                 <div class="flex-1">
-                                    <p class="font-semibold text-lg" style="color: #1B3C35;">AccusÈ de rÈception envoyÈ</p>
-                                    <p class="text-sm" style="color: #5C6E68;">Vous avez confirmÈ avoir pris connaissance de cette annonce.</p>
+                                    <p class="font-semibold text-lg" style="color: #1B3C35;">Accus√© de r√©ception envoy√©</p>
+                                    <p class="text-sm" style="color: #5C6E68;">Vous avez confirm√© avoir pris connaissance de cette annonce.</p>
                                 </div>
                                 <div class="hidden sm:block">
                                     <span class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium" style="background-color: rgba(27, 60, 53, 0.15); color: #1B3C35;">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
                                         </svg>
-                                        VÈrifiÈ
+                                        V√©rifi√©
                                     </span>
                                 </div>
                             </div>
@@ -144,7 +144,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
                         </svg>
-                        <span>Lu le {{ now()->format('d/m/Y ‡ H:i') }}</span>
+                        <span>Lu le {{ now()->format('d/m/Y √† H:i') }}</span>
                     </div>
                     @if($announcement->end_date)
                         <div class="flex items-center gap-2" style="color: #5C6E68;">
@@ -186,7 +186,7 @@
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                         </svg>
-                        ConfirmÈ !
+                        Confirm√© !
                     `;
                     btn.style.backgroundColor = '#1B3C35';
                     
@@ -196,7 +196,7 @@
                 }
             })
             .catch(() => {
-                btn.innerHTML = 'Erreur - RÈessayer';
+                btn.innerHTML = 'Erreur - R√©essayer';
                 btn.disabled = false;
             });
         }
