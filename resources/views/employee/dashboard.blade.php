@@ -885,85 +885,91 @@
         const chartData = @json($chartData);
 
         // Weekly Hours Chart
-        new Chart(document.getElementById('weeklyHoursChart'), {
-            type: 'bar',
-            data: {
-                labels: chartData.weekly_hours.labels,
-                datasets: [{
-                    label: 'Heures',
-                    data: chartData.weekly_hours.data,
-                    backgroundColor: 'rgba(27, 60, 53, 0.8)',
-                    borderRadius: 8,
-                    borderSkipped: false,
-                    hoverBackgroundColor: '#1B3C35'
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                        backgroundColor: 'rgba(17, 24, 39, 0.9)',
-                        padding: 12,
-                        cornerRadius: 8,
-                        callbacks: {
-                            label: function(context) {
-                                return context.parsed.y + 'h travaillées';
-                            }
-                        }
-                    }
+        const weeklyHoursEl = document.getElementById('weeklyHoursChart');
+        if (weeklyHoursEl) {
+            new Chart(weeklyHoursEl, {
+                type: 'bar',
+                data: {
+                    labels: chartData.weekly_hours.labels,
+                    datasets: [{
+                        label: 'Heures',
+                        data: chartData.weekly_hours.data,
+                        backgroundColor: 'rgba(27, 60, 53, 0.8)',
+                        borderRadius: 8,
+                        borderSkipped: false,
+                        hoverBackgroundColor: '#1B3C35'
+                    }]
                 },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        max: 10,
-                        grid: { color: 'rgba(0, 0, 0, 0.05)' },
-                        ticks: {
-                            callback: function(value) {
-                                return value + 'h';
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: 'rgba(17, 24, 39, 0.9)',
+                            padding: 12,
+                            cornerRadius: 8,
+                            callbacks: {
+                                label: function(context) {
+                                    return context.parsed.y + 'h travaillées';
+                                }
                             }
                         }
                     },
-                    x: { grid: { display: false } }
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 10,
+                            grid: { color: 'rgba(0, 0, 0, 0.05)' },
+                            ticks: {
+                                callback: function(value) {
+                                    return value + 'h';
+                                }
+                            }
+                        },
+                        x: { grid: { display: false } }
+                    }
                 }
-            }
-        });
+            });
+        }
 
         // Tasks Distribution Chart
-        new Chart(document.getElementById('tasksChart'), {
-            type: 'doughnut',
-            data: {
-                labels: chartData.tasks_by_status.labels,
-                datasets: [{
-                    data: chartData.tasks_by_status.data,
-                    backgroundColor: chartData.tasks_by_status.colors,
-                    borderWidth: 0,
-                    hoverOffset: 10
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                cutout: '60%',
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: {
-                            padding: 15,
-                            usePointStyle: true,
-                            pointStyle: 'circle',
-                            font: { size: 12 }
+        const tasksEl = document.getElementById('tasksChart');
+        if (tasksEl) {
+            new Chart(tasksEl, {
+                type: 'doughnut',
+                data: {
+                    labels: chartData.tasks_by_status.labels,
+                    datasets: [{
+                        data: chartData.tasks_by_status.data,
+                        backgroundColor: chartData.tasks_by_status.colors,
+                        borderWidth: 0,
+                        hoverOffset: 10
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '60%',
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 15,
+                                usePointStyle: true,
+                                pointStyle: 'circle',
+                                font: { size: 12 }
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(17, 24, 39, 0.9)',
+                            padding: 12,
+                            cornerRadius: 8
                         }
-                    },
-                    tooltip: {
-                        backgroundColor: 'rgba(17, 24, 39, 0.9)',
-                        padding: 12,
-                        cornerRadius: 8
                     }
                 }
-            }
-        });
+            });
+        }
 
         // Geolocation handling
         document.addEventListener('DOMContentLoaded', function() {
