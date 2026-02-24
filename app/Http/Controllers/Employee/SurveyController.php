@@ -80,7 +80,7 @@ class SurveyController extends Controller
             } elseif ($question->type === 'choice' && $question->options) {
                 $rules[$key][] = 'in:'.implode(',', $question->options);
             } elseif ($question->type === 'yesno') {
-                $rules[$key][] = 'in:oui,non';
+                $rules[$key][] = 'in:Oui,Non';
             }
         }
 
