@@ -457,6 +457,14 @@ class EmployeeController extends Controller
 
         $employee->update($data);
 
+        // Auto-assigner l'admin comme tuteur pour les stagiaires sans tuteur
+        if ($request->contract_type === 'stage' && !$employee->supervisor_id) {
+            $admin = User::where('role', 'admin')->first();
+            if ($admin) {
+                $employee->update(['supervisor_id' => $admin->id]);
+            }
+        }
+
         // Mettre à jour les jours de travail
         $employee->workDays()->delete();
         foreach ($request->work_days as $day) {

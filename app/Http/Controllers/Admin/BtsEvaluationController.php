@@ -20,7 +20,7 @@ class BtsEvaluationController extends Controller
             ->latest()
             ->get();
 
-        $internsWithoutEval = User::where('is_intern', true)
+        $internsWithoutEval = User::interns()
             ->where('status', 'active')
             ->where('intern_type', 'bts')
             ->whereDoesntHave('btsEvaluations')
