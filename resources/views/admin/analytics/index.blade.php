@@ -102,7 +102,12 @@
         </div>
 
         {{-- KPI Cards - Ligne 1 (Principaux) --}}
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 animate-fade-in-up animation-delay-200">
+        <div x-data="{ revealed: false }" x-init="setTimeout(() => revealed = true, 500)">
+            <div x-show="!revealed" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+                <x-skeleton-loader type="stat-card" :count="4" :columns="4" />
+            </div>
+            <div x-show="revealed" x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" x-cloak>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 animate-fade-in-up">
             {{-- 1. Effectif total --}}
             <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100 relative overflow-hidden group hover:shadow-md transition-all">
                 <div class="absolute right-0 top-0 w-24 h-24 bg-gradient-to-br from-[#2D5A4E]/10 to-[#2D5A4E]/10 rounded-full -mr-8 -mt-8 group-hover:scale-125 transition-transform"></div>
@@ -180,6 +185,8 @@
                 </div>
             </div>
         </div>
+            </div>
+        </div>
 
 {{-- Secondary KPIs Removed --}}
 
@@ -188,7 +195,12 @@
 
 
         {{-- Graphiques Row 1 --}}
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-fade-in-up animation-delay-400">
+        <div x-data="{ revealed: false }" x-init="setTimeout(() => revealed = true, 800)">
+            <div x-show="!revealed" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+                <x-skeleton-loader type="chart" :count="2" :columns="2" />
+            </div>
+            <div x-show="revealed" x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" x-cloak>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-fade-in-up">
             {{-- Evolution presences (Line) - Takes 2 cols --}}
             <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-100 p-5">
                 <div class="flex items-center justify-between mb-4">
@@ -227,13 +239,20 @@
                 </div>
             </div>
         </div>
+            </div>
+        </div>
 
 {{-- Charts Row 2 Removed --}}
 
 {{-- Charts Row 3 Removed --}}
 
         {{-- Heures par semaine (Area) --}}
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 animate-fade-in-up animation-delay-550">
+        <div x-data="{ revealed: false }" x-init="setTimeout(() => revealed = true, 1100)">
+            <div x-show="!revealed" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+                <x-skeleton-loader type="chart" :count="1" :columns="1" />
+            </div>
+            <div x-show="revealed" x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" x-cloak>
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 animate-fade-in-up">
             <div class="flex items-center justify-between mb-4">
                 <h3 class="font-semibold text-gray-900 flex items-center gap-2">
                     <div class="w-8 h-8 bg-[#E8F0ED] rounded-lg flex items-center justify-center">
@@ -249,6 +268,8 @@
                 <canvas id="weeklyHoursChart"></canvas>
             </div>
         </div>
+            </div>
+        </div>
 
         {{-- Section Stagiaires --}}
         <h2 class="text-xl font-bold text-gray-800 mt-8 mb-4 flex items-center gap-2">
@@ -258,7 +279,12 @@
             Statistiques Stagiaires
         </h2>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-fade-in-up animation-delay-600">
+        <div x-data="{ revealed: false }" x-init="setTimeout(() => revealed = true, 1300)">
+            <div x-show="!revealed" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+                <x-skeleton-loader type="chart" :count="2" :columns="2" />
+            </div>
+            <div x-show="revealed" x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" x-cloak>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-fade-in-up">
             {{-- Evolution Stagiaires (Bar) --}}
             <div class="lg:col-span-1 bg-white rounded-xl shadow-sm border border-gray-100 p-5">
                 <h3 class="font-semibold text-gray-900 mb-4">Recrutements vs Fins de stage</h3>
@@ -277,6 +303,8 @@
 
 
         </div>
+            </div>
+        </div>
 
         {{-- Section Tâches --}}
         <h2 class="text-xl font-bold text-gray-800 mt-8 mb-4 flex items-center gap-2">
@@ -286,7 +314,12 @@
             Statistiques Tâches
         </h2>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-fade-in-up animation-delay-700">
+        <div x-data="{ revealed: false }" x-init="setTimeout(() => revealed = true, 1500)">
+            <div x-show="!revealed" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+                <x-skeleton-loader type="chart" :count="3" :columns="3" />
+            </div>
+            <div x-show="revealed" x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" x-cloak>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-fade-in-up">
             {{-- Status Distribution (Donut) --}}
             <div class="lg:col-span-1 bg-white rounded-xl shadow-sm border border-gray-100 p-5">
                 <h3 class="font-semibold text-gray-900 mb-4">État des tâches</h3>
@@ -311,6 +344,8 @@
                 </div>
             </div>
         </div>
+            </div>
+        </div>
          {{-- Section Démographie --}}
         <h2 class="text-xl font-bold text-gray-800 mt-8 mb-4 flex items-center gap-2">
             <div class="w-8 h-8 bg-[#E8F0ED] rounded-lg flex items-center justify-center">
@@ -319,7 +354,12 @@
             Démographie & Carrière
         </h2>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-fade-in-up animation-delay-800 mb-8">
+        <div x-data="{ revealed: false }" x-init="setTimeout(() => revealed = true, 1700)">
+            <div x-show="!revealed" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+                <x-skeleton-loader type="chart" :count="3" :columns="3" />
+            </div>
+            <div x-show="revealed" x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" x-cloak>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-fade-in-up mb-8">
             {{-- Gender (Pie) --}}
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
                 <h3 class="font-semibold text-gray-900 mb-4">Parité (H/F)</h3>
@@ -342,6 +382,8 @@
                 <div class="h-64 relative w-full">
                     <canvas id="seniorityChart"></canvas>
                 </div>
+            </div>
+        </div>
             </div>
         </div>
 

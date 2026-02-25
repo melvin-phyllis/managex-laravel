@@ -20,150 +20,177 @@
        
 
         <!-- Stats Cards -->
-        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-            <a href="{{ route('admin.employees.index') }}" class="bg-white rounded-xl p-4 shadow-sm border border-[#D4BC8B]/50 hover:shadow-md hover:border-[#1B3C35]/30 transition-all">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-[#1B3C35] rounded-xl flex items-center justify-center">
-                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <p class="text-2xl font-bold text-slate-800">{{ $stats['total_employees'] }}</p>
-                        <p class="text-xs text-slate-500">Employés</p>
-                    </div>
-                </div>
-            </a>
+        <div x-data="{ loaded: false }" x-init="setTimeout(() => loaded = true, 150)">
+            <div x-show="!loaded" x-transition:leave="transition ease-in duration-300" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+                <x-skeleton-loader type="stat-card" :count="5" :columns="5" />
+            </div>
+            <div x-show="loaded" x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" x-cloak>
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+                    <a href="{{ route('admin.employees.index') }}" class="bg-white rounded-xl p-4 shadow-sm border border-[#D4BC8B]/50 hover:shadow-md hover:border-[#1B3C35]/30 transition-all">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 bg-[#1B3C35] rounded-xl flex items-center justify-center">
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="text-2xl font-bold text-slate-800">{{ $stats['total_employees'] }}</p>
+                                <p class="text-xs text-slate-500">Employés</p>
+                            </div>
+                        </div>
+                    </a>
 
-            <a href="{{ route('admin.presences.index') }}" class="bg-white rounded-xl p-4 shadow-sm border border-[#D4BC8B]/50 hover:shadow-md hover:border-[#2D5A4E]/30 transition-all">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-[#2D5A4E] rounded-xl flex items-center justify-center">
-                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <p class="text-2xl font-bold text-slate-800">{{ $stats['presences_today'] }}</p>
-                        <p class="text-xs text-slate-500">Présents</p>
-                    </div>
-                </div>
-            </a>
+                    <a href="{{ route('admin.presences.index') }}" class="bg-white rounded-xl p-4 shadow-sm border border-[#D4BC8B]/50 hover:shadow-md hover:border-[#2D5A4E]/30 transition-all">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 bg-[#2D5A4E] rounded-xl flex items-center justify-center">
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="text-2xl font-bold text-slate-800">{{ $stats['presences_today'] }}</p>
+                                <p class="text-xs text-slate-500">Présents</p>
+                            </div>
+                        </div>
+                    </a>
 
-            <a href="{{ route('admin.tasks.index', ['statut' => 'pending']) }}" class="bg-white rounded-xl p-4 shadow-sm border border-[#D4BC8B]/50 hover:shadow-md hover:border-[#3D7A6A]/30 transition-all">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-[#3D7A6A] rounded-xl flex items-center justify-center">
-                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <p class="text-2xl font-bold text-slate-800">{{ $stats['pending_tasks'] }}</p>
-                        <p class="text-xs text-slate-500">Tâches</p>
-                    </div>
-                </div>
-            </a>
+                    <a href="{{ route('admin.tasks.index', ['statut' => 'pending']) }}" class="bg-white rounded-xl p-4 shadow-sm border border-[#D4BC8B]/50 hover:shadow-md hover:border-[#3D7A6A]/30 transition-all">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 bg-[#3D7A6A] rounded-xl flex items-center justify-center">
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="text-2xl font-bold text-slate-800">{{ $stats['pending_tasks'] }}</p>
+                                <p class="text-xs text-slate-500">Tâches</p>
+                            </div>
+                        </div>
+                    </a>
 
-            <a href="{{ route('admin.leaves.index', ['statut' => 'pending']) }}" class="bg-white rounded-xl p-4 shadow-sm border border-[#D4BC8B]/50 hover:shadow-md hover:border-[#C8A96E]/30 transition-all">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-[#C8A96E] rounded-xl flex items-center justify-center">
-                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <p class="text-2xl font-bold text-slate-800">{{ $stats['pending_leaves'] }}</p>
-                        <p class="text-xs text-slate-500">Congés</p>
-                    </div>
-                </div>
-            </a>
+                    <a href="{{ route('admin.leaves.index', ['statut' => 'pending']) }}" class="bg-white rounded-xl p-4 shadow-sm border border-[#D4BC8B]/50 hover:shadow-md hover:border-[#C8A96E]/30 transition-all">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 bg-[#C8A96E] rounded-xl flex items-center justify-center">
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="text-2xl font-bold text-slate-800">{{ $stats['pending_leaves'] }}</p>
+                                <p class="text-xs text-slate-500">Congés</p>
+                            </div>
+                        </div>
+                    </a>
 
-            <a href="{{ route('admin.surveys.index') }}" class="bg-white rounded-xl p-4 shadow-sm border border-[#D4BC8B]/50 hover:shadow-md hover:border-[#1B3C35]/30 transition-all">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-[#1B3C35] rounded-xl flex items-center justify-center">
-                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <p class="text-2xl font-bold text-slate-800">{{ $stats['active_surveys'] }}</p>
-                        <p class="text-xs text-slate-500">Sondages</p>
-                    </div>
+                    <a href="{{ route('admin.surveys.index') }}" class="bg-white rounded-xl p-4 shadow-sm border border-[#D4BC8B]/50 hover:shadow-md hover:border-[#1B3C35]/30 transition-all">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 bg-[#1B3C35] rounded-xl flex items-center justify-center">
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="text-2xl font-bold text-slate-800">{{ $stats['active_surveys'] }}</p>
+                                <p class="text-xs text-slate-500">Sondages</p>
+                            </div>
+                        </div>
+                    </a>
                 </div>
-            </a>
+            </div>
         </div>
 
-        <!-- Alerts, Activity & Calendar Row - 3 colonnes (simplifié) -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Alert Center -->
-            <div class="flex flex-col min-h-0" style="max-height: 350px;">
-                <x-alert-center :alerts="$alerts" :apiUrl="route('admin.dashboard.alerts')" class="flex flex-col min-h-0 max-h-full" />
+        <!-- Alerts, Activity & Calendar Row -->
+        <div x-data="{ loaded: false }" x-init="setTimeout(() => loaded = true, 400)">
+            <div x-show="!loaded" x-transition:leave="transition ease-in duration-300" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <x-skeleton-loader type="alert" :count="1" :columns="1" />
+                    <x-skeleton-loader type="activity" :count="1" :columns="1" />
+                    <x-skeleton-loader type="calendar" :count="1" :columns="1" />
+                </div>
             </div>
-
-            <!-- Activity Feed -->
-            <div style="max-height: 350px;" class="overflow-hidden flex flex-col">
-                <x-activity-feed
-                    :activities="$recentActivities"
-                    :apiUrl="route('admin.dashboard.activity')"
-                    :pollInterval="30000"
-                    :maxItems="10" />
-            </div>
-
-            <!-- Mini Calendar -->
-            <div style="max-height: 350px;" class="overflow-hidden flex flex-col">
-                <x-mini-calendar :events="$calendarEvents" />
+            <div x-show="loaded" x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" x-cloak>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="flex flex-col min-h-0" style="max-height: 350px;">
+                        <x-alert-center :alerts="$alerts" :apiUrl="route('admin.dashboard.alerts')" class="flex flex-col min-h-0 max-h-full" />
+                    </div>
+                    <div style="max-height: 350px;" class="overflow-hidden flex flex-col">
+                        <x-activity-feed
+                            :activities="$recentActivities"
+                            :apiUrl="route('admin.dashboard.activity')"
+                            :pollInterval="30000"
+                            :maxItems="10" />
+                    </div>
+                    <div style="max-height: 350px;" class="overflow-hidden flex flex-col">
+                        <x-mini-calendar :events="$calendarEvents" />
+                    </div>
+                </div>
             </div>
         </div>
 
         <!-- Planning de présence -->
-        <x-presence-planning :apiUrl="route('admin.dashboard.presence-planning')" />
+        <div x-data="{ loaded: false }" x-init="setTimeout(() => loaded = true, 600)">
+            <div x-show="!loaded" x-transition:leave="transition ease-in duration-300" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+                <x-skeleton-loader type="list" :count="1" :columns="1" />
+            </div>
+            <div x-show="loaded" x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" x-cloak>
+                <x-presence-planning :apiUrl="route('admin.dashboard.presence-planning')" />
+            </div>
+        </div>
 
         <!-- Charts Row -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <!-- Tasks Chart -->
-            <div class="bg-white rounded-xl shadow-sm border border-[#D4BC8B]/50 overflow-hidden">
-                <div class="px-5 py-4 bg-gradient-to-r from-slate-50 to-[#D4BC8B]/20 border-b border-[#D4BC8B]/30 flex items-center justify-between">
-                    <h3 class="font-semibold text-slate-800 flex items-center gap-2">
-                        <svg class="w-5 h-5 text-[#1B3C35]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-                        </svg>
-                        Répartition des tâches
-                    </h3>
-                    <a href="{{ route('admin.tasks.index') }}" class="text-sm text-[#1B3C35] hover:underline">Voir tout</a>
-                </div>
-                <div class="p-5 h-72">
-                    <canvas id="taskChart"></canvas>
-                </div>
+        <div x-data="{ loaded: false }" x-init="setTimeout(() => loaded = true, 800)">
+            <div x-show="!loaded" x-transition:leave="transition ease-in duration-300" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+                <x-skeleton-loader type="chart" :count="3" :columns="3" />
             </div>
+            <div x-show="loaded" x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" x-cloak>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Tasks Chart -->
+                    <div class="bg-white rounded-xl shadow-sm border border-[#D4BC8B]/50 overflow-hidden">
+                        <div class="px-5 py-4 bg-gradient-to-r from-slate-50 to-[#D4BC8B]/20 border-b border-[#D4BC8B]/30 flex items-center justify-between">
+                            <h3 class="font-semibold text-slate-800 flex items-center gap-2">
+                                <svg class="w-5 h-5 text-[#1B3C35]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                                </svg>
+                                Répartition des tâches
+                            </h3>
+                            <a href="{{ route('admin.tasks.index') }}" class="text-sm text-[#1B3C35] hover:underline">Voir tout</a>
+                        </div>
+                        <div class="p-5 h-72">
+                            <canvas id="taskChart"></canvas>
+                        </div>
+                    </div>
 
-            <!-- Présences Chart -->
-            <div class="bg-white rounded-xl shadow-sm border border-[#D4BC8B]/50 overflow-hidden">
-                <div class="px-5 py-4 bg-gradient-to-r from-slate-50 to-[#D4BC8B]/20 border-b border-[#D4BC8B]/30 flex items-center justify-between">
-                    <h3 class="font-semibold text-slate-800 flex items-center gap-2">
-                        <svg class="w-5 h-5 text-[#2D5A4E]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
-                        Présences mensuelles
-                    </h3>
-                    <a href="{{ route('admin.presences.index') }}" class="text-sm text-[#1B3C35] hover:underline">Voir tout</a>
-                </div>
-                <div class="p-5 h-72">
-                    <canvas id="presenceChart"></canvas>
-                </div>
-            </div>
+                    <!-- Présences Chart -->
+                    <div class="bg-white rounded-xl shadow-sm border border-[#D4BC8B]/50 overflow-hidden">
+                        <div class="px-5 py-4 bg-gradient-to-r from-slate-50 to-[#D4BC8B]/20 border-b border-[#D4BC8B]/30 flex items-center justify-between">
+                            <h3 class="font-semibold text-slate-800 flex items-center gap-2">
+                                <svg class="w-5 h-5 text-[#2D5A4E]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                                Présences mensuelles
+                            </h3>
+                            <a href="{{ route('admin.presences.index') }}" class="text-sm text-[#1B3C35] hover:underline">Voir tout</a>
+                        </div>
+                        <div class="p-5 h-72">
+                            <canvas id="presenceChart"></canvas>
+                        </div>
+                    </div>
 
-            <!-- Leave Chart -->
-            <div class="bg-white rounded-xl shadow-sm border border-[#D4BC8B]/50 overflow-hidden">
-                <div class="px-5 py-4 bg-gradient-to-r from-slate-50 to-[#D4BC8B]/20 border-b border-[#D4BC8B]/30 flex items-center justify-between">
-                    <h3 class="font-semibold text-slate-800 flex items-center gap-2">
-                        <svg class="w-5 h-5 text-[#C8A96E]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                        </svg>
-                        Congés par mois
-                    </h3>
-                    <a href="{{ route('admin.leaves.index') }}" class="text-sm text-[#1B3C35] hover:underline">Voir tout</a>
-                </div>
-                <div class="p-5 h-72">
-                    <canvas id="leaveChart"></canvas>
+                    <!-- Leave Chart -->
+                    <div class="bg-white rounded-xl shadow-sm border border-[#D4BC8B]/50 overflow-hidden">
+                        <div class="px-5 py-4 bg-gradient-to-r from-slate-50 to-[#D4BC8B]/20 border-b border-[#D4BC8B]/30 flex items-center justify-between">
+                            <h3 class="font-semibold text-slate-800 flex items-center gap-2">
+                                <svg class="w-5 h-5 text-[#C8A96E]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                </svg>
+                                Congés par mois
+                            </h3>
+                            <a href="{{ route('admin.leaves.index') }}" class="text-sm text-[#1B3C35] hover:underline">Voir tout</a>
+                        </div>
+                        <div class="p-5 h-72">
+                            <canvas id="leaveChart"></canvas>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

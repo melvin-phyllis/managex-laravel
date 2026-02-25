@@ -113,7 +113,12 @@
         </div>
 
         <!-- Quick Stats -->
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 animate-fade-in-up animation-delay-100">
+        <div x-data="{ loaded: false }" x-init="setTimeout(() => loaded = true, 200)">
+            <div x-show="!loaded" x-transition:leave="transition ease-in duration-300" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+                <x-skeleton-loader type="stat-card" :count="4" :columns="4" />
+            </div>
+            <div x-show="loaded" x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" x-cloak>
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 animate-fade-in-up animation-delay-100">
             <!-- Présences -->
             <a href="{{ route('employee.presences.index') }}" class="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 hover:shadow-md transition-all group" style="border-color: rgba(27, 60, 53, 0.2);">
                 <div class="flex items-center justify-between">
@@ -181,6 +186,8 @@
                 <p class="text-xs text-gray-500">Sondages</p>
                 <p class="text-xs font-medium mt-1" style="color: #5C6E68;">à compléter</p>
             </a>
+                </div>
+            </div>
         </div>
 
         <!-- Presence Check-in/out & Quick Actions -->
