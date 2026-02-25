@@ -123,6 +123,11 @@ class TaskController extends Controller
 
     public function edit(Task $task)
     {
+        if ($task->statut === 'validated') {
+            return redirect()->route('admin.tasks.show', $task)
+                ->with('error', 'Une tâche validée ne peut pas être modifiée.');
+        }
+
         $task->load('documents');
         $employees = User::where('role', 'employee')->orderBy('name')->get();
 
@@ -131,6 +136,11 @@ class TaskController extends Controller
 
     public function update(Request $request, Task $task)
     {
+        if ($task->statut === 'validated') {
+            return redirect()->route('admin.tasks.show', $task)
+                ->with('error', 'Une tâche validée ne peut pas être modifiée.');
+        }
+
         $request->validate([
             'user_id' => ['required', 'exists:users,id'],
             'titre' => ['required', 'string', 'max:255'],
@@ -312,6 +322,11 @@ class TaskController extends Controller
 
     public function destroy(Task $task)
     {
+        if ($task->statut === 'validated') {
+            return redirect()->route('admin.tasks.show', $task)
+                ->with('error', 'Une tâche validée ne peut pas être supprimée.');
+        }
+
         // Supprimer les fichiers associes
         foreach ($task->documents as $doc) {
             \Storage::disk('documents')->delete($doc->file_path);

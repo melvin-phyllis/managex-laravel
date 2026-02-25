@@ -326,7 +326,8 @@
                     </dl>
                 </div>
 
-                <!-- Delete -->
+                <!-- Delete (caché si validée) -->
+                @if($task->statut !== 'validated')
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                     <h3 class="text-sm font-medium text-gray-500 uppercase tracking-wider mb-4">Zone de danger</h3>
                     <form action="{{ route('admin.tasks.destroy', $task) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette tâche ?')">
@@ -338,6 +339,7 @@
                         </button>
                     </form>
                 </div>
+                @endif
             </div>
         </div>
     </div>
