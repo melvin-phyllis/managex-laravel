@@ -122,43 +122,49 @@
                 <!-- Actions -->
                 @if($task->statut === 'pending')
                     <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Actions</h3>
-                        <div class="flex items-center space-x-4">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                            <svg class="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            Tâche en attente — Actions requises
+                        </h3>
+                        <div class="flex items-center gap-4">
                             <form action="{{ route('admin.tasks.approve', $task) }}" method="POST" class="flex-1">
                                 @csrf
-                                <button type="submit" class="w-full px-4 py-3 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center">
+                                <button type="submit" class="w-full px-5 py-3.5 bg-emerald-500 text-white font-semibold rounded-xl hover:bg-emerald-600 transition-all shadow-lg shadow-emerald-500/25 flex items-center justify-center text-sm">
                                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                                     </svg>
-                                    Approuver la tâche
+                                    ✅ Approuver la tâche
                                 </button>
                             </form>
                             <form action="{{ route('admin.tasks.reject', $task) }}" method="POST" class="flex-1">
                                 @csrf
                                 <input type="hidden" name="rejection_reason" value="Tâche non approuvée">
-                                <button type="submit" class="w-full px-4 py-3 bg-[#1B3C35] text-white font-medium rounded-lg hover:bg-[#163530] transition-colors flex items-center justify-center" onclick="var r=prompt('Motif du rejet :'); if(!r) return false; this.form.rejection_reason.value=r;">
+                                <button type="submit" class="w-full px-5 py-3.5 bg-red-500 text-white font-semibold rounded-xl hover:bg-red-600 transition-all shadow-lg shadow-red-500/25 flex items-center justify-center text-sm" onclick="var r=prompt('Motif du rejet :'); if(!r) return false; this.form.rejection_reason.value=r;">
                                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                                     </svg>
-                                    Rejeter la tâche
+                                    ❌ Rejeter la tâche
                                 </button>
                             </form>
                         </div>
                     </div>
                 @elseif(in_array($task->statut, ['approved', 'in_progress']))
                     <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Actions d'administration</h3>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                            <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            Tâche en cours — Actions d'administration
+                        </h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <a href="{{ route('admin.tasks.edit', $task) }}" class="flex items-center justify-center px-4 py-2 bg-[#1B3C35] text-white font-medium rounded-lg hover:bg-[#163530] transition-colors">
+                            <a href="{{ route('admin.tasks.edit', $task) }}" class="flex items-center justify-center px-5 py-3 bg-amber-500 text-white font-semibold rounded-xl hover:bg-amber-600 transition-all shadow-lg shadow-amber-500/25 text-sm">
                                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                                Modifier
+                                ✏️ Modifier
                             </a>
                             
                             <form action="{{ route('admin.tasks.remind', $task) }}" method="POST">
                                 @csrf
-                                <button type="submit" class="w-full flex items-center justify-center px-4 py-2 bg-amber-500 text-white font-medium rounded-lg hover:bg-amber-600 transition-colors">
+                                <button type="submit" class="w-full flex items-center justify-center px-5 py-3 bg-orange-500 text-white font-semibold rounded-xl hover:bg-orange-600 transition-all shadow-lg shadow-orange-500/25 text-sm">
                                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
-                                    Envoyer un rappel
+                                    🔔 Envoyer un rappel
                                 </button>
                             </form>
 
@@ -170,18 +176,18 @@
                                 <input type="hidden" name="titre" value="{{ $task->titre }}">
                                 <input type="hidden" name="priorite" value="{{ $task->priorite }}">
                                 
-                                <button type="submit" class="w-full flex items-center justify-center px-4 py-2 bg-[#1B3C35] text-white font-medium rounded-lg hover:bg-[#163530] transition-colors" onclick="return confirm('Forcer la fin de cette tâche ?')">
+                                <button type="submit" class="w-full flex items-center justify-center px-5 py-3 bg-teal-500 text-white font-semibold rounded-xl hover:bg-teal-600 transition-all shadow-lg shadow-teal-500/25 text-sm" onclick="return confirm('Forcer la fin de cette tâche ?')">
                                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                                    Marquer terminée
+                                    ✅ Marquer terminée
                                 </button>
                             </form>
                 
                             <form action="{{ route('admin.tasks.reject', $task) }}" method="POST">
                                 @csrf
                                 <input type="hidden" name="rejection_reason" value="Tâche annulée">
-                                <button type="submit" class="w-full flex items-center justify-center px-4 py-2 bg-[#1B3C35] text-white font-medium rounded-lg hover:bg-[#163530] transition-colors" onclick="var r=prompt('Motif du rejet / annulation :'); if(!r) return false; this.form.rejection_reason.value=r;">
+                                <button type="submit" class="w-full flex items-center justify-center px-5 py-3 bg-red-500 text-white font-semibold rounded-xl hover:bg-red-600 transition-all shadow-lg shadow-red-500/25 text-sm" onclick="var r=prompt('Motif du rejet / annulation :'); if(!r) return false; this.form.rejection_reason.value=r;">
                                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-                                    Annuler / Rejeter
+                                    ❌ Annuler / Rejeter
                                 </button>
                             </form>
                         </div>
@@ -226,9 +232,9 @@
                                           placeholder="Pourquoi cette note ?"></textarea>
                             </div>
 
-                            <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#1B3C35] hover:bg-[#163530] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#2D5A4E] transition-colors">
+                            <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-lg shadow-teal-500/25 text-sm font-semibold text-white bg-teal-500 hover:bg-teal-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-all">
                                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                                Valider et Noter
+                                ✅ Valider et Noter
                             </button>
                         </form>
 
@@ -241,9 +247,9 @@
                                               class="mt-1 block w-full rounded-md border-red-300 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm"
                                               placeholder="Pourquoi cette tâche est rejetée ?"></textarea>
                                 </div>
-                                <button type="submit" class="w-full flex justify-center py-2 px-4 border border-red-300 rounded-md shadow-sm text-sm font-medium text-red-700 bg-red-50 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors" onclick="return confirm('Rejeter cette tâche ? Les notes seront mises à zéro.')">
+                                <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-lg shadow-red-500/25 text-sm font-semibold text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all" onclick="return confirm('Rejeter cette tâche ? Les notes seront mises à zéro.')">
                                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                                    Rejeter (Non satisfaisant)
+                                    ❌ Rejeter (Non satisfaisant)
                                 </button>
                             </form>
                         </div>
@@ -326,8 +332,9 @@
                     <form action="{{ route('admin.tasks.destroy', $task) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette tâche ?')">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="w-full px-4 py-2 bg-[#E8F0ED] text-[#163530] font-medium rounded-lg hover:bg-[#B8D1C7] transition-colors">
-                            Supprimer la tâche
+                        <button type="submit" class="w-full px-4 py-3 bg-red-500 text-white font-semibold rounded-xl hover:bg-red-600 transition-all shadow-lg shadow-red-500/25 flex items-center justify-center text-sm">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                            🗑️ Supprimer la tâche
                         </button>
                     </form>
                 </div>

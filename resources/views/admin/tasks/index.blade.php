@@ -403,50 +403,53 @@
                             @endif
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <div class="flex items-center justify-end space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                <a href="{{ route('admin.tasks.show', $task) }}" class="p-1.5 text-gray-500 hover:text-[#1B3C35] hover:bg-[#F0F5F3] rounded-lg transition-colors" title="Voir">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                            <div class="flex items-center justify-end gap-1.5">
+                                {{-- Voir --}}
+                                <a href="{{ route('admin.tasks.show', $task) }}" class="inline-flex items-center px-2.5 py-1.5 bg-blue-50 text-blue-600 text-xs font-semibold rounded-lg hover:bg-blue-100 border border-blue-200 transition-colors" title="Voir">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                    Voir
                                 </a>
-                                <a href="{{ route('admin.tasks.edit', $task) }}" class="p-1.5 text-gray-500 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors" title="Modifier">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                                {{-- Modifier --}}
+                                <a href="{{ route('admin.tasks.edit', $task) }}" class="inline-flex items-center px-2.5 py-1.5 bg-amber-50 text-amber-700 text-xs font-semibold rounded-lg hover:bg-amber-100 border border-amber-200 transition-colors" title="Modifier">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                                    Modifier
                                 </a>
                                 
                                 @if($task->statut === 'pending')
+                                    {{-- Approuver --}}
                                     <form action="{{ route('admin.tasks.approve', $task) }}" method="POST" class="inline">
                                         @csrf
-                                        <button type="submit" class="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors" title="Approuver">
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                        <button type="submit" class="inline-flex items-center px-2.5 py-1.5 bg-emerald-500 text-white text-xs font-semibold rounded-lg hover:bg-emerald-600 shadow-sm transition-colors" title="Approuver">
+                                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                            Approuver
                                         </button>
                                     </form>
                                 @elseif($task->statut === 'completed')
-                                    <form action="{{ route('admin.tasks.validate', $task) }}" method="POST" class="inline-flex items-center gap-1">
+                                    {{-- Valider + Note --}}
+                                    <form action="{{ route('admin.tasks.validate', $task) }}" method="POST" class="inline-flex items-center gap-1.5">
                                         @csrf
-                                        <div class="relative group/rating">
-                                            <input type="number" name="rating" min="0" max="10" placeholder="/10" required
-                                                   class="w-12 px-1 py-1 text-xs border border-gray-300 rounded focus:ring-[#2D5A4E] focus:border-[#2D5A4E] text-center"
-                                                   title="Note sur 10">
-                                            <!-- Tooltip -->
-                                            <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 hidden group-hover/rating:block bg-gray-900 text-white text-[10px] px-2 py-1 rounded whitespace-nowrap">
-                                                Note sur 10
-                                            </div>
-                                        </div>
-                                        <button type="submit" class="p-1.5 text-[#1B3C35] hover:text-[#0F2A25] hover:bg-[#F0F5F3] rounded-lg transition-colors" title="Valider et Noter">
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                        <input type="number" name="rating" min="0" max="10" placeholder="/10" required
+                                               class="w-14 px-2 py-1.5 text-xs border-2 border-teal-300 rounded-lg focus:ring-teal-500 focus:border-teal-500 text-center font-semibold bg-teal-50"
+                                               title="Note sur 10">
+                                        <button type="submit" class="inline-flex items-center px-2.5 py-1.5 bg-teal-500 text-white text-xs font-semibold rounded-lg hover:bg-teal-600 shadow-sm transition-colors" title="Valider et Noter">
+                                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                            Valider
                                         </button>
                                     </form>
                                 @endif
 
                                 @if($task->rating !== null)
-                                    <div class="flex items-center justify-center w-8 h-8 rounded-full {{ $task->rating >= 7 ? 'bg-[#E8F0ED] text-[#163530]' : ($task->rating >= 5 ? 'bg-amber-100 text-amber-700' : 'bg-[#E8F0ED] text-[#163530]') }} font-bold text-xs" title="Note: {{ $task->rating }}/10">
+                                    <div class="flex items-center justify-center w-8 h-8 rounded-full {{ $task->rating >= 7 ? 'bg-emerald-100 text-emerald-700' : ($task->rating >= 5 ? 'bg-amber-100 text-amber-700' : 'bg-red-100 text-red-600') }} font-bold text-xs ring-2 ring-white" title="Note: {{ $task->rating }}/10">
                                         {{ $task->rating }}
                                     </div>
                                 @endif
 
+                                {{-- Supprimer --}}
                                 <button type="button" 
                                         @click="confirmDelete('{{ route('admin.tasks.destroy', $task) }}')"
-                                        class="p-1.5 text-gray-500 hover:text-[#1B3C35] hover:bg-[#F0F5F3] rounded-lg transition-colors" 
+                                        class="inline-flex items-center p-1.5 text-red-400 hover:text-white hover:bg-red-500 rounded-lg transition-colors border border-red-200 hover:border-red-500" 
                                         title="Supprimer">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                                 </button>
                             </div>
                         </td>
