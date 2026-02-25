@@ -39,6 +39,7 @@ class SurveyController extends Controller
         $request->validate([
             'titre' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string', 'max:1000'],
+            'is_anonymous' => ['boolean'],
             'date_limite' => ['nullable', 'date', 'after:today'],
             'questions' => ['required', 'array', 'min:1'],
             'questions.*.question' => ['required', 'string', 'max:500'],
@@ -52,6 +53,7 @@ class SurveyController extends Controller
             'titre' => $request->titre,
             'description' => $request->description,
             'is_active' => true,
+            'is_anonymous' => $request->boolean('is_anonymous', false),
             'date_limite' => $request->date_limite,
         ]);
 
@@ -91,9 +93,17 @@ class SurveyController extends Controller
         }
 
         // Comptage des employés pour le calcul du taux de réponse
-        $totalEmployees = \App\Models\User::where('role', 'employee')->count();
+        $totalEmployees = \App\Models\User::where('role', 'employee')->where('status', 'active')->count();
 
         return view('admin.surveys.results', compact('survey', 'statistics', 'totalEmployees'));
+    }
+
+    public function participants(Survey $survey)
+    {
+        $respondents = $survey->respondents;
+        $nonRespondents = $survey->non_respondents;
+
+        return view('admin.surveys.participants', compact('survey', 'respondents', 'nonRespondents'));
     }
 
     public function toggle(Survey $survey)

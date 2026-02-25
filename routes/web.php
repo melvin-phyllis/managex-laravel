@@ -360,6 +360,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     // Gestion des sondages
     Route::resource('surveys', AdminSurveyController::class)->except(['edit', 'update']);
     Route::get('/surveys/{survey}/results', [AdminSurveyController::class, 'results'])->name('surveys.results');
+    Route::get('/surveys/{survey}/participants', [AdminSurveyController::class, 'participants'])->name('surveys.participants');
     Route::post('/surveys/{survey}/toggle', [AdminSurveyController::class, 'toggle'])->name('surveys.toggle');
 
     // Gestion des départements (API pour sélecteurs)

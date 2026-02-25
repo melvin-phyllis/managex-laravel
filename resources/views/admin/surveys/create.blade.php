@@ -80,10 +80,16 @@
                         @enderror
                     </div>
 
-                    <div class="flex items-center h-full pt-6">
+                    <div class="flex items-center space-x-6 h-full pt-6">
                         <label class="inline-flex items-center cursor-pointer">
                             <input type="checkbox" name="is_active" id="is_active" value="1" {{ old('is_active', true) ? 'checked' : '' }} class="rounded border-gray-300 text-[#1B3C35] focus:ring-[#2D5A4E] w-5 h-5">
                             <span class="ml-2 text-sm text-gray-700">Activer immédiatement</span>
+                        </label>
+
+                        <label class="inline-flex items-center cursor-pointer" title="Les noms des répondants seront masqués dans les résultats">
+                            <input type="checkbox" name="is_anonymous" id="is_anonymous" value="1" {{ old('is_anonymous') ? 'checked' : '' }} class="rounded border-gray-300 text-[#1B3C35] focus:ring-[#2D5A4E] w-5 h-5">
+                            <span class="ml-2 text-sm text-gray-700">Sondage anonyme</span>
+                            <x-icon name="info" class="w-4 h-4 ml-1 text-gray-400" />
                         </label>
                     </div>
                 </div>

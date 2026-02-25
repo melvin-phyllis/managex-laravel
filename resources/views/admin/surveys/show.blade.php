@@ -75,6 +75,20 @@
                                 @endif
                             </dd>
                         </div>
+                        @if($survey->is_anonymous)
+                            <div>
+                                <dt class="text-sm text-gray-500 flex items-center gap-1.5">
+                                    <x-icon name="user-x" class="w-4 h-4" />
+                                    Anonymat
+                                </dt>
+                                <dd class="mt-1">
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800 border border-purple-200">
+                                        <x-icon name="shield" class="w-3 h-3 mr-1.5" />
+                                        Sondage Anonyme
+                                    </span>
+                                </dd>
+                            </div>
+                        @endif
                         <div>
                             <dt class="text-sm text-gray-500 flex items-center gap-1.5">
                                 <x-icon name="help-circle" class="w-4 h-4" />
@@ -127,6 +141,10 @@
                         Actions
                     </h3>
                     <div class="space-y-3">
+                        <a href="{{ route('admin.surveys.participants', $survey) }}" class="w-full px-4 py-2.5 font-medium rounded-xl transition-colors flex items-center justify-center gap-2 border" style="background-color: rgba(59, 130, 246, 0.1); color: #3B82F6; border-color: rgba(59, 130, 246, 0.2);" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+                            <x-icon name="users" class="w-5 h-5" />
+                            Voir les participants
+                        </a>
                         <form action="{{ route('admin.surveys.toggle', $survey) }}" method="POST">
                             @csrf
                             <button type="submit" class="w-full px-4 py-2.5 font-medium rounded-xl transition-colors flex items-center justify-center gap-2 border" style="{{ $survey->is_active ? 'background-color: rgba(245, 158, 11, 0.1); color: #F59E0B; border-color: rgba(245, 158, 11, 0.2);' : 'background-color: rgba(45, 90, 78, 0.1); color: #2D5A4E; border-color: rgba(45, 90, 78, 0.2);' }}" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">

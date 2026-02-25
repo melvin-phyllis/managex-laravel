@@ -17,11 +17,13 @@ class Survey extends Model
         'description',
         'is_active',
         'date_limite',
+        'is_anonymous',
     ];
 
     protected $casts = [
         'is_active' => 'boolean',
         'date_limite' => 'date',
+        'is_anonymous' => 'boolean',
     ];
 
     /**
@@ -82,5 +84,30 @@ class Survey extends Model
     public function getIsExpiredAttribute(): bool
     {
         return $this->date_limite && $this->date_limite->isPast();
+    }
+
+    /**
+     * Get users who have responded to this survey
+     */
+    public function getRespondentsAttribute()
+    {
+        return User::whereHas('surveyResponses', function ($query) {
+            $query->whereIn('survey_question_id', $this->questions->pluck('id'));
+        })->get();
+    }
+
+    /**
+     * Get active employees who have NOT responded to this survey
+     */
+    public function getNonRespondentsAttribute()
+    {
+        $respondentIds = SurveyResponse::whereIn('survey_question_id', $this->questions->pluck('id'))
+            ->pluck('user_id')
+            ->unique();
+
+        return User::where('role', 'employee')
+            ->where('status', 'active')
+            ->whereNotIn('id', $respondentIds)
+            ->get();
     }
 }

@@ -174,10 +174,17 @@
                                     <div class="bg-gray-50/80 rounded-xl p-4 border border-gray-100">
                                         <p class="text-gray-800 leading-relaxed">{{ $response->reponse }}</p>
                                         <div class="flex items-center gap-2 mt-3 pt-3 border-t border-gray-100">
-                                            <div class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold" style="background-color: rgba(45, 90, 78, 0.15); color: #2D5A4E;">
-                                                {{ strtoupper(substr($response->user->name, 0, 1)) }}
-                                            </div>
-                                            <p class="text-xs text-gray-500 font-medium">{{ $response->user->name }}</p>
+                                            @if($survey->is_anonymous)
+                                                <div class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold bg-gray-200 text-gray-600">
+                                                    A
+                                                </div>
+                                                <p class="text-xs text-gray-500 font-medium italic">Anonyme</p>
+                                            @else
+                                                <div class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold" style="background-color: rgba(45, 90, 78, 0.15); color: #2D5A4E;">
+                                                    {{ strtoupper(substr($response->user->name, 0, 1)) }}
+                                                </div>
+                                                <p class="text-xs text-gray-500 font-medium">{{ $response->user->name }}</p>
+                                            @endif
                                             <span class="text-xs text-gray-400">•</span>
                                             <p class="text-xs text-gray-400">{{ $response->created_at->format('d/m/Y H:i') }}</p>
                                         </div>
