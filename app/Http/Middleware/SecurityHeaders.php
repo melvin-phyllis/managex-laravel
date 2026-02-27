@@ -104,16 +104,16 @@ class SecurityHeaders
         // Styles: fonts + CDNs (Lightbox CSS, FullCalendar CSS, Leaflet CSS, etc.)
         // NOTE: 'unsafe-inline' est nécessaire pour les attributs style="" inline
         // Le nonce seul ne couvre pas les style attributes selon la spec CSP
-        $styleCdns = 'https://fonts.googleapis.com https://fonts.bunny.net https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://unpkg.com https://onesignal.com https://*.onesignal.com';
+        $styleCdns = 'https://fonts.googleapis.com https://fonts.bunny.net https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://unpkg.com https://onesignal.com https://*.onesignal.com https://embed.tawk.to https://*.tawk.to';
         // En production ET en dev, on a besoin de unsafe-inline pour les styles
         // car de nombreux composants utilisent des attributs style="" inline
         $styleSrc = "'self' 'unsafe-inline' {$styleCdns}";
 
         // Images: self, data URIs, blob URIs (image previews), et HTTPS pour les images externes
-        $imgSrc = "'self' data: blob: https:";
+        $imgSrc = "'self' data: blob: https://embed.tawk.to https://*.tawk.to https:";
 
-        // Fonts: Google Fonts, Bunny Fonts
-        $fontSrc = "'self' data: https://fonts.gstatic.com https://fonts.bunny.net";
+        // Fonts: Google Fonts, Bunny Fonts, Tawk.to fonts
+        $fontSrc = "'self' data: https://fonts.gstatic.com https://fonts.bunny.net https://embed.tawk.to https://*.tawk.to";
 
         // Connexions: self, WebSockets, CDNs pour source maps, et OpenStreetMap pour géolocalisation
         $connectSrc = "'self' wss: ws: https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://unpkg.com https://nominatim.openstreetmap.org https://cloudflareinsights.com https://onesignal.com https://*.onesignal.com https://embed.tawk.to https://*.tawk.to wss://*.tawk.to";
