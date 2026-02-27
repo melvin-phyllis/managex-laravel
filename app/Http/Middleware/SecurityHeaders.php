@@ -96,7 +96,7 @@ class SecurityHeaders
 
         // Scripts: CDNs nécessaires (Chart.js, Alpine.js, jQuery, Lightbox, etc.)
         // NOTE: 'unsafe-eval' est nécessaire pour Alpine.js (évaluation des expressions x-data)
-        $scriptCdns = 'https://cdn.jsdelivr.net https://unpkg.com https://cdnjs.cloudflare.com https://code.jquery.com https://static.cloudflareinsights.com https://onesignal.com https://*.onesignal.com';
+        $scriptCdns = 'https://cdn.jsdelivr.net https://unpkg.com https://cdnjs.cloudflare.com https://code.jquery.com https://static.cloudflareinsights.com https://onesignal.com https://*.onesignal.com https://embed.tawk.to https://*.tawk.to';
         // Alpine.js nécessite 'unsafe-eval' pour évaluer les expressions comme x-data="{ open: false }"
         // C'est un compromis nécessaire pour l'interactivité frontend
         $scriptSrc = "'self' 'unsafe-inline' 'unsafe-eval' {$scriptCdns}";
@@ -116,7 +116,7 @@ class SecurityHeaders
         $fontSrc = "'self' data: https://fonts.gstatic.com https://fonts.bunny.net";
 
         // Connexions: self, WebSockets, CDNs pour source maps, et OpenStreetMap pour géolocalisation
-        $connectSrc = "'self' wss: ws: https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://unpkg.com https://nominatim.openstreetmap.org https://cloudflareinsights.com https://onesignal.com https://*.onesignal.com";
+        $connectSrc = "'self' wss: ws: https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://unpkg.com https://nominatim.openstreetmap.org https://cloudflareinsights.com https://onesignal.com https://*.onesignal.com https://embed.tawk.to https://*.tawk.to wss://*.tawk.to";
 
         // Frame ancestors: self (clickjacking protection)
         $frameAncestors = "'self'";
@@ -130,6 +130,9 @@ class SecurityHeaders
         // Worker source: allow blob URLs for web workers
         $workerSrc = "'self' blob: https://cdn.onesignal.com";
 
+        // Tawk.to iframes
+        $frameSrc = "'self' https://embed.tawk.to https://*.tawk.to";
+
         return implode('; ', [
             "default-src {$defaultSrc}",
             "script-src {$scriptSrc}",
@@ -139,6 +142,7 @@ class SecurityHeaders
             "font-src {$fontSrc}",
             "connect-src {$connectSrc}",
             "worker-src {$workerSrc}",
+            "frame-src {$frameSrc}",
             "frame-ancestors {$frameAncestors}",
             "form-action {$formAction}",
             "base-uri {$baseUri}",
