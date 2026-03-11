@@ -151,12 +151,12 @@ Schedule::command('notifications:send-reminders')
     ->onOneServer();
 
 // ==========================================
-// Daily Report (Compte Rendu Quotidien)
+// Weekly Report (Rapport Hebdomadaire)
 // ==========================================
 
-// Daily at 19:00 - Send daily summary report to admins
-Schedule::command('report:daily')
-    ->weekdays()
-    ->dailyAt('19:00')
+// Friday at 19:00 - Send weekly presence report to admins
+Schedule::command('report:weekly')
+    ->weeklyOn(5, '19:00')
     ->timezone('Africa/Abidjan')
+    ->withoutOverlapping()
     ->onOneServer();

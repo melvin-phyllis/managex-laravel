@@ -1,4 +1,4 @@
-﻿<x-layouts.admin>
+<x-layouts.admin>
     <div class="space-y-6" x-data="settingsPage()">
         <!-- Header avec gradient -->
         <div class="relative overflow-hidden rounded-2xl shadow-xl" style="background: linear-gradient(135deg, #1B3C35, #3D7A6A) !important;">
@@ -117,6 +117,14 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/>
                     </svg>
                     Paie
+                </button>
+                <button @click="activeTab = 'apropos'"
+                        :class="activeTab === 'apropos' ? 'bg-gradient-to-r from-[#C8A96E] to-[#1B3C35] text-white shadow-lg shadow-[#C8A96E]/30' : 'text-gray-600 hover:bg-gray-100'"
+                        class="whitespace-nowrap py-2.5 px-4 font-medium text-sm flex items-center gap-2 transition-all rounded-lg">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    À propos
                 </button>
             </nav>
         </div>
@@ -801,7 +809,129 @@
                 </div>
             </form>
         </div>
-    </div>
+
+        {{-- ═══ TAB: À PROPOS ═══ --}}
+        <div x-show="activeTab === 'apropos'" class="space-y-6">
+
+            {{-- Carte identité app --}}
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                <div class="px-5 py-4" style="background: linear-gradient(135deg, #1B3C35, #C8A96E);">
+                    <h3 class="text-white font-semibold flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        À propos de ManageX
+                    </h3>
+                </div>
+                <div class="p-6">
+                    <div class="flex items-center gap-6 mb-6">
+                        <div class="w-20 h-20 rounded-2xl flex items-center justify-center text-white text-3xl font-bold shadow-lg" style="background: linear-gradient(135deg, #1B3C35, #3D7A6A);">
+                            M
+                        </div>
+                        <div>
+                            <h2 class="text-2xl font-bold text-gray-900">ManageX</h2>
+                            <p class="text-gray-500 text-sm">Système de Gestion des Ressources Humaines</p>
+                            <span class="inline-flex items-center gap-1.5 mt-2 px-3 py-1 rounded-full text-xs font-semibold text-white" style="background: linear-gradient(135deg, #1B3C35, #3D7A6A);">
+                                <span class="w-1.5 h-1.5 bg-green-300 rounded-full animate-pulse"></span>
+                                Version 1.0.0 — Stable
+                            </span>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div class="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                            <p class="text-xs font-medium text-gray-400 uppercase tracking-wider mb-1">Éditeur</p>
+                            <p class="text-sm font-semibold text-gray-900">YA Consulting</p>
+                            <p class="text-xs text-gray-500 mt-0.5">Abidjan, Côte d'Ivoire</p>
+                        </div>
+                        <div class="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                            <p class="text-xs font-medium text-gray-400 uppercase tracking-wider mb-1">Année de création</p>
+                            <p class="text-sm font-semibold text-gray-900">2024</p>
+                            <p class="text-xs text-gray-500 mt-0.5">Lancé en production</p>
+                        </div>
+                        <div class="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                            <p class="text-xs font-medium text-gray-400 uppercase tracking-wider mb-1">Licence</p>
+                            <p class="text-sm font-semibold text-gray-900">Propriétaire</p>
+                            <p class="text-xs text-gray-500 mt-0.5">Tous droits réservés</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Développeur --}}
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                <div class="px-5 py-4 border-b border-gray-100">
+                    <h3 class="font-semibold text-gray-900 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-[#1B3C35]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+                        </svg>
+                        Développeur
+                    </h3>
+                </div>
+                <div class="p-6">
+                    <div class="flex items-center gap-5">
+                        <div class="w-14 h-14 rounded-full flex items-center justify-center text-white text-xl font-bold shadow-md" style="background: linear-gradient(135deg, #1B3C35, #3D7A6A);">
+                            AM
+                        </div>
+                        <div>
+                            <p class="text-base font-semibold text-gray-900">Akou Melvin</p>
+                            <p class="text-sm text-gray-500">Développeur Full-Stack</p>
+                            <a href="https://github.com/melvin-phyllis" target="_blank" class="inline-flex items-center gap-1.5 mt-2 text-sm font-medium text-[#1B3C35] hover:underline">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                                github.com/melvin-phyllis
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Contact & Support --}}
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                <div class="px-5 py-4 border-b border-gray-100">
+                    <h3 class="font-semibold text-gray-900 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-[#1B3C35]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                        </svg>
+                        Support &amp; Contact
+                    </h3>
+                </div>
+                <div class="p-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <a href="mailto:support@managex.ci" class="flex items-center gap-3 p-4 rounded-xl border border-gray-100 hover:border-[#1B3C35] hover:bg-[#F0F5F3] transition-all">
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:#E8F0ED;">
+                            <svg class="w-5 h-5 text-[#1B3C35]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-400">Email support</p>
+                            <p class="text-sm font-medium text-gray-900">courriel@ya-consulting.com</p>
+                        </div>
+                    </a>
+                    <a href="https://ya-consulting.com" target="_blank" class="flex items-center gap-3 p-4 rounded-xl border border-gray-100 hover:border-[#1B3C35] hover:bg-[#F0F5F3] transition-all">
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:#E8F0ED;">
+                            <svg class="w-5 h-5 text-[#1B3C35]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9"/></svg>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-400">Site web</p>
+                            <p class="text-sm font-medium text-gray-900">managex.ci</p>
+                        </div>
+                    </a>
+                    <div class="flex items-center gap-3 p-4 rounded-xl border border-gray-100 bg-gray-50">
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:#E8F0ED;">
+                            <svg class="w-5 h-5 text-[#1B3C35]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-400">Support horaires</p>
+                            <p class="text-sm font-medium text-gray-900">Lun–Ven · 8h–18h</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Copyright --}}
+            <p class="text-center text-xs text-gray-400 pb-2">
+                &copy; {{ date('Y') }} ManageX &middot; Développé par <strong class="text-[#1B3C35]">YA Consulting</strong> &middot; Tous droits réservés
+            </p>
+        </div>{{-- end tab apropos --}}
+
+    </div>{{-- end x-data wrapper --}}
 
     <script nonce="{{ $cspNonce ?? '' }}">
         function settingsPage() {
@@ -862,4 +992,5 @@
             }
         }
     </script>
+
 </x-layouts.admin>

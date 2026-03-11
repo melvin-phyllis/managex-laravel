@@ -251,6 +251,7 @@
       .footer-bottom{flex-direction:column;gap:.75rem;text-align:center}
       .integrations-grid{gap:.6rem}
       .integration-icon{width:44px;height:44px;font-size:1.2rem}
+      #about .container>div{grid-template-columns:1fr!important;gap:2rem!important}
     }
   </style>
 </head>
@@ -264,6 +265,7 @@
       <nav class="nav-links">
         <a href="#features">Fonctionnalités</a>
         <a href="#integrations">Intégrations</a>
+        <a href="#about">À propos</a>
         <a href="#testimonials">Témoignages</a>
         <a href="#contact">Contact</a>
       </nav>
@@ -287,6 +289,7 @@
       <nav class="mobile-nav">
         <a href="#features">Fonctionnalités</a>
         <a href="#integrations">Intégrations</a>
+        <a href="#about">À propos</a>
         <a href="#testimonials">Témoignages</a>
         <a href="#contact">Contact</a>
         <div class="mobile-nav-divider"></div>
@@ -504,6 +507,95 @@
           <div class="integration-icon" title="API REST">
             <svg viewBox="0 0 24 24" width="32" height="32"><polyline points="16 18 22 12 16 6" fill="none" stroke="#7C4DFF" stroke-width="1.5" stroke-linecap="round"/><polyline points="8 6 2 12 8 18" fill="none" stroke="#7C4DFF" stroke-width="1.5" stroke-linecap="round"/><line x1="14" y1="4" x2="10" y2="20" stroke="#7C4DFF" stroke-width="1.5" stroke-linecap="round"/></svg>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ À PROPOS ═══ -->
+    <section class="section" id="about" style="background:var(--cream-light);border-top:1px solid var(--cream-dark);border-bottom:1px solid var(--cream-dark)">
+      <div class="container">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center">
+
+          <!-- Texte -->
+          <div class="reveal">
+            <span class="section-tag">À propos de ManageX</span>
+            <h2 class="section-title">Né en Afrique,<br><em style="font-style:italic;color:var(--green-accent)">pensé pour l'Afrique</em></h2>
+            <p style="font-size:.95rem;color:var(--muted);margin-top:1rem;line-height:1.8">
+              ManageX est une solution RH moderne développée par <strong style="color:var(--green)">YA Consulting</strong>,
+              conçue spécifiquement pour répondre aux réalités des entreprises africaines&nbsp;:
+              structures multi-sites, particularités légales locales (CNPS, IRPP), connectivité variable et équipes sur le terrain.
+            </p>
+            <p style="font-size:.95rem;color:var(--muted);margin-top:.85rem;line-height:1.8">
+              Depuis 2024, nous accompagnons plus de <strong style="color:var(--green)">150 entreprises</strong> en Côte d'Ivoire
+              et en Afrique de l'Ouest dans la digitalisation de leur gestion des ressources humaines, avec un support
+              local réactif et des mises à jour continues.
+            </p>
+
+            <!-- Valeurs -->
+            <div style="display:flex;flex-direction:column;gap:.75rem;margin-top:2rem">
+              <div style="display:flex;align-items:center;gap:.75rem">
+                <div style="width:32px;height:32px;border-radius:8px;background:rgba(27,60,53,.08);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                </div>
+                <span style="font-size:.875rem;color:var(--muted)"><strong style="color:var(--fg)">Sécurité &amp; Confidentialité</strong> — Données hébergées localement, chiffrement SSL et contrôle d'accès strict.</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:.75rem">
+                <div style="width:32px;height:32px;border-radius:8px;background:rgba(27,60,53,.08);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                </div>
+                <span style="font-size:.875rem;color:var(--muted)"><strong style="color:var(--fg)">Support réactif</strong> — Notre équipe répond en moins de 24h, en français et en anglais.</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:.75rem">
+                <div style="width:32px;height:32px;border-radius:8px;background:rgba(27,60,53,.08);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+                </div>
+                <span style="font-size:.875rem;color:var(--muted)"><strong style="color:var(--fg)">Équipe locale</strong> — Basés à Abidjan, nous connaissons vos défis métier de l'intérieur.</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Carte visuelle -->
+          <div class="reveal" style="animation-delay:.15s">
+            <div style="background:var(--white);border:1px solid var(--cream-dark);border-radius:var(--radius-xl);padding:2.5rem;box-shadow:var(--shadow-md)">
+              <!-- Header carte -->
+              <div style="display:flex;align-items:center;gap:1rem;margin-bottom:2rem">
+                <div style="width:52px;height:52px;border-radius:14px;background:var(--green);display:flex;align-items:center;justify-content:center">
+                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--cream)" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                </div>
+                <div>
+                  <div style="font-family:'DM Serif Display',serif;font-size:1.1rem;color:var(--green)">YA Consulting</div>
+                  <div style="font-size:.8rem;color:var(--muted)">Éditeur de ManageX · Abidjan, CI</div>
+                </div>
+              </div>
+
+              <!-- Stats rapides -->
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem">
+                <div style="background:var(--cream);border-radius:var(--radius);padding:1rem;text-align:center">
+                  <div style="font-family:'DM Serif Display',serif;font-size:1.8rem;color:var(--green);line-height:1">150+</div>
+                  <div style="font-size:.75rem;color:var(--muted);margin-top:.25rem">Entreprises clientes</div>
+                </div>
+                <div style="background:var(--cream);border-radius:var(--radius);padding:1rem;text-align:center">
+                  <div style="font-family:'DM Serif Display',serif;font-size:1.8rem;color:var(--green);line-height:1">2024</div>
+                  <div style="font-size:.75rem;color:var(--muted);margin-top:.25rem">Année de création</div>
+                </div>
+                <div style="background:var(--cream);border-radius:var(--radius);padding:1rem;text-align:center">
+                  <div style="font-family:'DM Serif Display',serif;font-size:1.8rem;color:var(--green);line-height:1">99%</div>
+                  <div style="font-size:.75rem;color:var(--muted);margin-top:.25rem">Disponibilité</div>
+                </div>
+                <div style="background:var(--cream);border-radius:var(--radius);padding:1rem;text-align:center">
+                  <div style="font-family:'DM Serif Display',serif;font-size:1.8rem;color:var(--gold);line-height:1">5★</div>
+                  <div style="font-size:.75rem;color:var(--muted);margin-top:.25rem">Note clients</div>
+                </div>
+              </div>
+
+              <!-- CTA -->
+              <a href="{{ route('demo-request') }}" class="btn btn-primary" style="width:100%;justify-content:center">
+                Demander une démo gratuite
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </a>
+            </div>
+          </div>
+
         </div>
       </div>
     </section>
