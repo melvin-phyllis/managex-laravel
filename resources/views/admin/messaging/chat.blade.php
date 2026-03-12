@@ -1,4 +1,4 @@
-﻿<x-layouts.admin>
+<x-layouts.admin>
     <style>
         [x-cloak] { display: none !important; }
 
@@ -285,11 +285,29 @@
                                 </div>
                             </template>
                         </div>
+                        <div x-show="pendingFiles.length > 0" class="flex flex-wrap gap-2 mb-3">
+                            <template x-for="(file, idx) in pendingFiles" :key="idx">
+                                <div class="inline-flex items-center gap-2 px-3 py-2 bg-gray-100 rounded-lg border border-gray-200 text-sm">
+                                    <svg class="w-4 h-4 text-[#2D5A4E] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                    </svg>
+                                    <span class="max-w-[120px] truncate" x-text="file.name"></span>
+                                    <span class="text-xs text-gray-500" x-text="file.sizeLabel"></span>
+                                    <button type="button" @click="removePendingFile(idx)" class="text-gray-500 hover:text-[#1B3C35] p-0.5 rounded">×</button>
+                                </div>
+                            </template>
+                        </div>
                         <form @submit.prevent="sendMessageOrAttachments()" class="flex items-center gap-2 sm:gap-3">
                             <input type="file" x-ref="imageInput" @change="onImageSelected($event)" accept="image/*" multiple class="hidden"/>
+                            <input type="file" x-ref="fileInput" @change="onFileSelected($event)" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,image/*,video/mp4,video/webm,audio/*" multiple class="hidden"/>
                             <button type="button" @click="$refs.imageInput.click()" class="p-2 text-gray-500 hover:text-[#1B3C35] hover:bg-[#F0F5F3] rounded-full transition-colors flex-shrink-0" title="Envoyer une image">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                </svg>
+                            </button>
+                            <button type="button" @click="$refs.fileInput.click()" class="p-2 text-gray-500 hover:text-[#1B3C35] hover:bg-[#F0F5F3] rounded-full transition-colors flex-shrink-0" title="Joindre un fichier (PDF, documents, vidéo, audio)">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/>
                                 </svg>
                             </button>
                             <button type="button" 
@@ -388,6 +406,7 @@
                 messages: [],
                 newMessage: '',
                 pendingImages: [],
+                pendingFiles: [],
                 isRecording: false,
                 mediaRecorder: null,
                 audioChunks: [],
@@ -689,13 +708,13 @@
                 },
 
                 canSend() {
-                    return this.selectedConversation && (this.newMessage.trim() || this.pendingImages.length > 0);
+                    return this.selectedConversation && (this.newMessage.trim() || this.pendingImages.length > 0 || this.pendingFiles.length > 0);
                 },
 
                 async sendMessageOrAttachments() {
                     if (!this.selectedConversation) return;
-                    if (this.pendingImages.length > 0) {
-                        await this.uploadImages();
+                    if (this.pendingFiles.length > 0 || this.pendingImages.length > 0) {
+                        await this.uploadAttachments();
                         return;
                     }
                     if (this.newMessage.trim()) {
@@ -741,21 +760,47 @@
                     this.pendingImages.splice(index, 1);
                 },
 
-                async uploadImages() {
-                    if (!this.selectedConversation || this.pendingImages.length === 0) return;
+                humanFileSize(bytes) {
+                    if (bytes < 1024) return bytes + ' o';
+                    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' Ko';
+                    return (bytes / (1024 * 1024)).toFixed(1) + ' Mo';
+                },
+
+                onFileSelected(event) {
+                    const files = event.target.files;
+                    if (!files || !files.length) return;
+                    for (let i = 0; i < files.length; i++) {
+                        const file = files[i];
+                        if (this.pendingFiles.length >= 10) break;
+                        this.pendingFiles.push({
+                            file,
+                            name: file.name,
+                            sizeLabel: this.humanFileSize(file.size)
+                        });
+                    }
+                    event.target.value = '';
+                },
+
+                removePendingFile(index) {
+                    this.pendingFiles.splice(index, 1);
+                },
+
+                async uploadAttachments() {
+                    if (!this.selectedConversation || (this.pendingFiles.length === 0 && this.pendingImages.length === 0)) return;
                     const formData = new FormData();
+                    this.pendingFiles.forEach(({ file }) => formData.append('files[]', file));
                     this.pendingImages.forEach(({ file }) => formData.append('files[]', file));
                     if (this.newMessage.trim()) formData.append('content', this.newMessage);
                     const csrf = document.querySelector('meta[name="csrf-token"]').content;
                     try {
-                        const response = await fetch(`${baseUrl}/messaging/api/conversations/${this.selectedConversation.id}/attachments`, {
+                        const response = await fetch(`${baseUrl}/admin/messaging/${this.selectedConversation.id}/attachments`, {
                             method: 'POST',
                             headers: { 'X-CSRF-TOKEN': csrf },
                             body: formData
                         });
                         if (!response.ok) {
                             const err = await response.json().catch(() => ({}));
-                            throw new Error(err.error || 'Erreur envoi');
+                            throw new Error(err.error || 'Erreur lors de l\'envoi');
                         }
                         const data = await response.json();
                         const msg = data.message;
@@ -766,11 +811,12 @@
                         }
                         this.pendingImages.forEach(p => URL.revokeObjectURL(p.preview));
                         this.pendingImages = [];
+                        this.pendingFiles = [];
                         this.newMessage = '';
                         this.$nextTick(() => this.scrollToBottom());
                     } catch (error) {
-                        console.error('Error uploading images:', error);
-                        alert(error.message || 'Impossible d\'envoyer les images.');
+                        console.error('Error uploading attachments:', error);
+                        alert(error.message || 'Impossible d\'envoyer les fichiers.');
                     }
                 },
 
@@ -813,7 +859,7 @@
                     formData.append('files[]', blob, 'message-vocal.webm');
                     const csrf = document.querySelector('meta[name="csrf-token"]').content;
                     try {
-                        const response = await fetch(`${baseUrl}/messaging/api/conversations/${this.selectedConversation.id}/attachments`, {
+                        const response = await fetch(`${baseUrl}/admin/messaging/${this.selectedConversation.id}/attachments`, {
                             method: 'POST',
                             headers: { 'X-CSRF-TOKEN': csrf },
                             body: formData

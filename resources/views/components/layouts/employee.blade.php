@@ -26,11 +26,16 @@
     <!-- Chart.js -->
     <script nonce="{{ $cspNonce ?? '' }}" src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <!-- OneSignal Push Notifications -->
+    <!-- OneSignal Push Notifications (uniquement sur le domaine de production) -->
     <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
     <script>
     window.OneSignalDeferred = window.OneSignalDeferred || [];
     OneSignalDeferred.push(async function(OneSignal) {
+        var allowedHost = "{{ parse_url(config('app.url'), PHP_URL_HOST) ?: 'ya-consulting.com' }}";
+        var isLocal = /^localhost$|^127\.0\.0\.1$|^\[::1\]$/.test(window.location.hostname);
+        if (isLocal || window.location.hostname !== allowedHost) {
+            return;
+        }
         await OneSignal.init({
             appId: "bd7969c6-0b7c-4bf4-8ad4-6209607959cd",
             path: "/managex/public/",

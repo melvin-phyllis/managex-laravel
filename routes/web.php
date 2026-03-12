@@ -431,6 +431,9 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::delete('/messaging/messages/{message}', [\App\Http\Controllers\Admin\MessagingController::class, 'deleteMessage'])->name('messaging.message.delete');
     Route::get('/messaging/{conversation}/messages', [\App\Http\Controllers\Admin\MessagingController::class, 'getMessages'])->name('messaging.messages.index');
     Route::post('/messaging/{conversation}/messages', [\App\Http\Controllers\Admin\MessagingController::class, 'storeMessage'])->name('messaging.messages.store');
+    Route::post('/messaging/{conversation}/attachments', [\App\Http\Controllers\Messaging\AttachmentController::class, 'store'])
+        ->middleware('throttle:uploads')
+        ->name('messaging.attachments.store');
     Route::post('/messaging/{conversation}/read', [\App\Http\Controllers\Admin\MessagingController::class, 'markAsRead'])->name('messaging.read');
 
     // Notifications admin

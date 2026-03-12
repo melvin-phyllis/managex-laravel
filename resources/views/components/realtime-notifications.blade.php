@@ -126,6 +126,7 @@ function realtimeToasts(notificationCountUrl) {
             
             try {
                 const response = await fetch(this.notificationCountUrl, {
+                    credentials: 'same-origin',
                     headers: {
                         'X-Requested-With': 'XMLHttpRequest',
                         'Accept': 'application/json',
@@ -139,7 +140,7 @@ function realtimeToasts(notificationCountUrl) {
                     }));
                 }
             } catch (error) {
-                // Silently ignore - network errors are expected when tab is hidden
+                // Silently ignore - network errors / IO suspended when tab in background
             }
         },
 

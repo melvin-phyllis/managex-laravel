@@ -21,6 +21,8 @@ class AttachmentController extends Controller
         'image/png' => ['png'],
         'image/gif' => ['gif'],
         'image/webp' => ['webp'],
+        'image/x-icon' => ['ico'],
+        'image/vnd.microsoft.icon' => ['ico'],
         'application/pdf' => ['pdf'],
         'application/msword' => ['doc'],
         'application/vnd.openxmlformats-officedocument.wordprocessingml.document' => ['docx'],

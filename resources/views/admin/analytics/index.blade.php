@@ -1,4 +1,4 @@
-﻿<x-layouts.admin>
+<x-layouts.admin>
     <div class="space-y-6" x-data="analyticsPage()">
 
         {{-- Header amélioré --}}
@@ -422,25 +422,31 @@
 
                 init() {
                     this.loadData();
-                    // Auto-refresh toutes les 5 minutes
-                    setInterval(() => this.loadData(), 300000);
+                    // Auto-refresh toutes les 5 minutes, uniquement quand l'onglet est visible
+                    setInterval(() => {
+                        if (!document.hidden) this.loadData();
+                    }, 300000);
+                    document.addEventListener('visibilitychange', () => {
+                        if (!document.hidden) this.loadData();
+                    });
                 },
 
                 async loadData() {
+                    if (document.hidden) return;
                     this.loading = true;
                     const query = new URLSearchParams(this.filters).toString();
-                    
+                    const fetchOpts = { credentials: 'same-origin' };
                     try {
                         const [kpis, charts, activities, pending, alerts, latecomers, topPerformers, bestAttendance, evaluationStats] = await Promise.all([
-                            fetch(`{{ route('admin.analytics.kpis') }}?${query}`).then(r => r.json()),
-                            fetch(`{{ route('admin.analytics.charts') }}?${query}`).then(r => r.json()),
-                            fetch(`{{ route('admin.analytics.activities') }}?${query}`).then(r => r.json()),
-                            fetch(`{{ route('admin.analytics.pending') }}?${query}`).then(r => r.json()),
-                            fetch(`{{ route('admin.analytics.alerts') }}?${query}`).then(r => r.json()),
-                            fetch(`{{ route('admin.analytics.latecomers') }}?${query}`).then(r => r.json()),
-                            fetch(`{{ route('admin.analytics.top-performers') }}?${query}`).then(r => r.json()),
-                            fetch(`{{ route('admin.analytics.best-attendance') }}?${query}`).then(r => r.json()),
-                            fetch(`{{ route('admin.analytics.evaluation-stats') }}?${query}`).then(r => r.json())
+                            fetch(`{{ route('admin.analytics.kpis') }}?${query}`, fetchOpts).then(r => r.json()),
+                            fetch(`{{ route('admin.analytics.charts') }}?${query}`, fetchOpts).then(r => r.json()),
+                            fetch(`{{ route('admin.analytics.activities') }}?${query}`, fetchOpts).then(r => r.json()),
+                            fetch(`{{ route('admin.analytics.pending') }}?${query}`, fetchOpts).then(r => r.json()),
+                            fetch(`{{ route('admin.analytics.alerts') }}?${query}`, fetchOpts).then(r => r.json()),
+                            fetch(`{{ route('admin.analytics.latecomers') }}?${query}`, fetchOpts).then(r => r.json()),
+                            fetch(`{{ route('admin.analytics.top-performers') }}?${query}`, fetchOpts).then(r => r.json()),
+                            fetch(`{{ route('admin.analytics.best-attendance') }}?${query}`, fetchOpts).then(r => r.json()),
+                            fetch(`{{ route('admin.analytics.evaluation-stats') }}?${query}`, fetchOpts).then(r => r.json())
                         ]);
 
                         this.kpis = kpis;
@@ -454,7 +460,9 @@
 
                         this.loadAiInsights();
                     } catch (error) {
-                        console.error('Error loading analytics:', error);
+                        if (error.name !== 'TypeError' || error.message !== 'Failed to fetch') {
+                            console.error('Error loading analytics:', error);
+                        }
                     } finally {
                         this.loading = false;
                     }
