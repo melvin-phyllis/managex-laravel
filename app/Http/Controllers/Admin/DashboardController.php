@@ -204,11 +204,12 @@ class DashboardController extends Controller
             ->get();
 
         foreach ($pendingLeaves as $leave) {
+            $leaveUser = $leave->user;
             $waitingHours = now()->diffInHours($leave->created_at);
             $alerts['pending'][] = [
                 'id' => 'leave_'.$leave->id,
                 'type' => 'Demande de congé',
-                'user' => $leave->user->name,
+                'user' => $leaveUser?->name ?? 'Utilisateur supprimé',
                 'waitingTime' => $this->formatWaitingTime($waitingHours),
                 'link' => route('admin.leaves.show', $leave->id),
                 'approveUrl' => route('admin.leaves.approve', $leave->id),
@@ -295,11 +296,14 @@ class DashboardController extends Controller
             ->get();
 
         foreach ($recentLeaves as $leave) {
+            // Some leaves may reference a deleted/soft-deleted user.
+            // Avoid crashing the whole dashboard in production.
+            $leaveUser = $leave->user;
             $activities[] = [
                 'id' => 'leave_'.$leave->id,
                 'type' => 'leave_requested',
-                'user' => $leave->user->name,
-                'avatar' => $leave->user->avatar ? avatar_url($leave->user->avatar) : null,
+                'user' => $leaveUser?->name ?? 'Utilisateur supprimé',
+                'avatar' => $leaveUser?->avatar ? avatar_url($leaveUser->avatar) : null,
                 'message' => 'a demandé un congé du '.$leave->date_debut->format('d/m').' au '.$leave->date_fin->format('d/m'),
                 'time' => $leave->created_at->diffForHumans(),
                 'timestamp' => $leave->created_at->timestamp,
@@ -340,7 +344,7 @@ class DashboardController extends Controller
                         'id' => 'leave_'.$leave->id.'_'.$current->format('Y-m-d'),
                         'date' => $current->format('Y-m-d'),
                         'type' => 'leave',
-                        'title' => $leave->user->name.' - Congé',
+                        'title' => ($leave->user?->name ?? 'Utilisateur supprimé').' - Congé',
                         'subtitle' => $leave->type_label ?? $leave->type,
                         'link' => route('admin.leaves.show', $leave->id),
                     ];
