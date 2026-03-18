@@ -278,6 +278,12 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/dashboard/calendar', [AdminDashboardController::class, 'getCalendarEventsData'])->name('dashboard.calendar');
     Route::get('/dashboard/presence-planning', [AdminDashboardController::class, 'getPresencePlanning'])->name('dashboard.presence-planning');
 
+    // Demandes d'accès (anciennement "démo" : réutilisation table demo_requests)
+    Route::get('/access-requests', [\App\Http\Controllers\Admin\AccessRequestController::class, 'index'])
+        ->name('access-requests.index');
+    Route::post('/access-requests/{demoRequest}/status', [\App\Http\Controllers\Admin\AccessRequestController::class, 'updateStatus'])
+        ->name('access-requests.update-status');
+
     // Analytics
     Route::get('/analytics', [AnalyticsController::class, 'index'])->name('analytics.index');
     Route::get('/analytics/kpis', [AnalyticsController::class, 'getKpiData'])->name('analytics.kpis');

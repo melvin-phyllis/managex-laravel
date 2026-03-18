@@ -31,8 +31,8 @@ class DemoRequestNotification extends Notification
         };
 
         $mail = (new MailMessage)
-            ->subject('Nouvelle demande de démo — ' . $this->demoRequest->company_name)
-            ->greeting('Nouvelle demande de démonstration')
+            ->subject('Nouvelle demande d’accès — ' . $this->demoRequest->company_name)
+            ->greeting('Nouvelle demande d’accès')
             ->line("**Entreprise :** {$this->demoRequest->company_name}")
             ->line("**Contact :** {$this->demoRequest->contact_name}")
             ->line("**Email :** {$this->demoRequest->email}")

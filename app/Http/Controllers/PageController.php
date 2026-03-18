@@ -62,7 +62,7 @@ class PageController extends Controller
             }
         }
 
-        return redirect()->route('demo-request')->with('success', 'Merci ! Notre équipe vous contactera sous 24h pour planifier votre démonstration.');
+        return redirect()->route('demo-request')->with('success', 'Merci ! Notre équipe vous contactera sous 24h pour activer votre accès.');
     }
 
     public function health()

@@ -108,11 +108,16 @@ class EmployeeController extends Controller
             ->whereYear('created_at', now()->year)
             ->count();
 
+        $suspendedEmployees = User::where('role', 'employee')
+            ->where('status', 'suspended')
+            ->count();
+
         $stats = [
             'total' => $totalEmployees,
             'present' => $presentToday,
             'on_leave' => $onLeaveToday,
             'new_this_month' => $newThisMonth,
+            'suspended' => $suspendedEmployees,
         ];
 
         return view('admin.employees.index', compact('employees', 'departments', 'stats'));

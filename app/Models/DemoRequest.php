@@ -13,5 +13,7 @@ class DemoRequest extends Model
         'phone',
         'company_size',
         'message',
+        'status',
+        'admin_note',
     ];
 }

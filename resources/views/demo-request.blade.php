@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Demander une démo — ManageX</title>
-  <meta name="description" content="Demandez une démonstration gratuite de ManageX, la plateforme RH intelligente." />
+  <title>Demander un accès — ManageX</title>
+  <meta name="description" content="Demandez un accès à ManageX. Notre équipe vous recontacte pour activer votre compte." />
   <meta name="theme-color" content="#1B3C35">
   <link rel="canonical" href="{{ route('demo-request') }}" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -414,6 +414,14 @@
     .anim-2 { animation: fadeUp 0.6s ease-out 0.1s both; }
     .anim-3 { animation: fadeUp 0.6s ease-out 0.2s both; }
 
+    @media (prefers-reduced-motion: reduce) {
+      .anim-1, .anim-2, .anim-3 {
+        animation: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+      }
+    }
+
     /* === RESPONSIVE === */
     @media (max-width: 800px) {
       .demo-grid {
@@ -445,16 +453,16 @@
         <a href="{{ url('/') }}" class="nav-link">Accueil</a>
         <a href="{{ url('/') }}#features" class="nav-link">Fonctionnalités</a>
         <a href="{{ route('login') }}" class="btn-nav btn-nav-outline">Connexion</a>
-        <a href="#demo-form" class="btn-nav btn-nav-primary">Démo</a>
+        <a href="#demo-form" class="btn-nav btn-nav-primary">Accès</a>
       </div>
     </div>
   </header>
 
   <!-- HERO -->
   <section class="demo-hero">
-    <p class="demo-hero-tag anim-1">Demander une démo</p>
-    <h1 class="demo-hero-title anim-2">Planifiez une démonstration<br>gratuite de ManageX</h1>
-    <p class="demo-hero-desc anim-3">Comment ManageX peut transformer votre gestion RH ? Planifiez une démo gratuite et obtenez toutes vos réponses.</p>
+    <p class="demo-hero-tag anim-1">Demander un accès</p>
+    <h1 class="demo-hero-title anim-2">Demander l’accès à<br>ManageX</h1>
+    <p class="demo-hero-desc anim-3">Partagez vos besoins et notre équipe YA Consulting vous contactera pour activer votre accès.</p>
   </section>
 
   <!-- SPLIT CONTENT -->
@@ -482,6 +490,12 @@
 
       <!-- RIGHT: Form -->
       <div class="demo-form-card anim-3" id="demo-form">
+        <h2 style="font-family: 'DM Serif Display', serif; font-size: 1.35rem; margin-bottom: .75rem;">
+          Demande d’accès
+        </h2>
+        <p style="color:#5C6E68; font-size:.9rem; margin-bottom:1rem;">
+          Renseignez vos informations. Un membre de YA Consulting validera votre demande.
+        </p>
         @if(session('success'))
           <div class="alert alert-success">{{ session('success') }}</div>
         @endif
@@ -536,7 +550,7 @@
           </div>
 
           <button type="submit" class="btn-submit">
-            Obtenir ma démo gratuite
+            Envoyer ma demande d’accès
             <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </button>
         </form>

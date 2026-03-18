@@ -565,7 +565,9 @@ class DashboardController extends Controller
         $startOfWeek = Carbon::now()->startOfWeek();
         $dayNames = [1 => 'Lundi', 2 => 'Mardi', 3 => 'Mercredi', 4 => 'Jeudi', 5 => 'Vendredi'];
 
+        // Exclure les comptes suspendus/terminés du planning (ils ne doivent pas apparaître)
         $employees = User::where('role', 'employee')
+            ->where('status', 'active')
             ->with(['workDays', 'department'])
             ->orderBy('name')
             ->get();

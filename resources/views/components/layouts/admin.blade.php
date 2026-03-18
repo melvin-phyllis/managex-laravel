@@ -267,6 +267,8 @@
                         Analytics
                     </x-sidebar-link>
 
+                   
+
                     <!-- Gestion RH Dropdown -->
                     <div x-data="{ open: {{ (request()->routeIs('admin.employees.*') || request()->routeIs('admin.presences.*') || request()->routeIs('admin.tasks.*') || request()->routeIs('admin.leaves.*') || request()->routeIs('admin.intern-evaluations.*')) ? 'true' : 'false' }} }">
                         <button @click="open = !open" 
@@ -365,7 +367,12 @@
                             <x-sidebar-link :href="route('admin.bts-evaluations.index')" :active="request()->routeIs('admin.bts-evaluations.*')" class="pl-12 text-sm">Fiches BTS</x-sidebar-link>
                         </div>
                     </div>
-
+                    <x-sidebar-link :href="route('admin.access-requests.index')" :active="request()->routeIs('admin.access-requests.*')">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
+                        </svg>
+                        Demandes d’accès
+                    </x-sidebar-link>
                 </div>
             </nav>
         </aside>

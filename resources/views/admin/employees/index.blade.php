@@ -1,4 +1,4 @@
-﻿<x-layouts.admin>
+<x-layouts.admin>
     <div class="space-y-6" x-data="employeeTable()">
         <!-- Breadcrumbs -->
         <nav class="flex animate-fade-in-up" aria-label="Breadcrumb">
@@ -57,7 +57,7 @@
         </x-table-header>
 
         <!-- Stats Cards -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             <!-- Total Employés -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 hover:shadow-md transition-shadow group animate-fade-in-up animation-delay-100">
                 <div class="flex items-center justify-between">
@@ -126,6 +126,29 @@
                     </span>
                     <span class="text-gray-400 mx-2">•</span>
                     <span class="text-gray-500">Recrutements</span>
+                </div>
+            </div>
+
+            <!-- Suspendus -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 hover:shadow-md transition-shadow group animate-fade-in-up animation-delay-500">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-gray-500">Suspendus</p>
+                        <p class="text-3xl font-bold text-gray-900 mt-1">{{ $stats['suspended'] ?? 0 }}</p>
+                    </div>
+                    <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform" style="background-image: linear-gradient(135deg, #E8F0ED, #F0F5F3) !important; box-shadow: 0 10px 15px -3px rgba(27, 60, 53, 0.12) !important;">
+                        <svg class="w-6 h-6" style="color:#1B3C35" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-1.414 1.414M6.05 17.95l-1.414 1.414M5.636 5.636l1.414 1.414m11.314 11.314l1.414 1.414M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="mt-4 flex items-center text-sm">
+                    <a href="{{ route('admin.employees.index', array_merge(request()->only(['search','department_id','contract_type']), ['status' => 'suspended'])) }}"
+                       class="text-[#163530] bg-[#F0F5F3] border border-[#B8D1C7] px-2 py-0.5 rounded-full font-medium hover:bg-[#E8F0ED] transition">
+                        Voir la liste
+                    </a>
+                    <span class="text-gray-400 mx-2">•</span>
+                    <span class="text-gray-500">Accès désactivé</span>
                 </div>
             </div>
         </div>
