@@ -630,6 +630,25 @@ class EmployeeController extends Controller
     }
 
     /**
+     * Autoriser/refuser l'acces a la section Demandes de stage.
+     */
+    public function toggleStageRequestsAccess(User $employee)
+    {
+        // Les admins ont deja acces global, ce toggle vise surtout les employes/staff.
+        if ($employee->isAdmin()) {
+            return back()->with('error', 'Un administrateur a deja acces a toutes les sections.');
+        }
+
+        $employee->update([
+            'can_access_stage_requests' => ! $employee->can_access_stage_requests,
+        ]);
+
+        $state = $employee->can_access_stage_requests ? 'autorise' : 'retire';
+
+        return back()->with('success', "Acces Demandes de stage {$state} pour {$employee->name}.");
+    }
+
+    /**
      * Activer un compte employé.
      */
     public function activate(User $employee)

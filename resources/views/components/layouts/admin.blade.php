@@ -15,7 +15,7 @@
     <!-- PWA -->
     <meta name="theme-color" content="#1B3C35">
     <link rel="manifest" href="{{ route('manifest') }}">
-    <link rel="apple-touch-icon" href="{{ asset('icons/icon-192x192.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('favicon.ico') }}">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -373,6 +373,15 @@
                         </svg>
                         Demandes d’accès
                     </x-sidebar-link>
+                    @if(auth()->user()->canAccessStageRequests())
+                        <x-sidebar-link :href="route('admin.stage-requests.index')" :active="request()->routeIs('admin.stage-requests.*')">
+                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"></path>
+                            </svg>
+                            Demandes de stage
+                        </x-sidebar-link>
+                    @endif
                 </div>
             </nav>
         </aside>

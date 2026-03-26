@@ -32,6 +32,7 @@ use App\Http\Controllers\Employee\TaskController as EmployeeTaskController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PushSubscriptionController;
+use App\Http\Controllers\StageRequestController;
 
 use Illuminate\Support\Facades\Route;
 // ============================================================================
@@ -175,16 +176,7 @@ Route::get('/manifest.webmanifest', function () {
         'prefer_related_applications' => false,
         'categories' => ['business', 'productivity', 'utilities'],
         'icons' => [
-            ['src' => '/managex/public/icons/icon-72x72.png', 'sizes' => '72x72', 'type' => 'image/png', 'purpose' => 'any'],
-            ['src' => '/managex/public/icons/icon-96x96.png', 'sizes' => '96x96', 'type' => 'image/png', 'purpose' => 'any'],
-            ['src' => '/managex/public/icons/icon-128x128.png', 'sizes' => '128x128', 'type' => 'image/png', 'purpose' => 'any'],
-            ['src' => '/managex/public/icons/icon-144x144.png', 'sizes' => '144x144', 'type' => 'image/png', 'purpose' => 'any'],
-            ['src' => '/managex/public/icons/icon-152x152.png', 'sizes' => '152x152', 'type' => 'image/png', 'purpose' => 'any'],
-            ['src' => '/managex/public/icons/icon-192x192.png', 'sizes' => '192x192', 'type' => 'image/png', 'purpose' => 'any'],
-            ['src' => '/managex/public/icons/icon-384x384.png', 'sizes' => '384x384', 'type' => 'image/png', 'purpose' => 'any'],
-            ['src' => '/managex/public/icons/icon-512x512.png', 'sizes' => '512x512', 'type' => 'image/png', 'purpose' => 'any'],
-            ['src' => '/managex/public/icons/icon-192x192.png', 'sizes' => '192x192', 'type' => 'image/png', 'purpose' => 'maskable'],
-            ['src' => '/managex/public/icons/icon-512x512.png', 'sizes' => '512x512', 'type' => 'image/png', 'purpose' => 'maskable'],
+            ['src' => '/favicon.ico', 'sizes' => '48x48', 'type' => 'image/x-icon', 'purpose' => 'any'],
         ],
         'shortcuts' => [
             [
@@ -192,28 +184,28 @@ Route::get('/manifest.webmanifest', function () {
                 'short_name' => 'Pointage',
                 'description' => 'Marquer votre arrivée ou départ',
                 'url' => '/managex/public/employee/presences',
-                'icons' => [['src' => '/managex/public/icons/icon-96x96.png', 'sizes' => '96x96']],
+                'icons' => [['src' => '/favicon.ico', 'sizes' => '48x48', 'type' => 'image/x-icon']],
             ],
             [
                 'name' => 'Mes tâches',
                 'short_name' => 'Tâches',
                 'description' => 'Voir et gérer vos tâches',
                 'url' => '/managex/public/employee/tasks',
-                'icons' => [['src' => '/managex/public/icons/icon-96x96.png', 'sizes' => '96x96']],
+                'icons' => [['src' => '/favicon.ico', 'sizes' => '48x48', 'type' => 'image/x-icon']],
             ],
             [
                 'name' => 'Mes congés',
                 'short_name' => 'Congés',
                 'description' => 'Demander ou consulter vos congés',
                 'url' => '/managex/public/employee/leaves',
-                'icons' => [['src' => '/managex/public/icons/icon-96x96.png', 'sizes' => '96x96']],
+                'icons' => [['src' => '/favicon.ico', 'sizes' => '48x48', 'type' => 'image/x-icon']],
             ],
             [
                 'name' => 'Messagerie',
                 'short_name' => 'Messages',
                 'description' => 'Consulter vos messages',
                 'url' => '/managex/public/employee/messaging',
-                'icons' => [['src' => '/managex/public/icons/icon-96x96.png', 'sizes' => '96x96']],
+                'icons' => [['src' => '/favicon.ico', 'sizes' => '48x48', 'type' => 'image/x-icon']],
             ],
         ],
         'screenshots' => [
@@ -245,6 +237,7 @@ Route::get('/manifest.webmanifest', function () {
 // - Utilisateur connecté : redirige vers le bon dashboard (admin / employee)
 Route::get('/', [PageController::class, 'home'])->name('home');
 Route::get('/demo', [PageController::class, 'demoRequest'])->name('demo-request');
+Route::get('/stage-request', [StageRequestController::class, 'create'])->name('stage-request');
 
 // Sitemap XML
 Route::get('/sitemap.xml', function () {
@@ -257,6 +250,7 @@ Route::get('/sitemap.xml', function () {
         ->header('Content-Type', 'application/xml');
 })->name('sitemap');
 Route::post('/demo', [PageController::class, 'storeDemoRequest'])->name('demo-request.store');
+Route::post('/stage-request', [StageRequestController::class, 'store'])->name('stage-request.store');
 
 // Redirection après login selon le rôle
 Route::get('/dashboard', [PageController::class, 'dashboard'])->middleware(['auth', 'verified'])->name('dashboard');
@@ -284,6 +278,18 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::post('/access-requests/{demoRequest}/status', [\App\Http\Controllers\Admin\AccessRequestController::class, 'updateStatus'])
         ->name('access-requests.update-status');
 
+    // Demandes de stage
+    Route::get('/stage-requests', [\App\Http\Controllers\Admin\StageRequestController::class, 'index'])
+        ->name('stage-requests.index');
+    Route::get('/stage-requests/{stageRequest}', [\App\Http\Controllers\Admin\StageRequestController::class, 'show'])
+        ->name('stage-requests.show');
+    Route::post('/stage-requests/{stageRequest}/status', [\App\Http\Controllers\Admin\StageRequestController::class, 'updateStatus'])
+        ->name('stage-requests.update-status');
+    Route::get('/stage-requests/{stageRequest}/attachments/{attachment}', [\App\Http\Controllers\Admin\StageRequestController::class, 'downloadAttachment'])
+        ->name('stage-requests.attachments.download');
+    Route::post('/stage-requests/settings/mail', [\App\Http\Controllers\Admin\StageRequestController::class, 'updateMailSettings'])
+        ->name('stage-requests.settings.mail');
+
     // Analytics
     Route::get('/analytics', [AnalyticsController::class, 'index'])->name('analytics.index');
     Route::get('/analytics/kpis', [AnalyticsController::class, 'getKpiData'])->name('analytics.kpis');
@@ -308,6 +314,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::post('/employees/{employee}/toggle-status', [EmployeeController::class, 'toggleStatus'])->name('employees.toggle-status');
     Route::post('/employees/{employee}/suspend', [EmployeeController::class, 'suspend'])->name('employees.suspend');
     Route::post('/employees/{employee}/activate', [EmployeeController::class, 'activate'])->name('employees.activate');
+    Route::post('/employees/{employee}/toggle-stage-requests-access', [EmployeeController::class, 'toggleStageRequestsAccess'])->name('employees.toggle-stage-requests-access');
 
     // Invitations employés
     Route::get('/employee-invitations/create', [EmployeeInvitationController::class, 'create'])->name('employee-invitations.create');

@@ -15,7 +15,7 @@
     <!-- PWA -->
     <meta name="theme-color" content="#1B3C35">
     <link rel="manifest" href="{{ route('manifest') }}">
-    <link rel="apple-touch-icon" href="{{ asset('icons/icon-192x192.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('favicon.ico') }}">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -928,7 +928,7 @@
                         // Tester immédiatement
                         new Notification('? Notifications ManageX activées', {
                             body: 'Vous recevrez les alertes de pointage directement sur votre bureau.',
-                            icon: '{{ asset("icons/icon-192x192.png") }}'
+                            icon: '{{ asset("favicon.ico") }}'
                         });
                     } else if (perm === 'denied') {
                         if (typeof showToast === 'function') {
@@ -1044,7 +1044,7 @@
                         console.log('[ManageX Alarm] Sending SW notification');
                         reg.showNotification('? ManageX é Confirmez votre présence !', {
                             body: 'Il est ' + data.work_start_time + '. Vous étes arrivé(e) é ' + data.pre_check_in_time + '. Cliquez pour confirmer.',
-                            icon: '{{ asset("icons/icon-192x192.png") }}',
+                            icon: '{{ asset("favicon.ico") }}',
                             badge: '{{ asset("icons/icon-72x72.png") }}',
                             tag: 'pre-checkin-confirm',
                             renotify: true,
@@ -1075,7 +1075,7 @@
                 console.log('[ManageX Alarm] Sending fallback Notification');
                 const n = new Notification('? ManageX é Confirmez votre présence !', {
                     body: 'Il est ' + data.work_start_time + '. Arrivé(e) é ' + data.pre_check_in_time + '.',
-                    icon: '{{ asset("icons/icon-192x192.png") }}',
+                    icon: '{{ asset("favicon.ico") }}',
                     tag: 'pre-checkin-confirm',
                     requireInteraction: true
                 });

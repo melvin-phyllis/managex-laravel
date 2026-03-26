@@ -64,6 +64,7 @@ class User extends Authenticatable
         'rtt_balance',
         // Statut
         'status',
+        'can_access_stage_requests',
         'notes',
         // Onboarding
         'onboarding_completed_at',
@@ -109,6 +110,7 @@ class User extends Authenticatable
             // Onboarding
             'onboarding_completed_at' => 'datetime',
             'onboarding_steps' => 'array',
+            'can_access_stage_requests' => 'boolean',
         ];
     }
 
@@ -145,6 +147,11 @@ class User extends Authenticatable
     public function isEmployee(): bool
     {
         return $this->role === 'employee';
+    }
+
+    public function canAccessStageRequests(): bool
+    {
+        return $this->isAdmin() || (bool) $this->can_access_stage_requests;
     }
 
     /**

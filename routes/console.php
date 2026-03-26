@@ -160,3 +160,11 @@ Schedule::command('report:weekly')
     ->timezone('Africa/Abidjan')
     ->withoutOverlapping()
     ->onOneServer();
+
+// ==========================================
+// Recruitment inbox sync
+// ==========================================
+Schedule::command('recruitment:sync-stage-requests --days=7')
+    ->everyThirtyMinutes()
+    ->withoutOverlapping()
+    ->appendOutputTo(storage_path('logs/recruitment-sync.log'));

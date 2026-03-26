@@ -19,6 +19,14 @@ class RoleMiddleware
             return redirect()->route('login');
         }
 
+        // Exception: some non-admin users can access stage requests section.
+        if ($role === 'admin'
+            && $request->routeIs('admin.stage-requests.*')
+            && method_exists($request->user(), 'canAccessStageRequests')
+            && $request->user()->canAccessStageRequests()) {
+            return $next($request);
+        }
+
         if ($request->user()->role !== $role) {
             if ($request->user()->isAdmin()) {
                 return redirect()->route('admin.dashboard');
