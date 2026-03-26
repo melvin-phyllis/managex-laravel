@@ -6,11 +6,29 @@ use App\Http\Controllers\Controller;
 use App\Models\Setting;
 use App\Models\StageRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class StageRequestController extends Controller
 {
+    private function senderEmailDefault(): string
+    {
+        return (string) (config('recruitment.sender_email') ?: '');
+    }
+
+    private function ccEmailDefault(): string
+    {
+        $stored = (string) Setting::get('recruitment_cc_email', '');
+        if (trim($stored) !== '') {
+            return $stored;
+        }
+
+        return (string) config('recruitment.cc_email', 'info@ya-consulting.com');
+    }
+
     public function index(Request $request)
     {
         $query = StageRequest::query()
@@ -21,12 +39,18 @@ class StageRequestController extends Controller
 
         if (in_array($finalStatus, ['retained', 'waitlist', 'rejected'], true)) {
             $query->where('final_status', $finalStatus);
+        } else {
+            // Vue par defaut: cacher les candidatures rejetees
+            $query->where(function ($q) {
+                $q->whereNull('final_status')
+                    ->orWhere('final_status', '!=', 'rejected');
+            });
         }
 
         $requests = $query->paginate(20)->withQueryString();
         $mailSettings = [
-            'sender_email' => (string) env('RECRUITMENT_IMAP_USERNAME', ''),
-            'cc_email' => Setting::get('recruitment_cc_email', config('recruitment.cc_email')),
+            'sender_email' => $this->senderEmailDefault(),
+            'cc_email' => $this->ccEmailDefault(),
             'retained_mail_subject' => Setting::get('recruitment_retained_mail_subject', 'Candidature retenue - {name}'),
             'retained_mail_body' => Setting::get(
                 'recruitment_retained_mail_body',
@@ -41,8 +65,8 @@ class StageRequestController extends Controller
     {
         $stageRequest->load('attachments');
         $mailSettings = [
-            'sender_email' => (string) env('RECRUITMENT_IMAP_USERNAME', ''),
-            'cc_email' => Setting::get('recruitment_cc_email', config('recruitment.cc_email')),
+            'sender_email' => $this->senderEmailDefault(),
+            'cc_email' => $this->ccEmailDefault(),
             'retained_mail_subject' => Setting::get('recruitment_retained_mail_subject', 'Candidature retenue - {name}'),
             'retained_mail_body' => Setting::get(
                 'recruitment_retained_mail_body',
@@ -107,6 +131,89 @@ class StageRequestController extends Controller
         return redirect()
             ->route('admin.stage-requests.index')
             ->with('success', 'Parametres email recrutement mis a jour.');
+    }
+
+    public function sendRetainedMail(StageRequest $stageRequest)
+    {
+        if ($stageRequest->final_status !== 'retained') {
+            return back()->with('error', 'Le mail est disponible uniquement pour les candidatures retenues.');
+        }
+
+        if (empty($stageRequest->email)) {
+            return back()->with('error', 'Adresse email du candidat manquante.');
+        }
+
+        $cc = $this->ccEmailDefault();
+        $subjectTpl = Setting::get('recruitment_retained_mail_subject', 'Candidature retenue - {name}');
+        $bodyTpl = Setting::get(
+            'recruitment_retained_mail_body',
+            "Bonjour {name},\n\nVotre candidature a ete retenue. Nous reviendrons vers vous tres rapidement pour la suite du processus.\n\nCordialement,\nEquipe RH"
+        );
+        $senderEmail = $this->senderEmailDefault();
+        $mailDriver = (string) Config::get('mail.default', 'log');
+        if (in_array($mailDriver, ['log', 'array'], true)) {
+            return back()->with('error', "Le mailer actuel est '{$mailDriver}' : aucun vrai email n'est envoye.");
+        }
+        if (empty($senderEmail)) {
+            return back()->with('error', 'RECRUITMENT_IMAP_USERNAME est non defini.');
+        }
+
+        $smtpHost = (string) config('recruitment.smtp.host');
+        $smtpPort = (int) config('recruitment.smtp.port', 465);
+        $smtpEncryption = (string) config('recruitment.smtp.encryption', 'ssl');
+        $smtpUsername = (string) config('recruitment.smtp.username');
+        $smtpPassword = (string) config('recruitment.smtp.password');
+        $fromName = (string) config('recruitment.smtp.from_name', config('app.name', 'ManageX'));
+
+        $missing = [];
+        if (empty($smtpHost)) $missing[] = 'host';
+        if (empty($smtpUsername)) $missing[] = 'username';
+        if (empty($smtpPassword)) $missing[] = 'password';
+
+        if ($missing) {
+            return back()->with(
+                'error',
+                'Configuration SMTP recrutement incomplete : ' . implode(', ', $missing) .
+                '. Verifiez RECRUITMENT_SMTP_HOST/PORT/ENCRYPTION ou RECRUITMENT_IMAP_HOST et RECRUITMENT_IMAP_USERNAME/PASSWORD dans .env (puis config:clear).'
+            );
+        }
+
+        $subject = str_replace('{name}', $stageRequest->full_name, (string) $subjectTpl);
+        $body = str_replace('{name}', $stageRequest->full_name, (string) $bodyTpl);
+
+        try {
+            $mailerName = 'recruitment_'.Str::random(8);
+            Config::set("mail.mailers.{$mailerName}", [
+                'transport' => 'smtp',
+                'host' => $smtpHost,
+                'port' => $smtpPort,
+                'encryption' => $smtpEncryption,
+                'username' => $smtpUsername,
+                'password' => $smtpPassword,
+                'timeout' => null,
+            ]);
+
+            Mail::mailer($mailerName)->raw($body, function ($message) use ($stageRequest, $subject, $cc, $senderEmail, $fromName) {
+                $message->to($stageRequest->email)->subject($subject);
+                if (! empty($cc)) {
+                    $message->cc($cc);
+                }
+                $message->from($senderEmail, $fromName);
+                $message->replyTo($senderEmail, $fromName);
+            });
+
+            $stageRequest->update([
+                'retained_mail_sent_at' => now(),
+            ]);
+
+            return back()->with('success', 'Email envoye au candidat.');
+        } catch (\Throwable $e) {
+            report($e);
+            return back()->with(
+                'error',
+                'Echec envoi email SMTP: '.$e->getMessage()
+            );
+        }
     }
 }
 

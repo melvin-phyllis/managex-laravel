@@ -23,8 +23,14 @@ class StageRequest extends Model
         'score_communication',
         'score_motivation',
         'final_status',
+        'retained_mail_sent_at',
         'source',
         'source_uid',
+    ];
+
+    protected $casts = [
+        'interview_at' => 'datetime',
+        'retained_mail_sent_at' => 'datetime',
     ];
 
     public function attachments(): HasMany

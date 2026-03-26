@@ -289,6 +289,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
         ->name('stage-requests.attachments.download');
     Route::post('/stage-requests/settings/mail', [\App\Http\Controllers\Admin\StageRequestController::class, 'updateMailSettings'])
         ->name('stage-requests.settings.mail');
+    Route::post('/stage-requests/{stageRequest}/send-retained-mail', [\App\Http\Controllers\Admin\StageRequestController::class, 'sendRetainedMail'])
+        ->name('stage-requests.send-retained-mail');
 
     // Analytics
     Route::get('/analytics', [AnalyticsController::class, 'index'])->name('analytics.index');

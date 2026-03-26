@@ -2,9 +2,27 @@
     <div class="p-6"
          x-data="{
              showTemplateModal: false,
+             showSendConfirmModal: false,
+             pendingSendFormId: null,
              ccEmail: @js($mailSettings['cc_email'] ?? ''),
              retainedSubject: @js($mailSettings['retained_mail_subject'] ?? 'Candidature retenue - {name}'),
-             retainedBody: @js($mailSettings['retained_mail_body'] ?? 'Bonjour {name},\\n\\nVotre candidature a ete retenue.\\n\\nCordialement,\\nEquipe RH')
+             retainedBody: @js($mailSettings['retained_mail_body'] ?? 'Bonjour {name},\\n\\nVotre candidature a ete retenue.\\n\\nCordialement,\\nEquipe RH'),
+             askSendConfirmation(formId) {
+                this.pendingSendFormId = formId;
+                this.showSendConfirmModal = true;
+             },
+             confirmSendMail() {
+                if (this.pendingSendFormId) {
+                    const form = document.getElementById(this.pendingSendFormId);
+                    if (form) {
+                        form.submit();
+                    } else {
+                        alert('Formulaire introuvable: ' + this.pendingSendFormId);
+                    }
+                }
+                this.showSendConfirmModal = false;
+                this.pendingSendFormId = null;
+             }
          }">
         <div class="flex items-center justify-between mb-4">
             <h1 class="text-xl font-bold text-gray-900">Demandes de stage</h1>
@@ -49,6 +67,11 @@
         @if(session('success'))
             <div class="mb-4 bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg">
                 {{ session('success') }}
+            </div>
+        @endif
+        @if(session('error'))
+            <div class="mb-4 bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg">
+                {{ session('error') }}
             </div>
         @endif
 
@@ -118,12 +141,25 @@
                                             <option value="waitlist" @selected($req->final_status==='waitlist')>Liste d'attente</option>
                                             <option value="rejected" @selected($req->final_status==='rejected')>Rejete</option>
                                         </select>
-                                        @if($req->final_status === 'retained')
-                                            <a href="{{ route('admin.stage-requests.show', ['stageRequest' => $req->id, 'compose' => 1]) }}" class="inline-flex items-center justify-center px-3 py-2 rounded-lg border border-emerald-300 bg-emerald-50 text-emerald-700 text-sm">
-                                                Envoyer un mail
-                                            </a>
-                                        @endif
                                     </form>
+
+                                    @if($req->final_status === 'retained')
+                                        <div class="mt-2 flex items-center gap-2">
+                                            <form id="send-mail-form-{{ $req->id }}" method="POST" action="{{ route('admin.stage-requests.send-retained-mail', $req) }}">
+                                                @csrf
+                                                <button type="button"
+                                                        @click="askSendConfirmation('send-mail-form-{{ $req->id }}')"
+                                                        class="inline-flex items-center justify-center px-3 py-2 rounded-lg border border-emerald-300 bg-emerald-50 text-emerald-700 text-sm">
+                                                    {{ $req->retained_mail_sent_at ? 'Renvoyer mail' : 'Envoyer un mail' }}
+                                                </button>
+                                            </form>
+                                            @if($req->retained_mail_sent_at)
+                                                <span class="text-xs px-2 py-1 rounded-full bg-emerald-100 text-emerald-800">
+                                                    Envoye {{ $req->retained_mail_sent_at->format('d/m H:i') }}
+                                                </span>
+                                            @endif
+                                        </div>
+                                    @endif
                                 </td>
                             </tr>
                         @empty
@@ -174,6 +210,22 @@
                         </button>
                     </div>
                 </form>
+            </div>
+        </div>
+
+        <div x-show="showSendConfirmModal" x-cloak class="fixed inset-0 z-[60] flex items-center justify-center p-4">
+            <div class="absolute inset-0 bg-black/50" @click="showSendConfirmModal = false"></div>
+            <div class="relative w-full max-w-md bg-white rounded-xl shadow-2xl border border-gray-200">
+                <div class="px-4 py-3 border-b border-gray-100">
+                    <h3 class="font-semibold text-gray-900">Confirmation</h3>
+                </div>
+                <div class="p-4">
+                    <p class="text-sm text-gray-700">Voulez-vous vraiment envoyer cet email au candidat ?</p>
+                </div>
+                <div class="px-4 py-3 border-t border-gray-100 flex items-center justify-end gap-2">
+                    <button type="button" @click="showSendConfirmModal = false" class="px-3 py-2 rounded-lg border border-gray-300 text-sm text-gray-700">Annuler</button>
+                    <button type="button" @click="confirmSendMail()" class="px-3 py-2 rounded-lg text-white text-sm" style="background: linear-gradient(135deg, #1B3C35, #2D5A4E);">Confirmer</button>
+                </div>
             </div>
         </div>
     </div>
