@@ -1,4 +1,4 @@
-﻿<x-layouts.admin>
+<x-layouts.admin>
     {{-- Statistiques passées depuis le contrôleur (optimisé: 1 requête au lieu de 4) --}}
 
     <div class="space-y-6">
@@ -206,16 +206,21 @@
                             <tr class="hover:bg-[#F0F5F3]/50 transition-colors group">
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="flex items-center gap-3">
-                                        @if($leave->user->avatar)
-                                            <img class="h-10 w-10 rounded-xl object-cover ring-2 ring-white shadow-md" src="{{ avatar_url($leave->user->avatar) }}" alt="{{ $leave->user->name }}">
+                                        @php
+                                            $leaveUser = $leave->user;
+                                            $leaveUserName = $leaveUser?->name ?? 'Employe supprime';
+                                            $leaveUserPoste = $leaveUser?->poste ?? 'Employe';
+                                        @endphp
+                                        @if($leaveUser?->avatar)
+                                            <img class="h-10 w-10 rounded-xl object-cover ring-2 ring-white shadow-md" src="{{ avatar_url($leaveUser->avatar) }}" alt="{{ $leaveUserName }}">
                                         @else
                                             <div class="h-10 w-10 rounded-xl flex items-center justify-center ring-2 ring-white shadow-md" style="background: linear-gradient(135deg, #1B3C35, #3D7A6A);">
-                                                <span class="text-white font-bold text-xs">{{ strtoupper(substr($leave->user->name, 0, 2)) }}</span>
+                                                <span class="text-white font-bold text-xs">{{ strtoupper(substr($leaveUserName, 0, 2)) }}</span>
                                             </div>
                                         @endif
                                         <div>
-                                            <div class="text-sm font-semibold text-gray-900">{{ $leave->user->name }}</div>
-                                            <div class="text-xs text-gray-500">{{ $leave->user->poste ?? 'Employé' }}</div>
+                                            <div class="text-sm font-semibold text-gray-900">{{ $leaveUserName }}</div>
+                                            <div class="text-xs text-gray-500">{{ $leaveUserPoste }}</div>
                                         </div>
                                     </div>
                                 </td>

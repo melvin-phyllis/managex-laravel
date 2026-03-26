@@ -1,4 +1,4 @@
-﻿<x-layouts.admin>
+<x-layouts.admin>
     <div class="space-y-6" x-data="taskManager()">
         <!-- Header amélioré -->
         <div class="relative overflow-hidden rounded-2xl shadow-xl animate-fade-in-up" style="background: linear-gradient(135deg, #1B3C35, #3D7A6A) !important;">
@@ -279,14 +279,18 @@
                                     @endif
                                     <div class="flex items-center justify-between mt-3">
                                         <div class="flex items-center gap-2">
-                                            @if($task->user->avatar)
-                                                <img class="w-6 h-6 rounded-full object-cover ring-2 ring-white" src="{{ avatar_url($task->user->avatar) }}" alt="{{ $task->user->name }}">
+                                            @php
+                                                $taskUser = $task->user;
+                                                $taskUserName = $taskUser?->name ?? 'Non assigne';
+                                            @endphp
+                                            @if($taskUser?->avatar)
+                                                <img class="w-6 h-6 rounded-full object-cover ring-2 ring-white" src="{{ avatar_url($taskUser->avatar) }}" alt="{{ $taskUserName }}">
                                             @else
                                                 <div class="w-6 h-6 rounded-full flex items-center justify-center ring-2 ring-white" style="background: linear-gradient(135deg, #1B3C35, #3D7A6A);">
-                                                    <span class="text-white font-bold text-[10px]">{{ strtoupper(substr($task->user->name, 0, 2)) }}</span>
+                                                    <span class="text-white font-bold text-[10px]">{{ strtoupper(substr($taskUserName, 0, 2)) }}</span>
                                                 </div>
                                             @endif
-                                            <span class="text-xs text-gray-600">{{ Str::limit($task->user->name, 12) }}</span>
+                                            <span class="text-xs text-gray-600">{{ Str::limit($taskUserName, 12) }}</span>
                                         </div>
                                         @if($task->date_fin)
                                             <span class="text-[10px] {{ $task->date_fin->isPast() && !in_array($task->statut, ['validated', 'completed']) ? 'text-[#1B3C35] font-bold' : 'text-gray-400' }}">
@@ -360,16 +364,20 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="flex items-center gap-3">
+                                @php
+                                    $taskUser = $task->user;
+                                    $taskUserName = $taskUser?->name ?? 'Non assigne';
+                                @endphp
                                 <div class="flex-shrink-0 h-8 w-8">
-                                    @if($task->user->avatar)
-                                        <img class="h-8 w-8 rounded-full object-cover ring-2 ring-white shadow-sm" src="{{ avatar_url($task->user->avatar) }}" alt="{{ $task->user->name }}">
+                                    @if($taskUser?->avatar)
+                                        <img class="h-8 w-8 rounded-full object-cover ring-2 ring-white shadow-sm" src="{{ avatar_url($taskUser->avatar) }}" alt="{{ $taskUserName }}">
                                     @else
                                         <div class="h-8 w-8 rounded-full flex items-center justify-center ring-2 ring-white shadow-sm" style="background: linear-gradient(135deg, #1B3C35, #3D7A6A);">
-                                            <span class="text-white font-bold text-xs">{{ strtoupper(substr($task->user->name, 0, 2)) }}</span>
+                                            <span class="text-white font-bold text-xs">{{ strtoupper(substr($taskUserName, 0, 2)) }}</span>
                                         </div>
                                     @endif
                                 </div>
-                                <span class="text-sm font-medium text-gray-700">{{ $task->user->name }}</span>
+                                <span class="text-sm font-medium text-gray-700">{{ $taskUserName }}</span>
                             </div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
