@@ -31,9 +31,15 @@ class StageRequestController extends Controller
 
     public function index(Request $request)
     {
+        $senderEmail = mb_strtolower(trim($this->senderEmailDefault()));
         $query = StageRequest::query()
             ->withCount('attachments')
             ->latest();
+
+        if ($senderEmail !== '') {
+            // Hide internal recruitment outbound emails accidentally imported in older sync runs.
+            $query->whereRaw('LOWER(email) != ?', [$senderEmail]);
+        }
 
         $finalStatus = $request->string('final_status')->toString();
 
@@ -85,10 +91,21 @@ class StageRequestController extends Controller
             'final_status' => 'nullable|in:retained,waitlist,rejected',
         ]);
 
+        $newFinalStatus = $validated['final_status'] ?? null;
+        $currentFinalStatus = $stageRequest->final_status;
+
+        // Prevent "mail sent" badge confusion when decision changes.
+        // Only the explicit sendRetainedMail action should set retained_mail_sent_at.
+        $retainedMailSentAt = $stageRequest->retained_mail_sent_at;
+        if ($newFinalStatus !== $currentFinalStatus) {
+            $retainedMailSentAt = null;
+        }
+
         $stageRequest->update([
             'status' => $validated['status'] ?? $stageRequest->status,
             'admin_note' => $validated['admin_note'] ?? null,
-            'final_status' => $validated['final_status'] ?? null,
+            'final_status' => $newFinalStatus,
+            'retained_mail_sent_at' => $retainedMailSentAt,
         ]);
 
         return redirect()

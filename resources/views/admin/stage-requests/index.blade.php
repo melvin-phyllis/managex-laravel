@@ -1,4 +1,4 @@
-<x-layouts.admin>
+<x-dynamic-component :component="auth()->user()->role === 'admin' ? 'layouts.admin' : 'layouts.employee'">
     <div class="p-6"
          x-data="{
              showTemplateModal: false,
@@ -229,5 +229,5 @@
             </div>
         </div>
     </div>
-</x-layouts.admin>
+</x-dynamic-component>
 
