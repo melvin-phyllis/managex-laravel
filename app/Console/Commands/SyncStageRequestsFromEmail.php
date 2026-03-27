@@ -38,6 +38,7 @@ class SyncStageRequestsFromEmail extends Command
         $mailbox = (string) env('RECRUITMENT_IMAP_MAILBOX', 'INBOX');
         $username = (string) env('RECRUITMENT_IMAP_USERNAME');
         $password = (string) env('RECRUITMENT_IMAP_PASSWORD');
+        $normalizedSender = mb_strtolower(trim($username));
         $onlyStage = filter_var(env('RECRUITMENT_ONLY_STAGE', true), FILTER_VALIDATE_BOOL);
         $maxAttachmentMb = (float) env('RECRUITMENT_ATTACHMENT_MAX_MB', 5);
         $maxAttachmentBytes = (int) max(1, $maxAttachmentMb * 1024 * 1024);
@@ -97,9 +98,18 @@ class SyncStageRequestsFromEmail extends Command
             $overview = $overviewList[0];
             $subject = $this->decodeHeader($overview->subject ?? '');
             $fromHeader = $overview->from ?? '';
+            [$fromEmail] = $this->parseSender($fromHeader);
+            $fromEmail = mb_strtolower(trim($fromEmail));
+            $headerInfo = imap_headerinfo($imap, $msgNo);
+            $rawHeaders = imap_fetchheader($imap, $msgNo) ?: '';
             $messageId = trim((string) ($overview->message_id ?? ''));
             $sourceUid = $messageId !== '' ? $messageId : 'imap-'.$msgNo;
             $body = $this->extractBody($imap, $msgNo);
+
+            if ($this->shouldSkipMessage($subject, $fromEmail, $normalizedSender, $headerInfo, (string) $rawHeaders)) {
+                $skipped++;
+                continue;
+            }
 
             $existingRequest = StageRequest::where('source_uid', $sourceUid)->first();
             if ($existingRequest) {
@@ -192,6 +202,53 @@ class SyncStageRequestsFromEmail extends Command
             || str_contains($text, 'candidature')
             || str_contains($text, 'stagiaire')
             || str_contains($text, 'cv');
+    }
+
+    private function shouldSkipMessage(
+        string $subject,
+        string $fromEmail,
+        string $normalizedSender,
+        object|false $headerInfo,
+        string $rawHeaders
+    ): bool {
+        // Ignore outbound recruitment emails to avoid importing our own "candidature retenue" messages.
+        if ($normalizedSender !== '' && $fromEmail === $normalizedSender) {
+            return true;
+        }
+
+        $subjectLower = mb_strtolower(trim($subject));
+
+        // Ignore common reply/forward chains and retained notification subjects.
+        if (preg_match('/^(re|fw|fwd)\s*:/iu', $subjectLower)) {
+            return true;
+        }
+        if (str_contains($subjectLower, 'candidature retenue')) {
+            return true;
+        }
+
+        $headersLower = mb_strtolower($rawHeaders);
+        if (
+            str_contains($headersLower, 'auto-submitted: auto-replied')
+            || str_contains($headersLower, 'x-autoreply')
+            || str_contains($headersLower, 'x-auto-response-suppress')
+            || str_contains($headersLower, 'precedence: bulk')
+            || str_contains($headersLower, 'precedence: auto_reply')
+        ) {
+            return true;
+        }
+
+        if ($headerInfo && isset($headerInfo->to) && is_array($headerInfo->to)) {
+            foreach ($headerInfo->to as $recipient) {
+                $mailbox = isset($recipient->mailbox) ? (string) $recipient->mailbox : '';
+                $host = isset($recipient->host) ? (string) $recipient->host : '';
+                $toEmail = mb_strtolower(trim($mailbox.'@'.$host, '@'));
+                if ($normalizedSender !== '' && $toEmail === $normalizedSender && preg_match('/^(re|fw|fwd)\s*:/iu', $subjectLower)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     private function extractBody($imap, int $msgNo): string
