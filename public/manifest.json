@@ -1,9 +1,9 @@
 {
-    "id": "/managex/public/",
+    "id": "/managex-laravel/public/",
     "name": "ManageX - Gestion des Ressources Humaines",
     "short_name": "ManageX",
     "description": "Application complète de gestion RH : pointage, congés, tâches, paie, évaluations, messagerie interne et sondages. Simplifiez la gestion de vos employés depuis votre mobile ou ordinateur.",
-    "start_url": "/managex/public/login",
+    "start_url": "/managex-laravel/public/login",
     "display": "standalone",
     "display_override": [
         "standalone",
@@ -12,7 +12,7 @@
     "background_color": "#ffffff",
     "theme_color": "#4f46e5",
     "orientation": "portrait-primary",
-    "scope": "/managex/public/",
+    "scope": "/managex-laravel/public/",
     "lang": "fr-FR",
     "dir": "ltr",
     "iarc_rating_id": "",
@@ -24,67 +24,67 @@
     ],
     "icons": [
         {
-            "src": "/managex/public/icons/icon-72x72.png",
+            "src": "/managex-laravel/public/icons/icon-72x72.png",
             "sizes": "72x72",
             "type": "image/png",
             "purpose": "any"
         },
         {
-            "src": "/managex/public/icons/icon-96x96.png",
+            "src": "/managex-laravel/public/icons/icon-96x96.png",
             "sizes": "96x96",
             "type": "image/png",
             "purpose": "any"
         },
         {
-            "src": "/managex/public/icons/icon-128x128.png",
+            "src": "/managex-laravel/public/icons/icon-128x128.png",
             "sizes": "128x128",
             "type": "image/png",
             "purpose": "any"
         },
         {
-            "src": "/managex/public/icons/icon-144x144.png",
+            "src": "/managex-laravel/public/icons/icon-144x144.png",
             "sizes": "144x144",
             "type": "image/png",
             "purpose": "any"
         },
         {
-            "src": "/managex/public/icons/icon-152x152.png",
+            "src": "/managex-laravel/public/icons/icon-152x152.png",
             "sizes": "152x152",
             "type": "image/png",
             "purpose": "any"
         },
         {
-            "src": "/managex/public/icons/icon-192x192.png",
+            "src": "/managex-laravel/public/icons/icon-192x192.png",
             "sizes": "192x192",
             "type": "image/png",
             "purpose": "any"
         },
         {
-            "src": "/managex/public/icons/icon-384x384.png",
+            "src": "/managex-laravel/public/icons/icon-384x384.png",
             "sizes": "384x384",
             "type": "image/png",
             "purpose": "any"
         },
         {
-            "src": "/managex/public/icons/icon-512x512.png",
+            "src": "/managex-laravel/public/icons/icon-512x512.png",
             "sizes": "512x512",
             "type": "image/png",
             "purpose": "any"
         },
         {
-            "src": "/managex/public/icons/icon-72x72.png",
+            "src": "/managex-laravel/public/icons/icon-72x72.png",
             "sizes": "72x72",
             "type": "image/png",
             "purpose": "maskable"
         },
         {
-            "src": "/managex/public/icons/icon-192x192.png",
+            "src": "/managex-laravel/public/icons/icon-192x192.png",
             "sizes": "192x192",
             "type": "image/png",
             "purpose": "maskable"
         },
         {
-            "src": "/managex/public/icons/icon-512x512.png",
+            "src": "/managex-laravel/public/icons/icon-512x512.png",
             "sizes": "512x512",
             "type": "image/png",
             "purpose": "maskable"
@@ -95,10 +95,10 @@
             "name": "Pointer ma présence",
             "short_name": "Pointage",
             "description": "Marquer votre arrivée ou départ",
-            "url": "/managex/public/employee/presences",
+            "url": "/managex-laravel/public/employee/presences",
             "icons": [
                 {
-                    "src": "/managex/public/icons/icon-96x96.png",
+                    "src": "/managex-laravel/public/icons/icon-96x96.png",
                     "sizes": "96x96"
                 }
             ]
@@ -107,10 +107,10 @@
             "name": "Mes tâches",
             "short_name": "Tâches",
             "description": "Voir et gérer vos tâches",
-            "url": "/managex/public/employee/tasks",
+            "url": "/managex-laravel/public/employee/tasks",
             "icons": [
                 {
-                    "src": "/managex/public/icons/icon-96x96.png",
+                    "src": "/managex-laravel/public/icons/icon-96x96.png",
                     "sizes": "96x96"
                 }
             ]
@@ -119,10 +119,10 @@
             "name": "Mes congés",
             "short_name": "Congés",
             "description": "Demander ou consulter vos congés",
-            "url": "/managex/public/employee/leaves",
+            "url": "/managex-laravel/public/employee/leaves",
             "icons": [
                 {
-                    "src": "/managex/public/icons/icon-96x96.png",
+                    "src": "/managex-laravel/public/icons/icon-96x96.png",
                     "sizes": "96x96"
                 }
             ]
@@ -131,10 +131,10 @@
             "name": "Messagerie",
             "short_name": "Messages",
             "description": "Consulter vos messages",
-            "url": "/managex/public/employee/messaging",
+            "url": "/managex-laravel/public/employee/messaging",
             "icons": [
                 {
-                    "src": "/managex/public/icons/icon-96x96.png",
+                    "src": "/managex-laravel/public/icons/icon-96x96.png",
                     "sizes": "96x96"
                 }
             ]
@@ -142,21 +142,21 @@
     ],
     "screenshots": [
         {
-            "src": "/managex/public/screenshots/mobile-dashboard.png",
+            "src": "/managex-laravel/public/screenshots/mobile-dashboard.png",
             "sizes": "1080x1920",
             "type": "image/png",
             "form_factor": "narrow",
             "label": "Tableau de bord ManageX - Vue mobile"
         },
         {
-            "src": "/managex/public/screenshots/mobile-tasks.png",
+            "src": "/managex-laravel/public/screenshots/mobile-tasks.png",
             "sizes": "1080x1920",
             "type": "image/png",
             "form_factor": "narrow",
             "label": "Gestion des tâches - Vue mobile"
         },
         {
-            "src": "/managex/public/screenshots/desktop-dashboard.png",
+            "src": "/managex-laravel/public/screenshots/desktop-dashboard.png",
             "sizes": "1920x1080",
             "type": "image/png",
             "form_factor": "wide",
