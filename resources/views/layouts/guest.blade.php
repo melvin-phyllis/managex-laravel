@@ -476,7 +476,7 @@
             <!-- Top bar -->
             <div class="login-topbar">
                 <a href="{{ url('/') }}" class="link">← Accueil</a>
-                <a href="{{ route('demo-request') }}" class="btn-cta">Demander une démo</a>
+                <a href="{{ route('register') }}" class="btn-cta">S'inscrire</a>
             </div>
 
             <div class="login-form-wrapper">

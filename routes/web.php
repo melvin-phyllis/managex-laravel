@@ -36,9 +36,26 @@ use App\Http\Controllers\StageRequestController;
 
 use Illuminate\Support\Facades\Route;
 // ============================================================================
-// ROUTES DE DÉVELOPPEMENT - PROTÉGÉES PAR ENVIRONNEMENT + AUTHENTIFICATION
-// Ces routes sont UNIQUEMENT accessibles en environnement local par un admin
-// ============================================================================
+use App\Http\Controllers\Auth\RegistrationController;
+
+// Routes d'inscription sécurisée (en 2 étapes)
+Route::middleware('guest')->group(function () {
+    Route::get('/register/verify', [RegistrationController::class, 'showVerify'])
+        ->name('register.verify');
+    Route::post('/register/verify', [RegistrationController::class, 'verify'])
+        ->name('register.verify.post');
+    Route::get('/register/complete', [RegistrationController::class, 'showComplete'])
+        ->name('register.complete');
+    Route::post('/register/complete', [RegistrationController::class, 'store'])
+        ->name('register.complete.post');
+
+    // Redirection de la route standard d'inscription vers la vérification du code
+    Route::get('/register', function () {
+        return redirect()->route('register.verify');
+    })->name('register');
+});
+
+// Routes de développement...
 if (app()->environment('local')) {
     Route::middleware(['auth', 'role:admin'])->prefix('dev')->name('dev.')->group(function () {
         // Seed Interns Route (DEV ONLY)
@@ -46,7 +63,7 @@ if (app()->environment('local')) {
             try {
                 $department = \App\Models\Department::first();
                 $tutor = \App\Models\User::where('role', 'admin')->first();
-                if (! $department || ! $tutor) {
+                if (!$department || !$tutor) {
                     return response()->json(['error' => 'Missing department or tutor']);
                 }
 
@@ -72,7 +89,7 @@ if (app()->environment('local')) {
                         'department_id' => $department->id,
                         'position_id' => $internPosition->id,
                         'hire_date' => now()->subMonths(rand(1, 3)),
-                        'employee_id' => 'STG-'.str_pad($i + 1, 3, '0', STR_PAD_LEFT),
+                        'employee_id' => 'STG-' . str_pad($i + 1, 3, '0', STR_PAD_LEFT),
                         'contract_type' => 'stage',
                         'supervisor_id' => $tutor->id,
                     ]);
@@ -89,15 +106,21 @@ if (app()->environment('local')) {
                             continue;
                         }
                         \App\Models\InternEvaluation::create([
-                            'intern_id' => $intern->id, 'tutor_id' => $tutor->id, 'week_start' => $weekStart,
+                            'intern_id' => $intern->id,
+                            'tutor_id' => $tutor->id,
+                            'week_start' => $weekStart,
                             'discipline_score' => min(2.5, max(0.5, 1.5 + $i * 0.15 + rand(-5, 5) / 10)),
                             'behavior_score' => min(2.5, max(0.5, 1.5 + $i * 0.15 + rand(-5, 5) / 10)),
                             'skills_score' => min(2.5, max(0.5, 1.5 + $i * 0.15 + rand(-3, 7) / 10)),
                             'communication_score' => min(2.5, max(0.5, 1.5 + $i * 0.15 + rand(-5, 5) / 10)),
-                            'discipline_comment' => 'Bon respect des horaires.', 'behavior_comment' => 'Attitude professionnelle.',
-                            'skills_comment' => 'Bonne progression.', 'communication_comment' => 'Communication claire.',
-                            'general_comment' => 'Semaine positive.', 'objectives_next_week' => 'Continuer les efforts.',
-                            'status' => 'submitted', 'submitted_at' => $weekStart->copy()->addDays(5),
+                            'discipline_comment' => 'Bon respect des horaires.',
+                            'behavior_comment' => 'Attitude professionnelle.',
+                            'skills_comment' => 'Bonne progression.',
+                            'communication_comment' => 'Communication claire.',
+                            'general_comment' => 'Semaine positive.',
+                            'objectives_next_week' => 'Continuer les efforts.',
+                            'status' => 'submitted',
+                            'submitted_at' => $weekStart->copy()->addDays(5),
                         ]);
                         $evalCount++;
                     }
@@ -112,11 +135,11 @@ if (app()->environment('local')) {
         // Test Payroll Route (DEV ONLY)
         Route::get('/test-payroll-civ', function () {
             $user = \App\Models\User::where('role', 'employee')->first();
-            if (! $user) {
+            if (!$user) {
                 return 'No employee found. Create an employee first.';
             }
 
-            if (! $user->currentContract) {
+            if (!$user->currentContract) {
                 \App\Models\Contract::create([
                     'user_id' => $user->id,
                     'base_salary' => 500000,
@@ -147,7 +170,7 @@ if (app()->environment('local')) {
 
                 return $pdf->stream('bulletin-test.pdf');
             } catch (\Exception $e) {
-                return 'Error: '.$e->getMessage();
+                return 'Error: ' . $e->getMessage();
             }
         })->name('test-payroll');
     });
@@ -223,7 +246,6 @@ Route::get('/manifest.webmanifest', function () {
 // - Visiteur non connecté : affiche la landing page
 // - Utilisateur connecté : redirige vers le bon dashboard (admin / employee)
 Route::get('/', [PageController::class, 'home'])->name('home');
-Route::get('/demo', [PageController::class, 'demoRequest'])->name('demo-request');
 Route::get('/stage-request', [StageRequestController::class, 'create'])->name('stage-request');
 
 // Sitemap XML
@@ -231,12 +253,10 @@ Route::get('/sitemap.xml', function () {
     $urls = [
         ['loc' => url('/'), 'lastmod' => now()->toDateString(), 'priority' => '1.0'],
         ['loc' => route('login'), 'lastmod' => now()->toDateString(), 'priority' => '0.8'],
-        ['loc' => route('demo-request'), 'lastmod' => now()->toDateString(), 'priority' => '0.9'],
     ];
     return response()->view('sitemap', compact('urls'))
         ->header('Content-Type', 'application/xml');
 })->name('sitemap');
-Route::post('/demo', [PageController::class, 'storeDemoRequest'])->name('demo-request.store');
 Route::post('/stage-request', [StageRequestController::class, 'store'])->name('stage-request.store');
 
 // Redirection après login selon le rôle
@@ -259,11 +279,13 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/dashboard/calendar', [AdminDashboardController::class, 'getCalendarEventsData'])->name('dashboard.calendar');
     Route::get('/dashboard/presence-planning', [AdminDashboardController::class, 'getPresencePlanning'])->name('dashboard.presence-planning');
 
-    // Demandes d'accès (anciennement "démo" : réutilisation table demo_requests)
-    Route::get('/access-requests', [\App\Http\Controllers\Admin\AccessRequestController::class, 'index'])
-        ->name('access-requests.index');
-    Route::post('/access-requests/{demoRequest}/status', [\App\Http\Controllers\Admin\AccessRequestController::class, 'updateStatus'])
-        ->name('access-requests.update-status');
+    // Codes d'inscription
+    Route::get('/registration-codes', [\App\Http\Controllers\Admin\RegistrationCodeController::class, 'index'])
+        ->name('registration-codes.index');
+    Route::post('/registration-codes', [\App\Http\Controllers\Admin\RegistrationCodeController::class, 'store'])
+        ->name('registration-codes.store');
+    Route::delete('/registration-codes/{registrationCode}', [\App\Http\Controllers\Admin\RegistrationCodeController::class, 'destroy'])
+        ->name('registration-codes.destroy');
 
     // Demandes de stage
     Route::get('/stage-requests', [\App\Http\Controllers\Admin\StageRequestController::class, 'index'])
@@ -489,13 +511,13 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
         Route::get('/report', [AdminInternEvaluationController::class, 'report'])->name('report');
         Route::get('/missing', [AdminInternEvaluationController::class, 'missingEvaluations'])->name('missing');
         Route::get('/export-pdf', [AdminInternEvaluationController::class, 'exportPdf'])->name('export-pdf');
-        
+
         // Gestion des évaluations
         Route::get('/intern/{intern}/create', [AdminInternEvaluationController::class, 'create'])->name('create');
         Route::post('/intern/{intern}', [AdminInternEvaluationController::class, 'store'])->name('store');
         Route::get('/{evaluation}/edit', [AdminInternEvaluationController::class, 'edit'])->name('edit');
         Route::put('/{evaluation}', [AdminInternEvaluationController::class, 'update'])->name('update');
-        
+
         // Détail d'un stagiaire (historique) - doit être à la fin pour ne pas conflire
         Route::get('/intern/{intern}', [AdminInternEvaluationController::class, 'show'])->name('show');
     });
@@ -722,5 +744,5 @@ Route::middleware('throttle:10,1')->prefix('invitation')->name('invitation.')->g
     Route::post('/{token}', [EmployeeOnboardingController::class, 'complete'])->name('complete');
 });
 
-require __DIR__.'/auth.php';
-require __DIR__.'/messaging.php';
+require __DIR__ . '/auth.php';
+require __DIR__ . '/messaging.php';

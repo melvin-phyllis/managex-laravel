@@ -31,16 +31,39 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'registration_code' => ['required', 'string'],
         ]);
+
+        $regCode = \App\Models\RegistrationCode::where('code', $request->registration_code)
+            ->where('status', 'active')
+            ->first();
+
+        if (!$regCode || !$regCode->isAvailable()) {
+            return back()->withErrors(['registration_code' => 'Ce code d\'inscription est invalide ou expiré.'])
+                ->withInput();
+        }
+
+        if ($regCode->email && $regCode->email !== $request->email) {
+            return back()->withErrors(['registration_code' => 'Ce code est réservé à une autre adresse email.'])
+                ->withInput();
+        }
 
         $user = new User([
             'name' => $request->name,
             'email' => $request->email,
+            'role' => $regCode->role, // Attribue le rôle défini dans le code
         ]);
         $user->password = Hash::make($request->password);
         $user->save();
+
+        // Marquer le code comme utilisé
+        $regCode->update([
+            'status' => 'used',
+            'used_at' => now(),
+            'used_by' => $user->id,
+        ]);
 
         event(new Registered($user));
 

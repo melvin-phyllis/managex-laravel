@@ -39,11 +39,14 @@ class ConversationPolicy
      */
     public function update(User $user, Conversation $conversation): bool
     {
-        // Admins can update any conversation
-        if ($user->isAdmin()) {
-            return true;
+        // Only conversation participants can potentially update
+        if (!$conversation->hasParticipant($user->id)) {
+            return false;
         }
 
+        // System admins can update if they are in the conversation
+        // or if we decide to let them manage ALL groups (but the request is for privacy)
+        
         // Only conversation admins can update
         return $conversation->isAdmin($user->id);
     }
@@ -53,13 +56,18 @@ class ConversationPolicy
      */
     public function delete(User $user, Conversation $conversation): bool
     {
-        // For direct messages, anyone can archive
-        if ($conversation->type === 'direct') {
-            return $conversation->hasParticipant($user->id);
+        // Must be a participant
+        if (!$conversation->hasParticipant($user->id)) {
+            return false;
         }
 
-        // For groups, only conversation admin or system admin
-        return $conversation->isAdmin($user->id) || $user->isAdmin();
+        // For direct messages, anyone can archive/delete their copy
+        if ($conversation->type === 'direct') {
+            return true;
+        }
+
+        // For groups, only conversation admin
+        return $conversation->isAdmin($user->id);
     }
 
     /**
@@ -72,9 +80,9 @@ class ConversationPolicy
             return false;
         }
 
-        // Announcement channels: only admins can post
+        // Announcement channels: only conversation admins can post
         if ($conversation->type === 'announcement') {
-            return $user->isAdmin() || $conversation->isAdmin($user->id);
+            return $conversation->isAdmin($user->id);
         }
 
         // Check if participant is muted
@@ -96,8 +104,9 @@ class ConversationPolicy
             return false;
         }
 
-        // System admins can always manage
-        if ($user->isAdmin()) {
+        // Only conversation admins can manage participants
+        return $conversation->isAdmin($user->id);
+    }
             return true;
         }
 
