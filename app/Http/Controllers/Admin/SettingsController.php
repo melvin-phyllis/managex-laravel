@@ -25,6 +25,8 @@ class SettingsController extends Controller
             'late_tolerance_minutes' => Setting::getLateTolerance(),
             'payroll_country_id' => Setting::get('payroll_country_id'),
             'report_email' => Setting::get('report_email'),
+            'intern_abandonment_days' => Setting::getInternAbandonmentDays(),
+            'intern_work_days_per_week' => Setting::getInternWorkDaysPerWeek(),
         ];
 
         $payrollCountries = PayrollCountry::active()->orderBy('name')->get();
@@ -99,6 +101,20 @@ class SettingsController extends Controller
                 Setting::set('payroll_country_id', $validated['payroll_country_id'], 'integer', 'payroll');
                 $message = 'Pays de paie mis à jour avec succès.';
                 $tab = 'paie';
+                break;
+
+            case 'stagiaires':
+                $validated = $request->validate([
+                    'intern_abandonment_days' => 'required|integer|min:1|max:60',
+                    'intern_work_days_per_week' => 'required|integer|min:1|max:7',
+                ], [
+                    'intern_abandonment_days.required' => 'Le délai d\'abandon est obligatoire.',
+                    'intern_work_days_per_week.required' => 'Le nombre de jours de travail est obligatoire.',
+                ]);
+                Setting::set('intern_abandonment_days', $validated['intern_abandonment_days'], 'integer', 'internship');
+                Setting::set('intern_work_days_per_week', $validated['intern_work_days_per_week'], 'integer', 'internship');
+                $message = 'Paramètres stagiaires mis à jour avec succès.';
+                $tab = 'stagiaires';
                 break;
 
             default:

@@ -115,6 +115,13 @@ class User extends Authenticatable
     }
 
     /**
+     * Statuts valides pour l'application
+     */
+    public const STATUS_ACTIVE = 'active';
+    public const STATUS_INACTIVE = 'inactive';
+    public const STATUS_ABANDONED = 'abandoned';
+
+    /**
      * Rôles valides pour l'application
      */
     public const VALID_ROLES = ['admin', 'employee'];
@@ -148,6 +155,15 @@ class User extends Authenticatable
     {
         return $this->role === 'employee';
     }
+
+    /**
+     * Check if user has abandoned internship
+     */
+    public function isAbandoned(): bool
+    {
+        return $this->status === self::STATUS_ABANDONED;
+    }
+
 
     public function canAccessStageRequests(): bool
     {

@@ -118,6 +118,14 @@
                     </svg>
                     Paie
                 </button>
+                <button @click="activeTab = 'stagiaires'"
+                        :class="activeTab === 'stagiaires' ? 'bg-gradient-to-r from-orange-500 to-[#C8A96E] text-white shadow-lg shadow-orange-500/30' : 'text-gray-600 hover:bg-gray-100'"
+                        class="whitespace-nowrap py-2.5 px-4 font-medium text-sm flex items-center gap-2 transition-all rounded-lg">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+                    </svg>
+                    Stagiaires
+                </button>
                 <button @click="activeTab = 'apropos'"
                         :class="activeTab === 'apropos' ? 'bg-gradient-to-r from-[#C8A96E] to-[#1B3C35] text-white shadow-lg shadow-[#C8A96E]/30' : 'text-gray-600 hover:bg-gray-100'"
                         class="whitespace-nowrap py-2.5 px-4 font-medium text-sm flex items-center gap-2 transition-all rounded-lg">
@@ -810,7 +818,89 @@
             </form>
         </div>
 
+        <!-- Tab: Stagiaires -->
+        <div x-show="activeTab === 'stagiaires'" x-cloak>
+            <form action="{{ route('admin.settings.update') }}" method="POST">
+                @csrf
+                @method('PUT')
+                <input type="hidden" name="section" value="stagiaires">
+
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                    <div class="flex items-center mb-6">
+                        <div class="bg-orange-100 p-3 rounded-full mr-4">
+                            <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h2 class="text-lg font-semibold text-gray-900">Gestion des abandons de stage</h2>
+                            <p class="text-sm text-gray-500">Configurez les seuils de détection automatique pour les stagiaires.</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl">
+                        <div>
+                            <label for="intern_abandonment_days" class="block text-sm font-medium text-gray-700 mb-2">
+                                Seuil d'abandon (jours calendaires)
+                            </label>
+                            <div class="relative">
+                                <input type="number" name="intern_abandonment_days" id="intern_abandonment_days"
+                                       value="{{ old('intern_abandonment_days', $settings['intern_abandonment_days']) }}"
+                                       min="1" max="60"
+                                       class="w-full rounded-lg border-gray-300 focus:border-orange-500 focus:ring-orange-500 text-lg py-3 pl-4 pr-12">
+                                <div class="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none text-gray-400">
+                                    jours
+                                </div>
+                            </div>
+                            <p class="mt-2 text-xs text-gray-500 italic">Délai d'inactivité au-delà duquel le système marque un abandon.</p>
+                            @error('intern_abandonment_days')
+                                <p class="mt-1 text-sm text-rose-500">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div>
+                            <label for="intern_work_days_per_week" class="block text-sm font-medium text-gray-700 mb-2">
+                                Rythme hebdomadaire du stagiaire
+                            </label>
+                            <div class="relative">
+                                <input type="number" name="intern_work_days_per_week" id="intern_work_days_per_week"
+                                       value="{{ old('intern_work_days_per_week', $settings['intern_work_days_per_week']) }}"
+                                       min="1" max="7"
+                                       class="w-full rounded-lg border-gray-300 focus:border-orange-500 focus:ring-orange-500 text-lg py-3 pl-4 pr-12">
+                                <div class="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none text-gray-400">
+                                    j/sem
+                                </div>
+                            </div>
+                            <p class="mt-2 text-xs text-gray-500 italic">Nombre de jours de présence théorique par semaine.</p>
+                            @error('intern_work_days_per_week')
+                                <p class="mt-1 text-sm text-rose-500">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="mt-8 p-4 bg-orange-50 border border-orange-100 rounded-xl max-w-2xl">
+                        <h4 class="flex items-center gap-2 text-sm font-semibold text-orange-800 mb-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            Comment ça marche ?
+                        </h4>
+                        <p class="text-xs text-orange-700 leading-relaxed">
+                            Le système vérifie chaque jour l'activité des stagiaires. Si un stagiaire n'a aucun pointage et aucun congé validé sur une période glissante de <strong>{{ $settings['intern_abandonment_days'] }} jours calendaires</strong>, il est automatiquement marqué comme <strong>"Abandonné"</strong>. Une notification par email lui est alors envoyée.
+                        </p>
+                    </div>
+
+                    <div class="mt-8 flex justify-end">
+                        <button type="submit" class="px-6 py-2.5 bg-orange-600 text-white font-medium rounded-lg hover:bg-orange-700 transition-colors shadow-lg shadow-orange-600/20">
+                            Enregistrer ces paramètres
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
         {{-- ═══ TAB: À PROPOS ═══ --}}
+
         <div x-show="activeTab === 'apropos'" class="space-y-6">
 
             {{-- Carte identité app --}}

@@ -99,6 +99,20 @@ class Setting extends Model
         return static::get('work_end_time', '17:00');
     }
 
+    /**
+     * Helpers pour l'abandon de stage
+     */
+    public static function getInternAbandonmentDays(): int
+    {
+        return (int) static::get('intern_abandonment_days', 14);
+    }
+
+    public static function getInternWorkDaysPerWeek(): int
+    {
+        return (int) static::get('intern_work_days_per_week', 3);
+    }
+
+
     public static function getBreakStartTime(): string
     {
         return static::get('break_start_time', '12:00');

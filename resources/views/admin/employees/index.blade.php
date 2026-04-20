@@ -187,6 +187,7 @@
                         <option value="">Tous statuts</option>
                         <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Actif</option>
                         <option value="on_leave" {{ request('status') == 'on_leave' ? 'selected' : '' }}>En congé</option>
+                        <option value="abandoned" {{ request('status') == 'abandoned' ? 'selected' : '' }}>Abandon de stage</option>
                         <option value="suspended" {{ request('status') == 'suspended' ? 'selected' : '' }}>Suspendu</option>
                         <option value="terminated" {{ request('status') == 'terminated' ? 'selected' : '' }}>Terminé</option>
                     </select>
@@ -306,6 +307,10 @@
                                         @if($employee->status === 'suspended')
                                             <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-[#FAF3E8] text-[#B8955A] border border-[#ECE0C8]" title="Ce compte est suspendu">
                                                 Suspendu
+                                            </span>
+                                        @elseif($employee->status === 'abandoned')
+                                            <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-red-50 text-red-700 border border-red-200" title="Ce stagiaire a abandonné son stage">
+                                                Abandonné
                                             </span>
                                         @elseif($employee->status === 'terminated')
                                             <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-[#E8F0ED] text-[#163530] border border-[#B8D1C7]" title="Ce compte est désactivé">

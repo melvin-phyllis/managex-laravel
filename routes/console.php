@@ -168,3 +168,14 @@ Schedule::command('recruitment:sync-stage-requests --days=7')
     ->everyThirtyMinutes()
     ->withoutOverlapping()
     ->appendOutputTo(storage_path('logs/recruitment-sync.log'));
+// ==========================================
+// Internship Abandonment Detection
+// ==========================================
+
+// Daily at 1:00 AM - Check for interns who have abandoned their internship
+Schedule::command('interns:check-abandonment')
+    ->dailyAt('01:00')
+    ->timezone('Africa/Abidjan')
+    ->withoutOverlapping()
+    ->onOneServer()
+    ->appendOutputTo(storage_path('logs/intern-abandonment.log'));

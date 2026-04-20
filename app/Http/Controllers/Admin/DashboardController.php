@@ -234,6 +234,23 @@ class DashboardController extends Controller
             ];
         }
 
+        // Abandons de stage (Nouveau)
+        $abandonedInterns = User::where('status', User::STATUS_ABANDONED)
+            ->where('contract_type', 'intern')
+            ->orderBy('updated_at', 'desc')
+            ->take(5)
+            ->get();
+
+        foreach ($abandonedInterns as $intern) {
+            $alerts['abandoned'][] = [
+                'id' => $intern->id,
+                'name' => $intern->name,
+                'initials' => $this->getInitials($intern->name),
+                'date' => $intern->updated_at->format('d/m/Y'),
+                'link' => route('admin.employees.show', $intern->id),
+            ];
+        }
+
         return $alerts;
     }
 

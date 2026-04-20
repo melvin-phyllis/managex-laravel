@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
@@ -40,7 +40,7 @@
             background:var(--cream);
             color:var(--fg);
             display:flex;
-            overflow:hidden;
+            overflow-x:hidden;
         }
 
         /* ─── LAYOUT ─── */
@@ -168,11 +168,13 @@
             flex:1;
             display:flex;
             flex-direction:column;
-            justify-content:center;
+            justify-content:flex-start; /* Start from top to handle long forms */
             align-items:center;
-            padding:3rem 2rem;
+            padding:5rem 2rem; /* More vertical padding for spacing */
             position:relative;
             background:var(--cream);
+            min-height:100vh;
+            overflow-y:auto;
         }
 
         .login-form-wrapper{

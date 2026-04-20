@@ -112,6 +112,49 @@
             </div>
         </div>
 
+        {{-- Stage Abandonment (New) --}}
+        <div class="border-b border-gray-50">
+            <button @click="sections.abandoned = !sections.abandoned"
+                    class="w-full px-6 py-3 flex items-center justify-between hover:bg-gray-50 transition-colors">
+                <div class="flex items-center space-x-3">
+                    <div class="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center">
+                        <svg class="w-4 h-4 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                        </svg>
+                    </div>
+                    <span class="font-medium text-gray-700">Abandons de stage</span>
+                    <span class="alert-badge bg-orange-100 text-orange-600" x-text="alerts.abandoned?.length || 0"></span>
+                </div>
+                <svg class="w-5 h-5 text-gray-400 transition-transform" :class="{ 'rotate-180': sections.abandoned }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                </svg>
+            </button>
+            <div x-show="sections.abandoned" x-collapse class="px-6 pb-4">
+                <template x-if="!alerts.abandoned || alerts.abandoned.length === 0">
+                    <p class="text-sm text-gray-500 py-2">Aucun abandon détecté</p>
+                </template>
+                <div class="space-y-2">
+                    <template x-for="item in alerts.abandoned" :key="item.id">
+                        <div class="flex items-center justify-between p-3 bg-orange-50 rounded-lg border border-orange-100">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 rounded-full bg-orange-200 flex items-center justify-center text-orange-700 text-xs font-bold"
+                                     x-text="item.initials"></div>
+                                <div>
+                                    <p class="text-sm font-semibold text-gray-900" x-text="item.name"></p>
+                                    <p class="text-xs text-orange-700">
+                                        Détecté le <span x-text="item.date"></span>
+                                    </p>
+                                </div>
+                            </div>
+                            <a :href="item.link" class="px-3 py-1 text-xs bg-orange-600 text-white rounded-full hover:bg-orange-700 transition-colors font-medium">
+                                Voir profil
+                            </a>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </div>
+
         {{-- Pending Approvals --}}
         <div class="border-b border-gray-50">
             <button @click="sections.pending = !sections.pending"
@@ -192,18 +235,20 @@
 <script nonce="{{ $cspNonce ?? '' }}">
 function alertCenter(initialAlerts, apiUrl) {
     return {
-        alerts: initialAlerts || { late: [], overdue: [], pending: [] },
+        alerts: initialAlerts || { late: [], overdue: [], pending: [], abandoned: [] },
         expanded: true,
         sections: {
             late: false,
             overdue: false,
-            pending: false
+            pending: false,
+            abandoned: false
         },
 
         get totalAlerts() {
             return (this.alerts.late?.length || 0) +
                    (this.alerts.overdue?.length || 0) +
-                   (this.alerts.pending?.length || 0);
+                   (this.alerts.pending?.length || 0) +
+                   (this.alerts.abandoned?.length || 0);
         },
 
         init() {
@@ -211,7 +256,8 @@ function alertCenter(initialAlerts, apiUrl) {
             const counts = {
                 late: this.alerts.late?.length || 0,
                 overdue: this.alerts.overdue?.length || 0,
-                pending: this.alerts.pending?.length || 0
+                pending: this.alerts.pending?.length || 0,
+                abandoned: this.alerts.abandoned?.length || 0
             };
             const maxSection = Object.keys(counts).reduce((a, b) => counts[a] > counts[b] ? a : b);
             if (counts[maxSection] > 0) {
